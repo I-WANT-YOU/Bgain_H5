@@ -1,6 +1,7 @@
 import axios from 'axios';
 import router from '../router';
 
+import * as Auth from './auth';
 import baseUrl from '../config/baseUrl';
 
 const request = axios.create({
@@ -11,7 +12,7 @@ const request = axios.create({
 request.interceptors.request.use(
   (config) => {
     const requestConfig = config;
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = Auth.getToken();
 
     if (accessToken) {
       requestConfig.headers.Authorization = accessToken;
@@ -25,10 +26,15 @@ request.interceptors.request.use(
 );
 
 request.interceptors.response.use(
-  response => response,
+  (response) => {
+    if (!response || !response.success) {
+      return Promise.reject(response.data);
+    }
+    return Promise.resolve(response.data);
+  },
   (error) => {
     if (error.response.status === 401) {
-      localStorage.removeItem('access_token');
+      Auth.removeToken();
       router.replace({
         path: '/login',
       });
