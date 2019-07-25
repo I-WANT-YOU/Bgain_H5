@@ -1,12 +1,13 @@
 import axios from "axios";
 
 let serve = axios.create({
-  timeout: 50000
+  timeout: 20000
 });
 
 serve.interceptors.request.use(
   config => {
-    // config.headers["testtt"] = "test";
+    // config.headers["authentication"] = "test";
+
     return config;
   },
   error => {
@@ -27,4 +28,4 @@ serve.interceptors.response.use(
   }
 );
 
-export default serve;
+export default serve
