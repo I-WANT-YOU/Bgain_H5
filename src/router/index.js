@@ -15,6 +15,16 @@ const router = new Router({
     {
       path: '/',
       redirect: "/home"
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
     }
   ]
 })
