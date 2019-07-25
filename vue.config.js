@@ -1,26 +1,9 @@
-const autoprefixer = require('autoprefixer');
-const pxtorem = require('postcss-pxtorem');
 const path = require('path');
 
 module.exports = {
   outputDir: 'dist',
   publicPath: '/',
-  lintOnSave: true,
-  css: {
-    loaderOptions: {
-      postcss: {
-        plugins: [
-          autoprefixer(),
-          pxtorem({
-            rootValue: 37.5,
-            propList: ['*'],
-            selectorBlackList: ['van-circle__layer'], // 该项仅在使用 Circle 组件时需要
-          }),
-        ],
-      },
-    },
-    // extract: true
-  },
+  css: {},
   chainWebpack: (config) => {
     // 压缩代码
     config.optimization.minimize(true);
