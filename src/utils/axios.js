@@ -1,31 +1,22 @@
-import axios from "axios";
+import axios from 'axios';
 
-let serve = axios.create({
-  timeout: 20000
+const serve = axios.create({
+  timeout: 5000,
 });
 
 serve.interceptors.request.use(
-  config => {
-    // config.headers["authentication"] = "test";
-
-    return config;
-  },
-  error => {
-    // 请求错误处理
-    Promise.reject(error);
-  }
+  config => config,
+  // config.headers["authentication"] = "test";
+  error => Promise.reject(error),
+  // 请求错误处理
 );
 
 serve.interceptors.response.use(
-  response => {
-    // 成功请求到数据
-    // 这里根据后端提供的数据进行对应的处理
-    return response;
-  },
-  error => {
-    // 响应错误处理
-    return Promise.reject(error);
-  }
+  response => response,
+  // 成功请求到数据
+  // 这里根据后端提供的数据进行对应的处理
+  error => Promise.reject(error),
+  // 响应错误处理
 );
 
-export default serve
+export default serve;
