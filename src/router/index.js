@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
@@ -13,24 +13,24 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
     },
     {
-      path: '/',
-      redirect: "/home"
-    },
-    {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+      component: () => import(/* webpackChunkName: "home" */ '../views/Login.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+      component: () => import(/* webpackChunkName: "home" */ '../views/Register.vue')
+    },
+    {
+      path: '/',
+      redirect: "/home"
     }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
-  next()
-})
+  next();
+});
 
 export default router;

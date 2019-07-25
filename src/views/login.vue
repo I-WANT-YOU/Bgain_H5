@@ -1,10 +1,12 @@
-<template></template>
+<template>
+  <div class="login"></div>
+</template>
 
 <script>
 export default {
-  name: "login"
+  name: 'login'
 };
 </script>
 
-<style>
+<style lang="scss">
 </style>
