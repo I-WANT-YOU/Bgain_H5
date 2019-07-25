@@ -1,8 +1,11 @@
 import axios from 'axios';
 import router from '../router';
 
+import baseUrl from '../config/baseUrl';
+
 const request = axios.create({
   timeout: 5000,
+  baseUrl,
 });
 
 request.interceptors.request.use(
