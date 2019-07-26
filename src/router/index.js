@@ -19,7 +19,17 @@ const router = new Router({
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue'),
+      component: () => import(/* webpackChunkName: "register" */ '../views/register/Register.vue'),
+    },
+    {
+      path: '/registerStepTwo',
+      name: 'RegisterStepTwo',
+      component: () => import(/* webpackChunkName: "registerStepTwo" */ '../views/register/RegisterStepTwo.vue'),
+    },
+    {
+      path: '/registerSuccess',
+      name: 'RegisterSuccess',
+      component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
       path: '/forgetPassword',
