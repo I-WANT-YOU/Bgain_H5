@@ -33,7 +33,6 @@ export default {
       })
         .onSuccess(() => {
           const options = captchaObj.getValidate();
-          console.log(options);
           this.$emit('success', options);
         })
         .onError((error) => {
