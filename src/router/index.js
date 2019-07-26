@@ -9,7 +9,7 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
     },
     {
       path: '/login',

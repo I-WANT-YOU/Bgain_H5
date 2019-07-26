@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      "login": 'auth/login',
+      login: 'auth/login',
     }),
     showPwd() {
       this.isShowPwd = !this.isShowPwd;
