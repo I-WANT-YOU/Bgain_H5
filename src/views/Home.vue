@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .home {
-    font-size: 18px;
-  }
+.home {
+  font-size: 18px;
+}
 </style>

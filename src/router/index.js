@@ -14,12 +14,17 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "home" */ '../views/login.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
       component: () => import(/* webpackChunkName: "home" */ '../views/Register.vue'),
+    },
+    {
+      path: '/forgetPassword',
+      name: 'forgetPassword',
+      component: () => import(/* webpackChunkName: "home" */ '../views/ForgetPassword.vue'),
     },
     {
       path: '/',
