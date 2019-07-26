@@ -19,7 +19,8 @@ const mutations = {
 const actions = {
   async login({ commit }, params) {
     try {
-      const data = await AuthServcice.login(params);
+      const response = await AuthServcice.login(params);
+      const data = Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
@@ -40,7 +41,8 @@ const actions = {
   },
   async register({ commit }, params) {
     try {
-      const data = await AuthServcice.register(params);
+      const response = await AuthServcice.register(params);
+      const data = Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
@@ -66,7 +68,8 @@ const actions = {
   },
   async changePassword({ commit }, params) {
     try {
-      const data = await AuthServcice.changePassword(params);
+      const response = await AuthServcice.changePassword(params);
+      const data = Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
@@ -77,14 +80,16 @@ const actions = {
   },
   async getGeetestOptions() {
     try {
-      return await AuthServcice.getGeetestOptions();
+      const response = await AuthServcice.getGeetestOptions();
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
   },
   async validateUsername(context, username) {
     try {
-      await AuthServcice.validateUsername(username);
+      const response = await AuthServcice.validateUsername(username);
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
