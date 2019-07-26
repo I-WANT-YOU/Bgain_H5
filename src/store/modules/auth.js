@@ -77,7 +77,7 @@ const actions = {
   },
   async getGeetestOptions() {
     try {
-      await AuthServcice.getGeetestOptions();
+      return await AuthServcice.getGeetestOptions();
     } catch (error) {
       throw error;
     }
