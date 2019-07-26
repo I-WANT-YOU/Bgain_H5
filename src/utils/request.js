@@ -15,7 +15,7 @@ request.interceptors.request.use(
     const accessToken = Auth.getToken();
 
     if (accessToken) {
-      requestConfig.headers.Authorization = accessToken;
+      requestConfig.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     requestConfig.headers.language = 'ZH_CN';
@@ -26,12 +26,7 @@ request.interceptors.request.use(
 );
 
 request.interceptors.response.use(
-  (response) => {
-    if (!response || !response.data.success) {
-      return Promise.reject(response.data);
-    }
-    return Promise.resolve(response.data);
-  },
+  response => response,
   (error) => {
     if (error.response.status === 401) {
       Auth.removeToken();

@@ -1,13 +1,13 @@
 <template>
-  <div class="forget-password"></div>
+  <h1>FixedProduct</h1>
 </template>
 
 <script>
-
 export default {
-  name: 'ForgetPassword',
+  name: 'Fixed',
 };
 </script>
 
-<style>
+<style scoped>
+
 </style>
