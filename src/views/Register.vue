@@ -3,7 +3,8 @@
         <Header/>
         <div class="register-content">
             <div class="tabs">
-                <a class="tab-phone" @click="isShowPhoneContent()" :style="{ color: phoneColor }">手机号</a>
+                <a class="tab-phone"
+                   @click="isShowPhoneContent()" :style="{ color: phoneColor }">手机号</a>
                 <span class="tab-line" ></span>
                 <a class="tab-email" @click="isShowEmailContent()" :style="{ color: emailColor }">邮箱</a>
             </div>
@@ -84,60 +85,66 @@
 </template>
 
 <script>
-    import { Field, RadioGroup, Radio,ActionSheet  } from 'vant';
-    import Header from '../components/Header.vue';
-    import Footer from '../components/Footer.vue';
+import {
+  Field, RadioGroup, Radio, ActionSheet,
+} from 'vant';
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
 
-    export default {
-        name: 'register',
-        data() {
-            return {
-                phoneActive:true,
-                emailActive:false,
-                phoneColor:'#333333',
-                emailColor:'#999999',
-                phoneData:{
-                    country:'',
-                    phone:'',
-                    password:'',
-                    invitedCode:'',
-                    agreement:'',
-                },
-                show: false,
-                actions: [
-                    { name: '选项' },
-                    { name: '选项' },
-                    { name: '选项', subname: '描述信息' }
-                ]
-            };
-        },
-        methods:{
-            isShowPhoneContent:function () {
-                this.phoneActive=true;
-                this.emailActive=false;
-                this.phoneColor='#333333';
-                this.emailColor='#999999';
-            },
-            isShowEmailContent:function () {
-                this.phoneActive=false;
-                this.emailActive=true;
-                this.phoneColor='#999999';
-                this.emailColor='#333333';
-            },
-            // 点击下一步
-            next:function (event) {
-                event.preventDefault();
-            },
-            // 选择国家
-            chooseCountry:function () {
+export default {
+  name: 'register',
+  data() {
+    return {
+      phoneActive: true,
+      emailActive: false,
+      phoneColor: '#333333',
+      emailColor: '#999999',
+      phoneData: {
+        country: '',
+        phone: '',
+        password: '',
+        invitedCode: '',
+        agreement: '',
+      },
+      show: false,
+      actions: [
+        { name: '选项' },
+        { name: '选项' },
+        { name: '选项', subname: '描述信息' },
+      ],
+    };
+  },
+  methods: {
+    isShowPhoneContent() {
+      this.phoneActive = true;
+      this.emailActive = false;
+      this.phoneColor = '#333333';
+      this.emailColor = '#999999';
+    },
+    isShowEmailContent() {
+      this.phoneActive = false;
+      this.emailActive = true;
+      this.phoneColor = '#999999';
+      this.emailColor = '#333333';
+    },
+    // 点击下一步
+    next(event) {
+      event.preventDefault();
+    },
+    // 选择国家
+    chooseCountry() {
 
-            }
-        },
-        components: {
-            Field, RadioGroup, Radio,ActionSheet,
-            Header, Footer,
-        }
-    }
+    },
+  },
+  components: {
+    Field,
+    RadioGroup,
+    Radio,
+    ActionSheet,
+    Header,
+    Footer,
+  },
+};
 </script>
 
 <style lang='scss'>
