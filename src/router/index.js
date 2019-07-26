@@ -9,12 +9,12 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Login.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/login/Login.vue'),
     },
     {
       path: '/register',
@@ -24,7 +24,7 @@ const router = new Router({
     {
       path: '/forgetPassword',
       name: 'forgetPassword',
-      component: () => import(/* webpackChunkName: "home" */ '../views/ForgetPassword.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/forgetPassword/ForgetPassword.vue'),
     },
     {
       path: '/',

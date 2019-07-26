@@ -27,7 +27,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => {
-    if (!response || !response.success) {
+    if (!response || !response.data.success) {
       return Promise.reject(response.data);
     }
     return Promise.resolve(response.data);

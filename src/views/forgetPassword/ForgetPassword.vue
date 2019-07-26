@@ -74,7 +74,7 @@ export default {
   width: 8px;
   height: 13px;
   margin-left: 31px;
-  background: url("../assets/images/back.svg");
+  background: url("../../assets/images/back.svg");
 }
 .tab {
   margin-top: 25px;
@@ -109,7 +109,7 @@ export default {
           margin-left: 18px;
           width: 7px;
           height: 11px;
-          background: url("../assets/images/next.svg");
+          background: url("../../assets/images/next.svg");
         }
         &.mobile {
           display: flex;

@@ -34,6 +34,7 @@
       </p>
     </div>
     <Footer class="trademark" />
+    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
   </div>
 </template>
 
@@ -41,6 +42,7 @@
 import { Field, Button, Toast } from 'vant';
 import Header from '@component/Header.vue';
 import Footer from '@component/Footer.vue';
+import Geetest from '@component/Geetest.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -50,6 +52,7 @@ export default {
     Field,
     Button,
     Footer,
+    Geetest,
   },
   data() {
     return {
@@ -57,6 +60,8 @@ export default {
       password: '',
       isShowPwd: false,
       disabled: true,
+      options: null,
+      geetest: null,
     };
   },
   watch: {
@@ -84,7 +89,7 @@ export default {
     },
     submit() {
       let flag;
-      const { username, password } = this;
+      const { username } = this;
       const reg = /^[0-9]{1,}$/;
       const mobile = /^[0-9]{1,15}$/;
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
@@ -107,15 +112,26 @@ export default {
       }
 
       if (flag) {
-        try {
-          this.login({
-            username,
-            password,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+        // 滑块验证
+        this.geetest.verify();
       }
+    },
+    onLoaded(geetest) {
+      this.geetest = geetest;
+    },
+    onSuccess(options) {
+      const { username, password } = this;
+
+      this.options = options;
+
+      this.login({
+        username,
+        password,
+        geetestOptions: options,
+      });
+    },
+    onError() {
+
     },
     forgetPwd() { // 修改密码
       this.$router.history.push('/forgetPassword');
@@ -165,11 +181,11 @@ export default {
           display: inline-block;
           width: 18px;
           height: 9px;
-          background: url("../assets/images/none.svg");
+          background: url("../../assets/images/none.svg");
           background-size: 100% 100%;
         }
         .show {
-          background: url("../assets/images/display.svg") no-repeat;
+          background: url("../../assets/images/display.svg") no-repeat;
           background-size: 100% 100%;
         }
       }
@@ -214,7 +230,7 @@ export default {
         margin-left: 8px;
         width: 9px;
         height: 11px;
-        background: url("../assets/images/next.svg");
+        background: url("../../assets/images/next.svg");
       }
     }
   }
