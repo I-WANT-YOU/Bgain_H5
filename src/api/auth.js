@@ -14,6 +14,13 @@ export default class AuthService {
     });
   }
 
+  static logout() {
+    return request({
+      url: '/auth/signout',
+      method: 'post',
+    });
+  }
+
   static register({
     username,
     password,
@@ -51,6 +58,40 @@ export default class AuthService {
         target: username,
         ...geetestOptions,
       },
+    });
+  }
+
+  static resetPassword({ username, password, token }) {
+    return request({
+      url: '/auth/reset-password',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'post',
+      data: {
+        username,
+        password,
+        token,
+      },
+    });
+  }
+
+  static changePassword({ oldPassword, newPassword }) {
+    return request({
+      url: '/auth/change-password',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'post',
+      data: {
+        new_password: newPassword,
+        old_password: oldPassword,
+      },
+    });
+  }
+
+  static validateUsername(username) {
+    return request({
+      url: '/auth/valide-register-name',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'post',
+      data: { username },
     });
   }
 }
