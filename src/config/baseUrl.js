@@ -8,6 +8,4 @@ const config = {
   production: prod,
 };
 
-export default {
-  ...config[env],
-};
+export default config[env];
