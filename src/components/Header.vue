@@ -34,7 +34,6 @@ export default {
 
 <style lang="scss" scoped>
 .bg-head {
-  width: 100%;
   height: 43px;
   display: flex;
   align-items: center;
@@ -48,8 +47,10 @@ export default {
     background: none;
   }
   h3 {
+    font-family: PingFangSC-Regular;
     font-size: 14px;
     font-weight: 400;
+    margin-left: 107px;
     color: #333333;
     letter-spacing: 0;
     text-align: center;

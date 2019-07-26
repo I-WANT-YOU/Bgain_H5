@@ -4,7 +4,6 @@ import router from './router';
 import store from './store';
 import 'amfe-flexible';
 import 'normalize.css';
-import './assets/css/common.css';
 
 Vue.config.productionTip = false;
 
