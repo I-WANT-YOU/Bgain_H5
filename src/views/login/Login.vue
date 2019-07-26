@@ -33,13 +33,16 @@
         <i></i>
       </p>
     </div>
-    <p class="trademark">Copyright@2019 Bgain</p>
+    <Footer class="trademark" />
+    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
   </div>
 </template>
 
 <script>
 import { Field, Button, Toast } from 'vant';
 import Header from '@component/Header.vue';
+import Footer from '@component/Footer.vue';
+import Geetest from '@component/Geetest.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -48,6 +51,8 @@ export default {
     Header,
     Field,
     Button,
+    Footer,
+    Geetest,
   },
   data() {
     return {
@@ -55,6 +60,8 @@ export default {
       password: '',
       isShowPwd: false,
       disabled: true,
+      options: null,
+      geetest: null,
     };
   },
   watch: {
@@ -81,32 +88,50 @@ export default {
       this.isShowPwd = !this.isShowPwd;
     },
     submit() {
-      // let flag;
-      // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
-      // const mobile = /^[0-9]{1,15}$/;
-      // if (mobile.test(this.username)) {
-      //   console.log('mobile login');
-      //   if (re.test(this.username)) {
-      //     flag = true;
-      //   } else {
-      //     flag = false;
-      //     Toast('手机格式有误，请重新输入');
-      //   }
-      // } else {
-      //   console.log('s');
-      //   if (re.test(this.username)) {
-      //     flag = true;
-      //   } else {
-      //     flag = false;
-      //     Toast('邮箱格式有误，请重新输入');
-      //   }
-      // }
+      let flag;
+      const { username } = this;
+      const reg = /^[0-9]{1,}$/;
+      const mobile = /^[0-9]{1,15}$/;
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
+      if (reg.test(username)) {
+        // console.log('mobile login');
+        if (mobile.test(username)) {
+          flag = true;
+        } else {
+          flag = false;
+          Toast('手机格式有误，请重新输入');
+        }
+      } else {
+        flag = false;
+        if (re.test(username)) {
+          flag = true;
+        } else {
+          flag = false;
+          Toast('邮箱格式有误，请重新输入');
+        }
+      }
 
-      // if (flag) {
-      //   console.log('logins');
-      // }
-      // console.log(this)
-      this.login({ username: this.username, passsword: this.password });
+      if (flag) {
+        // 滑块验证
+        this.geetest.verify();
+      }
+    },
+    onLoaded(geetest) {
+      this.geetest = geetest;
+    },
+    onSuccess(options) {
+      const { username, password } = this;
+
+      this.options = options;
+
+      this.login({
+        username,
+        password,
+        geetestOptions: options,
+      });
+    },
+    onError() {
+
     },
     forgetPwd() { // 修改密码
       this.$router.history.push('/forgetPassword');
@@ -156,11 +181,11 @@ export default {
           display: inline-block;
           width: 18px;
           height: 9px;
-          background: url("../assets/images/none.svg");
+          background: url("../../assets/images/none.svg");
           background-size: 100% 100%;
         }
         .show {
-          background: url("../assets/images/display.svg") no-repeat;
+          background: url("../../assets/images/display.svg") no-repeat;
           background-size: 100% 100%;
         }
       }
@@ -196,6 +221,7 @@ export default {
       margin: 131px 0 0;
       justify-content: center;
       align-items: center;
+      font-size: 14px;
       .to-register-btn {
         color: #3c64ee;
       }
@@ -204,17 +230,13 @@ export default {
         margin-left: 8px;
         width: 9px;
         height: 11px;
-        background: url("../assets/images/next.svg");
+        background: url("../../assets/images/next.svg");
       }
     }
   }
   .trademark {
-    width: 100%;
     font-size: 12.5px;
     transform: scale(0.8);
-    color: #bbbbbb;
-    letter-spacing: 0;
-    text-align: center;
   }
 }
 </style>
