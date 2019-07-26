@@ -1,5 +1,5 @@
 <template>
-  <h1>FixedProduct</h1>
+  <span>FixedProduct</span>
 </template>
 
 <script>
