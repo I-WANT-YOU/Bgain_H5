@@ -12,10 +12,9 @@ export default {
     .footer{
         height: 14px;
         width: 106px;
+        margin-top: 40px;
         font-size: 10px;
         text-align: center;
         margin-left: 134px;
-        position: fixed;
-        bottom:14px;
     }
 </style>
