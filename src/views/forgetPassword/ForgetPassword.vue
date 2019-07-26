@@ -11,12 +11,14 @@
         <div class="tab-con-form">
           <div class="tab-con-form-input mobile">
             <p>
-              <span class="text">{{mobile.text}}</span>
-              <span class="phone">{{mobile.phone}}</span>
+              <span class="text">{{country.text}}</span>
+              <span class="phone">{{country.value}}</span>
               <i class="skip" @click="skip"></i>
             </p>
           </div>
-          <div class="tab-con-form-input"></div>
+          <div class="tab-con-form-input">
+            <Field class="input" v-model="phone" placeholder="请输入手机号" />
+          </div>
         </div>
         <div class="tab-con-button">
           <Button
@@ -34,7 +36,7 @@
 </template>
 
 <script>
-import { Button } from 'vant';
+import { Button, Field } from 'vant';
 import Header from '@component/Header.vue';
 import Footer from '@component/Footer.vue';
 
@@ -44,14 +46,18 @@ export default {
     Header,
     Footer,
     Button,
+    Field,
   },
   data() {
     return {
       disabled: false,
       tab: 'mobile',
-      mobile: {
-        text: '中国大陆',
-        phone: '+86',
+      phone: '',
+      country: {
+        key: 'China',
+        text: '中国',
+        value: '+86',
+        label: '+86',
       },
     };
   },
@@ -63,8 +69,14 @@ export default {
 
     },
     skip() {
-
+      this.$router.push('/country');
     },
+  },
+  mounted() {
+    console.log(this.country);
+    if (this.$route.params.text !== '') {
+      this.country = this.$route.params;
+    }
   },
 };
 </script>
@@ -102,31 +114,41 @@ export default {
       padding: 16px 22px 0;
       .tab-con-form-input {
         height: 50px;
-        // padding: 0 6px;
         border-bottom: 1px solid #eeeeee;
-        .skip {
-          display: inline-block;
-          margin-left: 18px;
-          width: 7px;
-          height: 11px;
-          background: url("../../assets/images/next.svg");
-        }
         &.mobile {
           display: flex;
+          box-sizing: border-box;
           align-items: center;
-          .text {
-            margin-right: 210px;
-            font-family: PingFangSC-Regular;
-            font-size: 15px;
-            color: #333333;
-            letter-spacing: 0;
+          p {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            padding-left: 7px;
+            .text {
+              margin-right: 210px;
+              font-family: PingFangSC-Regular;
+              font-size: 15px;
+              color: #333333;
+              letter-spacing: 0;
+            }
+            .phone {
+              font-family: PingFangSC-Regular;
+              font-size: 16px;
+              color: #333333;
+              letter-spacing: 0;
+            }
+            .skip {
+              display: inline-block;
+              margin-left: 16px;
+              width: 7px;
+              height: 11px;
+              background: url("../../assets/images/next.svg");
+            }
           }
-          .phone {
-            font-family: PingFangSC-Regular;
-            font-size: 16px;
-            color: #333333;
-            letter-spacing: 0;
-          }
+        }
+        .input {
+          height: 50px;
+          padding: 7px 8px;
         }
       }
     }

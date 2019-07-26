@@ -22,6 +22,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue'),
     },
     {
+      path: '/country',
+      name: 'country',
+      component: () => import(/* webpackChunkName: "register" */ '../views/country/Country.vue'),
+    },
+    {
       path: '/forgetPassword',
       name: 'forgetPassword',
       component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPassword/ForgetPassword.vue'),

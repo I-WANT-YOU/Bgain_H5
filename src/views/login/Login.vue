@@ -16,7 +16,9 @@
           />
           <span :class="['password-is-show',isShowPwd ? 'show':'']" @click="showPwd"></span>
         </div>
-        <div class="forget-password" @click="forgetPwd">忘记密码？</div>
+        <div class="forget-password">
+          <span @click="forgetPwd">忘记密码？</span>
+        </div>
         <div class="button">
           <Button
             tag="div"
@@ -94,7 +96,6 @@ export default {
       const mobile = /^[0-9]{1,15}$/;
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
       if (reg.test(username)) {
-        // console.log('mobile login');
         if (mobile.test(username)) {
           flag = true;
         } else {

@@ -34,9 +34,10 @@ export default {
 
 <style lang="scss" scoped>
 .bg-head {
-  height: 43px;
+  height: 44px;
   display: flex;
   align-items: center;
+  background: #fff;
   .bg-back {
     width: 8px;
     height: 13px;
