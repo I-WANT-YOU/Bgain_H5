@@ -4,7 +4,6 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -21,6 +20,11 @@ const router = new Router({
       path: '/register',
       name: 'register',
       component: () => import(/* webpackChunkName: "home" */ '../views/Register.vue'),
+    },
+    {
+      path: '/forgetPassword',
+      name: 'forgetPassword',
+      component: () => import(/* webpackChunkName: "home" */ '../views/ForgetPassword.vue'),
     },
     {
       path: '/',
