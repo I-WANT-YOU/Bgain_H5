@@ -40,6 +40,7 @@
 <script>
 import { Field, Button, Toast } from 'vant';
 import Header from '@component/Header.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
@@ -73,34 +74,39 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      "login": 'auth/login',
+    }),
     showPwd() {
       this.isShowPwd = !this.isShowPwd;
     },
     submit() {
-      let flag;
-      const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      const mobile = /^\d{1,}$/;
-      if (mobile.test(this.username)) {
-        // console.log('mobile login');
-        if (reg.test(this.username)) {
-          flag = true;
-        } else {
-          flag = false;
-          Toast('手机格式有误，请重新输入');
-        }
-      } else {
-        console.log('s');
-        if (reg.test(this.username)) {
-          flag = true;
-        } else {
-          flag = false;
-          Toast('邮箱格式有误，请重新输入');
-        }
-      }
+      // let flag;
+      // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
+      // const mobile = /^[0-9]{1,15}$/;
+      // if (mobile.test(this.username)) {
+      //   console.log('mobile login');
+      //   if (re.test(this.username)) {
+      //     flag = true;
+      //   } else {
+      //     flag = false;
+      //     Toast('手机格式有误，请重新输入');
+      //   }
+      // } else {
+      //   console.log('s');
+      //   if (re.test(this.username)) {
+      //     flag = true;
+      //   } else {
+      //     flag = false;
+      //     Toast('邮箱格式有误，请重新输入');
+      //   }
+      // }
 
-      if (flag) {
-        console.log('logins');
-      }
+      // if (flag) {
+      //   console.log('logins');
+      // }
+      // console.log(this)
+      this.login({ username: this.username, passsword: this.password });
     },
     forgetPwd() { // 修改密码
       this.$router.history.push('/forgetPassword');
