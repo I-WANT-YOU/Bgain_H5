@@ -20,7 +20,7 @@ const actions = {
   async login({ commit }, params) {
     try {
       const response = await AuthServcice.login(params);
-      const data = Auth.handlerSuccessResponse(response);
+      const data = await Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
