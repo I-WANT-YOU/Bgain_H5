@@ -122,14 +122,16 @@ export default {
     },
     onSuccess(options) {
       const { username, password } = this;
-
       this.options = options;
-
-      this.login({
-        username,
-        password,
-        geetestOptions: options,
-      });
+      try {
+        this.login({
+          username,
+          password,
+          geetestOptions: options,
+        });
+      } catch (error) {
+        throw error;
+      }
     },
     onError() {
 

@@ -32,8 +32,9 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPassword/ForgetPassword.vue'),
     },
     {
-      path: '/',
-      redirect: '/home',
+      path: '/forgetPasswordSet',
+      name: 'forgetPasswordSet',
+      component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPasswordSet/ForgetPasswordSet.vue'),
     },
     {
       path: '/product',
@@ -53,6 +54,10 @@ const router = new Router({
           component: () => import('../views/product/fund/Fund.vue'),
         },
       ],
+    },
+    {
+      path: '/',
+      redirect: '/home',
     },
   ],
 });
