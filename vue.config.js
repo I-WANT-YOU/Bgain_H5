@@ -24,7 +24,7 @@ module.exports = {
           '@router': path.resolve(__dirname, './src/router'),
           '@api': path.resolve(__dirname, './src/api'),
           '@assets': path.resolve(__dirname, './src/assets'),
-          '@store': path.resolve(__dirname, './src/store'),
+          '@modules': path.resolve(__dirname, './src/store/modules'),
         },
       },
     });
