@@ -14,21 +14,40 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "home" */ '../views/login/Login.vue'),
+      component: () => import(/* webpackChunkName: "login" */ '../views/login/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Register.vue'),
+      component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue'),
     },
     {
       path: '/forgetPassword',
       name: 'forgetPassword',
-      component: () => import(/* webpackChunkName: "home" */ '../views/forgetPassword/ForgetPassword.vue'),
+      component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPassword/ForgetPassword.vue'),
     },
     {
       path: '/',
       redirect: '/home',
+    },
+    {
+      path: '/product',
+      name: 'product',
+      component: () => import(/* webpackChunkName: "product" */ '../views/product/Product.vue'),
+      children: [
+        {
+          path: 'current',
+          component: () => import('../views/product/current/Current.vue'),
+        },
+        {
+          path: 'fixed',
+          component: () => import('../views/product/fixed/Fixed.vue'),
+        },
+        {
+          path: 'fund',
+          component: () => import('../views/product/fund/Fund.vue'),
+        },
+      ],
     },
   ],
 });
