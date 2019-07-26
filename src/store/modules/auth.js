@@ -80,8 +80,8 @@ const actions = {
   },
   async getGeetestOptions() {
     try {
-      const response = await AuthServcice.getGeetestOptions();
-      return Auth.handlerSuccessResponse(response);
+      const result = await AuthServcice.getGeetestOptions();
+      return result;
     } catch (error) {
       throw error;
     }
