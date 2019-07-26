@@ -5,6 +5,7 @@ import store from './store';
 import 'amfe-flexible';
 import 'normalize.css';
 import './assets/scripts/geetest';
+import './icons';
 
 Vue.config.productionTip = false;
 
