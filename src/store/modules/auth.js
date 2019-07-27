@@ -98,9 +98,21 @@ const actions = {
       throw error;
     }
   },
-  async validateUsername(context, username) {
+  /**
+   * 验证用户是否存在以及邀请码是否正确
+   *
+   * @param context
+   * @param params
+   * @example:
+   * params: {
+   *   username: '',
+   *   invitationCode: '',
+   * }
+   * @returns {Promise<*>}
+   */
+  async validateUsername(context, params) {
     try {
-      const response = await AuthServcice.validateUsername(username);
+      const response = await AuthServcice.validateUser(params);
       return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
