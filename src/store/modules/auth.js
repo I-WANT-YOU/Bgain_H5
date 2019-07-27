@@ -51,6 +51,19 @@ const actions = {
       throw error;
     }
   },
+  /**
+   * 发送验证码
+   * @param context
+   * @param params
+   * @example
+   * params: {
+   *   username: '',
+   *   // 如果 username 为手机号，必填
+   *   countryCode: '',
+   *   geetestOptions: {},
+   * }
+   * @returns {Promise<void>}
+   */
   async getToken(context, params) {
     try {
       await AuthServcice.getToken(params);
