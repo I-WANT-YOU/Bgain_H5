@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import countries from '@assets/constants/country';
-import Header from '@component/Header.vue';
 import { List, Cell } from 'vant';
+import Header from '@component/Header.vue';
+import countries from '@/constants/country';
 
 export default {
   name: 'Country',
@@ -34,7 +34,7 @@ export default {
     };
   },
   mounted() {
-    this.goBack = '/' + this.$route.params.fromPath;
+    this.goBack = `/${this.$route.params.fromPath}`;
   },
   methods: {
     skip(options) {
