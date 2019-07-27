@@ -54,14 +54,23 @@ const router = new Router({
         {
           path: 'current',
           component: () => import('../views/product/current/Current.vue'),
+          meta: {
+            title: '活期',
+          },
         },
         {
           path: 'fixed',
           component: () => import('../views/product/fixed/Fixed.vue'),
+          meta: {
+            title: '定期',
+          },
         },
         {
           path: 'fund',
           component: () => import('../views/product/fund/Fund.vue'),
+          meta: {
+            title: '基金',
+          },
         },
       ],
     },
