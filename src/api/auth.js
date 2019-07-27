@@ -144,7 +144,7 @@ class AuthService {
    * @param invitationCode
    * @returns {Promise<*>}
    */
-  static async validateUser(username, invitationCode) {
+  static async validateUser({ username, invitationCode }) {
     try {
       const requestOptions = {
         url: '/auth/valide-register-name',
