@@ -137,13 +137,23 @@ class AuthService {
     }
   }
 
-  static async validateUsername(username) {
+  /**
+   * 验证用户是否存在以及邀请码是否正确
+   *
+   * @param username
+   * @param invitationCode
+   * @returns {Promise<*>}
+   */
+  static async validateUser(username, invitationCode) {
     try {
       const requestOptions = {
         url: '/auth/valide-register-name',
         headers: { 'Content-Type': 'application/json' },
         method: 'post',
-        data: { username },
+        data: {
+          username,
+          invitation_code: invitationCode,
+        },
       };
       const response = await request(requestOptions);
       return handlerResponse(response);
