@@ -139,6 +139,16 @@ export default {
       ],
     };
   },
+  components: {
+    Field,
+    ActionSheet,
+    Checkbox,
+    // eslint-disable-next-line
+    Toast,
+    Header,
+    Footer,
+    Geetest,
+  },
   methods: {
     isShowPhoneContent() {
       this.phoneActive = true;
@@ -258,16 +268,6 @@ export default {
       this.$router.push('/registerStepTwo');
     },
     onError() {},
-  },
-  components: {
-    Field,
-    ActionSheet,
-    Checkbox,
-    // eslint-disable-next-line
-    Toast,
-    Header,
-    Footer,
-    Geetest,
   },
 };
 </script>
