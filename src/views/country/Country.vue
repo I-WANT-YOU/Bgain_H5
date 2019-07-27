@@ -1,6 +1,6 @@
 <template>
   <div class="country">
-    <Header class title="选择国籍" :backPath="'/forgetPassword'" />
+    <Header class title="选择国籍" :backPath="goBack" />
     <List class="list">
       <Cell
         class="list-item"
@@ -12,14 +12,12 @@
       />
     </List>
     <p>Copyright@2019 Bgain</p>
-    <!-- <Footer /> -->
   </div>
 </template>
 
 <script>
-import { countries } from '@assets/constants/country';
+import countries from '@assets/constants/country';
 import Header from '@component/Header.vue';
-import Footer from '@component/Footer.vue';
 import { List, Cell } from 'vant';
 
 export default {
@@ -28,17 +26,19 @@ export default {
     List,
     Cell,
     Header,
-    Footer,
   },
   data() {
     return {
       countries,
+      goBack: '/forgetPassword',
     };
+  },
+  mounted() {
+    this.goBack = '/' + this.$route.params.fromPath;
   },
   methods: {
     skip(options) {
-      console.log(options)
-      this.$router.push({ name: 'forgetPassword', params: { ...options } });
+      this.$router.push({ name: this.goBack.substr(1), params: { ...options } });
     },
   },
 };

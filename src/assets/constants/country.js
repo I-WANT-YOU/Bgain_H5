@@ -1,4 +1,4 @@
-export const countries = [
+const countries = [
   {
     key: 'China',
     text: '中国',
@@ -180,3 +180,5 @@ export const countries = [
     label: '+972',
   },
 ];
+
+export default countries;
