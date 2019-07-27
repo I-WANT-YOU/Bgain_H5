@@ -16,11 +16,11 @@
                     <form>
                         <div class="taps-form-phone">
                             <div>
-                                    <div class="country">
-                                        <span>中国大陆</span>
+                                    <div class="countryType">
+                                        <span>{{country.text}}</span>
                                         <div @click="chooseCountry()">
-                                            <span>+86</span>
-                                            <span>></span>
+                                            <span>{{country.label}}</span>
+                                            <img src="../../assets/images/next.svg"/>
                                         </div>
                                     </div>
                                     <div class="phone">
@@ -33,7 +33,7 @@
                                                placeholder="请设置8-20位字母及数字组成的密码" />
                                     </div>
                                     <div class="phone">
-                                        <Field v-model="phoneData.invitedCode"
+                                        <Field v-model="phoneData.invitationCode"
                                                placeholder="请输入邀请码（非必填）" />
                                     </div>
                                     <div class="agreement">
@@ -41,8 +41,10 @@
                                           icon-size="16px"
                                           @click="radioSelect()"
                                         >
-                                          我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
                                         </Checkbox>
+                                      <span>
+                                        我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
+                                      </span>
                                     </div>
                             </div>
                         </div>
@@ -62,10 +64,11 @@
                                 </div>
                                 <div class="phone">
                                     <Field v-model="emailData.password"
+                                           type="password"
                                            placeholder="请设置8-20位字母及数字组成的密码" />
                                 </div>
                                 <div class="phone">
-                                    <Field v-model="emailData.invitedCode"
+                                    <Field v-model="emailData.invitationCode"
                                            placeholder="请输入邀请码（非必填）" />
                                 </div>
                                 <div class="agreement">
@@ -73,8 +76,10 @@
                                              icon-size="16px"
                                              @click="radioSelect()"
                                   >
-                                    我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
                                   </Checkbox>
+                                  <span>
+                                    我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
+                                  </span>
                                 </div>
                             </div>
                         </div>
@@ -89,11 +94,6 @@
             </div>
             <!--国家选择下拉菜单-->
             <div class="country-select">
-                <ActionSheet
-                        v-model="show"
-                        :actions="actions"
-                        @select="onSelect"
-                />
             </div>
         </div>
         <Footer/>
@@ -103,8 +103,9 @@
 
 <script>
 import {
-  Field, ActionSheet, Toast, Checkbox,
+  Field, Toast, Checkbox,
 } from 'vant';
+import { mapActions } from 'vuex';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 import Geetest from '../../components/Geetest.vue';
@@ -117,31 +118,31 @@ export default {
       emailActive: false,
       phoneColor: '#333333',
       emailColor: '#999999',
+      country: {
+        text: '中国大陆',
+        label: '+86',
+        value: '+86',
+      },
       phoneData: {
-        country: '',
+        countryCode: '+86',
         phone: '',
         password: '',
-        invitedCode: '',
+        invitationCode: '',
         checked: false,
       },
       emailData: {
         email: '',
         password: '',
-        invitedCode: '',
+        invitationCode: '',
         checked: false,
       },
       activeButton: false,
       show: false,
-      actions: [
-        { name: '选项' },
-        { name: '选项' },
-        { name: '选项', subname: '描述信息' },
-      ],
+      routerData: {},
     };
   },
   components: {
     Field,
-    ActionSheet,
     Checkbox,
     // eslint-disable-next-line
     Toast,
@@ -149,7 +150,15 @@ export default {
     Footer,
     Geetest,
   },
+  mounted() {
+    if (this.$route.params.key) {
+      this.country = this.$route.params;
+      this.phoneData.countryCode = this.$route.params.value;
+    }
+  },
   methods: {
+    // 触发action的方法
+    ...mapActions(['getToken']),
     isShowPhoneContent() {
       this.phoneActive = true;
       this.emailActive = false;
@@ -184,12 +193,12 @@ export default {
         return false;
       }
       // 校验校验码
-      if (this.phoneData.invitedCode) {
-        if (this.phoneData.invitedCode.length !== 6) {
+      if (this.phoneData.invitationCode) {
+        if (this.phoneData.invitationCode.length !== 6) {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
-        if (!regPassword.test(this.phoneData.invitedCode)) {
+        if (!regPassword.test(this.phoneData.invitationCode)) {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
@@ -197,8 +206,14 @@ export default {
       // 是否同意协议
       if (this.phoneData.checked === false) {
         this.$toast('请点击同意协议');
-        return true;
+        return false;
       }
+      this.routerData = {
+        username: this.phoneData.phone,
+        password: this.phoneData.password,
+        invitationCode: this.phoneData.password,
+        countryCode: this.phoneData.countryCode,
+      };
       // 进入下一步
       this.geetest.verify();
       return false;
@@ -225,12 +240,12 @@ export default {
         return false;
       }
       // 校验校验码
-      if (this.emailData.invitedCode) {
-        if (this.emailData.invitedCode.length !== 6) {
+      if (this.emailData.invitationCode) {
+        if (this.emailData.invitationCode.length !== 6) {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
-        if (!regPassword.test(this.emailData.invitedCode)) {
+        if (!regPassword.test(this.emailData.invitationCode)) {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
@@ -240,13 +255,18 @@ export default {
         this.$toast('请点击同意协议');
         return true;
       }
+      this.routerData = {
+        username: this.emailData.email,
+        password: this.emailData.password,
+        invitationCode: this.emailData.password,
+      };
       // 进入下一步
       this.geetest.verify();
       return false;
     },
     // 选择国家
     chooseCountry() {
-      this.show = true;
+      this.$router.push({ name: 'country', params: { fromPath: 'register' } });
     },
     // 选择国家
     onSelect(item) {
@@ -264,8 +284,25 @@ export default {
     },
     onSuccess(options) {
       this.options = options;
-      alert('进入下一页');
-      this.$router.push('/registerStepTwo');
+      const registerData = this.routerData;
+      let tokenData = {};
+      if (this.routerData.countryCode) {
+        tokenData = {
+          username: this.routerData.username,
+          geetestOptions: options,
+          countryCode: this.routerData.countryCode,
+        };
+      } else {
+        tokenData = {
+          username: this.routerData.username,
+          geetestOptions: options,
+        };
+      }
+      this.getToken(tokenData);
+      this.$router.push({
+        name: 'RegisterStepTwo',
+        params: { registerData },
+      });
     },
     onError() {},
   },
@@ -314,19 +351,20 @@ export default {
                 margin-left: 31px;
                 padding-right:26px;
                 .taps-form-phone{
-                    .country{
+                    .countryType{
                         height:53px;
                         display: flex;
                         align-items: center;
-                        justify-content: flex-start;
+                        justify-content: space-between;
                         font-size: 15px;
                         color: #333333;
                         border-bottom: 2px solid #EEEEEE;
                         >div{
-                            margin-left: 200px;
                             display: flex;
-                            >span:nth-child(2){
-                                margin-left:15px;
+                            >img{
+                              width:9px;
+                              height: 18px;
+                              margin-left:15px;
                             }
                         }
                     }
@@ -346,12 +384,15 @@ export default {
                         height:55px;
                         display: flex;
                         align-items: center;
-                        justify-content: space-between;
+                        justify-content: flex-start;
                         font-size: 12px;
                         color: #999999;
                         line-height: 19px;
                         .van-cell{
                             padding:0;
+                        }
+                        >span{
+                          margin-left: 10px;
                         }
                     }
                 }

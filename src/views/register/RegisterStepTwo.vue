@@ -20,7 +20,7 @@
 
 <script>
 import {
-  Field,Button,
+  Field, Button,
 } from 'vant';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
@@ -38,6 +38,9 @@ export default {
       verificationCode: '',
       activeButton: true,
     };
+  },
+  mounted() {
+    console.log(this.$route.params);
   },
   methods: {
     confirm() {
