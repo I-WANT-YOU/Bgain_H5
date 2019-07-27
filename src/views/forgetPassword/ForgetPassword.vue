@@ -91,7 +91,7 @@ export default {
       }
     },
     skip() {
-      this.$router.push('/country');
+      this.$router.push({ name: 'country', params: { fromPath: 'forgetPassword' } });
     },
   },
   mounted() {
