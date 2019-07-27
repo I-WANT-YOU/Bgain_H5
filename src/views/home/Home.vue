@@ -3,8 +3,9 @@
     注册
     <router-link to="/login">登录</router-link>
     <router-link to="/register">注册</router-link>
-    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError"/>
+    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
     <button @click="onClick">Geetest</button>
+    <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div>
   </div>
 </template>
 
@@ -29,7 +30,7 @@ export default {
     onSuccess(options) {
       this.options = options;
     },
-    onError() {},
+    onError() { },
     onClick() {
       this.geetest.verify();
     },
