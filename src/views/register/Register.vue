@@ -25,10 +25,12 @@
                                     </div>
                                     <div class="phone">
                                         <Field v-model="phoneData.phone"
+                                               maxlength=15
                                                type="tel" placeholder="请输入手机号" />
                                     </div>
                                     <div class="phone">
                                         <Field v-model="phoneData.password"
+                                               maxlength=20
                                                type="password"
                                                placeholder="请设置8-20位字母及数字组成的密码" />
                                     </div>
@@ -90,13 +92,11 @@
                 </div>
             </div>
             <div class="toLogin">
-                <span>已有账号？</span><a>登陆</a>
-            </div>
-            <!--国家选择下拉菜单-->
-            <div class="country-select">
+                <span>已有账号？</span><a>登录</a>
             </div>
         </div>
         <Footer/>
+      <!-- 国家列表-->
       <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError"/>
     </div>
 </template>
@@ -106,6 +106,7 @@ import {
   Field, Toast, Checkbox,
 } from 'vant';
 import { mapActions } from 'vuex';
+import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 import Geetest from '../../components/Geetest.vue';
@@ -158,7 +159,10 @@ export default {
   },
   methods: {
     // 触发action的方法
-    ...mapActions(['getToken']),
+    ...mapActions('auth', [
+      'getToken',
+      'validateUsername',
+    ]),
     isShowPhoneContent() {
       this.phoneActive = true;
       this.emailActive = false;
@@ -211,11 +215,23 @@ export default {
       this.routerData = {
         username: this.phoneData.phone,
         password: this.phoneData.password,
-        invitationCode: this.phoneData.password,
+        invitationCode: this.phoneData.invitationCode,
         countryCode: this.phoneData.countryCode,
       };
-      // 进入下一步
-      this.geetest.verify();
+      // 判断用户名和邀请码
+      const validateData = {
+        username: this.routerData.username,
+      };
+      this.validateUsername(validateData).then(
+        (res) => {
+          console.log(res);
+          this.geetest.verify();
+        },
+        (err) => {
+          console.log(errorMessage[err.status])
+          this.$toast(errorMessage[err.status]);
+        },
+      );
       return false;
     },
     // 点击下一步
@@ -258,7 +274,7 @@ export default {
       this.routerData = {
         username: this.emailData.email,
         password: this.emailData.password,
-        invitationCode: this.emailData.password,
+        invitationCode: this.emailData.invitationCode,
       };
       // 进入下一步
       this.geetest.verify();

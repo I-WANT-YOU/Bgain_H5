@@ -63,6 +63,7 @@ export default {
     }
     .info{
       height: 40px;
+      margin-top:25px;
       font-size: 13px;
       color: #797979;
       flex-direction: column;

@@ -22,6 +22,7 @@
 import {
   Field, Button,
 } from 'vant';
+import { mapActions } from 'vuex';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 
@@ -37,14 +38,40 @@ export default {
     return {
       verificationCode: '',
       activeButton: true,
+      registerData: {},
     };
   },
   mounted() {
-    console.log(this.$route.params);
+    if (this.$route.params.registerData) {
+      if (!this.$route.params.registerData.countryCode) {
+        this.registerData = {
+          invitationCode: this.$route.params.registerData.invitationCode,
+          password: this.$route.params.registerData.password,
+          username: this.$route.params.registerData.username,
+        };
+      } else {
+        this.registerData = {
+          countryCode: this.$route.params.registerData.countryCode,
+          invitationCode: this.$route.params.registerData.invitationCode,
+          password: this.$route.params.registerData.password,
+          username: this.$route.params.registerData.username,
+        };
+      }
+    }
   },
   methods: {
+    // 触发action的方法
+    ...mapActions('auth', [
+      'register',
+    ]),
     confirm() {
-      console.log('77777');
+      const registerData = {
+        ...this.registerData,
+        token: this.verificationCode,
+      };
+      console.log(registerData);
+      this.register(registerData);
+      alert('是否跳转');
       this.$router.push('/RegisterSuccess');
     },
   },
