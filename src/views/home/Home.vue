@@ -6,6 +6,7 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
     <button @click="onClick">Geetest</button>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div>
+    <router-link to="/unLoginHome">未登录业主页</router-link>
   </div>
 </template>
 

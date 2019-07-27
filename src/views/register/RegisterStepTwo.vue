@@ -4,15 +4,23 @@
     <div class="verification-code">
       <div class="code">
         <Field
+          type="number"
           maxlength="6"
           v-model="verificationCode" placeholder="请输入验证码" />
       </div>
-      <div class="send">
+      <div v-if="isShowTime" class="time">
+        <span> {{preTime+countDown+nextTime}}</span>
+      </div>
+      <div v-else class="send" @click="getVerificationCode()">
         <span>发送验证码</span>
       </div>
     </div>
     <div class="button">
-      <Button :disabled='activeButton'  @click="confirm()">确定</Button >
+      <Button
+        :loading="buttonIsLoading"
+        :disabled='activeButton'
+        @click="confirm()">确定
+      </Button >
     </div>
     <Footer></Footer>
   </div>
@@ -20,8 +28,10 @@
 
 <script>
 import {
-  Field,Button,
+  Field, Button, Toast,
 } from 'vant';
+import { mapActions, mapState } from 'vuex';
+import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 
@@ -32,17 +42,97 @@ export default {
     Footer,
     Field,
     Button,
+    // eslint-disable-next-line vue/no-unused-components
+    Toast,
   },
   data() {
     return {
       verificationCode: '',
       activeButton: true,
+      registerData: {},
+      buttonIsLoading: false, // 按钮是否加载
+      countDown: 6,
+      myTime: '',
+      tokenData: '',
+      preTime: '已发送（',
+      nextTime: '）',
+      isShowTime: true,
     };
   },
+  mounted() {
+    // 倒计时
+    this.setTime();
+    if (this.$route.params.registerData) {
+      // 获取验证码参数
+      this.tokenData = {
+        username: this.$route.params.registerData.username,
+        geetestOptions: this.$route.params.registerData.geetestOptions,
+      };
+      if (!this.$route.params.registerData.countryCode) {
+        this.registerData = {
+          invitationCode: this.$route.params.registerData.invitationCode,
+          password: this.$route.params.registerData.password,
+          username: this.$route.params.registerData.username,
+        };
+      } else {
+        this.registerData = {
+          countryCode: this.$route.params.registerData.countryCode,
+          invitationCode: this.$route.params.registerData.invitationCode,
+          password: this.$route.params.registerData.password,
+          username: this.$route.params.registerData.username,
+        };
+      }
+    }
+  },
   methods: {
+    // 触发action的方法
+    ...mapActions('auth', [
+      'register',
+      'getToken',
+    ]),
+    // 设置倒计时
+    setTime() {
+      this.myTime = setInterval(
+        () => { this.countDown = this.countDown - 1; }, 1000,
+      );
+    },
+    // 获取验证码
+    getVerificationCode() {
+      console.log(this.verificationMessage)
+      const tokenData = {
+        ...this.tokenData,
+      };
+      this.getToken(tokenData).then(
+        (res) => { console.log(res); },
+        (err) => {
+          console.log(err);
+          this.$toast(errorMessage[err.status]);
+        },
+      );
+    },
+    // 点击确定
     confirm() {
-      console.log('77777');
-      this.$router.push('/RegisterSuccess');
+      const regPhone = /^[0-9]{1,15}$/;
+      if (!regPhone.test(this.verificationCode)) {
+        this.$toast('验证码格式不正确');
+        return false;
+      }
+      this.buttonIsLoading = true;
+      const registerData = {
+        ...this.registerData,
+        token: this.verificationCode,
+      };
+      this.register(registerData).then(
+        () => {
+          this.buttonIsLoading = false;
+          this.$router.push('/RegisterSuccess');
+        },
+        (error) => {
+          this.buttonIsLoading = false;
+          this.$toast(errorMessage[error.status]);
+        },
+      );
+      return false;
     },
   },
   watch: {
@@ -53,6 +143,17 @@ export default {
       } else {
         this.activeButton = true;
       }
+    },
+    countDown() {
+      if (this.countDown === 0) {
+        clearInterval(this.myTime);
+        this.isShowTime = false;
+      }
+    },
+  },
+  computed: {
+    verificationMessage() {
+      return this.$store.state;
     },
   },
 };

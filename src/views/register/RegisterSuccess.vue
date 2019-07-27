@@ -2,7 +2,7 @@
     <div class="register-success">
       <Header></Header>
       <div class="imageStyle">
-        <img alt="." src="../../assets/images/register_success.svg">
+        <img alt="." src="../../assets/images/registerSuccess.svg">
       </div>
       <div class="success-tips"><span>注册成功</span></div>
       <div class="info">
@@ -12,7 +12,7 @@
       <div class="continue-button"><button>继续身份验证</button></div>
       <div class="goToNext">
         <a href="#">跳过次步，先去浏览平台产品</a>
-        <img alt="." src="../../assets/images/next.svg">
+        <img alt="." src="../../assets/images/blue_next.svg">
       </div>
       <Footer></Footer>
     </div>
@@ -63,6 +63,7 @@ export default {
     }
     .info{
       height: 40px;
+      margin-top:25px;
       font-size: 13px;
       color: #797979;
       flex-direction: column;
