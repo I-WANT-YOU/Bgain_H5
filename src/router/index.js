@@ -32,6 +32,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
+      path: '/unLoginHome',
+      name: 'UnLoginHome',
+      component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/UnLoginHome.vue'),
+    },
+    {
       path: '/country',
       name: 'country',
       component: () => import(/* webpackChunkName: "register" */ '../views/country/Country.vue'),

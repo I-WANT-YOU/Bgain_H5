@@ -28,11 +28,18 @@
                                                maxlength=15
                                                type="tel" placeholder="请输入手机号" />
                                     </div>
-                                    <div class="phone">
-                                        <Field v-model="phoneData.password"
-                                               maxlength=20
-                                               type="password"
-                                               placeholder="请设置8-20位字母及数字组成的密码" />
+                                    <div class="phone password">
+                                      <div>
+                                        <input
+                                          ref="myPhonePassword"
+                                          v-model="phoneData.password"
+                                          maxlength=20
+                                          type="password"
+                                          placeholder="请设置8-20位字母及数字组成的密码" />
+                                      </div>
+                                      <div @click="showPhonePassword()">
+                                        <img :src="phonePasswordImg">
+                                      </div>
                                     </div>
                                     <div class="phone">
                                         <Field v-model="phoneData.invitationCode"
@@ -51,7 +58,11 @@
                             </div>
                         </div>
                         <div class="tabs-button">
-                            <button type="primary" @click="phoneNext($event)">下一步</button>
+                            <Button
+                              :loading="buttonIsLoading"
+                              loading-type="spinner"
+                              @click="phoneNext($event)">下一步
+                            </Button>
                         </div>
                     </form>
 
@@ -64,11 +75,19 @@
                                     <Field v-model="emailData.email"
                                            placeholder="请输入邮箱" />
                                 </div>
-                                <div class="phone">
-                                    <Field v-model="emailData.password"
-                                           type="password"
-                                           placeholder="请设置8-20位字母及数字组成的密码" />
+                              <div class="phone password">
+                                <div>
+                                  <input
+                                    ref="myEmailPassword"
+                                    v-model="emailData.password"
+                                    maxlength=20
+                                    type="password"
+                                    placeholder="请设置8-20位字母及数字组成的密码" />
                                 </div>
+                                <div @click="showEmailPassword()">
+                                  <img :src="emailPasswordImg">
+                                </div>
+                              </div>
                                 <div class="phone">
                                     <Field v-model="emailData.invitationCode"
                                            placeholder="请输入邀请码（非必填）" />
@@ -103,22 +122,27 @@
 
 <script>
 import {
-  Field, Toast, Checkbox,
+  Field, Toast, Checkbox, Button,
 } from 'vant';
 import { mapActions } from 'vuex';
 import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 import Geetest from '../../components/Geetest.vue';
+import showPasswordImg from '../../assets/images/showPassword.svg';
+import hidePasswordImg from '../../assets/images/display.svg';
 
 export default {
   name: 'Register',
   data() {
     return {
+      phonePasswordImg: showPasswordImg, // 密码图片
+      emailPasswordImg: showPasswordImg, // 密码图片
       phoneActive: true,
       emailActive: false,
       phoneColor: '#333333',
       emailColor: '#999999',
+      buttonIsLoading: false, // 按钮是否为加载状态
       country: {
         text: '中国大陆',
         label: '+86',
@@ -150,6 +174,7 @@ export default {
     Header,
     Footer,
     Geetest,
+    Button,
   },
   mounted() {
     if (this.$route.params.key) {
@@ -174,6 +199,25 @@ export default {
       this.emailActive = true;
       this.phoneColor = '#999999';
       this.emailColor = '#333333';
+    },
+    // 是否显示密码
+    showPhonePassword() {
+      if (this.phonePasswordImg === showPasswordImg) {
+        this.phonePasswordImg = hidePasswordImg;
+        this.$refs.myPhonePassword.setAttribute('type', 'text');
+      } else {
+        this.phonePasswordImg = showPasswordImg;
+        this.$refs.myPhonePassword.setAttribute('type', 'password');
+      }
+    },
+    showEmailPassword() {
+      if (this.emailPasswordImg === showPasswordImg) {
+        this.emailPasswordImg = hidePasswordImg;
+        this.$refs.myEmailPassword.setAttribute('type', 'text');
+      } else {
+        this.emailPasswordImg = showPasswordImg;
+        this.$refs.myEmailPassword.setAttribute('type', 'password');
+      }
     },
     // 点击下一步
     phoneNext(event) {
@@ -221,14 +265,16 @@ export default {
       // 判断用户名和邀请码
       const validateData = {
         username: this.routerData.username,
+        invitationCode: this.routerData.invitationCode,
       };
+      this.buttonIsLoading = true;
       this.validateUsername(validateData).then(
-        (res) => {
-          console.log(res);
+        () => {
+          this.buttonIsLoading = false;
           this.geetest.verify();
         },
         (err) => {
-          console.log(errorMessage[err.status])
+          this.buttonIsLoading = false;
           this.$toast(errorMessage[err.status]);
         },
       );
@@ -277,6 +323,22 @@ export default {
         invitationCode: this.emailData.invitationCode,
       };
       // 进入下一步
+      // 判断用户名和邀请码
+      const validateData = {
+        username: this.routerData.username,
+        invitationCode: this.routerData.invitationCode,
+      };
+      this.buttonIsLoading = true;
+      this.validateUsername(validateData).then(
+        () => {
+          this.buttonIsLoading = false;
+          this.geetest.verify();
+        },
+        (err) => {
+          this.buttonIsLoading = false;
+          this.$toast(errorMessage[err.status]);
+        },
+      );
       this.geetest.verify();
       return false;
     },
@@ -314,11 +376,17 @@ export default {
           geetestOptions: options,
         };
       }
-      this.getToken(tokenData);
-      this.$router.push({
-        name: 'RegisterStepTwo',
-        params: { registerData },
-      });
+      this.getToken(tokenData).then(
+        () => {
+          this.$router.push({
+            name: 'RegisterStepTwo',
+            params: { registerData },
+          });
+        },
+        (err) => {
+          this.$toast(errorMessage[err.status]);
+        },
+      );
     },
     onError() {},
   },
@@ -396,6 +464,15 @@ export default {
                             padding:0;
                         }
                     }
+                  .password{
+                    >div:nth-child(1){
+                      width:250px;
+                      >input{
+                        width: 250px;
+                        border:none;
+                      }
+                    }
+                  }
                     .agreement{
                         height:55px;
                         display: flex;
