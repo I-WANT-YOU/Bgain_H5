@@ -1,17 +1,28 @@
 <template>
   <div class="header">
     <svg-icon icon-class="bgain" class="header__bgain"/>
-    <span class="header__title">定期</span>
+    <span class="header__title">{{title}}</span>
     <div class="header__right">
-      <svg-icon icon-class="user" class="header__user" />
+      <svg-icon
+        v-if="authenticated"
+        icon-class="user"
+        lass="header__user" />
       <svg-icon icon-class="more" class="header__more" />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'BaseHeader',
+  computed: {
+    ...mapState('auth', ['authenticated']),
+    title() {
+      return this.$route.meta.title;
+    },
+  },
 };
 </script>
 

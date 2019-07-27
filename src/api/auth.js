@@ -1,7 +1,7 @@
 import request from '@utils/request';
 import { handlerResponse } from '@/utils/auth';
 
-export default class AuthService {
+class AuthService {
   static async login({ username, password, geetestOptions }) {
     try {
       const requestOptions = {
@@ -74,7 +74,14 @@ export default class AuthService {
     }
   }
 
-  static async getToken({ username, geetestOptions }) {
+  /**
+   * 发送验证码
+   * @param username
+   * @param countryCode
+   * @param geetestOptions
+   * @returns {Promise<*>}
+   */
+  static async getToken({ username, countryCode, geetestOptions }) {
     try {
       const requestOptions = {
         url: '/auth/send-token',
@@ -82,6 +89,7 @@ export default class AuthService {
         method: 'post',
         data: {
           target: username,
+          country_calling_code: countryCode,
           ...geetestOptions,
         },
       };
@@ -144,3 +152,5 @@ export default class AuthService {
     }
   }
 }
+
+export default AuthService;
