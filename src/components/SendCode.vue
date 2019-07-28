@@ -9,7 +9,7 @@ export default {
     sendTime: {
       type: Number,
       default: 60,
-    }
+    },
   },
   data() {
     return {
@@ -37,7 +37,7 @@ export default {
           this.text = `${this.timeText}秒后重新发送`;
           this.timeText = this.timeText - 1;
         } else {
-          clearInterval(this.timer)
+          clearInterval(this.timer);
           this.disabled = false;
           this.text = '重新发送';
           this.timeText = this.sendTime;
@@ -49,7 +49,7 @@ export default {
     // 销毁组件前确认销毁
     clearInterval(this.timer);
     this.timer = null;
-  }
+  },
 };
 </script>
 
