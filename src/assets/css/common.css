@@ -1,16 +1,12 @@
-html,
-body,
-#app {
-  width: 100%;
+html {
   height: 100%;
-  font-size: 16px;
 }
 
-input {
-  outline: none;
+body {
+  height: 100%;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
-a {
-  text-decoration: none;
-  color: #333;
+#app {
+  height: 100%;
 }
