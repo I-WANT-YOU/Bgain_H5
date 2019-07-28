@@ -27,7 +27,8 @@ export default {
     display: flex;
     flex-direction: column;
     .product-content {
-      flex-grow: 1;
+      display: flex;
+      flex: 1 1 auto;
     }
   }
 </style>

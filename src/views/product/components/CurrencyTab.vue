@@ -1,10 +1,16 @@
 <template>
   <div class="currency__tabs">
-  <tabs v-model="active" sticky>
-    <tab v-for="index in 4" :title="'选项 ' + index">
-      内容 {{ index }}
-    </tab>
-  </tabs>
+    <tabs
+        sticky
+        v-model="currency"
+        @click="onCurrencyChange">
+      <tab v-for="currency in currencies"
+          :key="currency"
+          :title="currency"
+          :name="currency">
+        <slot :currency="currency"></slot>
+      </tab>
+    </tabs>
   </div>
 </template>
 
@@ -19,15 +25,27 @@ export default {
   },
   data() {
     return {
-      active: 1,
+      currency: 'BTC',
+      currencies: ['BTC', 'USDT', 'ETH', 'EOS', 'FBP'],
     };
+  },
+  methods: {
+    onCurrencyChange(name) {
+    },
   },
 };
 </script>
 
 <style lang="scss">
   .currency__tabs {
-    .van-tabs__wrap {
+    flex: 1;
+
+    .van-tabs, .van-tab__pane,.van-pull-refresh, .van-pull-refresh__track {
+      height: 100%;
+    }
+
+    .van-tabs__content {
+     height: calc(100% - 44px);
     }
 
     .van-tab {
