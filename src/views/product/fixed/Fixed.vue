@@ -1,9 +1,9 @@
 <template>
   <currency-tab>
     <template v-slot:default="{currency}">
-      <pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <pull-refresh v-model="isLoading" @refresh="onRefresh" success-text="加载成功">
         <div class="bg-fixed__content">
-          <p>{{currency}}</p>
+          <fixed-card :data-source="fixed" />
         </div>
       </pull-refresh>
     </template>
@@ -11,24 +11,26 @@
 </template>
 
 <script>
-import { PullRefresh, Toast } from 'vant';
+import { PullRefresh } from 'vant';
 import CurrencyTab from '../components/CurrencyTab.vue';
+import FixedCard from './components/FixedCard.vue';
 
 export default {
   name: 'Fixed',
   components: {
     CurrencyTab,
     PullRefresh,
+    FixedCard,
   },
   data() {
     return {
       isLoading: false,
+      fixed: {},
     };
   },
   methods: {
     onRefresh() {
       setTimeout(() => {
-        Toast('刷新成功');
         this.isLoading = false;
       }, 500);
     },
@@ -37,5 +39,10 @@ export default {
 </script>
 
 <style lang="scss">
-
+  .bg-fixed__content {
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 </style>
