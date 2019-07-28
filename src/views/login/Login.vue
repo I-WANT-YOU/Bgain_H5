@@ -142,7 +142,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .login {
   width: 100%;
   height: 100%;
@@ -173,6 +173,9 @@ export default {
         justify-content: center;
         border-bottom: 1px solid #eeeeee;
         position: relative;
+        .van-cell:not(:last-child)::after {
+          border: 0;
+        }
         .van-field__control {
           color: #ccc !important;
         }
