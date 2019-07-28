@@ -17,7 +17,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -30,7 +30,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -57,7 +57,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -70,7 +70,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -96,7 +96,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -115,7 +115,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -133,7 +133,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -158,7 +158,7 @@ class AuthService {
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 }
