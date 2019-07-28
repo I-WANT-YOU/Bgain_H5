@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import Geetest from '../../components/Geetest.vue';
 import SendCode from '@component/SendCode.vue';
+import Geetest from '../../components/Geetest.vue';
 
 export default {
   name: 'home',
