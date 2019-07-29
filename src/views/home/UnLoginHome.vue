@@ -10,11 +10,14 @@
     <div class="button-container">
       <button>注册</button>
     </div>
-    <divc class="toLogin">
+    <div class="toLogin">
       <router-link to="/login">已有账号？登录</router-link>
-    </divc>
+    </div>
     <div class="list-container">
       <HomeProductList/>
+    </div>
+    <div class="more-products-container">
+      <HomeMoreProducts/>
     </div>
   </div>
 </template>
@@ -23,13 +26,15 @@
 import HomeSwipe from '../../components/home/HomeSwipe.vue';
 import HomeTip from '../../components/home/HomeTip.vue';
 import HomeProductList from '../../components/home/HomeProductList.vue';
+import HomeMoreProducts from '../../components/home/HomeMoreProducts.vue';
 
 export default {
-  name: 'Home-unLogin',
+  name: 'UnLoginHome',
   components: {
     HomeSwipe,
     HomeTip,
     HomeProductList,
+    HomeMoreProducts,
   },
 };
 </script>
@@ -85,6 +90,12 @@ export default {
   }
   .list-container{
     width: 100%
+  }
+  .more-products-container{
+   display: flex;
+    height: 63px;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
