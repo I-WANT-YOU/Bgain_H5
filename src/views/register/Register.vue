@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="toLogin">
-                <span>已有账号？</span><a>登录</a>
+                <span>已有账号？</span><router-link to="/login">登录</router-link>
             </div>
         </div>
         <Footer/>

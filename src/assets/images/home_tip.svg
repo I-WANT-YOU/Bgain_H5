@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="18px" viewBox="0 0 17 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>编组 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="33.9001173%" y1="0%" x2="47.7136217%" y2="134.46306%" id="linearGradient-1">
+            <stop stop-color="#4776F7" offset="0%"></stop>
+            <stop stop-color="#5012D9" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="49.0904212%" y1="0%" x2="49.8708288%" y2="134.46306%" id="linearGradient-2">
+            <stop stop-color="#4776F7" offset="0%"></stop>
+            <stop stop-color="#5012D9" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="M端首页-未登录" transform="translate(-31.000000, -276.000000)">
+            <g id="提示" transform="translate(17.000000, 270.000000)">
+                <g id="Page-1" transform="translate(15.000000, 5.000000)">
+                    <g id="编组-3" transform="translate(-0.000114, 0.375147)">
+                        <path d="M0.846857143,5.70396267 L2.87238095,5.70396267 C3.06780952,5.70396267 3.25714286,5.63717671 3.4087619,5.51561125 L8.776,1.1902822 C9.32914286,0.744542179 10.1588571,1.13175068 10.1588571,1.83525449 L10.1588571,17.0767115 C10.1588571,17.7802154 9.32914286,18.1674239 8.776,17.7216838 L3.4087619,13.3963548 C3.25714286,13.2747893 3.06780952,13.2080034 2.87238095,13.2080034 L0.846857143,13.2080034 C0.379047619,13.2080034 0,12.8346773 0,12.3739292 L0,6.5380368 C0,6.0772887 0.379047619,5.70396267 0.846857143,5.70396267" id="Fill-1" fill="url(#linearGradient-1)"></path>
+                        <path d="M15.2382095,14.792369 C14.8176381,14.792369 14.4763048,14.456188 14.4763048,14.0419649 L14.4763048,4.87015119 C14.4763048,4.45555294 14.8176381,4.11974712 15.2382095,4.11974712 C15.658781,4.11974712 16.0001143,4.45555294 16.0001143,4.87015119 L16.0001143,14.0419649 C16.0001143,14.456188 15.658781,14.792369 15.2382095,14.792369" id="Fill-4" fill="url(#linearGradient-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
