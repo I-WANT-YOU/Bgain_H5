@@ -8,13 +8,13 @@ const state = {
 };
 
 const getters = {
-  announcement: state => get(state, 'announcement_system_index', {}),
-  banners: state => get(state, 'banner_list', []),
-  funds: state => get(state, 'fund_product_list', []),
-  currents: state => get(state, 'current_product_list', []),
-  fixeds: state => get(state, 'fix_product_summary_list', []),
-  isLogin: state => get(state, 'login', false),
-  hasUnreadMessage: state => get(state, 'exist_unread_message', false),
+  announcement: state => get(state.infos, 'announcement_system_index', {}),
+  banners: state => get(state.infos, 'banner_list', []),
+  funds: state => get(state.infos, 'fund_product_list', []),
+  currents: state => get(state.infos, 'current_product_list', []),
+  fixeds: state => get(state.infos, 'fix_product_summary_list', []),
+  isLogin: state => get(state.infos, 'login', false),
+  hasUnreadMessage: state => get(state.infos, 'exist_unread_message', false),
 };
 
 const mutations = {
