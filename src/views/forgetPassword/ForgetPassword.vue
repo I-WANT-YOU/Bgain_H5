@@ -125,6 +125,7 @@ export default {
 
 <style lang="scss">
 .forget-password {
+  width: 100%;
   .bg-back {
     width: 8px;
     height: 13px;

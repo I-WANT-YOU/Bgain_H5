@@ -112,6 +112,7 @@ export default {
 
 <style lang="scss">
 .forget-set-password {
+  width: 100%;
   .info {
     font-family: PingFangSC-Regular;
     font-size: 14px;
