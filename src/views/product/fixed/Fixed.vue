@@ -1,19 +1,26 @@
 <template>
-  <currency-tab>
-    <template v-slot:default="{currency}">
-      <pull-refresh v-model="isLoading" @refresh="onRefresh" success-text="加载成功">
-        <div class="bg-fixed__content">
-          <fixed-card :data-source="fixed" />
-        </div>
-      </pull-refresh>
-    </template>
+  <currency-tab
+    :currencies="currencies"
+    @currency-change="onCurrencyChange"
+  >
+    <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
+      <div class="bg-fixed__content">
+        <fixed-card
+          v-for="product in products"
+          :key="product.product_id"
+          :data-source="product"/>
+      </div>
+    </pull-refresh>
   </currency-tab>
 </template>
 
 <script>
-import { PullRefresh } from 'vant';
+import { PullRefresh, Toast } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
 import CurrencyTab from '../components/CurrencyTab.vue';
 import FixedCard from './components/FixedCard.vue';
+
+const { mapActions, mapGetters } = createNamespacedHelpers('product/fixed');
 
 export default {
   name: 'Fixed',
@@ -25,14 +32,37 @@ export default {
   data() {
     return {
       isLoading: false,
+      currency: 'BTC',
+      products: [],
       fixed: {},
     };
   },
+  computed: {
+    ...mapGetters({
+      currencies: 'currencies',
+      getProducts: 'getFixedProductsByCurrency',
+    }),
+  },
+  mounted() {
+    this.onRefresh(this.currency);
+  },
   methods: {
-    onRefresh() {
-      setTimeout(() => {
+    ...mapActions([
+      'getFixedProducts',
+    ]),
+    onCurrencyChange(currency) {
+      this.currency = currency;
+      this.products = this.getProducts(currency);
+    },
+    async onRefresh(currency) {
+      try {
+        await this.getFixedProducts();
+        this.products = this.getProducts(currency);
         this.isLoading = false;
-      }, 500);
+      } catch (error) {
+        Toast(error.message);
+        this.isLoading = false;
+      }
     },
   },
 };
