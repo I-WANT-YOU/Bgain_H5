@@ -1,3 +1,6 @@
 // Auth
 export const AUTHENTICATED = 'AUTHENTICATED';
 export const UNAUTHENTICATED = 'UNAUTHENTICATED';
+
+// Home
+export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
