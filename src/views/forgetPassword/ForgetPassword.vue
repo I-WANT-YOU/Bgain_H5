@@ -77,7 +77,7 @@ export default {
       if (this.tab === 'mobile') {
         const re = /^[0-9]{1,15}$/;
         if (re.test(this.mobile)) {
-          this.$router.push({ name: 'forgetPasswordSet', params: { mobile: this.mobile } });
+          this.$router.push({ name: 'forgetPasswordSet', params: { mobile: this.mobile, value: this.country.value } });
         } else {
           Toast('请输入正确的手机号');
         }
@@ -112,7 +112,7 @@ export default {
   }
   .next {
     display: inline-block;
-    width: 7px;
+    width: 8px;
     height: 11px;
     background: url("../../assets/images/next.svg");
   }
@@ -142,12 +142,13 @@ export default {
         padding: 16px 22px 0;
         .tab-con-form-input {
           height: 50px;
-          border-bottom: 1px solid #eeeeee;
+          box-sizing: border-box;
           position: relative;
           &.mobile {
             display: flex;
             box-sizing: border-box;
             align-items: center;
+            border-bottom: 1px solid #eeeeee;
             p {
               width: 100%;
               margin: 0;
@@ -176,25 +177,27 @@ export default {
               }
               .skip {
                 position: absolute;
-                right: 0;
+                right: 1px;
                 bottom: 4px;
               }
             }
           }
           .input {
-            height: 50px;
-            padding: 7px 8px;
+            height: 47px;
+            width: 100%;
+            padding: 6px 8px;
             box-sizing: border-box;
             border: 0;
             font-family: PingFangSC-Regular;
             font-size: 15px;
             letter-spacing: 0;
+            border-bottom: 1px solid #eeeeee;
           }
           .icon {
             position: absolute;
             transform: translateY(-50%);
             top: 50%;
-            right: 0;
+            right: 2px;
           }
         }
       }

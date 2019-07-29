@@ -1,5 +1,5 @@
 import * as Auth from '@utils/auth';
-import AuthServcice from '@api/auth';
+import AuthService from '@api/auth';
 import router from '@router';
 import * as types from '../mutationTypes';
 
@@ -19,7 +19,7 @@ const mutations = {
 const actions = {
   async login({ commit }, params) {
     try {
-      const response = await AuthServcice.login(params);
+      const response = await AuthService.login(params);
       const data = await Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
@@ -31,7 +31,7 @@ const actions = {
   },
   async logout({ commit }) {
     try {
-      await AuthServcice.logout();
+      await AuthService.logout();
       commit(types.UNAUTHENTICATED);
       Auth.removeToken();
       router.push('/');
@@ -41,7 +41,7 @@ const actions = {
   },
   async register({ commit }, params) {
     try {
-      const response = await AuthServcice.register(params);
+      const response = await AuthService.register(params);
       const data = Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
@@ -66,22 +66,23 @@ const actions = {
    */
   async getToken(context, params) {
     try {
-      await AuthServcice.getToken(params);
+      const response = await AuthService.getToken(params);
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
   },
   async resetPassword(context, params) {
     try {
-      await AuthServcice.resetPassword(params);
-      router.push('/login');
+      const response = await AuthService.resetPassword(params);
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
   },
   async changePassword({ commit }, params) {
     try {
-      const response = await AuthServcice.changePassword(params);
+      const response = await AuthService.changePassword(params);
       const data = Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
@@ -93,7 +94,7 @@ const actions = {
   },
   async getGeetestOptions() {
     try {
-      return await AuthServcice.getGeetestOptions();
+      return await AuthService.getGeetestOptions();
     } catch (error) {
       throw error;
     }
@@ -112,7 +113,7 @@ const actions = {
    */
   async validateUsername(context, params) {
     try {
-      const response = await AuthServcice.validateUser(params);
+      const response = await AuthService.validateUser(params);
       return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
