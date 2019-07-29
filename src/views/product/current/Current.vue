@@ -1,6 +1,6 @@
 <template>
-  <div class="current">
-    <currency-tab :currencies="currencies">
+  <currency-tab :currencies="currencies">
+    <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
       <div class="content">
         <p class="year">
           今日年化利率
@@ -28,24 +28,30 @@
           <div class="roll-out">转出</div>
           <div class="roll-in">转入</div>
         </div>
+        <product-highlight></product-highlight>
       </div>
-    </currency-tab>
-  </div>
+    </pull-refresh>
+  </currency-tab>
 </template>
 
 <script>
+import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import CurrencyTab from '../components/CurrencyTab.vue';
+import ProductHighlight from './components/ProductHighlight.vue';
 
 const { mapState, mapActions } = createNamespacedHelpers('product/current');
 
 export default {
   name: 'Current',
   components: {
+    PullRefresh,
     CurrencyTab,
+    ProductHighlight,
   },
   data() {
     return {
+      isLoading: false,
       currency: 'BTC',
       type: 'BTC',
       totalAmount: '11123.123456',
@@ -66,12 +72,21 @@ export default {
   },
   methods: {
     ...mapActions(['getAllCurrentProduct']),
+    async onRefresh() {
+      try {
+        await this.getAllCurrentProduct();
+        this.isLoading = false;
+      } catch (error) {
+        Toast(error.message);
+        this.isLoading = false;
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .current {
+  .content {
     width: 100%;
 
     p {
@@ -79,108 +94,106 @@ export default {
       padding: 0;
     }
 
-    .content {
-      .year {
-        margin: 24px 0 1px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 13px;
-        color: #a8aeb9;
-        letter-spacing: 0;
+    .year {
+      margin: 24px 0 1px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      color: #a8aeb9;
+      letter-spacing: 0;
 
-        .next {
-          width: 4.4px;
-          height: 9px;
-          margin-left: 6.6px;
-        }
+      .next {
+        width: 4.4px;
+        height: 9px;
+        margin-left: 6.6px;
       }
+    }
 
-      .annual-interest-rate {
+    .annual-interest-rate {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 59px;
+      margin-bottom: 6px;
+
+      span {
+        font-size: 42px;
+        color: #ff5656;
+        letter-spacing: 0;
+        line-height: 59px;
+      }
+    }
+
+    .total-amount {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 19px;
+      font-size: 15px;
+      color: #a8aeb9;
+      letter-spacing: 0;
+      line-height: 21px;
+
+      .amount {
+        color: #003259;
+      }
+    }
+
+    .income {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      div {
+        padding: 0 17px;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        height: 59px;
-        margin-bottom: 6px;
+
+        .title {
+          margin-bottom: 5px;
+          font-size: 13px;
+          color: #a8aeb9;
+          letter-spacing: 0;
+        }
 
         span {
-          font-size: 42px;
-          color: #ff5656;
-          letter-spacing: 0;
-          line-height: 59px;
-        }
-      }
-
-      .total-amount {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 19px;
-        font-size: 15px;
-        color: #a8aeb9;
-        letter-spacing: 0;
-        line-height: 21px;
-
-        .amount {
-          color: #003259;
-        }
-      }
-
-      .income {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-
-        div {
-          padding: 0 17px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-
-          .title {
-            margin-bottom: 5px;
-            font-size: 13px;
-            color: #a8aeb9;
-            letter-spacing: 0;
-          }
-
-          span {
-            font-size: 16px;
-            color: #0f3256;
-            letter-spacing: 0;
-          }
-        }
-
-        > span {
-          height: 32px;
-          width: 1px;
-          background: #eeeeee;
-        }
-      }
-
-      .buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 19px;
-
-        > div {
-          width: 156px;
-          height: 42px;
-          line-height: 42px;
-          text-align: center;
-          border-radius: 4px;
           font-size: 16px;
+          color: #0f3256;
           letter-spacing: 0;
+        }
+      }
 
-          &.roll-out {
-            background: #edf0fa;
-            color: #3c64ee;
-          }
+      > span {
+        height: 32px;
+        width: 1px;
+        background: #eeeeee;
+      }
+    }
 
-          &.roll-in {
-            background: #3c64ee;
-            color: #ffffff;
-          }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 19px;
+
+      > div {
+        width: 156px;
+        height: 42px;
+        line-height: 42px;
+        text-align: center;
+        border-radius: 4px;
+        font-size: 16px;
+        letter-spacing: 0;
+
+        &.roll-out {
+          background: #edf0fa;
+          color: #3c64ee;
+        }
+
+        &.roll-in {
+          background: #3c64ee;
+          color: #ffffff;
         }
       }
     }
