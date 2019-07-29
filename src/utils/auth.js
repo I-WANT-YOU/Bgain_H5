@@ -21,3 +21,10 @@ export const handlerSuccessResponse = (response) => {
   }
   return Promise.resolve(response.data);
 };
+
+export const handlerSuccessResponseV2 = (response) => {
+  if (!response || !(response.code === 0)) {
+    return Promise.reject(response.msg);
+  }
+  return Promise.resolve(response.data);
+};
