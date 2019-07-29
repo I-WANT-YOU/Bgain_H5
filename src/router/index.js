@@ -12,6 +12,10 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
     },
     {
+      path: '/',
+      redirect: '/home',
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import(/* webpackChunkName: "login" */ '../views/login/Login.vue'),
@@ -80,8 +84,8 @@ const router = new Router({
       ],
     },
     {
-      path: '/',
-      redirect: '/home',
+      path: '/product/fixed/:id',
+      component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
   ],
 });

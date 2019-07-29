@@ -5,6 +5,18 @@ export const UNAUTHENTICATED = 'UNAUTHENTICATED';
 // Home
 export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
 
-// Product
+/**
+ * 产品相关
+ */
+
+/**
+ * @module Fixed 定期产品相关
+ */
 export const GET_ALL_FIXED_PRODUCT = 'GET_ALL_FIXED_PRODUCT';
 export const GET_FIXED_PRODUCT_BY_ID = 'GET_FIXED_PRODUCT_BY_ID';
+
+/**
+ * @module Current 活期产品相关
+ */
+export const GET_ALL_CURRENT_PRODUCT = 'GET_ALL_CURRENT_PRODUCT';
+export const GET_CURRENT_CURRENCIES = 'GET_CURRENT_CURRENCIES';
