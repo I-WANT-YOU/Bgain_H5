@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getFixedProducts',
+      'getAllFixedProduct',
     ]),
     onCurrencyChange(currency) {
       this.currency = currency;
@@ -56,7 +56,7 @@ export default {
     },
     async onRefresh(currency) {
       try {
-        await this.getFixedProducts();
+        await this.getAllFixedProduct();
         this.products = this.getProducts(currency);
         this.isLoading = false;
       } catch (error) {
