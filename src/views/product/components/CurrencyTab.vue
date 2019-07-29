@@ -8,7 +8,7 @@
           :key="currency"
           :title="currency"
           :name="currency">
-        <slot :currency="currency"></slot>
+        <slot></slot>
       </tab>
     </tabs>
   </div>
@@ -23,14 +23,20 @@ export default {
     Tabs,
     Tab,
   },
+  props: {
+    currencies: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       currency: 'BTC',
-      currencies: ['BTC', 'USDT', 'ETH', 'EOS', 'FBP'],
     };
   },
   methods: {
-    onCurrencyChange() {
+    onCurrencyChange(currency) {
+      this.$emit('currency-change', currency);
     },
   },
 };
