@@ -40,6 +40,7 @@
       </div>
     </div>
     <Footer />
+    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
   </div>
 </template>
 
@@ -47,6 +48,7 @@
 import { Button, Toast } from 'vant';
 import Header from '@component/Header.vue';
 import Footer from '@component/Footer.vue';
+import Geetest from '@component/Geetest.vue';
 
 export default {
   name: 'ForgetPassword',
@@ -54,6 +56,7 @@ export default {
     Header,
     Footer,
     Button,
+    Geetest,
   },
   data() {
     return {
@@ -67,6 +70,8 @@ export default {
         value: '+86',
         label: '+86',
       },
+      geetest: null,
+      options: null,
     };
   },
   methods: {
@@ -74,25 +79,41 @@ export default {
       this.tab = text;
     },
     submit() {
-      if (this.tab === 'mobile') {
-        const re = /^[0-9]{1,15}$/;
-        if (re.test(this.mobile)) {
-          this.$router.push({ name: 'forgetPasswordSet', params: { mobile: this.mobile, value: this.country.value } });
-        } else {
-          Toast('请输入正确的手机号');
-        }
+      const mobileReg = /^[0-9]{1,15}$/;
+      const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line no-useless-escape
+      const flag = this.tab === 'mobile' ? mobileReg.test(this.mobile) : emailReg.test(this.email);
+      if (flag) {
+        this.geetest.verify();
       } else {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line no-useless-escape
-        if (re.test(this.email)) {
-          this.$router.push({ name: 'forgetPasswordSet', params: { email: this.email } });
-        } else {
-          Toast('请输入正确的邮箱号');
-        }
+        Toast(this.tab === 'mobile' ? '请输入正确的手机号' : '请输入正确的邮箱号');
       }
     },
     skip() {
       this.$router.push({ name: 'country', params: { fromPath: 'forgetPassword' } });
     },
+    onLoaded(geetest) {
+      this.geetest = geetest;
+    },
+    onSuccess(options) {
+      this.options = options;
+      let params = {};
+      if (this.tab === 'mobile') {
+        params = {
+          type: 'mobile',
+          username: this.mobile,
+          countryCode: this.country.value,
+          geetestOptions: options,
+        };
+      } else {
+        params = {
+          type: 'email',
+          username: this.email,
+          geetestOptions: options,
+        };
+      }
+      this.$router.push({ name: 'forgetPasswordSet', params });
+    },
+    onError() { },
   },
   mounted() {
     if (this.$route.params.text) {
@@ -104,6 +125,7 @@ export default {
 
 <style lang="scss">
 .forget-password {
+  width: 100%;
   .bg-back {
     width: 8px;
     height: 13px;

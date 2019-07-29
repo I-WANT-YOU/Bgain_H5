@@ -35,7 +35,8 @@
         <i></i>
       </p>
     </div>
-    <Footer class="trademark" />
+    <Footer />
+    <!-- <div class="trademark">Copyright@2019 Bgain</div> -->
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
   </div>
 </template>
@@ -111,7 +112,6 @@ export default {
           Toast('邮箱格式有误，请重新输入');
         }
       }
-
       if (flag) {
         // 滑块验证
         this.geetest.verify();
@@ -176,8 +176,8 @@ export default {
         .van-cell:not(:last-child)::after {
           border: 0;
         }
-        .van-field__control {
-          color: #ccc !important;
+        .van-field__control::placeholder {
+          color: #ccc;
         }
         .password-is-show {
           position: absolute;
@@ -239,10 +239,6 @@ export default {
         background: url("../../assets/images/next.svg");
       }
     }
-  }
-  .trademark {
-    font-size: 12.5px;
-    transform: scale(0.8);
   }
 }
 </style>
