@@ -4,6 +4,8 @@
     <router-link to="/login">登录</router-link>
     <router-link to="/register">注册</router-link>
     <router-link to="/product/fixed">定期</router-link>
+    <router-link to="/product/current">活期</router-link>
+    <router-link to="/product/fund">基金</router-link>
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
     <button @click="onClick">Geetest</button>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div>
