@@ -7,3 +7,4 @@ export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
 
 // Product
 export const GET_ALL_FIXED_PRODUCT = 'GET_ALL_FIXED_PRODUCT';
+export const GET_FIXED_PRODUCT_BY_ID = 'GET_FIXED_PRODUCT_BY_ID';

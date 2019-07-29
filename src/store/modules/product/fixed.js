@@ -5,6 +5,7 @@ import { FixedService } from '@/api/product';
 
 const state = {
   fixeds: {},
+  fixed: {},
 };
 
 const getters = {
@@ -21,6 +22,9 @@ const mutations = {
   [types.GET_ALL_FIXED_PRODUCT](state, payload) {
     state.fixeds = payload;
   },
+  [types.GET_FIXED_PRODUCT_BY_ID](state, payload) {
+    state.fixed = get(payload, 'obj', {});
+  },
 };
 
 const actions = {
@@ -29,6 +33,16 @@ const actions = {
       const response = await FixedService.getAllFixedProduct();
       const data = await handlerSuccessResponse(response);
       commit(types.GET_ALL_FIXED_PRODUCT, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getFixedProductById({ commit }, productId) {
+    try {
+      const response = await FixedService.getFixedProductById(productId);
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_FIXED_PRODUCT_BY_ID, data);
     } catch (error) {
       throw error;
     }
