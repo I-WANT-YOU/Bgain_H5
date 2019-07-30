@@ -28,7 +28,7 @@
           <div class="roll-out">转出</div>
           <div class="roll-in">转入</div>
         </div>
-        <product-highlight></product-highlight>
+        <current-panel></current-panel>
       </div>
     </pull-refresh>
   </currency-tab>
@@ -38,7 +38,7 @@
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import CurrencyTab from '../components/CurrencyTab.vue';
-import ProductHighlight from './components/ProductHighlight.vue';
+import CurrentPanel from './components/CurrentPanel.vue';
 
 const { mapState, mapActions } = createNamespacedHelpers('product/current');
 
@@ -47,7 +47,7 @@ export default {
   components: {
     PullRefresh,
     CurrencyTab,
-    ProductHighlight,
+    CurrentPanel,
   },
   data() {
     return {
