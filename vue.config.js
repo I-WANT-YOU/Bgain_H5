@@ -11,6 +11,7 @@ module.exports = {
     loaderOptions: {
       less: {
         modifyVars: {
+          blue: '#3C64EE',
           'border-color': '#E5E9F6',
         },
       },
