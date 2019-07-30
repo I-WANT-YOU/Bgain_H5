@@ -11,13 +11,15 @@
         @click="skip(item)"
       />
     </List>
-    <p>Copyright@2019 Bgain</p>
+    <div class="none"></div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { List, Cell } from 'vant';
 import Header from '@component/Header.vue';
+import Footer from '@component/Footer.vue';
 import countries from '@/constants/country';
 
 export default {
@@ -26,15 +28,18 @@ export default {
     List,
     Cell,
     Header,
+    Footer,
   },
   data() {
     return {
       countries,
-      goBack: '/forgetPassword',
+      goBack: '/login',
     };
   },
   mounted() {
-    this.goBack = `/${this.$route.params.fromPath}`;
+    if (this.$route.params.fromPath) {
+      this.goBack = `/${this.$route.params.fromPath}`;
+    }
   },
   methods: {
     skip(options) {
@@ -46,6 +51,7 @@ export default {
 
 <style lang="scss">
 .country {
+  position: relative;
   background: #f8f8f8;
   .list {
     margin-top: 13px;
@@ -65,6 +71,9 @@ export default {
     color: #bbbbbb;
     letter-spacing: 0;
     text-align: center;
+  }
+  .none {
+    height: 50px;
   }
 }
 </style>

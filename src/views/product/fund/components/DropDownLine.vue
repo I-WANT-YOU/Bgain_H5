@@ -6,10 +6,10 @@
     >全部</span>
     <div class="others">
       <span
-        :class="['drop-down-menu-item',active === key ? 'active' : '']"
+        :class="['drop-down-menu-item',active === item ? 'active' : '']"
         v-for="(item,key) in options"
         :key="key"
-        @click="onClickItem(key)"
+        @click="onClickItem(item)"
       >{{item}}</span>
     </div>
   </Cell>
@@ -17,24 +17,20 @@
 
 <script>
 import { Cell } from 'vant';
+
 export default {
   name: 'DropDownLine',
   components: { Cell },
-  props: ['options'],
-  data() {
-    return {
-      active: 'all',
-    };
-  },
+  props: ['options', 'reset', 'active', 'type'],
   methods: {
     onClickItem(text) {
-      this.active = text;
+      this.$emit('changeItem', this.type, text);
     },
     onReset() {
-      this.active = 'all';
-    }
+      this.reset();
+    },
   },
-}
+};
 </script>
 
 <style lang='scss'>
@@ -51,6 +47,8 @@ export default {
   .drop-down-menu-item {
     display: inline-block;
     text-align: center;
+    font-size: 12px;
+    color: #a8aeb9;
     width: 52px;
     height: 24px;
     line-height: 24px;

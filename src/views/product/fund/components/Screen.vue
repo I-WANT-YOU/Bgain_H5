@@ -10,28 +10,19 @@
             class="showList-item"
             v-for="(item) in options"
             v-bind:key="item.value"
-          >{{item.text}}</span>
+          >{{item.active === 'all' ? item.text : item.active}}</span>
         </div>
       </div>
     </div>
-    <DropdownItem ref="item" title-class="screeen-title">
-      <!-- <Cell class="drop-down-menu" v-for="(item,k) in options" v-bind:key="item.value">
-        <span class="drop-down-menu-item" @click="onClickItem(k,'all')">全部</span>
-        <div class="others">
-          <span
-            class="drop-down-menu-item"
-            v-for="(ite,key) in item.children"
-            :key="key"
-            @click="onClickItem(k,key)"
-          >{{ite}}</span>
-        </div>
-      </Cell>-->
+    <DropdownItem ref="item" title-class="screeen-title" @close="closeMenu" @open="openMenu">
       <DorpDownLine
         v-for="(item,key) in options"
         :ref="item.value"
         :key="key"
-        :active='item'
-        @onReset="onChange"
+        :active="item.active"
+        :reset="onReset"
+        :type="item.type"
+        @changeItem="changeItem"
         :options="item.children"
       />
       <div class="buttons">
@@ -45,8 +36,8 @@
 
 <script>
 import SvgIcon from '@component/SvgIcon.vue';
+import { DropdownMenu, DropdownItem } from 'vant';
 import DorpDownLine from './DropDownLine.vue';
-import { DropdownMenu, DropdownItem, Cell } from 'vant';
 
 export default {
   name: 'Screen',
@@ -55,7 +46,6 @@ export default {
     DropdownItem,
     DorpDownLine,
     SvgIcon,
-    Cell,
   },
   props: ['options'],
   data() {
@@ -64,26 +54,33 @@ export default {
       currency_type: 'all',
       fund_product_type: 'all',
       risk_level_type: 'all',
+      cloneOptions: [],
     };
   },
-  // {
-  //  "currency_type":"USDT", // 货币类型
-  //  "fund_product_type":"MixedStrategies", // 基金类型
-  //  "risk_level_type":"R1_LOW_RISK" // 风险等级
-  // }
   methods: {
     onConfirm() {
+      this.cloneOptions = this.options;
       this.$refs.item.toggle();
-      this.$emit('onChange')
+      this.$emit('onChange');
     },
     onClick() {
       this.$refs.item.toggle();
     },
     onReset() {
-
+      this.cloneOptions = this.cloneOptions.map((item) => {
+        item.active = 'all';
+        return item;
+      });
+      this.$emit('onReset');
     },
-    onChange() {
-
+    changeItem(type, text) {
+      this.$emit('changeItem', type, text);
+    },
+    openMenu() {
+      this.cloneOptions = JSON.parse(JSON.stringify(this.options));
+    },
+    closeMenu() {
+      this.$emit('close', this.cloneOptions);
     },
   },
 };

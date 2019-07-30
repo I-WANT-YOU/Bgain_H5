@@ -65,6 +65,7 @@ export default {
       disabled: true,
       options: null,
       geetest: null,
+      once: true,
     };
   },
   watch: {
@@ -92,7 +93,7 @@ export default {
     },
     submit() {
       let flag;
-      const { username } = this;
+      const { username, password } = this;
       const reg = /^[0-9]{1,}$/;
       const mobile = /^[0-9]{1,15}$/;
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
@@ -113,8 +114,19 @@ export default {
         }
       }
       if (flag) {
-        // 滑块验证
-        this.geetest.verify();
+        if (this.once) {
+          this.login({
+            username,
+            password,
+          }).then(() => {
+            this.once = false;
+          }).catch(err => {
+            this.once = false;
+          });
+        } else {
+          // 滑块验证
+          this.geetest.verify();
+        }
       }
     },
     onLoaded(geetest) {
