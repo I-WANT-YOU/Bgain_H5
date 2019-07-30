@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { chain, get } from 'lodash';
 import { CurrentService } from '@api/product';
 import * as Auth from '@utils/auth';
 import * as types from '../../mutationTypes';
@@ -9,6 +9,10 @@ const state = {
 };
 
 const getters = {
+  getCurrentProductsByCurrency: ({ currents }) => currency => chain(currents)
+    .filter(({ currency_type: type }) => currency === type)
+    .head()
+    .value(),
 };
 
 const mutations = {

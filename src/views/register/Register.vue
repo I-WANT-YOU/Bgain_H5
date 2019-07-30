@@ -16,9 +16,9 @@
                     <form>
                         <div class="taps-form-phone">
                             <div>
-                                    <div class="countryType">
+                                    <div class="countryType" @click="chooseCountry()">
                                         <span>{{country.text}}</span>
-                                        <div @click="chooseCountry()">
+                                        <div>
                                             <span>{{country.label}}</span>
                                             <img src="../../assets/images/next.svg"/>
                                         </div>
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="toLogin">
-                <span>已有账号？</span><a>登录</a>
+                <span>已有账号？</span><router-link to="/login">登录</router-link>
             </div>
         </div>
         <Footer/>
