@@ -3,4 +3,8 @@ export const languages = [
   { name: 'English', value: 'en', disabled: true },
 ];
 
-export const types = [];
+export const FUND_STATUS = {
+  INITIAL: 'INITIAL', // 首发
+  OPEN: 'OPEN', // 开放
+  CLOSE: 'CLOSE', // 锁定
+};
