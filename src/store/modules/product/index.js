@@ -1,4 +1,6 @@
 import fixed from './fixed';
+import current from './current';
+import fund from './fund';
 
 const state = {
 };
@@ -11,6 +13,8 @@ const actions = {
 
 const modules = {
   fixed,
+  current,
+  fund,
 };
 
 export default {
