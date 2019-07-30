@@ -35,14 +35,7 @@ export default {
 
 <style lang='scss'>
 .drop-down-menu {
-  .van-cell__value--alone {
-    display: flex;
-    .others {
-      flex: 1;
-      display: flex;
-      flex-wrap: wrap;
-    }
-  }
+  padding: 0 15px;
 
   .drop-down-menu-item {
     display: inline-block;
@@ -54,7 +47,7 @@ export default {
     line-height: 24px;
     border: 1px solid #eeeeee;
     border-radius: 2px;
-    margin: 10px 7.5px;
+    margin: 10px 6px;
     &.active {
       background: #3c64ee;
       color: #ffffff;

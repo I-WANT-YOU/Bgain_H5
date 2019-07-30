@@ -1,9 +1,9 @@
 <template>
   <DropdownMenu class="menu-wrap">
     <div class="title">
-      <div>
+      <div @click="onClick">
         <SvgIcon icon-class="screen" class="screen_icon" />
-        <span class="screen_title" @click="onClick">筛选</span>
+        <span class="screen_title">筛选</span>
         <span class="line"></span>
         <div class="showList">
           <span

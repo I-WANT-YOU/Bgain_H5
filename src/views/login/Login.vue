@@ -120,7 +120,7 @@ export default {
             password,
           }).then(() => {
             this.once = false;
-          }).catch(err => {
+          }).catch(() => {
             this.once = false;
           });
         } else {
