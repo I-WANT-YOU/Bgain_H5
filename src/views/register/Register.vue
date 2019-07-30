@@ -16,9 +16,9 @@
                     <form>
                         <div class="taps-form-phone">
                             <div>
-                                    <div class="countryType">
+                                    <div class="countryType" @click="chooseCountry()">
                                         <span>{{country.text}}</span>
-                                        <div @click="chooseCountry()">
+                                        <div>
                                             <span>{{country.label}}</span>
                                             <img src="../../assets/images/next.svg"/>
                                         </div>

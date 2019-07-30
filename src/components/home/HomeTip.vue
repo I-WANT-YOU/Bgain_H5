@@ -7,12 +7,15 @@
 </template>
 
 <script>
+import backRectangle from '../../assets/images/home/backRectangle.svg';
+
 export default {
   name: 'HomeTip',
 };
 </script>
 
 <style lang="scss" scoped>
+
   .home-tip{
     display: flex;
     align-items: center;
@@ -23,6 +26,7 @@ export default {
     font-family: PingFangSC-Regular;
     letter-spacing: 0;
     text-align: center;
+    background: url(../../assets/images/home/backRectangle.svg);
     >img{
       width: 20px;
       height: 20px;

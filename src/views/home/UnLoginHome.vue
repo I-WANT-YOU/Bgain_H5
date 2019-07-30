@@ -8,7 +8,9 @@
       <HomeTip/>
     </div>
     <div class="button-container">
-      <button>注册</button>
+      <router-link to="/register">
+        <button>注册</button>
+      </router-link>
     </div>
     <div class="toLogin">
       <router-link to="/login">已有账号？登录</router-link>
@@ -63,7 +65,7 @@ export default {
     width: 100%;
     height: 43px;
     margin-top:26px;
-    >button{
+    button{
       width: 325px;
       background: #3C64EE;
       border-radius: 4px;
@@ -92,8 +94,9 @@ export default {
     width: 100%
   }
   .more-products-container{
-   display: flex;
-    height: 63px;
+    display: flex;
+    height: 20px;
+    margin-top: 21px;
     justify-content: center;
     align-items: center;
   }

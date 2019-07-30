@@ -4,3 +4,6 @@ export const UNAUTHENTICATED = 'UNAUTHENTICATED';
 
 // Home
 export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
+
+// Product
+export const GET_FIXED_PRODUCTS = 'GET_FIXED_PRODUCTS';

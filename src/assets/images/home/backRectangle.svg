@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="340px" height="30px" viewBox="0 0 340 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Rectangle 78</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="5.47293375%" y1="73.3984374%" x2="95.3765918%" y2="73.3984352%" id="linearGradient-1">
+            <stop stop-color="#4870F6" stop-opacity="0.0321557971" offset="0%"></stop>
+            <stop stop-color="#2A55E7" stop-opacity="0.120584239" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="M端首页-未登录" transform="translate(-17.000000, -270.000000)" fill="url(#linearGradient-1)">
+            <g id="提示" transform="translate(17.000000, 270.000000)">
+                <g id="Rectangle-78">
+                    <path d="M15,0 L338,0 C339.104569,-2.02906125e-16 340,0.8954305 340,2 L340,28 C340,29.1045695 339.104569,30 338,30 L15,30 C6.71572875,30 1.01453063e-15,23.2842712 0,15 L3.55271368e-15,15 C2.53818305e-15,6.71572875 6.71572875,1.52179594e-15 15,0 Z" id="Rectangle-77"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

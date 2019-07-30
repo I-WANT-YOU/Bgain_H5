@@ -8,10 +8,26 @@
       </Field>
     </div>
     <div class="input">
-      <Field v-model="formData.password" placeholder="请设置8-20位字母及数字组成的密码" />
+      <Field
+        :type="passwordType ? 'password' : ''"
+        v-model="formData.password"
+        placeholder="请设置8-20位字母及数字组成的密码"
+      />
+      <span
+        :class="['password-is-show',passwordType ? '' : 'show']"
+        @click="showPwd('passwordType')"
+      ></span>
     </div>
     <div class="input">
-      <Field v-model="formData.confirmPassword" placeholder="请再次输入登录密码" />
+      <Field
+        :type="confirmPasswordType ? 'password' : ''"
+        v-model="formData.confirmPassword"
+        placeholder="请再次输入登录密码"
+      />
+      <span
+        :class="['password-is-show',confirmPasswordType ? '' : 'show']"
+        @click="showPwd('confirmPasswordType')"
+      ></span>
     </div>
     <div class="button">
       <Button tag="div" class="submit-btn" type="info" @click="submit">确定</Button>
@@ -24,6 +40,7 @@
 import Header from '@component/Header.vue';
 import Footer from '@component/Footer.vue';
 import sendCode from '@component/SendCode.vue';
+import { mapActions } from 'vuex';
 import { Field, Button, Toast } from 'vant';
 
 export default {
@@ -36,10 +53,10 @@ export default {
     Button,
   },
   mounted() {
-    if (this.$route.params.mobile) {
-      this.address = `${this.$route.params.value} ${this.$route.params.mobile}`;
-    } else if (this.$route.params.email) {
-      this.address = this.$route.params.email;
+    if (this.$route.params.type === 'mobile') {
+      this.address = `${this.$route.params.countryCode} ${this.$route.params.username}`;
+    } else if (this.$route.params.type === 'email') {
+      this.address = this.$route.params.username;
     } else {
       console.log('参数不完整');
       // this.$router.push('/login');
@@ -53,28 +70,41 @@ export default {
         password: '',
         confirmPassword: '',
       },
+      passwordType: true,
+      confirmPasswordType: true,
+      options: null,
     };
   },
   methods: {
+    ...mapActions({
+      getToken: 'auth/getToken',
+      resetPassword: 'auth/resetPassword',
+    }),
+    showPwd(text) {
+      const oldValue = this[text];
+      this[text] = !oldValue;
+    },
     submit() {
-      console.log(this.formData);
       const reg = /^[0-9A-Za-z]{8,20}$/;
-      // if (this.formData.code.length === 6) {
-      // if (reg.test(this.formData.password)) {
-      //   if (this.formData.password === this.formData.confirmPassword) {
-      //     Toast('')
-      //   } else {
-      //     Toast('两次输入的密码不一致');
-      //   }
-      // } else {
-      //   Toast('密码格式不正确');
-      // }
-      // } else {
-      //   Toast('请输入验证码');
-      // }
+      if (this.formData.code.length === 6) {
+        if (reg.test(this.formData.password)) {
+          if (this.formData.password === this.formData.confirmPassword) {
+            this.resetPassword({ username: this.$route.params.username, password: this.formData.password, token: 'sfdfdg' });
+          } else {
+            Toast('两次输入的密码不一致');
+          }
+        } else {
+          Toast('密码格式不正确');
+        }
+      } else {
+        Toast('请输入验证码');
+      }
     },
     onSend() {
       // 发送验证码
+      const { params } = this.$route;
+      delete params.type;
+      this.getToken(params);
     },
   },
 };
@@ -82,6 +112,7 @@ export default {
 
 <style lang="scss">
 .forget-set-password {
+  width: 100%;
   .info {
     font-family: PingFangSC-Regular;
     font-size: 14px;
@@ -113,6 +144,21 @@ export default {
       font-size: 14px;
       color: #2a55e7;
       letter-spacing: 0;
+    }
+    .password-is-show {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-block;
+      width: 18px;
+      height: 9px;
+      background: url("../../assets/images/none.svg");
+      background-size: 100% 100%;
+    }
+    .show {
+      background: url("../../assets/images/display.svg") no-repeat;
+      background-size: 100% 100%;
     }
   }
   .button {

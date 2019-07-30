@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer">Copyright@2019 Bgain</footer>
+  <footer class="footer">Copyright&copy;2019 Bgain</footer>
 </template>
 
 <script>
@@ -9,12 +9,17 @@ export default {
 </script>
 
 <style scoped>
-    .footer{
-        height: 14px;
-        width: 106px;
-        margin-top: 40px;
-        font-size: 10px;
-        text-align: center;
-        margin-left: 134px;
-    }
+.footer {
+  height: 14px;
+  width: 100%;
+  margin-top: 40px;
+  font-size: 12.5px;
+  transform: scale(0.8);
+  letter-spacing: 0;
+  text-align: center;
+  position: absolute;
+  bottom: 14px;
+  font-family: PingFangSC-Regular;
+  color: #bbbbbb;
+}
 </style>
