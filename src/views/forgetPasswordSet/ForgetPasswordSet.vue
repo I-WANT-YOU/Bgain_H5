@@ -55,7 +55,6 @@ export default {
     Button,
   },
   mounted() {
-    this.$refs.sendCode.onClick();
     if (this.$route.params.type === 'mobile') {
       this.address = `${this.$route.params.countryCode} ${this.$route.params.username}`;
     } else if (this.$route.params.type === 'email') {
@@ -64,6 +63,7 @@ export default {
       console.log('参数不完整');
       // this.$router.push('/login');
     }
+    this.$refs.sendCode.onClick();
   },
   data() {
     return {
