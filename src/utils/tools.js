@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const strip = (num, precision = 12) => +parseFloat(num.toPrecision(precision));
 
 export const getQueryParam = (name, url) => {
@@ -9,3 +11,5 @@ export const getQueryParam = (name, url) => {
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+export const filterUndefined = options => _.omitBy(options, _.isUndefined);
