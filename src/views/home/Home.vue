@@ -9,7 +9,9 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
     <button @click="onClick">Geetest</button>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div>
-    <router-link to="/unLoginHome">未登录业主页</router-link>
+    <router-link to="/unLoginHome">未登录业主页</router-link><br/>
+    <router-link to="/registerHome">注册业主页</router-link><br/>
+    <router-link to="/loginHome">登陆页主页</router-link>
     <br />
     <SendCode @onsend="onSend" ref="sendCode" :sendTime="5" />
     <br />
