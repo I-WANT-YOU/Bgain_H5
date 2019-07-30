@@ -7,7 +7,15 @@ function resolve(dir) {
 module.exports = {
   outputDir: 'dist',
   publicPath: '/',
-  css: {},
+  css: {
+    loaderOptions: {
+      less: {
+        modifyVars: {
+          'border-color': '#E5E9F6',
+        },
+      },
+    },
+  },
   chainWebpack: (config) => {
     // 压缩代码
     config.optimization.minimize(true);
