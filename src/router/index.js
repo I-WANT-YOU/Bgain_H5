@@ -97,6 +97,10 @@ const router = new Router({
       path: '/product/fixed/:id',
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
+    {
+      path: '/product/current/records',
+      component: () => import('../views/product/current/TradeRecords.vue'),
+    },
   ],
 });
 
