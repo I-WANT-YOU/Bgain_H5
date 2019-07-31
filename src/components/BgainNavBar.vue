@@ -1,5 +1,5 @@
 <template>
-  <nav-bar v-bind="$attrs" :border="false">
+  <nav-bar v-bind="$attrs" :border="false" :fixed="true" @click-left="onClickLeft">
     <template v-slot:left>
       <svg-icon icon-class="go-back" class="icon-go-back"></svg-icon>
     </template>
@@ -13,6 +13,11 @@ export default {
   name: 'BgainNavBar',
   components: {
     NavBar,
+  },
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
   },
 };
 </script>
