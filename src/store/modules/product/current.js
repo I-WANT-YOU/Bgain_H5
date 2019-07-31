@@ -7,6 +7,7 @@ const state = {
   currencies: [],
   currents: [],
   tradeRecords: [],
+  historyRates: [],
 };
 
 const getters = {
@@ -14,6 +15,7 @@ const getters = {
     .filter(({ currency_type: type }) => currency === type)
     .head()
     .value(),
+  historyProfitMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '0')),
 };
 
 const mutations = {
@@ -25,6 +27,9 @@ const mutations = {
   },
   [types.GET_CURRENT_TRADE_RECORDS](state, payload) {
     state.tradeRecords = payload;
+  },
+  [types.GET_HISTORY_INTEREST_RATE](state, payload) {
+    state.historyRates = payload;
   },
 };
 
@@ -45,6 +50,16 @@ const actions = {
       const response = await CurrentService.getCurrentTradeRecords();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_CURRENT_TRADE_RECORDS, get(data, 'current_orders', []));
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getHistoryInterestRate({ commit }, currency) {
+    try {
+      const response = await CurrentService.getHistoryInterestRate(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_HISTORY_INTEREST_RATE, data);
     } catch (error) {
       throw error;
     }

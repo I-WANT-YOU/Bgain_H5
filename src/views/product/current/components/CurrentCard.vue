@@ -1,6 +1,6 @@
 <template>
   <div class="current-card__container">
-    <div class="card-annual__title">
+    <div class="card-annual__title" @click="onHistoryRatesClick">
       今日年化利率
       <svg-icon icon-class="current-arrow" class="icon-arrow"/>
     </div>
@@ -46,6 +46,11 @@ export default {
         name: 'trade-records',
       });
     },
+    onHistoryRatesClick() {
+      this.$router.push({
+        name: 'history-rates',
+      });
+    },
   },
 };
 </script>
@@ -53,13 +58,14 @@ export default {
 <style lang="scss" scoped>
   .current-card__container {
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     padding-top: 24px;
 
     .card-annual__title {
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin-bottom: 1px;
       font-size: 13px;
       color: #a8aeb9;
       line-height: 18px;
@@ -150,6 +156,7 @@ export default {
     }
 
     .buttons {
+      width: 100%;
       display: flex;
       justify-content: space-around;
       margin-top: 19px;

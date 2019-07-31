@@ -29,6 +29,23 @@ class CurrentService {
       throw new Error(error);
     }
   }
+
+  static async getHistoryInterestRate(currency) {
+    try {
+      const requestOptions = {
+        url: '/current/history-interest-rate',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          currency_type: currency,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CurrentService;

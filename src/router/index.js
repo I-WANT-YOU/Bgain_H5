@@ -112,6 +112,11 @@ const router = new Router({
       name: 'trade-records',
       component: () => import('../views/product/current/TradeRecords.vue'),
     },
+    {
+      path: '/product/current/history-rates/:currency',
+      name: 'history-rates',
+      component: () => import('../views/product/current/HistoryRates.vue'),
+    },
   ],
 });
 
