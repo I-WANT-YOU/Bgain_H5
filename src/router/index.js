@@ -108,7 +108,8 @@ const router = new Router({
       component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
     },
     {
-      path: '/product/current/records',
+      path: '/product/current/trade-records',
+      name: 'trade-records',
       component: () => import('../views/product/current/TradeRecords.vue'),
     },
   ],
