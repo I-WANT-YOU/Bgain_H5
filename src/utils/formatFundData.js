@@ -1,5 +1,20 @@
 import dayjs from 'dayjs';
 
+export const fundProductTypeList = [
+  { type: 'SmartBeta', value: '指数更强' },
+  { type: 'CTA', value: 'CTA' },
+  { type: 'Arbitrage', value: '套利' },
+  { type: 'HighFrequency', value: '高频' },
+  { type: 'MixedStrategies', value: '混合' },
+];
+export const riskLevelTypeList = [
+  { type: 'R1_LOW_RISK', value: 'R1' },
+  { type: 'R2_MEDIUM_LOW_LEVEL', value: 'R2' },
+  { type: 'R3_MEDIUM_LEVEL', value: 'R3' },
+  { type: 'R4_MEDIUM_HIGH_LEVEL', value: 'R4' },
+  { type: 'R5_HIGH_LEVEL', value: 'R5' },
+];
+
 // 基金类型
 const formatType = (data) => {
   switch (data.fund_product_type) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="initial">
+  <div class="initial" @click="skip">
     <svg-icon icon-class="initial" class="icon-initial" />
     <div class="initial-top"></div>
     <h4 class="title">{{options.fund_name}}</h4>
@@ -31,11 +31,14 @@ export default {
   props: {
     options: {
       type: Object,
-    }
+    },
   },
   methods: {
     submit() {
       console.log('2');
+    },
+    skip() {
+      this.$router.push(`/product/fund/initial/${this.options.id}`);
     },
   },
 };

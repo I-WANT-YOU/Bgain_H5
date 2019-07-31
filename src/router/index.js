@@ -97,6 +97,16 @@ const router = new Router({
       path: '/product/fixed/:id',
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
+    {
+      path: '/product/fund/initial/:id',
+      name: 'initial',
+      component: () => import('../views/product/fund/Initial/Initial.vue'),
+    },
+    {
+      path: '/product/fund/noinitial/:id',
+      name: 'noinitial',
+      component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
+    },
   ],
 });
 

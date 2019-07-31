@@ -33,25 +33,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { Sticky, PullRefresh } from 'vant';
-import formatFundData from '@utils/formatFundData';
+import formatFundData, { fundProductTypeList, riskLevelTypeList } from '@utils/formatFundData';
 import Screen from './components/Screen.vue';
 import Initial from './components/Initial.vue';
 import NoInitial from './components/NoInitial.vue';
-
-const fundProductTypeList = [
-  { type: 'SmartBeta', value: '指数更强' },
-  { type: 'CTA', value: 'CTA' },
-  { type: 'Arbitrage', value: '套利' },
-  { type: 'HighFrequency', value: '高频' },
-  { type: 'MixedStrategies', value: '混合' },
-];
-const riskLevelTypeList = [
-  { type: 'R1_LOW_RISK', value: 'R1' },
-  { type: 'R2_MEDIUM_LOW_LEVEL', value: 'R2' },
-  { type: 'R3_MEDIUM_LEVEL', value: 'R3' },
-  { type: 'R4_MEDIUM_HIGH_LEVEL', value: 'R4' },
-  { type: 'R5_HIGH_LEVEL', value: 'R5' },
-];
 
 const options = [
   {

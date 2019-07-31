@@ -1,5 +1,5 @@
 <template>
-  <div class="noInitial">
+  <div class="noInitial" @click="onClick">
     <h4 class="title">
       <span>{{options.fund_name}}</span>
       <svg-icon v-if="options.support_fbp" icon-class="fbp" class="icon-no-initial" />
@@ -37,7 +37,12 @@ export default {
   props: {
     options: {
       type: Object,
-    }
+    },
+  },
+  methods: {
+    onClick() {
+      this.$router.push(`/product/fund/noinitial/${this.options.id}`);
+    },
   },
 };
 </script>
