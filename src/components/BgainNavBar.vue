@@ -28,6 +28,7 @@ export default {
 <style lang="scss" scoped>
   .van-nav-bar__title {
     font-size: 17px;
+    font-weight: normal;
     color: #0F3256;
   }
 
