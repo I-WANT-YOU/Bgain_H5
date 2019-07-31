@@ -11,10 +11,10 @@
         <div class="tab-con-form">
           <div v-show="tab === 'mobile'" class="tab-con-form-mobile-wrap">
             <div class="tab-con-form-input mobile">
-              <p>
+              <p @click="skip">
                 <span class="text">{{country.text}}</span>
                 <span class="phone">{{country.value}}</span>
-                <i class="next skip" @click="skip"></i>
+                <i class="next skip"></i>
               </p>
             </div>
             <div class="tab-con-form-input">
@@ -39,8 +39,8 @@
         </div>
       </div>
     </div>
-    <Footer />
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
+    <Footer />
   </div>
 </template>
 
@@ -126,6 +126,9 @@ export default {
 <style lang="scss">
 .forget-password {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .bg-back {
     width: 8px;
     height: 13px;
@@ -139,6 +142,7 @@ export default {
     background: url("../../assets/images/next.svg");
   }
   .tab {
+    flex: 1;
     margin-top: 25px;
     .tab-nav {
       display: flex;
