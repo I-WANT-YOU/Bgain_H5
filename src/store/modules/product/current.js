@@ -6,6 +6,7 @@ import * as types from '../../mutationTypes';
 const state = {
   currencies: [],
   currents: [],
+  tradeRecords: [],
 };
 
 const getters = {
@@ -22,6 +23,9 @@ const mutations = {
   [types.GET_CURRENT_CURRENCIES](state, payload) {
     state.currencies = payload;
   },
+  [types.GET_CURRENT_TRADE_RECORDS](state, payload) {
+    state.tradeRecords = payload;
+  },
 };
 
 const actions = {
@@ -31,6 +35,16 @@ const actions = {
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_CURRENT_CURRENCIES, get(data, 'currency_type_list', []));
       commit(types.GET_ALL_CURRENT_PRODUCT, get(data, 'current_profit', []));
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getCurrentTradeRecords({ commit }) {
+    try {
+      const response = await CurrentService.getCurrentTradeRecords();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_CURRENT_TRADE_RECORDS, get(data, 'current_orders', []));
     } catch (error) {
       throw error;
     }

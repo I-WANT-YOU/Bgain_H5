@@ -4,6 +4,10 @@
       今日年化利率
       <svg-icon icon-class="current-arrow" class="icon-arrow"/>
     </div>
+    <div class="card__trade-records" @click="onRecordsClick">
+      <svg-icon icon-class="current-records" class="icon-records"></svg-icon>
+      交易记录
+    </div>
     <div class="card-annual__rate">{{dataSource.interest_rate}}</div>
     <div class="card__total-amount">
       <span>在投总额</span>
@@ -36,11 +40,19 @@ export default {
       required: true,
     },
   },
+  methods: {
+    onRecordsClick() {
+      this.$router.push({
+        name: 'trade-records',
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
   .current-card__container {
+    position: relative;
     padding-top: 24px;
 
     .card-annual__title {
@@ -56,6 +68,23 @@ export default {
         width: 4.4px;
         height: 9px;
         margin-left: 6.6px;
+      }
+    }
+
+    .card__trade-records {
+      position: absolute;
+      top: 16px;
+      right: 0;
+      background: #FDF4F4;
+      padding: 6px 18px 6px 8px;
+      border-radius: 17px 0 0 17px;
+      font-size: 12px;
+      color: #FF5656;
+      line-height: 17px;
+
+      .icon-records {
+        width: 10px;
+        height: 11px;
       }
     }
 
