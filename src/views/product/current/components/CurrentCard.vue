@@ -19,7 +19,7 @@
         <span>{{dataSource.total_profit}}</span>
       </div>
       <span></span>
-      <div>
+      <div @click="onHistoryProfitClick(dataSource.currency_type)">
         <div class="profit__title">昨日收益({{dataSource.currency_type}})</div>
         <span>{{dataSource.yesterday_profit}}</span>
       </div>
@@ -49,6 +49,14 @@ export default {
     onHistoryRatesClick(currency) {
       this.$router.push({
         name: 'history-rates',
+        params: {
+          currency,
+        },
+      });
+    },
+    onHistoryProfitClick(currency) {
+      this.$router.push({
+        name: 'history-profit',
         params: {
           currency,
         },

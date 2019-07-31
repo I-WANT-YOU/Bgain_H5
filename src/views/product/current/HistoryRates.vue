@@ -7,7 +7,7 @@
           <progress-card
             v-for="(history, index) in historyProfitRates"
             :key="history.date"
-            :percentage="Number(history.amount) / historyProfitMax * 100"
+            :percentage="Number(history.amount) / historyProfitRateMax * 100"
             :left-text="index === 0 ? '今日利率' : history.date"
             :right-text="`${history.amount}%`">
           </progress-card>
@@ -39,7 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['historyProfitMax', 'historyProfitRates']),
+    ...mapGetters(['historyProfitRateMax', 'historyProfitRates']),
   },
   mounted() {
     this.currency = this.$route.params.currency;

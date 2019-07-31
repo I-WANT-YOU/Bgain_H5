@@ -121,6 +121,15 @@ const router = new Router({
       name: 'history-rates',
       component: () => import('../views/product/current/HistoryRates.vue'),
     },
+    {
+      path: '/product/current/history-profit/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/history-profit/:currency',
+      name: 'history-profit',
+      component: () => import('../views/product/current/HistoryProfit.vue'),
+    },
   ],
 });
 

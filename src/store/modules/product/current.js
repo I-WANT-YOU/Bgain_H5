@@ -8,7 +8,8 @@ const state = {
   currencies: [],
   currents: [],
   tradeRecords: [],
-  historyRates: [],
+  historyRates: {},
+  historyProfit: {},
 };
 
 const getters = {
@@ -16,8 +17,16 @@ const getters = {
     .filter(({ currency_type: type }) => currency === type)
     .head()
     .value(),
-  historyProfitMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '')),
+  historyProfitRateMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '0')),
   historyProfitRates: ({ historyRates }) => chain(historyRates)
+    .get('history_profit_daily', [])
+    .map(({ amount, date }) => ({
+      amount,
+      date: formatDate(date),
+    }))
+    .value(),
+  historyProfitMax: ({ historyProfit }) => Number(get(historyProfit, 'history_profit_max', '0')),
+  historyProfits: ({ historyProfit }) => chain(historyProfit)
     .get('history_profit_daily', [])
     .map(({ amount, date }) => ({
       amount,
@@ -38,6 +47,9 @@ const mutations = {
   },
   [types.GET_HISTORY_INTEREST_RATE](state, payload) {
     state.historyRates = payload;
+  },
+  [types.GET_HISTORY_PROFIT](state, payload) {
+    state.historyProfit = payload;
   },
 };
 
@@ -68,6 +80,16 @@ const actions = {
       const response = await CurrentService.getHistoryInterestRate(currency);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_HISTORY_INTEREST_RATE, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getHistoryProfit({ commit }, currency) {
+    try {
+      const response = await CurrentService.getHistoryProfit(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_HISTORY_PROFIT, data);
     } catch (error) {
       throw error;
     }
