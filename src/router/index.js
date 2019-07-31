@@ -107,6 +107,10 @@ const router = new Router({
       name: 'noinitial',
       component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
     },
+    {
+      path: '/product/current/records',
+      component: () => import('../views/product/current/TradeRecords.vue'),
+    },
   ],
 });
 
