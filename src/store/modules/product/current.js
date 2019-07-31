@@ -1,6 +1,7 @@
 import { chain, get } from 'lodash';
 import { CurrentService } from '@api/product';
 import * as Auth from '@utils/auth';
+import { formatDate } from '@utils/tools';
 import * as types from '../../mutationTypes';
 
 const state = {
@@ -15,7 +16,14 @@ const getters = {
     .filter(({ currency_type: type }) => currency === type)
     .head()
     .value(),
-  historyProfitMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '0')),
+  historyProfitMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '')),
+  historyProfitRates: ({ historyRates }) => chain(historyRates)
+    .get('history_profit_daily', [])
+    .map(({ amount, date }) => ({
+      amount,
+      date: formatDate(date),
+    }))
+    .value(),
 };
 
 const mutations = {

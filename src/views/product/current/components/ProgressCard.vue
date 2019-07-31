@@ -64,6 +64,7 @@ export default {
           background: linear-gradient(-90deg, #783FF8 26%, #4776F7 100%) !important;
         }
       }
+
       .progress-card__text {
         span {
           color: #3C64EE;

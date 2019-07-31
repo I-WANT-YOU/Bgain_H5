@@ -113,6 +113,10 @@ const router = new Router({
       component: () => import('../views/product/current/TradeRecords.vue'),
     },
     {
+      path: '/product/current/history-rates/',
+      redirect: '/product/current',
+    },
+    {
       path: '/product/current/history-rates/:currency',
       name: 'history-rates',
       component: () => import('../views/product/current/HistoryRates.vue'),

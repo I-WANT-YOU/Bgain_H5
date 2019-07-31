@@ -1,6 +1,6 @@
 <template>
   <div class="current-card__container">
-    <div class="card-annual__title" @click="onHistoryRatesClick">
+    <div class="card-annual__title" @click="onHistoryRatesClick(dataSource.currency_type)">
       今日年化利率
       <svg-icon icon-class="current-arrow" class="icon-arrow"/>
     </div>
@@ -46,9 +46,12 @@ export default {
         name: 'trade-records',
       });
     },
-    onHistoryRatesClick() {
+    onHistoryRatesClick(currency) {
       this.$router.push({
         name: 'history-rates',
+        params: {
+          currency,
+        },
       });
     },
   },
