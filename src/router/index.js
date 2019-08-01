@@ -51,6 +51,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
     },
     {
+      path: '/fixedPurchaseStepOne/:name',
+      name: 'FixedPurchaseStepOne',
+      component: () => import(/* webpackChunkName: "fixedPurchaseStepOne" */ '../views/product/fixed/FixedPurchaseStepOne.vue'),
+    },
+    {
       path: '/country',
       name: 'country',
       component: () => import(/* webpackChunkName: "register" */ '../views/country/Country.vue'),
@@ -95,6 +100,7 @@ const router = new Router({
     },
     {
       path: '/product/fixed/:id',
+      name: 'FixedDetail',
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
   ],

@@ -344,7 +344,9 @@ export default {
     },
     // 选择国家
     chooseCountry() {
-      this.$router.push({ name: 'country', params: { fromPath: 'register' } });
+      this.$router.push(
+        { name: 'country', params: { fromPath: 'register' } },
+      );
     },
     // 选择国家
     onSelect(item) {

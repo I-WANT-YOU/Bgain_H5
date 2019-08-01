@@ -82,7 +82,11 @@
             <span>锁定期</span>
             <span>预期年化利率</span>
           </li>
-          <li v-for="(item) in fixeds" :key="item.id">
+          <li
+            v-for="(item) in fixeds"
+            :key="item.id"
+            @click="stepToFixDetail(item.id)"
+          >
             <div class="fix-li-style">
               <div>
                 <span>{{ item.currency_type }}</span>
@@ -152,6 +156,13 @@ export default {
     ...mapActions('home', [
       'getAllHomeInfo',
     ]),
+    // 跳转到定期详情页面
+    stepToFixDetail(id) {
+      this.$router.push({
+        name: 'FixedDetail',
+        params: { id },
+      });
+    },
     // 设置echart名称
     setMyEchart(index) {
       const myEchart = `myEchart${index}`;

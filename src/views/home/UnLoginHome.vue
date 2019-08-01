@@ -91,7 +91,8 @@ export default {
 
   }
   .list-container{
-    width: 100%
+    width: 100%;
+    margin-top:25px;
   }
   .more-products-container{
     display: flex;
