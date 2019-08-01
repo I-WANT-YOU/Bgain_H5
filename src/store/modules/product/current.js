@@ -10,6 +10,8 @@ const state = {
   tradeRecords: [],
   historyRates: {},
   historyProfit: {},
+  buyInfo: {},
+  sellInfo: {},
 };
 
 const getters = {
@@ -51,6 +53,12 @@ const mutations = {
   [types.GET_HISTORY_PROFIT](state, payload) {
     state.historyProfit = payload;
   },
+  [types.GET_CURRENT_BUY_INFO](state, payload) {
+    state.buyInfo = payload;
+  },
+  [types.GET_CURRENT_SELL_INFO](state, payload) {
+    state.sellInfo = payload;
+  },
 };
 
 const actions = {
@@ -90,6 +98,26 @@ const actions = {
       const response = await CurrentService.getHistoryProfit(currency);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_HISTORY_PROFIT, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getCurrentBuyInfo({ commit }, currency) {
+    try {
+      const response = await CurrentService.getCurrentBuyInfo(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_CURRENT_BUY_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getCurrentSellInfo({ commit }, currency) {
+    try {
+      const response = await CurrentService.getCurrentSellInfo(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_CURRENT_SELL_INFO, data);
     } catch (error) {
       throw error;
     }

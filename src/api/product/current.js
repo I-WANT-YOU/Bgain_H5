@@ -63,6 +63,40 @@ class CurrentService {
       throw new Error(error);
     }
   }
+
+  static async getCurrentBuyInfo(currency) {
+    try {
+      const requestOptions = {
+        url: '/current/buy-info',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          currency_type: currency,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getCurrentSellInfo(currency) {
+    try {
+      const requestOptions = {
+        url: '/current/sell-info',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          currency_type: currency,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CurrentService;
