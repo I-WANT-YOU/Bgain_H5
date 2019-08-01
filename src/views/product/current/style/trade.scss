@@ -1,0 +1,72 @@
+.current-trade__container {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+
+  .current-trade__content {
+    position: relative;
+    flex: 1;
+    background: #f8f8f8;
+
+    .content__panel {
+      padding: 20px;
+      background: #fff;
+      margin-bottom: 60px;
+
+      .panel__title {
+        font-size: 15px;
+        line-height: 21px;
+        color: #0F3256;
+      }
+
+      .panel__all {
+        font-size: 14px;
+        line-height: 20px;
+        color: #3C64EE;
+      }
+
+      .van-cell {
+        padding: 20px 0 0;
+        font-size: 18px;
+        line-height: 25px;
+
+        .van-field__control {
+          color: #0F3256;
+        }
+      }
+    }
+
+    .content__button {
+      padding: 0 22px;
+    }
+
+    .content__description {
+      position: absolute;
+      bottom: 50px;
+      padding-left: 20px;
+
+      @media screen and (max-device-width: 374px) {
+        padding-right: 20px;
+      }
+
+      .content__description--title {
+        color: #666666;
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 10px;
+      }
+
+      .content__description--texts {
+        div {
+          font-size: 12px;
+          color: #999999;
+          line-height: 18px;
+        }
+
+        :not(last-child) {
+          margin-bottom: 18px;
+        }
+      }
+    }
+  }
+}

@@ -35,6 +35,7 @@ const getters = {
       date: formatDate(date),
     }))
     .value(),
+  maxSellAmount: ({ sellInfo }) => Number(get(sellInfo, 'amount', '0')),
 };
 
 const mutations = {
