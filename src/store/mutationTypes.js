@@ -14,6 +14,8 @@ export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
  */
 export const GET_ALL_FIXED_PRODUCT = 'GET_ALL_FIXED_PRODUCT';
 export const GET_FIXED_PRODUCT_BY_ID = 'GET_FIXED_PRODUCT_BY_ID';
+export const GET_FIXED_BUY_INFO = 'GET_FIXED_BUY_INFO';
+export const GET_AVAILABEL_COUPONS = 'GET_AVAILABEL_COUPONS';
 
 /**
  * @module Current 活期产品相关

@@ -1,11 +1,13 @@
 import { get, chain } from 'lodash';
-import { handlerSuccessResponse } from '@utils/auth';
+import { handlerSuccessResponse, handlerSuccessResponseV2 } from '@utils/auth';
 import * as types from '@/store/mutationTypes';
 import { FixedService } from '@/api/product';
 
 const state = {
   fixeds: {},
   fixed: {},
+  fixedBuyInfo: {},
+  availabelCoupons: [],
 };
 
 const getters = {
@@ -25,6 +27,12 @@ const mutations = {
   [types.GET_FIXED_PRODUCT_BY_ID](state, payload) {
     state.fixed = get(payload, 'obj', {});
   },
+  [types.GET_FIXED_BUY_INFO](state, payload) {
+    state.fixedBuyInfo = payload;
+  },
+  [types.GET_AVAILABEL_COUPONS](state, payload) {
+    state.availabelCoupons = payload;
+  },
 };
 
 const actions = {
@@ -38,11 +46,63 @@ const actions = {
     }
   },
 
+  // 获取定期产品详情
   async getFixedProductById({ commit }, productId) {
     try {
       const response = await FixedService.getFixedProductById(productId);
       const data = await handlerSuccessResponse(response);
       commit(types.GET_FIXED_PRODUCT_BY_ID, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 获取定期产品购买页信息
+  async getFixedBuyInfo({ commit }, productId) {
+    try {
+      const response = await FixedService.getFixedBuyInfo(productId);
+      const data = await handlerSuccessResponseV2(response);
+      commit(types.GET_FIXED_BUY_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**
+   * 购买定期产品
+   * @param context
+   * @param params
+   * @example
+   * {
+      "product_id" : 177,
+      "amount": 6000,
+      "amount_currency":"usdt",
+      "payment_currency": "usdt",
+      "payment_password": "123456",
+      "user_coupon_id": "",
+      "product_type":"fix_income",
+      "auto_transfer_in":true
+   * }
+   * @returns {Promise<Promise<never> | Promise<unknown>>}
+   */
+  async buyFixedProduct(context, params) {
+    try {
+      const response = await FixedService.buyFixedProduct(params);
+      return handlerSuccessResponseV2(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 获取可用的优惠券
+  async getAvailableCoupons({ commit }, { id, amount }) {
+    try {
+      const response = await FixedService.getAvailableCoupons({
+        product_id: id,
+        amount,
+      });
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_AVAILABEL_COUPONS, get(data, 'available_coupon_list', []));
     } catch (error) {
       throw error;
     }
