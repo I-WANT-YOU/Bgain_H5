@@ -3,7 +3,7 @@
     <bgain-nav-bar :title="`历史收益(${currency})`"></bgain-nav-bar>
     <div class="history-profit__wrapper">
       <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)">
-        <div class="history-rate__content">
+        <div class="history-rate__content" v-if="historyProfits.length !== 0">
           <progress-card
             v-for="(history, index) in historyProfits"
             :key="history.date"
@@ -12,6 +12,7 @@
             :right-text="`${history.amount}`">
           </progress-card>
         </div>
+        <bgain-empty v-else title="暂无历史收益记录"></bgain-empty>
       </pull-refresh>
     </div>
   </div>
@@ -20,6 +21,7 @@
 <script>
 import { createNamespacedHelpers } from 'vuex';
 import { PullRefresh, Toast } from 'vant';
+import BgainEmpty from '@/components/BgainEmpty.vue';
 import ProgressCard from './components/ProgressCard.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 
@@ -29,6 +31,7 @@ export default {
   name: 'HistoryProfit',
   components: {
     PullRefresh,
+    BgainEmpty,
     BgainNavBar,
     ProgressCard,
   },

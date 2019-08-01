@@ -38,8 +38,12 @@ export default {
       getProduct: 'getCurrentProductsByCurrency',
     }),
   },
-  mounted() {
-    this.onRefresh(this.currency);
+  async mounted() {
+    Toast.loading({
+      message: '加载中...',
+    });
+    await this.onRefresh(this.currency);
+    Toast.clear();
   },
   methods: {
     ...mapActions(['getAllCurrentProduct']),
