@@ -103,6 +103,39 @@ const router = new Router({
       name: 'FixedDetail',
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
+    {
+      path: '/product/fund/initial/:id',
+      name: 'initial',
+      component: () => import('../views/product/fund/Initial/Initial.vue'),
+    },
+    {
+      path: '/product/fund/noinitial/:id',
+      name: 'noinitial',
+      component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
+    },
+    {
+      path: '/product/current/trade-records',
+      name: 'trade-records',
+      component: () => import('../views/product/current/TradeRecords.vue'),
+    },
+    {
+      path: '/product/current/history-rates/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/history-rates/:currency',
+      name: 'history-rates',
+      component: () => import('../views/product/current/HistoryRates.vue'),
+    },
+    {
+      path: '/product/current/history-profit/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/history-profit/:currency',
+      name: 'history-profit',
+      component: () => import('../views/product/current/HistoryProfit.vue'),
+    },
   ],
 });
 

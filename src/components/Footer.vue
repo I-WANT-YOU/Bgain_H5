@@ -17,8 +17,7 @@ export default {
   transform: scale(0.8);
   letter-spacing: 0;
   text-align: center;
-  position: absolute;
-  bottom: 14px;
+  padding-bottom: 14px;
   font-family: PingFangSC-Regular;
   color: #bbbbbb;
 }
