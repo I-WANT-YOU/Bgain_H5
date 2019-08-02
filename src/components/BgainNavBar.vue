@@ -1,7 +1,7 @@
 <template>
   <sticky>
     <nav-bar v-bind="$attrs" :border="false" @click-left="onClickLeft">
-      <template v-slot:left>
+      <template v-slot:left v-if="showArrow">
         <svg-icon icon-class="go-back" class="icon-go-back"></svg-icon>
       </template>
     </nav-bar>
@@ -13,6 +13,13 @@ import { NavBar, Sticky } from 'vant';
 
 export default {
   name: 'BgainNavBar',
+  props: {
+    showArrow: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+  },
   components: {
     NavBar,
     Sticky,

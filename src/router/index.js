@@ -107,11 +107,13 @@ const router = new Router({
       name: 'noinitial',
       component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
     },
+    // 活期交易记录
     {
       path: '/product/current/trade-records',
       name: 'trade-records',
       component: () => import('../views/product/current/TradeRecords.vue'),
     },
+    // 活期历史年化收益率
     {
       path: '/product/current/history-rates/',
       redirect: '/product/current',
@@ -121,6 +123,7 @@ const router = new Router({
       name: 'history-rates',
       component: () => import('../views/product/current/HistoryRates.vue'),
     },
+    // 活期历史收益
     {
       path: '/product/current/history-profit/',
       redirect: '/product/current',
@@ -129,6 +132,35 @@ const router = new Router({
       path: '/product/current/history-profit/:currency',
       name: 'history-profit',
       component: () => import('../views/product/current/HistoryProfit.vue'),
+    },
+    // 活期转出
+    {
+      path: '/product/current/sell/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/sell/:currency',
+      name: 'current-sell',
+      component: () => import('../views/product/current/CurrentSell.vue'),
+    },
+    {
+      path: '/product/current/buy/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/buy/:currency',
+      name: 'current-buy',
+      component: () => import('../views/product/current/CurrentBuy.vue'),
+    },
+    {
+      path: '/product/current/buy/:currency/result',
+      name: 'current-buy-result',
+      component: () => import('../views/product/current/CurrentBuyResult.vue'),
+    },
+    {
+      path: '/product/current/sell/:currency/result',
+      name: 'current-sell-result',
+      component: () => import('../views/product/current/CurrentSellResult.vue'),
     },
   ],
 });
