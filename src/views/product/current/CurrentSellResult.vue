@@ -9,12 +9,12 @@
       </div>
       <div class="content-text__cards">
         <div class="content-text__card">
-          <div class="card__title">转入成功</div>
-          <div class="card__content">转入1223 {{currency}}</div>
+          <div class="card__title">转出申请提交</div>
+          <div class="card__content">转出1223 {{currency}}</div>
         </div>
         <div class="content-text__card">
-          <div class="card__title">计算收益</div>
-          <div class="card__content">预计1223 开始计息</div>
+          <div class="card__title">资金到账</div>
+          <div class="card__content">预计1223 资金可到账</div>
         </div>
       </div>
     </div>
@@ -37,6 +37,9 @@ export default {
     BgainNavBar,
   },
   computed: {
+    currency() {
+      return this.$route.params.currency;
+    },
   },
   methods: {
     onGoBackClick() {
