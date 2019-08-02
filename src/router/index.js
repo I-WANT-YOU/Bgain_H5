@@ -152,6 +152,11 @@ const router = new Router({
       name: 'current-buy',
       component: () => import('../views/product/current/CurrentBuy.vue'),
     },
+    {
+      path: '/product/current/buy/:currency/result',
+      name: 'current-buy-result',
+      component: () => import('../views/product/current/CurrentBuyResult.vue'),
+    },
   ],
 });
 

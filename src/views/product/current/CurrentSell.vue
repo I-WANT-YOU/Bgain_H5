@@ -6,7 +6,8 @@
         <div class="panel__title">转出数量({{currency}})</div>
         <Field
           type="number"
-          v-model="value"
+          :value="amount"
+          @keydown.native="onAmountInput"
           :placeholder="`最多转出 ${maxSellAmount} ${currency}`"
           :border="false">
           <template v-slot:button>
@@ -18,7 +19,9 @@
         <bgain-button
           type="info"
           :fluid="true"
-          :disabled="value === ''">
+          :disabled="amount === ''"
+          @click="onSubmitClick"
+        >
           确定
         </bgain-button>
       </div>
@@ -51,7 +54,7 @@ export default {
   },
   data() {
     return {
-      value: '',
+      amount: '',
       currency: '',
     };
   },
@@ -75,8 +78,23 @@ export default {
         Toast(error.message);
       }
     },
+    onAmountInput(e) {
+      // const { key } = e;
+      // const { value } = e.target;
+      // console.log(e);
+      // console.log(key === '.');
+      // if (key === '.') {
+      //   console.log(1);
+      //   console.log(e.target.value.match(/^\d*(\.?\d{0,8})/g)[0]);
+      //   this.amount = '0.';
+      //   e.target.value = '0.' || null;
+      // }
+    },
     onClickAll() {
       this.value = this.maxSellAmount;
+    },
+    onSubmitClick() {
+      console.log(this.value);
     },
   },
 };

@@ -6,6 +6,7 @@
         <div class="panel__title">转入数量({{currency}})</div>
         <Field
           type="number"
+          v-model="amount"
           :placeholder="`起投 ${minBuyAmount} ${currency}`"
           :border="false">
         </Field>
@@ -20,6 +21,7 @@
           type="info"
           :fluid="true"
           :disabled="amount === ''"
+          @click="onSubmitClick"
         >
           转入
         </bgain-button>
@@ -70,10 +72,24 @@ export default {
     Toast.clear();
   },
   methods: {
-    ...mapActions(['getCurrentBuyInfo']),
+    ...mapActions(['getCurrentBuyInfo', 'buyCurrentProduct']),
     async fetchBuyInfo(currency) {
       try {
         await this.getCurrentBuyInfo(currency);
+      } catch (error) {
+        Toast(error.message);
+      }
+    },
+    async onSubmitClick() {
+      try {
+        await this.buyCurrentProduct({
+          amount: 0.1,
+          currency: 'BTC',
+          password: '123456',
+        });
+        this.$router.push({
+          name: 'current-buy-result',
+        });
       } catch (error) {
         Toast(error.message);
       }

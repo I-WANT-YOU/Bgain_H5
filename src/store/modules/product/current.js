@@ -12,6 +12,8 @@ const state = {
   historyProfit: {},
   buyInfo: {},
   sellInfo: {},
+  buyResult: {},
+  sellResult: {},
 };
 
 const getters = {
@@ -38,6 +40,8 @@ const getters = {
   minBuyAmount: ({ buyInfo }) => Number(get(buyInfo, 'current_buy_min', '0')),
   buyBalance: ({ buyInfo }) => Number(get(buyInfo, 'amount', '0')),
   maxSellAmount: ({ sellInfo }) => Number(get(sellInfo, 'amount', '0')),
+  buyAmount: ({ buyResult }) => get(buyResult, 'amount', '0'),
+  buyStartDate: ({ buyResult }) => get(buyResult, 'interestStartDate', 0),
 };
 
 const mutations = {
@@ -61,6 +65,9 @@ const mutations = {
   },
   [types.GET_CURRENT_SELL_INFO](state, payload) {
     state.sellInfo = payload;
+  },
+  [types.GET_CURRENT_BUY_RESULT](state, payload) {
+    state.buyResult = payload;
   },
 };
 
@@ -121,6 +128,23 @@ const actions = {
       const response = await CurrentService.getCurrentSellInfo(currency);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_CURRENT_SELL_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async buyCurrentProduct({ commit }, { amount, currency, password }) {
+    try {
+      const response = await CurrentService.buyCurrentProduct({
+        amount,
+        currency,
+        password,
+      });
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_CURRENT_BUY_RESULT, {
+        interestStartDate: get(data, 'interest_start_date', 0),
+        amount,
+      });
     } catch (error) {
       throw error;
     }
