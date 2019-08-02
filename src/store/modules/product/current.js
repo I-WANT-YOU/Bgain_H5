@@ -35,6 +35,8 @@ const getters = {
       date: formatDate(date),
     }))
     .value(),
+  minBuyAmount: ({ buyInfo }) => Number(get(buyInfo, 'current_buy_min', '0')),
+  buyBalance: ({ buyInfo }) => Number(get(buyInfo, 'amount', '0')),
   maxSellAmount: ({ sellInfo }) => Number(get(sellInfo, 'amount', '0')),
 };
 

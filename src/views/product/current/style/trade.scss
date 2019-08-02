@@ -19,6 +19,26 @@
         color: #0F3256;
       }
 
+      .panel__subcontent {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 15px;
+        margin-bottom: -5px;
+
+        .panel__title--sub {
+          font-size: 15px;
+          line-height: 21px;
+          color: #6A707D;
+        }
+
+        .panel__number {
+          font-size: 15px;
+          line-height: 21px;
+          color: #0F3256;
+        }
+      }
+
+
       .panel__all {
         font-size: 14px;
         line-height: 20px;
@@ -33,6 +53,10 @@
         .van-field__control {
           color: #0F3256;
         }
+      }
+
+      .van-divider {
+        margin: 20px 0 0;
       }
     }
 
