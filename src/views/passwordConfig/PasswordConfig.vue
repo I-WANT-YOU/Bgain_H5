@@ -2,12 +2,12 @@
   <div class="config">
     <BgainNavBar title="密码设置" />
     <div class="password-config">
-      <div @click="$router.push('/passwordConfig/ResetLoginPassword')">
+      <div @click="$router.push('/passwordconfig/reset/loginpassword')">
         <span>修改登录密码</span>
         <svg-icon icon-class="next" class="next" />
       </div>
       <div class="line"></div>
-      <div @click="$router.push('/passwordConfig/ResetTradePassword')">
+      <div @click="$router.push('/passwordconfig/reset/tradepassword')">
         <span>重置交易密码</span>
         <svg-icon icon-class="next" class="next" />
       </div>

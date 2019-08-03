@@ -3,7 +3,11 @@
     <BgainNavBar :title="title" />
     <div class="info">
       <div class="info-top">
-        <span class="gains">+{{fundDetail.market_change_percent}}%</span>
+        <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
+          <span>{{fundDetail.market_change_percent >= 0 ? `+${fundDetail.market_change_percent}` : fundDetail.market_change_percent}}</span>
+          <span class="percent">%</span>
+          <i />
+        </span>
         <span class="texts">
           当前规模
           <span class="text">{{fundDetail.current_size}} {{fundDetail.currency_type}}</span>
@@ -29,7 +33,11 @@
         <div class="purchase">申购倒计时 1天19小时24分</div>
       </div>
       <div class="echarts">
-        <div class="my-echarts" ref="echarts" style="width: 286px;height: 136px;"></div>
+        <div class="echarts-info">
+          <span>日期 {{formatDate(chart_x, 'MM-DD')}}</span>
+          <span>单位净值 {{chart_y}}</span>
+        </div>
+        <div class="my-echarts" ref="echarts" style="width: 305px;height: 136px;"></div>
       </div>
     </div>
     <div class="tradeshow">
@@ -43,15 +51,15 @@
       <div class="steps">
         <div class="text">
           <div>
-            <div>{{showstep ? '--' : ''}}</div>
+            <div>{{showstep ? '--' : formatDate(fundDetail.current_time,'MM-DD') }}</div>
             <div class="font">认购提交</div>
           </div>
           <div>
-            <div>{{showstep ? '--' : ''}}</div>
+            <div>{{showstep ? '--' : formatDate(fundDetail.due_date,'MM-DD')}}</div>
             <div class="font">确认份额</div>
           </div>
           <div>
-            <div>{{showstep ? '--' : ''}}</div>
+            <div>{{showstep ? '--' : formatDate(fundDetail.profits_date,'MM-DD')}}</div>
             <div class="font">查看交易</div>
           </div>
           <div>
@@ -95,9 +103,9 @@
         </div>
         <div>
           <svg-icon icon-class="fund-meritpay" />
-          <div class="percent">{{fundDetail.market_change_percent * 100}}%</div>
+          <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
-          <!-- market_change_percent -->
+          <!-- carry_rate_user -->
         </div>
       </div>
     </div>
@@ -122,8 +130,11 @@
     </div>
     <div class="foot"></div>
     <div class="fixed">
-      <div v-if="!open" class="open">2019-08-08开放认购</div>
-      <Button type="info" class="button">立即认购</Button>
+      <div
+        v-if="!this.fundDetail.status === 'OPEN'"
+        class="open"
+      >{{formatDate(fundDetail.next_open_date,'YYYY-MM-DD')}}开放认购</div>
+      <Button type="info" class="button" @click="onSubmit">立即认购</Button>
     </div>
   </div>
 </template>
@@ -134,44 +145,7 @@ import { formatDate, strip } from '@utils/tools';
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import { Button } from 'vant';
-import { formatRisk, formatType } from './formatFundData';
-
-/*
-administrator: "NV Capital↵"
-carry_rate_user: "30"
-closing_date: 1561716000000
-create_date: 1558354347000
-currency_type: "BTC"
-current_size: "15.8752"
-current_time: 1564675200000
-due_date: 1561651200000
-fund_name: "NV全频中性套利1号"
-fund_product_type: "Arbitrage"
-id: 1
-initial_end_date: 1559296800000
-initial_start_date: 1558364400000
-introduction: "针↵"
-issue_number: 2
-manage_fee_rate: "0"
-market_change_percent: "283.22"
-max_retracement_scale: "6.00"
-min_holding_shares: "1"
-min_invest_amt: "0.01"
-nav: "3.7823"
-nav_date: 1562774400000
-next_open_date: 1563532200000
-open_duration: 7
-period: 28
-png_url: "https://finbee-uat.oss-cn-hongkong.aliyuncs.com/logo2.jpg"
-profits_date: 1561737600000
-risk_level_type: "R2_MEDIUM_LOW_LEVEL"
-status: "CLOSE"
-team_name: "NV Capital"
-un_open_duration: 21
-up_down: 1
-*/
-
-
+import { formatRisk, formatType, echartsOption } from './formatFundData';
 
 export default {
   name: 'NoInitial',
@@ -182,72 +156,19 @@ export default {
   data() {
     return {
       title: 'ABC多策略整合CTA',
-      showstep: true,
+      showstep: false,
       open: false,
       type: '',
       risk: '',
+      chart_x: '03-16',
+      chart_y: '1.000',
     };
   },
   mounted() {
     this.getFundProductDetail(this.$route.params.id).then(() => {
-      console.log(this.fundDetail);
-
-      console.log(this.fundNavHistories);
-      console.log(this.$refs.echarts);
       this.type = formatType(this.fundDetail).fund_product_type;
       this.risk = formatRisk(this.fundDetail).risk_level_type;
-      this.chart = echarts.init(this.$refs.echarts);
-      const X = this.fundNavHistories.map((item) => formatDate(item.get_nav_time, 'MM-DD'));
-      const series = this.fundNavHistories.map((item) => item.nav);
-      const min = Math.min.apply(null, series);
-      const max = Math.max.apply(null, series);
-      const num = (max - min) * 1.2;
-      const option = {
-        grid: {
-          left: '14%',
-          right: '0%',
-          bottom: '5%',
-          top: '5%',
-        },
-        legend: {
-          bottom: 10,
-          left: 'center',
-          data: ['净值']
-        },
-        tooltip: {
-          trigger: 'axis',
-        },
-        xAxis: {
-          show: false,
-          type: 'category',
-          data: X,
-        },
-
-        yAxis: {
-          show: true,
-          type: 'value',
-          min: strip(min - num, 4),
-          max: strip(max * 1 + num, 4),
-        },
-        series: [{
-          data: series,
-          type: 'line',
-          symbol: 'none',
-          smooth: true,
-          lineStyle: {
-            width: 1,
-            color: '#4770F5',
-          },
-          areaStyle: {
-            normal: {
-              opacity: 0.2,
-              color: `#C6D0F0`,
-            },
-          },
-        },
-        ],
-      };
-      this.chart.setOption(option);
+      this.setEcharts();
     });
   },
   methods: {
@@ -256,6 +177,41 @@ export default {
     }),
     formatDate(date, format) {
       return formatDate(date, format);
+    },
+    setEcharts() {
+      this.chart_x = formatDate(this.fundNavHistories[0].get_nav_time, 'MM-DD');
+      this.chart_y = this.fundNavHistories[0].nav;
+      this.chart = echarts.init(this.$refs.echarts);
+      const X = this.fundNavHistories.map((item) => item.get_nav_time);
+      const series = this.fundNavHistories.map((item) => item.nav);
+      const min = Math.min.apply(null, series);
+      const max = Math.max.apply(null, series);
+      const num = (max - min) * 1.2;
+      // 触发事件
+      this.chart.getZr().on('mousemove', this.onMouseMove);
+      this.chart.setOption(echartsOption(X, series, min, max, num));
+    },
+    onMouseMove(params) {
+      var pointInPixel = [params.offsetX, params.offsetY];
+      var pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
+      if (this.chart.containPixel('grid', pointInPixel)) {
+        this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
+        this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x)[0].nav;
+      }
+    },
+    onSubmit() {
+      const password = true;
+      // 开放认购
+      if (this.fundDetail.status === 'OPEN') {
+        if (password) {
+          this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
+        } else {
+          console.log('设置交易密码');
+          this.$router.push('/passwordconfig/set/tradepassword');
+        }
+      } else {
+        console.log('短信通知');
+      }
     },
   },
   computed: {
@@ -308,6 +264,27 @@ export default {
         width: 151px;
         font-size: 28px;
         color: #00b870;
+        .percent {
+          font-size: 20px;
+        }
+        i {
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 0 4.5px 10px;
+          margin-bottom: 17px;
+          margin-left: 2px;
+          border-color: transparent transparent #00b870;
+        }
+        &.active {
+          color: #ff5044;
+          i {
+            border-style: solid;
+            border-width: 10px 5px 0;
+            border-color: #ff5044 transparent transparent;
+          }
+        }
       }
       .texts {
         padding-top: 13px;
@@ -364,6 +341,18 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+      .echarts-info {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #6a707d;
+        box-sizing: border-box;
+        padding: 0 20px;
+        margin-bottom: 14px;
+      }
     }
   }
   .tradeshow {
@@ -417,6 +406,7 @@ export default {
       > div {
         display: flex;
         flex-direction: column;
+        align-items: center;
       }
       .percent {
         font-size: 15px;
