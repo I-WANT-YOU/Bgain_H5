@@ -9,13 +9,19 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
     <button @click="onClick">Geetest</button>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div>
-    <router-link to="/unLoginHome">未登录业主页</router-link><br/>
-    <router-link to="/registerHome">注册业主页</router-link><br/>
+    <router-link to="/unLoginHome">未登录业主页</router-link>
+    <br />
+    <router-link to="/registerHome">注册业主页</router-link>
+    <br />
     <router-link to="/loginHome">登陆页主页</router-link>
+    <router-link to="/product/fund/subscribe/1">基金认证页面</router-link>
+    <router-link to="/product/fund/result">基金认证结果</router-link>
+    <router-link to="/passwordConfig">密码设置</router-link>
     <br />
-    <SendCode @onsend="onSend" ref="sendCode" :sendTime="5" />
+    <router-link :to="{ path: '/setTradePassword', query : {fillPath:'/'} }">设置交易密码</router-link>
     <br />
-    <SendCode />
+    <SendCode ref="sendCode" />
+    <br />
   </div>
 </template>
 
@@ -33,6 +39,7 @@ export default {
     return {
       geetest: null,
       options: null,
+      show: false,
     };
   },
   mounted() {

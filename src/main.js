@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Dialog } from 'vant';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -10,6 +11,7 @@ import './assets/scripts/geetest';
 import './icons';
 
 Vue.config.productionTip = false;
+Vue.use(Dialog);
 
 new Vue({
   router,
