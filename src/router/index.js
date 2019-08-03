@@ -98,14 +98,24 @@ const router = new Router({
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
     {
+      path: '/product/fund/subscribe/:id',
+      name: 'subscribe',
+      component: () => import('../views/product/fund/Subscribe.vue'),
+    },
+    {
       path: '/product/fund/initial/:id',
       name: 'initial',
-      component: () => import('../views/product/fund/Initial/Initial.vue'),
+      component: () => import('../views/product/fund/Initial.vue'),
     },
     {
       path: '/product/fund/noinitial/:id',
       name: 'noinitial',
-      component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
+      component: () => import('../views/product/fund/NoInitial.vue'),
+    },
+    {
+      path: '/product/fund/result',
+      name: 'result',
+      component: () => import('../views/product/fund/BuyResult.vue'),
     },
     // 活期交易记录
     {
@@ -161,6 +171,26 @@ const router = new Router({
       path: '/product/current/sell/:currency/result',
       name: 'current-sell-result',
       component: () => import('../views/product/current/CurrentSellResult.vue'),
+    },
+    {
+      path: '/passwordConfig',
+      name: 'passwordConfig',
+      component: () => import('../views/passwordConfig/PasswordConfig.vue'),
+    },
+    {
+      path: '/passwordConfig/ResetLoginPassword',
+      name: 'resetLoginPassword',
+      component: () => import('../views/passwordConfig/ResetLoginPassword.vue'),
+    },
+    {
+      path: '/passwordConfig/ResetTradePassword',
+      name: 'resetTradePassword',
+      component: () => import('../views/passwordConfig/ResetTradePassword.vue'),
+    },
+    {
+      path: '/setTradePassword',
+      name: 'setTradePassword',
+      component: () => import('../views/passwordConfig/SetTradePassword.vue'),
     },
   ],
 });

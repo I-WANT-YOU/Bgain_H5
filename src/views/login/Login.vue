@@ -36,7 +36,6 @@
       </p>
     </div>
     <Footer />
-    <!-- <div class="trademark">Copyright@2019 Bgain</div> -->
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
   </div>
 </template>

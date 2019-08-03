@@ -33,7 +33,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { Sticky, PullRefresh } from 'vant';
-import formatFundData, { fundProductTypeList, riskLevelTypeList } from '@utils/formatFundData';
+import formatFundData, { fundProductTypeList, riskLevelTypeList } from './formatFundData';
 import Screen from './components/Screen.vue';
 import Initial from './components/Initial.vue';
 import NoInitial from './components/NoInitial.vue';
@@ -76,6 +76,7 @@ export default {
       isLoading: false,
       options,
       params: {},
+      show: false,
     };
   },
   methods: {
@@ -87,7 +88,8 @@ export default {
         item.active = 'all';
         return item;
       });
-      this.getFundProducts(this.params);
+      this.params = {};
+      this.getFundProducts({});
     },
     changeItem(type, text) {
       this.options = this.options.map((item) => {
