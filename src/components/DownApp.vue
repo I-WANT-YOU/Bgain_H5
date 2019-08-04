@@ -38,10 +38,10 @@ export default {
   background-size: 100% 100%;
   .close{
     position: absolute;
-    top:10px;
+    top:8.8px;
     left: 357.8px;
-    width: 10px;
-    height: 10px;
+    width: 11.2px;
+    height: 11.3px;
       >img{
         display: block;
         width: 10px;
@@ -49,9 +49,10 @@ export default {
       }
   }
   .down{
-    /*margin:19px 26px 16px 0;*/
     position: absolute;
-    top:19px;
+    width: 68px;
+    height: 28px;
+    top:5px;
     left: 281px;
     >button{
       width: 68px;

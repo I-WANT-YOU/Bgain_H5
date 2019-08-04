@@ -34,7 +34,10 @@
         </div>
       </div>
       <div class="steps-container">
-        <FixedDetailSteps :father-current-step = this.currentStep />
+        <FixedDetailSteps
+          :father-current-step = this.currentStep
+          :from-father-date = this.toChildDate
+        />
       </div>
     </div>
     <!--产品信息-->
@@ -97,6 +100,7 @@ export default {
       countDownTimer: '',
       currentStep: 0,
       msgFormSon: false,
+      toChildDate: [],
     };
   },
   mounted() {
@@ -104,28 +108,47 @@ export default {
       () => {
         // 设置购买流程（包含倒计时）
         this.setSteps(this.fixed.product_progress_status_type);
+        // 认购开始日期 起息日 到期日 预计收款日
+        this.stepTime(
+          [this.fixed.purchase_start_date, this.fixed.interest_start_date,
+            this.fixed.due_date, this.fixed.expected_payment_date],
+        );
       },
-      (err) => { this.$toast(errorMessage[err.status]); },
+      (err) => {
+        if (err.status) {
+          this.$toast(errorMessage[err.status]);
+        } else {
+          this.$toast('服务器错误');
+        }
+      },
     );
   },
   beforeDestroy() {
     clearInterval(this.timer);
   },
-  computed: mapState([
-    'fixed',
-  ]),
+  computed: {
+    ...mapState([
+      'fixed',
+    ]),
+  },
   methods: {
     // 立即认购
     purchase() {
+      const info = JSON.stringify({
+        productId: this.$route.params.id,
+        support_fbp: this.fixed.support_fbp,
+        title: this.fixed.product_name,
+      });
       this.$router.push({
         name: 'FixedPurchaseStepOne',
-        params: { name: 'fff' },
+        params: {
+          info,
+        },
       });
     },
     // 从子组件获取参数
     getMsgFormSon(data) {
       this.msgFormSon = data;
-      console.log(this.msgFormSon);
     },
     ...mapActions(
       ['getFixedProductById'],
@@ -190,6 +213,44 @@ export default {
       }
       this.countDownTimer = `${day}天${hour}小时${minutes}分${seconds}秒`;
       return true;
+    },
+    // 格式化时间
+    stepTime(inputTime) {
+      // eslint-disable-next-line
+      const formatDate = [];
+      const types = ['认购开始', '起息日', '到期日', '预期收款日'];
+      inputTime.map((item, index) => {
+        const time = new Date(item);
+        let year = time.getFullYear();
+        let month = time.getMonth() + 1;
+        let day = time.getDate();
+        let hours = time.getHours();
+        let minute = time.getMinutes();
+        if (year < 10) {
+          year = `0${year}`;
+        }
+        if (month < 10) {
+          month = `0${month}`;
+        }
+        if (day < 10) {
+          day = `0${day}`;
+        }
+        if (hours < 10) {
+          hours = `0${hours}`;
+        }
+        if (minute < 10) {
+          minute = `0${minute}`;
+        }
+        const big = `${year}-${month}-${day}`;
+        const small = `${hours}:${minute}`;
+        const formateTime = {
+          type: types[index],
+          big,
+          small,
+        };
+        this.toChildDate.push(formateTime);
+        return true;
+      });
     },
   },
 };

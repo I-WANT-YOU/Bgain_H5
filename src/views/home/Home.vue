@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <router-link to="/test">余额不足</router-link><br />
+    <router-link to="/homeToLogin">tologin</router-link><br />
+    <router-link to="/fixedPurchaseStepTwo">优惠券购买</router-link><br />
     <router-link to="/login">登录</router-link><br/>
     <router-link to="/register">注册</router-link><br/>
     <router-link to="/product/fixed">定期</router-link><br/>
@@ -8,9 +11,10 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" /><br/>
     <button @click="onClick">Geetest</button><br/>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div><br/>
-    <router-link to="/unLoginHome">未登录业主页</router-link><br/>
-    <router-link to="/registerHome">注册业主页</router-link><br/>
-    <router-link to="/loginHome">登陆页主页</router-link><br />
+    <router-link to="/registerHome/unLogin">未登录业主页</router-link><br/>
+    <router-link to="/registerHome/register">注册业主页</router-link><br/>
+    <router-link to="/registerHome/login">登陆页主页</router-link><br />
+    <router-link to="/subscriptionResults">认购结果</router-link><br />
     <SendCode @onsend="onSend" ref="sendCode" :sendTime="5" /><br />
     <SendCode />
   </div>

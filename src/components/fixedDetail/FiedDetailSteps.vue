@@ -15,25 +15,10 @@
       </div>
     </div>
     <div class="step-text">
-      <div>
-        <span>认购开始</span>
-        <span>2019-07-12</span>
-        <span>14:00</span>
-      </div>
-      <div>
-        <span>起息日</span>
-        <span>2019-07-12</span>
-        <span>14:00</span>
-      </div>
-      <div>
-        <span>到期日</span>
-        <span>2019-07-12</span>
-        <span>14:00</span>
-      </div>
-      <div>
-        <span>预期收款日</span>
-        <span>2019-07-12</span>
-        <span>14:00</span>
+      <div v-for="item in fromFatherDate" :key="item.type">
+        <span>{{item.type}}</span>
+        <span>{{item.big}}</span>
+        <span>{{item.small}}</span>
       </div>
     </div>
   </div>
@@ -47,11 +32,10 @@ export default {
       steps: [0, 1, 2],
     };
   },
-  props: ['fatherCurrentStep'],
+  props: ['fatherCurrentStep', 'fromFatherDate'],
   components: {
   },
   mounted() {
-    console.log(this.fatherCurrentStep);
   },
 };
 </script>

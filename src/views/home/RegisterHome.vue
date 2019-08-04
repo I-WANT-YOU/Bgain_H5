@@ -3,21 +3,32 @@
     <header>
       这是头部
     </header>
+    <!--all-->
     <HomeSwipe/>
+    <!--all-->
     <div class="home-tip-container">
       <HomeTip/>
     </div>
-    <div class="notice-container">
+    <!--登陆注册后有-->
+    <div class="notice-container" v-show="userStatus === 'login' || userStatus === 'register'">
       <HomeNotice/>
     </div>
-    <div class="guide-container">
+    <!--注册后信息不全有-->
+    <div class="guide-container" v-show="userStatus === 'register'">
       <HomeGuide/>
+    </div>
+    <!--未登录有-->
+    <div class="toLogin-container" v-show="userStatus === 'unLogin'">
+      <HomeToLogin/>
     </div>
     <div class="list-container">
       <HomeProductList/>
     </div>
     <div class="more-products-container">
       <HomeMoreProducts/>
+    </div>
+    <div class="footer">
+      <BaseFooter/>
     </div>
   </div>
 </template>
@@ -29,23 +40,35 @@ import HomeGuide from '../../components/home/HomeGuide.vue';
 import HomeProductList from '../../components/home/HomeProductList.vue';
 import HomeMoreProducts from '../../components/home/HomeMoreProducts.vue';
 import HomeNotice from '../../components/home/HomeNotice.vue';
+import BaseFooter from '../../components/BaseFooter.vue';
+import HomeToLogin from '../../components/home/HomeToLogin.vue';
 
 export default {
   name: 'RegisterHome',
   components: {
     HomeSwipe,
     HomeTip,
+    HomeToLogin,
     HomeProductList,
     HomeMoreProducts,
     HomeGuide,
     HomeNotice,
+    BaseFooter,
+  },
+  data() {
+    return {
+      userStatus: '',
+    };
+  },
+  mounted() {
+    this.userStatus = this.$route.params.status;
   },
 };
 </script>
 
 <style lang="scss" scoped>
   .registerHome{
-    font-family: PingFangSC-Semibold;
+    font-family: PingFangSC-Semibold sans-serif;
     letter-spacing: 0;
     text-align: center;
     /*头部*/
@@ -64,6 +87,9 @@ export default {
     .notice-container{
       margin-top: 35px;
     }
+    .toLogin-container{
+      margin-top: 15px;
+    }
     .guide-container{
       margin-top:18px;
     }
@@ -77,6 +103,9 @@ export default {
       margin-top: 21px;
       justify-content: center;
       align-items: center;
+    }
+    .footer{
+      margin-top: 24px;
     }
   }
 </style>
