@@ -4,7 +4,7 @@
     <div class="content">
       <div class="purchaseNum">
         <span>认购数量</span>
-        <span>0.0005 BTC</span>
+        <span>{{investmentAmount+'&nbsp;'+currencyType}}</span>
       </div>
       <div class="coupon">
         <span>选择优惠券</span>
@@ -13,10 +13,11 @@
           <svg-icon icon-class="next" class="next-img"/>
         </div>
       </div>
+      <!--预期收益-->
       <div class="expectedReturn">
         <div v-for="(item,index) in expectedReturnData" :key="index">
           <span>{{item.name}}</span>
-          <span>{{item.num}}</span>
+          <span>{{item.num+'&nbsp;'+currencyType}}</span>
         </div>
       </div>
   </div>
@@ -42,25 +43,32 @@ export default {
   name: 'FixedPurchaseStepTwo',
   data() {
     return {
-      title: 'zhehsi title',
-      checked: true,
+      title: '',
+      checked: false,
+      showData: {},
+      currencyType: '', // 币种
+      investmentAmount: '', // 认购数量
       expectedReturnData:
         [
           {
             name: '预期收益',
             num: '346.999',
+            show: true,
           },
           {
             name: '预期加息收益',
             num: '346.999',
+            show: true,
           },
           {
             name: '预期总收益',
             num: '346.999',
+            show: true,
           },
           {
             name: '预计收款日',
             num: '346.999',
+            show: true,
           },
         ],
     };
@@ -68,6 +76,21 @@ export default {
   components: {
     BgainNavBar,
     'van-switch': Switch,
+  },
+  mounted() {
+    if (this.$route.params.stepTwoData) {
+      sessionStorage.setItem('showData', this.$route.params.stepTwoData); // 保存上一页的数据
+    }
+    this.currencyType = JSON.parse(sessionStorage.getItem('showData')).currencyType; // 币种类型
+    this.investmentAmount = JSON.parse(sessionStorage.getItem('showData')).investmentAmount;// 认购数量
+    this.title = JSON.parse(sessionStorage.getItem('showData')).title;
+    const changData = {
+      name: '预期收益',
+      num: JSON.parse(sessionStorage.getItem('showData')).expectedReturn,
+      show: true,
+    };
+    this.$set(this.expectedReturnData, 0, changData); // 预期收益
+    console.log(this.expectedReturnData);
   },
 };
 </script>

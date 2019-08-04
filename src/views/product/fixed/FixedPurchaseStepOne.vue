@@ -13,9 +13,10 @@
         <div class="info-num">
           <span>{{expectedReturn}}</span>
         </div>
-        <div class="info-text">{{'预期收益('+tabActive+')'}}</div>
+        <div class="info-text">{{'预期收益('+tabActiveType+')'}}</div>
       </div>
     </div>
+    <!--tab-->
     <div class="purchase-step">
       <div class="tabs-title" v-show="isTabsShow">
         <div>
@@ -29,7 +30,7 @@
         </div>
       </div>
       <div class="tabs-content">
-        <div class="tabs-content-title"><span>{{'认购数量('+tabActive+')'}}</span></div>
+        <div class="tabs-content-title"><span>{{'认购数量('+tabActiveType+')'}}</span></div>
         <div class="lestPurchase">
 
           <input ref='inputFile'
@@ -38,14 +39,14 @@
           />
         </div>
         <div class="availableBalance">
-         <span>可用余额</span><span>{{AllAccount+'&nbsp;'+tabActive}}</span>
+         <span>可用余额</span><span>{{AllAccount+'&nbsp;'+tabActiveType}}</span>
         </div>
       </div>
     </div>
     <div class="button-container">
       <button
         :class="{'activeStyle':activeButton}"
-        :disabled="buttonStatus"
+        :disabled="!activeButton"
         @click="toStepTwo">下一步</button>
     </div>
     <div class="pop-container" v-show="popShow"><FixedPop/></div>
@@ -66,19 +67,18 @@ export default {
   data() {
     return {
       isTabsShow: false,
-      tabActive: '', // 显示币种/FBP
-      tabActiveCurrency: false, // 币种tab激活
-      tabActiveFBP: false, // FBPtab激活
+      tabActiveType: '', // 显示币种/FBP 仅做展示
+      tabActiveCurrency: false, // 币种tab激活 激活tab样式 在最大最小中判断
+      tabActiveFBP: false, // FBPtab激活 在最大最小中判断
       title: '', // 标题
       // currency: '',
-      canUseCurrency: false, // 是否可用币种
-      canUseFBP: false, // 是否可用FBP
+      canUseCurrency: false, // 是否可用币种 toast提示是否可用
+      canUseFBP: false, // 是否可用FBP   toast提示是否可用
       popShow: false, // 遮罩层 显示余额不足
       placeHolder: '',
       AllAccount: '',
       investmentAmount: '',
       oldValue: '',
-      buttonStatus: true,
       activeButton: false,
       // expectedReturn: '-',
     };
@@ -127,21 +127,39 @@ export default {
         }
         return false;
       }
+      // 判断是否是0
+      if (lastStr === '0') {
+        if (val.charAt(val.length - 2) === '0') { // 前一位也是0
+          if (val.length === 2) {
+            this.investmentAmount = val.substring(0, val.length - 1);
+          } else {
+            this.investmentAmount = val;
+          }
+        }
+      }
       // 判断是否是数字
       if (regNum.test(lastStr)) { // 输入是数字
         this.investmentAmount = val;
+        console.log(this.tabActiveCurrency);
         // 判断是否大于可用余额 大于产品剩余剩余额度
         if (this.tabActiveCurrency === true) {
+          // 判断是否激活按钮 进行下一步
+          if ((this.investmentAmount - this.fixedBuyInfo.min_inverst_amount) >= 0) {
+            this.activeButton = true;
+          }
           if ((this.investmentAmount - this.fixedBuyInfo.available) > 0) {
             this.investmentAmount = val.substring(0, val.length - 1);
             this.$toast(`产品额度不足，您最多可认购${this.fixedBuyInfo.available}${this.fixedBuyInfo.currency}`);
           }
           if ((this.investmentAmount - this.fixedBuyInfo.balance) > 0) {
-            // this.investmentAmount = val.substring(0, val.length - 1);
+            this.investmentAmount = val.substring(0, val.length - 1);
             this.$toast('您的可用余额不足，请重新输入');
           }
         }
         if (this.tabActiveFBP === true) {
+          if ((this.investmentAmount - this.fixedBuyInfo.min_inverst_amount_fbp) > 0) {
+            this.activeButton = true;
+          }
           if ((this.investmentAmount - this.fixedBuyInfo.available) > 0) {
             this.investmentAmount = val.substring(0, val.length - 1);
             this.$toast(`产品额度不足，您最多可认购${this.fixedBuyInfo.available}${this.fixedBuyInfo.currency}`);
@@ -158,16 +176,7 @@ export default {
         return false;
       }
 
-      // 判断是否是0
-      if (lastStr === '0') {
-        if (val.charAt(val.length - 2) === '0') { // 前一位也是0
-          if (val.length === 2) {
-            this.investmentAmount = val.substring(0, val.length - 1);
-          } else {
-            this.investmentAmount = val;
-          }
-        }
-      }
+
       // 判断小数点后只有8位
       if (this.investmentAmount.indexOf('.') > -1) { // 有小数点
         if ((this.investmentAmount.length - this.investmentAmount.indexOf('.') - 1) > 8) {
@@ -198,7 +207,19 @@ export default {
       ['getFixedBuyInfo'],
     ),
     toStepTwo() {
-      console.log('1111111');
+      const routeData = {
+        investmentAmount: this.investmentAmount,
+        expectedReturn: this.expectedReturn,
+        currencyType: this.tabActiveType,
+        title: this.title,
+      };
+      const stepTwoData = JSON.stringify(routeData);
+      this.$router.push({
+        name: 'FixedPurchaseStepTwo',
+        params: {
+          stepTwoData,
+        },
+      });
     },
     // 购买逻辑判断
     purchaseProcess(info, localFixedBuyInfo) {
@@ -206,11 +227,13 @@ export default {
       if (info.support_fbp === false) { // 不支持FBP购买
         this.isTabsShow = false; // 设置tabTitle不可见
         // 判断BTC/FBP余额是否大于起投金额 选择初始TAB页面（本页面接口）
+        console.log(localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount);
         if (localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount) { // 本金>最小
           this.canUseCurrency = true; // 币种可以购买
           this.placeHolder = localFixedBuyInfo.min_inverst_amount;
           this.AllAccount = localFixedBuyInfo.balance; // 余额
-          this.tabActive = localFixedBuyInfo.currency; // 认购数量
+          this.tabActiveType = localFixedBuyInfo.currency; // 认购数量
+          this.tabActiveCurrency = true; // tab页面为币种
         } else {
           // 显示弹窗 提示用户余额不足
           this.popShow = true;
@@ -221,7 +244,7 @@ export default {
         if (localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount) {
           this.tabActiveCurrency = true; // tab页面为币种
           this.canUseCurrency = true; // 币种可以购买
-          this.tabActive = localFixedBuyInfo.currency; // 认购数量
+          this.tabActiveType = localFixedBuyInfo.currency; // 认购数量
           this.placeHolder = localFixedBuyInfo.min_inverst_amount;
           this.AllAccount = localFixedBuyInfo.balance; // 余额
           // 判断FBP是否有足够余额
@@ -234,7 +257,7 @@ export default {
           this.canUseCurrency = false; // BTC不可以购买
           // 判断FBP是否有足够余额
           if (localFixedBuyInfo.balance_fbp >= localFixedBuyInfo.min_inverst_amount_fbp) {
-            this.tabActiveFBP = true; // tab页面为FBP
+            this.tabActiveTypeFBP = true; // tab页面为FBP
             this.tabActive = 'FBP'; // 认购数量
             this.canUseFBP = true; // FBP可以购买
             this.placeHolder = localFixedBuyInfo.min_inverst_amount_fbp;
@@ -248,6 +271,7 @@ export default {
     },
     // 改变Tabs
     changeTab(text) {
+      this.activeButton = false;
       switch (text) {
         case 'currency':
           if (this.canUseCurrency === false) {
@@ -255,7 +279,7 @@ export default {
           } else {
             this.tabActiveCurrency = true; // 币种tab激活
             this.tabActiveFBP = false; // FBPtab激活
-            this.tabActive = this.fixedBuyInfo.currency;
+            this.tabActiveType = this.fixedBuyInfo.currency;
             this.investmentAmount = '';
             this.placeHolder = this.fixedBuyInfo.min_inverst_amount;
             this.AllAccount = this.fixedBuyInfo.balance;
@@ -267,7 +291,7 @@ export default {
           } else {
             this.tabActiveCurrency = false; // 币种tab激活
             this.tabActiveFBP = true; // FBPtab激活
-            this.tabActive = 'FBP';
+            this.tabActiveType = 'FBP';
             this.investmentAmount = '';
             this.placeHolder = this.fixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = this.fixedBuyInfo.balance_fbp;
