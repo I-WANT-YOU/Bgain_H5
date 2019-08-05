@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import HomeSwipe from '../../components/home/HomeSwipe.vue';
 import HomeTip from '../../components/home/HomeTip.vue';
 import HomeGuide from '../../components/home/HomeGuide.vue';
@@ -62,6 +63,16 @@ export default {
   },
   mounted() {
     this.userStatus = this.$route.params.status;
+    this.getUserInfo().then(
+      () => {},
+      () => {},
+    );
+  },
+  methods: {
+    // 触发action的方法
+    ...mapActions('auth', [
+      'getUserInfo',
+    ]),
   },
 };
 </script>

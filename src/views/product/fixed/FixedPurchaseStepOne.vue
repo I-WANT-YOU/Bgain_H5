@@ -80,6 +80,7 @@ export default {
       investmentAmount: '',
       oldValue: '',
       activeButton: false,
+      productId:'',
       // expectedReturn: '-',
     };
   },
@@ -88,6 +89,7 @@ export default {
       sessionStorage.setItem('info', this.$route.params.info);
     }
     const info = JSON.parse(sessionStorage.getItem('info'));
+    this.productId = info.productId;
     this.getFixedBuyInfo(info.productId).then(
       () => {
         // 设置title
@@ -211,6 +213,7 @@ export default {
         investmentAmount: this.investmentAmount,
         expectedReturn: this.expectedReturn,
         currencyType: this.tabActiveType,
+        productId: this.productId,
         title: this.title,
       };
       const stepTwoData = JSON.stringify(routeData);

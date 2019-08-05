@@ -5,6 +5,7 @@ import * as types from '../mutationTypes';
 
 const state = {
   authenticated: !!Auth.getToken(),
+  userInfo: {},
 };
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
   },
   [types.UNAUTHENTICATED](state) {
     state.authenticated = false;
+  },
+  getUserInfo(state, userInfo) {
+    state.userInfo = { ...userInfo };
   },
 };
 
@@ -115,6 +119,18 @@ const actions = {
     try {
       const response = await AuthService.validateUser(params);
       return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+  //  获取用户信息
+  async getUserInfo({ commit }) {
+    try {
+      const response = await AuthService.getUserInfo();
+      const data = Auth.handlerSuccessResponse(response);
+      if (data && data.success) {
+        commit('getUserInfo', data);
+      }
     } catch (error) {
       throw error;
     }
