@@ -10,11 +10,11 @@
       <div class="content-text__cards">
         <div class="content-text__card">
           <div class="card__title">转出申请提交</div>
-          <div class="card__content">转出1223 {{currency}}</div>
+          <div class="card__content">转出{{sellAmount}} {{currency}}</div>
         </div>
         <div class="content-text__card">
           <div class="card__title">资金到账</div>
-          <div class="card__content">预计1223 资金可到账</div>
+          <div class="card__content">预计{{date}} 资金可到账</div>
         </div>
       </div>
     </div>
@@ -37,6 +37,10 @@ export default {
     BgainNavBar,
   },
   computed: {
+    ...mapGetters('product/current', ['sellAmount', 'sellDate']),
+    date() {
+      return dayjs(this.sellDate).format('MM-DD');
+    },
     currency() {
       return this.$route.params.currency;
     },

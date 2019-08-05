@@ -72,8 +72,6 @@ export default {
   watch: {
     amount(newValue, oldValue) {
       const value = newValue.replace(/[^\d.]/g, '');
-      console.log('newValue', newValue);
-      console.log('oldValue', oldValue);
       if (newValue === '.') {
         this.amount = '0.';
       } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.') {

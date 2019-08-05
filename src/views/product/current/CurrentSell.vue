@@ -5,9 +5,7 @@
       <div class="content__panel">
         <div class="panel__title">转出数量({{currency}})</div>
         <Field
-          type="number"
-          :value="amount"
-          @keydown.native="onAmountInput"
+          v-model="amount"
           :placeholder="`最多转出 ${maxSellAmount} ${currency}`"
           :border="false">
           <template v-slot:button>
@@ -20,7 +18,7 @@
           type="info"
           :fluid="true"
           :disabled="amount === ''"
-          @click="onSubmitClick"
+          @click="onSellClick"
         >
           确定
         </bgain-button>
@@ -34,6 +32,7 @@
         </div>
       </div>
     </div>
+    <payment-password-dialog v-model="visible" @close="onClose" @submit="onSubmitClick"/>
   </div>
 </template>
 
@@ -42,24 +41,54 @@ import { Field, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainButton from '@/components/BgainButton.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
+import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('product/current');
+const { mapGetters: mapUserGetters, mapActions: mapUserActions } = createNamespacedHelpers('user');
 
 export default {
   name: 'CurrentSell',
   components: {
     BgainButton,
     BgainNavBar,
+    PaymentPasswordDialog,
     Field,
   },
   data() {
     return {
       amount: '',
       currency: '',
+      visible: false,
     };
+  },
+  watch: {
+    amount(newValue, oldValue) {
+      const value = newValue.replace(/[^\d.]/g, '');
+      if (newValue === '.') {
+        this.amount = '0.';
+      } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.' && newValue !== '') {
+        this.amount = '0';
+      } else if (oldValue.indexOf('.') > 0
+        && oldValue.indexOf('.') !== newValue.lastIndexOf('.')
+        && newValue.substr(newValue.length - 1) === '.') {
+        Toast('只能输入一个小数点');
+        this.amount = value.replace(/\.{2,}/g, '.')
+          .replace('.', '$#$')
+          .replace(/\./g, '')
+          .replace('$#$', '.');
+      } else if (!(/^\d+\.?\d{0,8}$/.test(newValue))) {
+        this.amount = value.substr(0, value.indexOf('.') + 9);
+      } else if (newValue === '') {
+        console.log(123);
+        this.amount = '';
+      } else {
+        this.amount = value;
+      }
+    },
   },
   computed: {
     ...mapGetters(['maxSellAmount']),
+    ...mapUserGetters(['authLevel']),
   },
   async mounted() {
     this.currency = this.$route.params.currency;
@@ -70,31 +99,43 @@ export default {
     Toast.clear();
   },
   methods: {
-    ...mapActions(['getCurrentSellInfo']),
+    ...mapActions(['getCurrentSellInfo', 'sellCurrentProduct']),
+    ...mapUserActions(['getUserSummary']),
     async fetchSellInfo(currency) {
       try {
-        await this.getCurrentSellInfo(currency);
+        await Promise.all([this.getCurrentSellInfo(currency), this.getUserSummary()]);
       } catch (error) {
         Toast(error.message);
       }
     },
-    onAmountInput(e) {
-      // const { key } = e;
-      // const { value } = e.target;
-      // console.log(e);
-      // console.log(key === '.');
-      // if (key === '.') {
-      //   console.log(1);
-      //   console.log(e.target.value.match(/^\d*(\.?\d{0,8})/g)[0]);
-      //   this.amount = '0.';
-      //   e.target.value = '0.' || null;
-      // }
-    },
     onClickAll() {
       this.value = this.maxSellAmount;
     },
-    onSubmitClick() {
-      console.log(this.value);
+    onSellClick() {
+      if (this.amount === '0') {
+        Toast('转出数量不可为 0，请重新输入');
+      } else if (Number(this.amount) > this.maxSellAmount) {
+        Toast(`最多转出 ${this.maxSellAmount} ${this.currency}，请重新输入`);
+      } else {
+        this.visible = true;
+      }
+    },
+    async onSubmitClick(password) {
+      try {
+        await this.sellCurrentProduct({
+          amount: this.amount,
+          currency: this.currency,
+          password,
+        });
+        this.$router.push({
+          name: 'current-sell-result',
+        });
+      } catch (error) {
+        Toast(error.message);
+      }
+    },
+    onClose() {
+      this.visible = false;
     },
   },
 };
