@@ -20,10 +20,10 @@ const getters = {
   otherFunds: state => state.funds.filter(({ status }) => status !== FUND_STATUS.INITIAL),
   fundDetail: state => get(state.fund, 'fund_product_detail_record', {}),
   fundNavHistories: state => get(state.fund, 'fund_nav_histories', []),
-  next_end_date: state => formatDate(state.fundBuyResult.next_end_date),
-  confirm_date: state => formatDate(state.fundBuyResult.confirm_date),
-  next_open_date: state => formatDate(state.fundBuyResult.next_open_date),
-  submit_date: state => formatDate(state.fundBuyResult.submit_date),
+  nextEndDate: state => formatDate(state.fundBuyResult.next_end_date),
+  confirmDate: state => formatDate(state.fundBuyResult.confirm_date),
+  nextOpenDate: state => formatDate(state.fundBuyResult.next_open_date),
+  submitDate: state => formatDate(state.fundBuyResult.submit_date),
   amount: state => state.fundBuyResult.amount,
 };
 

@@ -13,17 +13,17 @@
       <div class="step">
         <svg-icon icon-class="step-active" class="icon" />
         <div class="step-title">扣减资金,提交认购申请</div>
-        <div class="step-time">{{confirm_date}}</div>
+        <div class="step-time">{{confirmDate}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
         <div class="step-title">确认份额,募集期结束,进入锁定期</div>
-        <div class="step-time">{{submit_date}}</div>
+        <div class="step-time">{{submitDate}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
         <div class="step-title">进入开放期,基金可赎回或继续认购</div>
-        <div class="step-time">{{next_open_date}}至{{next_end_date}}</div>
+        <div class="step-time">{{nextOpenDate}}至{{nextEndDate}}</div>
       </div>
     </div>
     <div class="buttons">
@@ -49,10 +49,10 @@ export default {
       fundBuyResult: 'product/fund/fundBuyResult',
     }),
     ...mapGetters({
-      next_end_date: 'product/fund/next_end_date',
-      confirm_date: 'product/fund/confirm_date',
-      submit_date: 'product/fund/submit_date',
-      next_open_date: 'product/fund/next_open_date',
+      nextEndDate: 'product/fund/nextEndDate',
+      confirmDate: 'product/fund/confirmDate',
+      submitDate: 'product/fund/submitDate',
+      nextOpenDate: 'product/fund/nextOpenDate',
       amount: 'product/fund/amount',
     }),
   },
