@@ -9,7 +9,7 @@
       <svg-icon icon-class="prompt" class="icon-prompt"/>
       <div class="balance__title">您当前可用余额不足，请先充币</div>
       <div class="balance__buttons">
-        <Button class="balance__buttons--cancel" @click="onClose">取消</Button>
+        <Button class="balance__buttons--cancel" @click="onCancel">取消</Button>
         <Button type="info"
                 class="balance__buttons--recharge"
                 @click="onRechargeClick">
@@ -32,8 +32,8 @@ export default {
     Button,
   },
   methods: {
-    onClose() {
-      this.$emit('close');
+    onCancel() {
+      this.$emit('cancel');
     },
     onRechargeClick() {
       this.$router.push({
