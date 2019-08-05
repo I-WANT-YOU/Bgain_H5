@@ -5,8 +5,8 @@
       <div class="content__panel">
         <div class="panel__title">转入数量({{currency}})</div>
         <Field
-          type="number"
           v-model="amount"
+          @input="onAmountInput"
           :placeholder="`起投 ${minBuyAmount} ${currency}`"
           :border="false">
         </Field>
@@ -35,6 +35,7 @@
         </div>
       </div>
     </div>
+    <payment-password-dialog v-model="visible" @close="onClose"/>
   </div>
 </template>
 
@@ -43,6 +44,7 @@ import { Field, Divider, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import BgainButton from '@/components/BgainButton.vue';
+import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 
 const { mapGetters, mapActions } = createNamespacedHelpers('product/current');
 
@@ -51,6 +53,7 @@ export default {
   components: {
     BgainNavBar,
     BgainButton,
+    PaymentPasswordDialog,
     Field,
     Divider,
   },
@@ -58,7 +61,28 @@ export default {
     return {
       amount: '',
       currency: '',
+      visible: false,
     };
+  },
+  watch: {
+    amount(newValue, oldValue) {
+      const value = newValue.replace(/[^\d.]/g, '');
+      if (newValue === '.') {
+        this.amount = '0.';
+      } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.') {
+        this.amount = '0';
+      } else if (oldValue.indexOf('.') > 0 && newValue.substr(newValue.length - 1) === '.') {
+        Toast('只能输入一个小数点');
+        this.amount = value.replace(/\.{2,}/g, '.')
+          .replace('.', '$#$')
+          .replace(/\./g, '')
+          .replace('$#$', '.');
+      } else if (!(/^\d+\.?\d{0,8}$/.test(newValue))) {
+        this.amount = value.substr(0, value.indexOf('.') + 9);
+      } else {
+        this.amount = value;
+      }
+    },
   },
   computed: {
     ...mapGetters(['minBuyAmount', 'buyBalance']),
@@ -80,6 +104,21 @@ export default {
         Toast(error.message);
       }
     },
+    onAmountInput(amount) {
+      const re = /^\d+$/;
+      // console.log(amount);
+      // console.log(this.amount);
+      // this.amount = 1;
+      // if (amount === '.') {
+      //   this.amount = '0.';
+      // }
+      // else if (amount[amount.length - 1] === '.' && oldValue.indexOf('.') > 0) {
+      //   console.log(amount.slice(0, amount.length - 1));
+      //   this.amount = amount.slice(0, amount.length - 1);
+      //   Toast('只能输入一个小数点');
+      // }
+      // console.log('amount', amount);
+    },
     async onSubmitClick() {
       try {
         await this.buyCurrentProduct({
@@ -93,6 +132,13 @@ export default {
       } catch (error) {
         Toast(error.message);
       }
+    },
+    onConfirm() {
+      console.log(123);
+      this.visible = false;
+    },
+    onClose() {
+      this.visible = false;
     },
   },
 };
