@@ -16,7 +16,7 @@ export const riskLevelTypeList = [
 ];
 
 // 基金类型
-const formatType = (data) => {
+export const formatType = (data) => {
   switch (data.fund_product_type) {
     case 'SmartBeta':
       data.fund_product_type = '指数型';
@@ -40,7 +40,7 @@ const formatType = (data) => {
 };
 
 // 风险等级
-const formatRisk = (data) => {
+export const formatRisk = (data) => {
   switch (data.risk_level_type) {
     case 'R1_LOW_RISK':
       data.risk_level_type = 'R1';
@@ -66,7 +66,6 @@ const formatRisk = (data) => {
 export default (data) => {
   formatType(data);
   formatRisk(data);
-  // 时间 closing_date
   data.closing_date = dayjs(data.closing_date).format('YYYY-MM-DD hh:mm');
   // 净值 nav_date
   data.nav_date = dayjs(data.nav_date).format('MM-DD');

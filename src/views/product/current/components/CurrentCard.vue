@@ -25,8 +25,8 @@
       </div>
     </div>
     <div class="buttons">
-      <div class="roll-out">转出</div>
-      <div class="roll-in">转入</div>
+      <div class="roll-out" @click="onSellClick(dataSource.currency_type)">转出</div>
+      <div class="roll-in" @click="onBuyClick(dataSource.currency_type)">转入</div>
     </div>
   </div>
 </template>
@@ -57,6 +57,22 @@ export default {
     onHistoryProfitClick(currency) {
       this.$router.push({
         name: 'history-profit',
+        params: {
+          currency,
+        },
+      });
+    },
+    onSellClick(currency) {
+      this.$router.push({
+        name: 'current-sell',
+        params: {
+          currency,
+        },
+      });
+    },
+    onBuyClick(currency) {
+      this.$router.push({
+        name: 'current-buy',
         params: {
           currency,
         },

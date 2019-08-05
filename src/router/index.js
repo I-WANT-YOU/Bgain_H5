@@ -124,20 +124,32 @@ const router = new Router({
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
     {
+      path: '/product/fund/subscribe/:id',
+      name: 'subscribe',
+      component: () => import('../views/product/fund/Subscribe.vue'),
+    },
+    {
       path: '/product/fund/initial/:id',
       name: 'initial',
-      component: () => import('../views/product/fund/Initial/Initial.vue'),
+      component: () => import('../views/product/fund/Initial.vue'),
     },
     {
       path: '/product/fund/noinitial/:id',
       name: 'noinitial',
-      component: () => import('../views/product/fund/NoInitial/NoInitial.vue'),
+      component: () => import('../views/product/fund/NoInitial.vue'),
     },
+    {
+      path: '/product/fund/result',
+      name: 'result',
+      component: () => import('../views/product/fund/BuyResult.vue'),
+    },
+    // 活期交易记录
     {
       path: '/product/current/trade-records',
       name: 'trade-records',
       component: () => import('../views/product/current/TradeRecords.vue'),
     },
+    // 活期历史年化收益率
     {
       path: '/product/current/history-rates/',
       redirect: '/product/current',
@@ -147,6 +159,7 @@ const router = new Router({
       name: 'history-rates',
       component: () => import('../views/product/current/HistoryRates.vue'),
     },
+    // 活期历史收益
     {
       path: '/product/current/history-profit/',
       redirect: '/product/current',
@@ -155,6 +168,55 @@ const router = new Router({
       path: '/product/current/history-profit/:currency',
       name: 'history-profit',
       component: () => import('../views/product/current/HistoryProfit.vue'),
+    },
+    // 活期转出
+    {
+      path: '/product/current/sell/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/sell/:currency',
+      name: 'current-sell',
+      component: () => import('../views/product/current/CurrentSell.vue'),
+    },
+    {
+      path: '/product/current/buy/',
+      redirect: '/product/current',
+    },
+    {
+      path: '/product/current/buy/:currency',
+      name: 'current-buy',
+      component: () => import('../views/product/current/CurrentBuy.vue'),
+    },
+    {
+      path: '/product/current/buy/:currency/result',
+      name: 'current-buy-result',
+      component: () => import('../views/product/current/CurrentBuyResult.vue'),
+    },
+    {
+      path: '/product/current/sell/:currency/result',
+      name: 'current-sell-result',
+      component: () => import('../views/product/current/CurrentSellResult.vue'),
+    },
+    {
+      path: '/passwordConfig',
+      name: 'passwordConfig',
+      component: () => import('../views/passwordConfig/PasswordConfig.vue'),
+    },
+    {
+      path: '/passwordConfig/ResetLoginPassword',
+      name: 'resetLoginPassword',
+      component: () => import('../views/passwordConfig/ResetLoginPassword.vue'),
+    },
+    {
+      path: '/passwordConfig/ResetTradePassword',
+      name: 'resetTradePassword',
+      component: () => import('../views/passwordConfig/ResetTradePassword.vue'),
+    },
+    {
+      path: '/setTradePassword',
+      name: 'setTradePassword',
+      component: () => import('../views/passwordConfig/SetTradePassword.vue'),
     },
   ],
 });

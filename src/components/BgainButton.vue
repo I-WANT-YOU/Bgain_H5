@@ -1,5 +1,5 @@
 <template>
-  <Button v-bind="$attrs">
+  <Button v-bind="$attrs" v-on="$listeners" :size="size" :class="className">
     <slot></slot>
   </Button>
 </template>
@@ -13,9 +13,21 @@ export default {
     Button,
   },
   props: {
-    style: {
-      type: Array,
+    fluid: {
+      type: Boolean,
       required: false,
+      default: false,
+    },
+  },
+  computed: {
+    size() {
+      return this.fluid ? 'large' : 'normal';
+    },
+    className() {
+      if (this.fluid) {
+        return 'van-button--large-override';
+      }
+      return '';
     },
   },
   mounted() {
@@ -23,8 +35,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .van-button {
     border-radius: 4px;
+  }
+  .van-button--large-override {
+    height: 46px;
+    line-height: 44px;
   }
 </style>
