@@ -81,7 +81,6 @@ export default {
   },
   mounted() {
     this.getFundBuyInfo(this.$route.params.id).then(() => {
-      console.log(this.fundBuyInfo);
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
@@ -94,23 +93,29 @@ export default {
     });
   },
   watch: {
-    immediate: true,
     show(value) {
       this.inDisabled = value;
     },
     num(value, old) {
       this.disabled = true;
       const reg = /^\./;
-      const re = /^0/;
+      const last = /\.$/;
+      const num = /^\d+(\.\d+)?$/;
+      const zero = /^0\d+/;
+      // 按钮
       if (value !== '') {
         this.disabled = false;
       }
       if (reg.test(value)) {
         this.num = '0.';
-      };
-      if (re.test(value)) {
-        this.num = '';
+      } else if (value.indexOf('.') !== -1 && value.lastIndexOf('.') !== value.indexOf('.') && last.test(value)) {
+        this.num = value.slice(0, value.length - 1);
+      } else if (zero.test(value)) {
+        this.num = value.slice(1);
+      } else if (!num.test(value * 1)) {
+        this.num = value.slice(0, value.length - 1);
       }
+
       this.onToast(value);
       if (value * 1 > this.balance * 1) {
         this.num = old;
@@ -146,10 +151,10 @@ export default {
       this.poundage = strip(this.fundBuyInfo.fund_fee_rate_buy[0].rate1 * this.num);
     },
     onDialog(text) {
-      if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 > this.balance_fbp * 1) {
+      if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 > this.balance * 1) {
         this.show = true;
         this.changIcon();
-      } else if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance_fbp * 1) {
+      } else if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance * 1) {
         this.changIconFBP();
       } else if (text !== 'FBP' && this.fundBuyInfo.min_invest_amt > this.balance * 1) {
         this.show = true;
@@ -180,7 +185,9 @@ export default {
       // };
       if (this.mininvest <= this.num && this.num <= this.fundBuyInfo.balance) {
         // 点击认购
-        // this.$router.push('/');
+        // 输入交易密码 完成后跳页面;
+      } else {
+
       }
     },
     onCancel() {

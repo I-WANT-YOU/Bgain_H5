@@ -30,7 +30,7 @@
 import {
   Field, Button, Toast,
 } from 'vant';
-import { mapActions, mapState } from 'vuex';
+import { mapActions } from 'vuex';
 import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
@@ -98,7 +98,7 @@ export default {
     },
     // 获取验证码
     getVerificationCode() {
-      console.log(this.verificationMessage)
+      console.log(this.verificationMessage);
       const tokenData = {
         ...this.tokenData,
       };
@@ -210,5 +210,4 @@ export default {
 
     }
   }
-
 </style>

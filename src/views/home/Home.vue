@@ -1,6 +1,23 @@
 <template>
   <div class="home">
-    注册
+    <router-link to="/test">余额不足</router-link><br />
+    <router-link to="/homeToLogin">tologin</router-link><br />
+    <router-link to="/fixedPurchaseStepTwo">优惠券购买</router-link><br />
+    <router-link to="/login">登录</router-link><br/>
+    <router-link to="/register">注册</router-link><br/>
+    <router-link to="/product/fixed">定期</router-link><br/>
+    <router-link to="/product/current">活期</router-link><br/>
+    <router-link to="/product/fund">基金</router-link><br/>
+    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" /><br/>
+    <button @click="onClick">Geetest</button><br/>
+    <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div><br/>
+    <router-link to="/registerHome/unLogin">未登录业主页</router-link><br/>
+    <router-link to="/registerHome/register">注册业主页</router-link><br/>
+    <router-link to="/registerHome/login">登陆页主页</router-link><br />
+    <router-link to="/subscriptionResults">认购结果</router-link><br />
+    <SendCode @onsend="onSend" ref="sendCode" :sendTime="5" /><br />
+    <SendCode />
+
     <router-link to="/login">登录</router-link>
     <router-link to="/register">注册</router-link>
     <router-link to="/product/fixed">定期</router-link>
@@ -18,7 +35,7 @@
     <router-link to="/product/fund/result">基金认证结果</router-link>
     <router-link to="/passwordConfig">密码设置</router-link>
     <br />
-    <router-link :to="{ path: '/setTradePassword', query : {fillPath:'/'} }">设置交易密码</router-link>
+    <router-link :to="{ path: '/passwordconfig/set/tradepassword', query : {fillPath:'/'} }">设置交易密码</router-link>
     <br />
     <SendCode ref="sendCode" />
     <br />
