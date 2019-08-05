@@ -4,6 +4,7 @@ import * as Auth from '@utils/auth';
 import { filterUndefined } from '@utils/tools';
 import * as types from '../../mutationTypes';
 import { FUND_STATUS } from '@/constants/options';
+import { formatDate } from '@utils/tools';
 
 const state = {
   funds: [],
@@ -11,6 +12,7 @@ const state = {
   fund: {},
   fundBuyInfo: {},
   holdingFunds: {},
+  fundBuyResult: {},
 };
 
 const getters = {
@@ -18,6 +20,11 @@ const getters = {
   otherFunds: state => state.funds.filter(({ status }) => status !== FUND_STATUS.INITIAL),
   fundDetail: state => get(state.fund, 'fund_product_detail_record', {}),
   fundNavHistories: state => get(state.fund, 'fund_nav_histories', []),
+  nextEndDate: state => formatDate(state.fundBuyResult.next_end_date),
+  confirmDate: state => formatDate(state.fundBuyResult.confirm_date),
+  nextOpenDate: state => formatDate(state.fundBuyResult.next_open_date),
+  submitDate: state => formatDate(state.fundBuyResult.submit_date),
+  amount: state => state.fundBuyResult.amount,
 };
 
 const mutations = {
@@ -36,6 +43,10 @@ const mutations = {
   [types.GET_HOLDING_FUNDS](state, payload) {
     state.holdingFunds = payload;
   },
+  [types.BUY_FUNDS](state, payload) {
+    console.log(payload);
+    state.fundBuyResult = payload;
+  }
 };
 
 const actions = {
@@ -83,6 +94,17 @@ const actions = {
       const response = await FundService.getHoldingFunds();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_HOLDING_FUNDS, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 基金购买
+  async buyFund({ commit }, payload) {
+    try {
+      const response = await FundService.buyFund(payload);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.BUY_FUNDS, data);
     } catch (error) {
       throw error;
     }

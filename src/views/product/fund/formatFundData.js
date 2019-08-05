@@ -41,10 +41,34 @@ export const formatType = (data) => {
 };
 
 // 风险等级
+export const formatRiskText = (data) => {
+  switch (data.risk_level_type) {
+    case 'R1_LOW_RISK':
+      data.risk_level_type = 'R1低风险';
+      break;
+    case 'R2_MEDIUM_LOW_LEVEL':
+      data.risk_level_type = 'R2中低风险';
+      break;
+    case 'R3_MEDIUM_LEVEL':
+      data.risk_level_type = 'R3中风险';
+      break;
+    case 'R4_MEDIUM_HIGH_LEVEL':
+      data.risk_level_type = 'R4中高风险';
+      break;
+    case 'R5_HIGH_LEVEL':
+      data.risk_level_type = 'R5高风险';
+      break;
+    default:
+      data.risk_level_type = 'R5高风险';
+  }
+  return data;
+};
+
+// 风险等级
 export const formatRisk = (data) => {
   switch (data.risk_level_type) {
     case 'R1_LOW_RISK':
-      data.risk_level_type = 'R1';
+      data.risk_level_type = 'R';
       break;
     case 'R2_MEDIUM_LOW_LEVEL':
       data.risk_level_type = 'R2';
@@ -64,10 +88,10 @@ export const formatRisk = (data) => {
   return data;
 };
 
-export const echartsOption = function (X, series, min, max, num) {
+export function echartsOption(X, series, min, max, num) {
   return {
     grid: {
-      left: '14%',
+      left: '11%',
       right: '0%',
       bottom: '5%',
       top: '5%',
@@ -143,7 +167,7 @@ export const echartsOption = function (X, series, min, max, num) {
     },
     ],
   };
-};
+}
 
 
 export default (data) => {

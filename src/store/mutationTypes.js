@@ -38,6 +38,7 @@ export const GET_FUND_CURRENCIES = 'GET_FUND_CURRENCIES';
 export const GET_FUND_PRODUCT_DETAIL = 'GET_FUND_PRODUCT_DETAIL';
 export const GET_FUND_BUY_INFO = 'GET_FUND_BUY_INFO';
 export const GET_HOLDING_FUNDS = 'GET_HOLDING_FUNDS';
+export const BUY_FUNDS = 'BUY_FUNDS';
 
 /**
  * 用户相关
