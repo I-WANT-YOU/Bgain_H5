@@ -1,6 +1,6 @@
 <template>
   <div class="noiniaial">
-    <BgainNavBar :title="title" />
+    <BgainNavBar :title="fundDetail.fund_name ? fundDetail.fund_name : title" />
     <div class="info">
       <div class="info-top">
         <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
@@ -30,14 +30,14 @@
     <div class="networth">
       <div class="title">
         <span>净值走势</span>
-        <div class="purchase">申购倒计时 1天19小时24分</div>
+        <!-- <div v-if="this.fundDetail.status === 'OPEN'" class="purchase">申购倒计时 1天19小时24分</div> -->
       </div>
       <div class="echarts">
         <div class="echarts-info">
           <span>日期 {{formatDate(chart_x, 'MM-DD')}}</span>
-          <span>单位净值 {{chart_y}}</span>
+          <span class="echarts-info-num">单位净值 {{chart_y}}</span>
         </div>
-        <div class="my-echarts" ref="echarts" style="width: 305px;height: 136px;"></div>
+        <div class="my-echarts" ref="echarts" style="width: 315px;height: 136px;"></div>
       </div>
     </div>
     <div class="tradeshow">
@@ -93,19 +93,16 @@
           <svg-icon icon-class="fund-retreat" />
           <div class="percent">{{fundDetail.max_retracement_scale * 1}}%</div>
           <div class="text">最大回撤</div>
-          <!--  -->
         </div>
         <div>
           <svg-icon icon-class="fund-managementfee" />
           <div class="percent">{{fundDetail.manage_fee_rate * 1}}%</div>
           <div class="text">管理费(年化)</div>
-          <!-- manage_fee_rate -->
         </div>
         <div>
           <svg-icon icon-class="fund-meritpay" />
           <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
-          <!-- carry_rate_user -->
         </div>
       </div>
     </div>
@@ -134,7 +131,13 @@
         v-if="!this.fundDetail.status === 'OPEN'"
         class="open"
       >{{formatDate(fundDetail.next_open_date,'YYYY-MM-DD')}}开放认购</div>
-      <Button type="info" class="button" @click="onSubmit">立即认购</Button>
+      <Button
+        v-if="this.fundDetail.status === 'OPEN'"
+        type="info"
+        class="button"
+        @click="onSubmit"
+      >立即认购</Button>
+      <Button v-else type="info" class="button" @click="onSubmit">到时提醒我</Button>
     </div>
   </div>
 </template>
@@ -146,7 +149,7 @@ import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import { Button } from 'vant';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
-import { formatRisk, formatType, echartsOption } from './formatFundData';
+import { formatRiskText, formatType, echartsOption } from './formatFundData';
 
 export default {
   name: 'NoInitial',
@@ -162,13 +165,13 @@ export default {
       type: '',
       risk: '',
       chart_x: '03-16',
-      chart_y: '1.000',
+      chart_y: '1.0000',
     };
   },
   mounted() {
     this.getFundProductDetail(this.$route.params.id).then(() => {
       this.type = formatType(this.fundDetail).fund_product_type;
-      this.risk = formatRisk(this.fundDetail).risk_level_type;
+      this.risk = formatRiskText(this.fundDetail).risk_level_type;
       this.setEcharts();
     });
   },
@@ -353,6 +356,11 @@ export default {
         box-sizing: border-box;
         padding: 0 20px;
         margin-bottom: 14px;
+        .echarts-info-num {
+          display: inline-block;
+          width: 90px;
+          text-align: left;
+        }
       }
     }
   }

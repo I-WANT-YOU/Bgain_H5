@@ -60,6 +60,21 @@ class FundService {
       throw new Error(error);
     }
   }
+
+  static async FundBuy(options) {
+    try {
+      const requestOptions = {
+        url: '/fund-product-order/buy',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: options,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FundService;

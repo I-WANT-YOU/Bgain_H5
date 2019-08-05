@@ -4,7 +4,7 @@
     <div class="title">您的认购申请已提交</div>
     <div class="info">
       <span class="icon">日涨跌幅</span>
-      <span>认购金额 23.125 FBP{{ }}</span>
+      <span>认购金额 {{amount}} {{currency}}</span>
       <span class="none">日涨跌幅</span>
     </div>
     <div class="message">该交易成功与否以平台确认结果为准,请及时关注消息通知</div>
@@ -13,17 +13,17 @@
       <div class="step">
         <svg-icon icon-class="step-active" class="icon" />
         <div class="step-title">扣减资金,提交认购申请</div>
-        <div class="step-time">2019-05-01 12:23:04</div>
+        <div class="step-time">{{confirm_date}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
         <div class="step-title">确认份额,募集期结束,进入锁定期</div>
-        <div class="step-time">2019-05-08 18:00</div>
+        <div class="step-time">{{submit_date}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
         <div class="step-title">进入开放期,基金可赎回或继续认购</div>
-        <div class="step-time">2019-05-30至2019-06-05</div>
+        <div class="step-time">{{next_open_date}}至{{next_end_date}}</div>
       </div>
     </div>
     <div class="buttons">
@@ -34,12 +34,27 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
+
 export default {
   name: 'Success',
+  props: ['currency'],
   methods: {
     onContinue() {
       this.$router.push('/product/fund');
     },
+  },
+  computed: {
+    ...mapState({
+      fundBuyResult: 'product/fund/fundBuyResult',
+    }),
+    ...mapGetters({
+      next_end_date: 'product/fund/next_end_date',
+      confirm_date: 'product/fund/confirm_date',
+      submit_date: 'product/fund/submit_date',
+      next_open_date: 'product/fund/next_open_date',
+      amount: 'product/fund/amount',
+    }),
   },
 };
 </script>

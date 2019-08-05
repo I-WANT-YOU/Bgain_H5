@@ -2,12 +2,12 @@
   <div class="noInitial" @click="onClick">
     <h4 class="title">
       <span>{{options.fund_name}}</span>
-      <svg-icon v-if="options.support_fbp" icon-class="fbp" class="icon-no-initial" />
+      <svg-icon v-if="options.support_fbp" icon-class="bgp" class="icon-no-initial" />
     </h4>
     <div class="data">
       <div class="top">
         <div :class="['setup', options.ups_and_downs_week > 0 ? '' : 'active']">
-          <span>{{options.ups_and_downs_week > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}</span>
+          <span>{{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}</span>
           <span class="unit">%</span>
         </div>
         <div class="networth">{{options.nav}}</div>

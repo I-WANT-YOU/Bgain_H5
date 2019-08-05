@@ -2,7 +2,7 @@
   <div class="buy-result">
     <BgainNavBar title="购买结果" />
     <Fail v-if="show" class="buy-result-con" />
-    <Success v-if="!show" class="buy-result-con" />
+    <Success v-if="!show" :currency="currency" class="buy-result-con" />
   </div>
 </template>
 
@@ -10,6 +10,7 @@
 import BgainNavBar from '@component/BgainNavBar.vue';
 import Fail from './components/Fail.vue';
 import Success from './components/Success.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'BuyResult',
@@ -21,7 +22,21 @@ export default {
   data() {
     return {
       show: false,
+      currency: "BTC",
     };
+  },
+  mounted() {
+    if (this.$route.query.status === 'success') {
+      this.show = false;
+      this.currency = this.$route.query.currency;
+    } else {
+      this.show = true;
+    }
+  },
+  computed: {
+    ...mapState({
+      "fundBuyResult": 'product/fund/fundBuyResult',
+    }),
   },
 };
 </script>
