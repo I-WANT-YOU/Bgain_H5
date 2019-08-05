@@ -36,19 +36,44 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
-      path: '/unLoginHome',
+      path: '/unLoginHome/:status',
       name: 'UnLoginHome',
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/UnLoginHome.vue'),
     },
     {
-      path: '/loginHome',
+      path: '/loginHome/:status',
       name: 'LoginHome',
       component: () => import(/* webpackChunkName: "loginHome" */ '../views/home/LoginHome.vue'),
     },
     {
-      path: '/registerHome',
+      path: '/registerHome/:status',
       name: 'RegisterHome',
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
+    },
+    {
+      path: '/homeToLogin/',
+      name: 'HomeToLogin',
+      component: () => import(/* webpackChunkName: "HomeToLogin" */ '../components/home/HomeToLogin.vue'),
+    },
+    {
+      path: '/fixedPurchaseStepOne',
+      name: 'FixedPurchaseStepOne',
+      component: () => import(/* webpackChunkName: "fixedPurchaseStepOne" */ '../views/product/fixed/FixedPurchaseStepOne.vue'),
+    },
+    {
+      path: '/fixedPurchaseStepTwo',
+      name: 'FixedPurchaseStepTwo',
+      component: () => import(/* webpackChunkName: "fixedPurchaseStepTwo" */ '../views/product/fixed/FixedPurchaseStepTwo.vue'),
+    },
+    {
+      path: '/subscriptionResults/',
+      name: 'SubscriptionResults',
+      component: () => import(/* webpackChunkName: "subscriptionResults" */ '../views/product/fixed/SubscriptionResults.vue'),
+    },
+    {
+      path: '/test/',
+      name: 'fixedPop',
+      component: () => import(/* webpackChunkName: "fixedPop" */ '../components/fixedDetail/FixedPop.vue'),
     },
     {
       path: '/country',
@@ -95,6 +120,7 @@ const router = new Router({
     },
     {
       path: '/product/fixed/:id',
+      name: 'FixedDetail',
       component: () => import('../views/product/fixed/FixedDetail.vue'),
     },
     {

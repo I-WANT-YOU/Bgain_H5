@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import backRectangle from '../../assets/images/home/backRectangle.svg';
 
 export default {
   name: 'HomeTip',

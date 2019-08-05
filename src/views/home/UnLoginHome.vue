@@ -7,13 +7,8 @@
     <div class="home-tip-container">
       <HomeTip/>
     </div>
-    <div class="button-container">
-      <router-link to="/register">
-        <button>注册</button>
-      </router-link>
-    </div>
-    <div class="toLogin">
-      <router-link to="/login">已有账号？登录</router-link>
+    <div class="toLogin-container">
+      <HomeToLogin/>
     </div>
     <div class="list-container">
       <HomeProductList/>
@@ -22,6 +17,7 @@
       <HomeMoreProducts/>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -29,6 +25,8 @@ import HomeSwipe from '../../components/home/HomeSwipe.vue';
 import HomeTip from '../../components/home/HomeTip.vue';
 import HomeProductList from '../../components/home/HomeProductList.vue';
 import HomeMoreProducts from '../../components/home/HomeMoreProducts.vue';
+import HomeToLogin from '../../components/home/HomeToLogin.vue';
+
 
 export default {
   name: 'UnLoginHome',
@@ -37,6 +35,7 @@ export default {
     HomeTip,
     HomeProductList,
     HomeMoreProducts,
+    HomeToLogin,
   },
 };
 </script>
@@ -91,7 +90,8 @@ export default {
 
   }
   .list-container{
-    width: 100%
+    width: 100%;
+    margin-top:25px;
   }
   .more-products-container{
     display: flex;
