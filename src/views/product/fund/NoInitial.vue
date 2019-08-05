@@ -145,6 +145,7 @@ import { formatDate, strip } from '@utils/tools';
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import { Button } from 'vant';
+import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 import { formatRisk, formatType, echartsOption } from './formatFundData';
 
 export default {
