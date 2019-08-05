@@ -61,7 +61,7 @@ class FundService {
     }
   }
 
-  static async FundBuy(options) {
+  static async buyFund(options) {
     try {
       const requestOptions = {
         url: '/fund-product-order/buy',

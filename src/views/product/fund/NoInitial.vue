@@ -196,8 +196,8 @@ export default {
       this.chart.setOption(echartsOption(X, series, min, max, num));
     },
     onMouseMove(params) {
-      var pointInPixel = [params.offsetX, params.offsetY];
-      var pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
+      const pointInPixel = [params.offsetX, params.offsetY];
+      const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
       if (this.chart.containPixel('grid', pointInPixel)) {
         this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
         this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x)[0].nav;

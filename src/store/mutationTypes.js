@@ -44,4 +44,3 @@ export const BUY_FUNDS = 'BUY_FUNDS';
  * 用户相关
  */
 export const GET_USER_SUMMARY = 'GET_USER_SUMMARY';
-

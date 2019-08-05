@@ -88,7 +88,7 @@ export const formatRisk = (data) => {
   return data;
 };
 
-export const echartsOption = function (X, series, min, max, num) {
+export function echartsOption(X, series, min, max, num) {
   return {
     grid: {
       left: '11%',
@@ -167,7 +167,7 @@ export const echartsOption = function (X, series, min, max, num) {
     },
     ],
   };
-};
+}
 
 
 export default (data) => {

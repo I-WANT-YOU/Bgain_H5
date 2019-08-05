@@ -100,9 +100,9 @@ const actions = {
   },
 
   // 基金购买
-  async FundBuy({ commit }, payload) {
+  async buyFund({ commit }, payload) {
     try {
-      const response = await FundService.FundBuy(payload);
+      const response = await FundService.buyFund(payload);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.BUY_FUNDS, data);
     } catch (error) {

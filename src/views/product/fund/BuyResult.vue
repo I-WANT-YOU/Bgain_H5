@@ -8,9 +8,9 @@
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
+import { mapState } from 'vuex';
 import Fail from './components/Fail.vue';
 import Success from './components/Success.vue';
-import { mapState } from 'vuex';
 
 export default {
   name: 'BuyResult',
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       show: false,
-      currency: "BTC",
+      currency: 'BTC',
     };
   },
   mounted() {
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     ...mapState({
-      "fundBuyResult": 'product/fund/fundBuyResult',
+      fundBuyResult: 'product/fund/fundBuyResult',
     }),
   },
 };
