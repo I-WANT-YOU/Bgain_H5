@@ -5,6 +5,7 @@ import app from '@modules/app';
 import auth from '@modules/auth';
 import home from '@modules/home';
 import product from '@modules/product';
+import user from '@modules/user';
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
     auth,
     home,
     product,
+    user,
   },
 });

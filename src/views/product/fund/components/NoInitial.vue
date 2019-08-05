@@ -6,8 +6,8 @@
     </h4>
     <div class="data">
       <div class="top">
-        <div class="setup">
-          <span>{{options.ups_and_downs_week}}</span>
+        <div :class="['setup', options.ups_and_downs_week > 0 ? '' : 'active']">
+          <span>{{options.ups_and_downs_week > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}</span>
           <span class="unit">%</span>
         </div>
         <div class="networth">{{options.nav}}</div>
@@ -83,22 +83,22 @@ export default {
       }
       &.top {
         display: flex;
+        letter-spacing: 0;
         .setup {
           font-size: 24px;
           color: #67bb74;
-          letter-spacing: 0;
           line-height: 33px;
           .unit {
             font-size: 18px;
-            color: #67bb74;
-            letter-spacing: 0;
             line-height: 25px;
+          }
+          &.active {
+            color: #ff5044;
           }
         }
         .networth {
           font-size: 18px;
           color: #0f3256;
-          letter-spacing: 0;
           box-sizing: border-box;
           padding: 8px 0 0 17px;
         }
