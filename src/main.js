@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Dialog } from 'vant';
+import eruda from 'eruda';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -11,7 +11,10 @@ import './assets/scripts/geetest';
 import './icons';
 
 Vue.config.productionTip = false;
-Vue.use(Dialog);
+
+if (process.env.NODE_ENV === 'development') {
+  eruda.init();
+}
 
 new Vue({
   router,
