@@ -24,6 +24,7 @@ const actions = {
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
+        router.push('/');
       }
     } catch (error) {
       throw error;

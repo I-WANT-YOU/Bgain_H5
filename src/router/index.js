@@ -218,6 +218,11 @@ const router = new Router({
       name: 'setTradePassword',
       component: () => import('../views/passwordConfig/SetTradePassword.vue'),
     },
+    {
+      path: '/mine',
+      name: 'Mine',
+      component: () => import('../views/mine/Mine.vue'),
+    },
   ],
 });
 

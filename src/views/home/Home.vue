@@ -39,6 +39,7 @@
     <br />
     <SendCode ref="sendCode" />
     <br />
+    <router-link to='/mine'>我的</router-link>
   </div>
 </template>
 

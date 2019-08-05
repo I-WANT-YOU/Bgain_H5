@@ -46,7 +46,7 @@ export default {
     },
     onForgotClick() {
       this.$router.push({
-        path: '/passwordConfig/ResetTradePassword',
+        path: '/passwordconfig/reset/tradepassword',
       });
     },
     onSubmit() {
