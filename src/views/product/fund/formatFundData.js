@@ -12,7 +12,7 @@ export const riskLevelTypeList = [
   { type: 'R1_LOW_RISK', value: 'R1' },
   { type: 'R2_MEDIUM_LOW_LEVEL', value: 'R2' },
   { type: 'R3_MEDIUM_LEVEL', value: 'R3' },
-  { type: 'R4_MEDIUM_HIGH_LEVEL', value: 'R4中' },
+  { type: 'R4_MEDIUM_HIGH_LEVEL', value: 'R4' },
   { type: 'R5_HIGH_LEVEL', value: 'R5' },
 ];
 
