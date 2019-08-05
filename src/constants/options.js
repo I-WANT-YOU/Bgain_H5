@@ -8,3 +8,8 @@ export const FUND_STATUS = {
   OPEN: 'OPEN', // 开放
   CLOSE: 'CLOSE', // 锁定
 };
+
+export const AUTH_LEVEL = {
+  NEW_USER: 1, // 新用户
+  TRADE_PASSWORD: 2, // 已设置交易密码
+};
