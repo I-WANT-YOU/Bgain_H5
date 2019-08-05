@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { strip } from '@utils/tools';
 
 export const fundProductTypeList = [
   { type: 'SmartBeta', value: '指数更强' },
@@ -63,6 +64,88 @@ export const formatRisk = (data) => {
   return data;
 };
 
+export const echartsOption = function (X, series, min, max, num) {
+  return {
+    grid: {
+      left: '14%',
+      right: '0%',
+      bottom: '5%',
+      top: '5%',
+    },
+    tooltip: {
+      showContent: false,
+      trigger: 'axis',
+    },
+    xAxis: {
+      show: false,
+      type: 'category',
+      data: X,
+      axisLine: {
+        show: false,
+        lineStyle: {
+          color: '#ffffff',
+        },
+      },
+      axisLabel: {
+        show: true,
+        textStyle: {
+          color: '#ffffff',
+          fontSize: 8,
+        },
+      },
+      splitLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false,
+      },
+    },
+    yAxis: {
+      show: true,
+      type: 'value',
+      min: strip(min - num, 3),
+      max: strip(max * 1 + num, 3),
+      axisLabel: {
+        show: true,
+        textStyle: {
+          color: '#a8aeb9',
+          fontSize: 8,
+        },
+      },
+      axisLine: {
+        show: false,
+        lineStyle: {
+          color: '#ffffff',
+        },
+      },
+      splitLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false,
+      },
+    },
+    series: [{
+      data: series,
+      type: 'line',
+      symbol: 'none',
+      smooth: true,
+      lineStyle: {
+        width: 1,
+        color: '#4770F5',
+      },
+      areaStyle: {
+        normal: {
+          opacity: 0.2,
+          color: '#C6D0F0',
+        },
+      },
+    },
+    ],
+  };
+};
+
+
 export default (data) => {
   formatType(data);
   formatRisk(data);
@@ -70,6 +153,5 @@ export default (data) => {
   // 净值 nav_date
   data.nav_date = dayjs(data.nav_date).format('MM-DD');
   // 成立以来 ups_and_downs_week
-  data.ups_and_downs_week = data.ups_and_downs_week >= 0 ? `+${data.ups_and_downs_week}` : data.ups_and_downs_week;
   return data;
 };

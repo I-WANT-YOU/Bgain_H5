@@ -81,12 +81,12 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "register" */ '../views/country/Country.vue'),
     },
     {
-      path: '/forgetPassword',
+      path: '/forgetpassword',
       name: 'forgetPassword',
       component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPassword/ForgetPassword.vue'),
     },
     {
-      path: '/forgetPasswordSet',
+      path: '/forgetpasswordset',
       name: 'forgetPasswordSet',
       component: () => import(/* webpackChunkName: "forgetPassword" */ '../views/forgetPasswordSet/ForgetPasswordSet.vue'),
     },
@@ -199,22 +199,22 @@ const router = new Router({
       component: () => import('../views/product/current/CurrentSellResult.vue'),
     },
     {
-      path: '/passwordConfig',
+      path: '/passwordconfig',
       name: 'passwordConfig',
       component: () => import('../views/passwordConfig/PasswordConfig.vue'),
     },
     {
-      path: '/passwordConfig/ResetLoginPassword',
+      path: '/passwordconfig/reset/loginpassword',
       name: 'resetLoginPassword',
       component: () => import('../views/passwordConfig/ResetLoginPassword.vue'),
     },
     {
-      path: '/passwordConfig/ResetTradePassword',
+      path: '/passwordconfig/reset/tradepassword',
       name: 'resetTradePassword',
       component: () => import('../views/passwordConfig/ResetTradePassword.vue'),
     },
     {
-      path: '/setTradePassword',
+      path: '/passwordconfig/set/tradepassword',
       name: 'setTradePassword',
       component: () => import('../views/passwordConfig/SetTradePassword.vue'),
     },

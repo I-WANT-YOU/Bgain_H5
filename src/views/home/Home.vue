@@ -37,7 +37,7 @@
     <router-link to="/product/fund/result">基金认证结果</router-link>
     <router-link to="/passwordConfig">密码设置</router-link>
     <br />
-    <router-link :to="{ path: '/setTradePassword', query : {fillPath:'/'} }">设置交易密码</router-link>
+    <router-link :to="{ path: '/passwordconfig/set/tradepassword', query : {fillPath:'/'} }">设置交易密码</router-link>
     <br />
     <SendCode ref="sendCode" />
     <br />
