@@ -142,7 +142,6 @@ export default {
       // 判断是否是数字
       if (regNum.test(lastStr)) { // 输入是数字
         this.investmentAmount = val;
-        console.log(this.tabActiveCurrency);
         // 判断是否大于可用余额 大于产品剩余剩余额度
         if (this.tabActiveCurrency === true) {
           // 判断是否激活按钮 进行下一步

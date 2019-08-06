@@ -200,6 +200,16 @@ export default {
         }
         return false;
       }
+      // 判断是否是0
+      if (lastStr === '0') {
+        if (val.charAt(val.length - 2) === '0') { // 前一位也是0
+          if (val.length === 2) {
+            this.inputValue = val.substring(0, val.length - 1);
+          } else {
+            this.inputValue = val;
+          }
+        }
+      }
     },
   },
 };
