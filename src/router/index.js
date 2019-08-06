@@ -229,6 +229,11 @@ const router = new Router({
       name: 'kyc',
       component: () => import('../views/mine/kyc/Kyc.vue'),
     },
+    {
+      path: '/mine/safety/kyc-result',
+      name: 'kyc-result',
+      component: () => import('../views/mine/kyc/KycResult.vue'),
+    },
   ],
 });
 
