@@ -224,6 +224,11 @@ const router = new Router({
       name: 'Mine',
       component: () => import('../views/mine/Mine.vue'),
     },
+    {
+      path: '/mine/safety/kyc',
+      name: 'kyc',
+      component: () => import('../views/mine/kyc/Kyc.vue'),
+    },
   ],
 });
 
