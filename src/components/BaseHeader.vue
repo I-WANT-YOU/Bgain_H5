@@ -6,7 +6,7 @@
       <svg-icon
         v-if="authenticated"
         icon-class="user"
-        lass="header__user" />
+        class="header__user" />
       <svg-icon icon-class="more" class="header__more" />
     </div>
   </div>

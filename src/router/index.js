@@ -97,6 +97,7 @@ const router = new Router({
       children: [
         {
           path: 'current',
+          name: 'current',
           component: () => import('../views/product/current/Current.vue'),
           meta: {
             title: '活期',

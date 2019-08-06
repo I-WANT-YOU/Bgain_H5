@@ -122,6 +122,27 @@ class CurrentService {
       throw new Error(error);
     }
   }
+
+  static async sellCurrentProduct({ amount, currency, password }) {
+    try {
+      const requestOptions = {
+        url: '/trade/sell',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          trade_type: 'sell',
+          amount,
+          payment_currency: currency,
+          payment_password: password,
+          product_type: 'current_income',
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CurrentService;
