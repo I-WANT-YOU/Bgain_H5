@@ -26,7 +26,7 @@
             <span>当前净值</span>
             <span>成立以来</span>
           </li>
-          <li v-for="(item) in funds" :key="item.id">
+          <li v-for="(item) in newFunds" :key="item.id">
             <div class="found-li-style">
               <div>
                 <div>{{ item.fund_product_name }}</div>
@@ -138,11 +138,20 @@ export default {
       'isLogin',
       'hasUnreadMessage',
     ]),
+    newFunds() {
+      let fundList = [];
+      const fundInitial = this.funds.filter(item => item.status === 'INITIAL');
+      const fundUnInitial = this.funds.filter(item => item.status !== 'INITIAL');
+      fundList = fundList.concat(fundInitial);
+      fundList = fundList.concat(fundUnInitial);
+      // console.log(fundList);
+      return fundList;
+    },
+
   },
   mounted() {
     this.getAllHomeInfo().then(
       () => {
-        console.log(this.fixeds);
         let num = 0;
         while (num < this.currents.length) {
           this.initChart(num);

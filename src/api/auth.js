@@ -161,21 +161,6 @@ class AuthService {
       throw new Error(error);
     }
   }
-
-  // 获取用户信息
-  static async getUserInfo() {
-    try {
-      const requestOptions = {
-        url: '/user/get-user-summary',
-        headers: { 'Content-Type': 'application/json' },
-        method: 'get',
-      };
-      const response = await request(requestOptions);
-      return handlerResponse(response);
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
 }
 
 export default AuthService;

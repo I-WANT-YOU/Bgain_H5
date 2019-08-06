@@ -4,6 +4,7 @@ export const UNAUTHENTICATED = 'UNAUTHENTICATED';
 
 // Home
 export const GET_ALL_HOME_INFO = 'GET_ALL_HOME_INFO';
+export const GET_RECORD = 'GET_RECORD';
 
 /**
  * 产品相关
@@ -43,3 +44,11 @@ export const GET_HOLDING_FUNDS = 'GET_HOLDING_FUNDS';
  * 用户相关
  */
 export const GET_USER_SUMMARY = 'GET_USER_SUMMARY';
+
+/**
+ * 冲币买币
+ */
+export const GET_PURCHASE_INFO = 'GET_PURCHASE_INFO';
+export const GET_CURRENCY_LIST = 'GET_CURRENCY_LIST';
+export const GET_CURRENCY_PRICE = 'GET_CURRENCY_PRICE';
+

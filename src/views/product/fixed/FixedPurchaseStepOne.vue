@@ -80,7 +80,7 @@ export default {
       investmentAmount: '',
       oldValue: '',
       activeButton: false,
-      productId:'',
+      productId: '',
       // expectedReturn: '-',
     };
   },

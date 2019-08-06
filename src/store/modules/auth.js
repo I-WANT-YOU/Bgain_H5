@@ -123,18 +123,6 @@ const actions = {
       throw error;
     }
   },
-  //  获取用户信息
-  async getUserInfo({ commit }) {
-    try {
-      const response = await AuthService.getUserInfo();
-      const data = Auth.handlerSuccessResponse(response);
-      if (data && data.success) {
-        commit('getUserInfo', data);
-      }
-    } catch (error) {
-      throw error;
-    }
-  },
 };
 
 export default {

@@ -41,6 +41,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
     },
     {
+      path: '/purchaseCoinHome/',
+      name: 'PurchaseCoinHome',
+      component: () => import(/* webpackChunkName: "PurchaseCoinHome" */ '../views/purchaseCoin/purchaseCoinHome.vue'),
+    },
+    {
       path: '/homeToLogin/',
       name: 'HomeToLogin',
       component: () => import(/* webpackChunkName: "HomeToLogin" */ '../components/home/HomeToLogin.vue'),

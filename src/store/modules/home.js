@@ -1,10 +1,11 @@
 import { get } from 'lodash';
 import HomeService from '@api/home';
-import { handlerSuccessResponseV2 } from '@utils/auth';
+import { handlerSuccessResponseV2, handlerSuccessResponse } from '@utils/auth';
 import * as types from '../mutationTypes';
 
 const state = {
   infos: {},
+  recordList: {},
 };
 
 const getters = {
@@ -21,6 +22,9 @@ const mutations = {
   [types.GET_ALL_HOME_INFO](state, payload) {
     state.infos = payload;
   },
+  [types.GET_RECORD](state, payload) {
+    state.recordList = payload;
+  },
 };
 
 const actions = {
@@ -35,6 +39,16 @@ const actions = {
       const response = await HomeService.getAllHomeInfo();
       const data = await handlerSuccessResponseV2(response);
       commit(types.GET_ALL_HOME_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  // 用户是否有充值记录
+  async getRecord({ commit }) {
+    try {
+      const response = await HomeService.getRecord();
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_RECORD, data);
     } catch (error) {
       throw error;
     }

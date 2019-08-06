@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <router-link to="/purchaseCoinHome">买币冲币</router-link><br />
     <router-link to="/test">余额不足</router-link><br />
     <router-link to="/homeToLogin">tologin</router-link><br />
     <router-link to="/fixedPurchaseStepTwo">优惠券购买</router-link><br />

@@ -6,7 +6,9 @@
       </div>
       <div class="steps">
         <div class="step" v-for="(step,index) in steps" :key="index">
-          <div class="img-container"><svg-icon :icon-class="step.img[0]" class="img-style"/></div>
+          <div class="img-container">
+            <svg-icon :icon-class="step.img[step.status]" class="img-style"/>
+          </div>
           <div class="text-container">{{step.text}}</div>
         </div>
       </div>
@@ -17,29 +19,43 @@
 <script>
 export default {
   name: 'HomeGuide',
+  props: [
+    'kyc_status',
+    'setPassword',
+    'record',
+  ],
+  computed: {
+    steps() {
+      const steps = [
+        {
+          img: ['register_dark ', 'register_light'],
+          text: '注册',
+          status: 1,
+        },
+        {
+          img: ['identity_dark', 'identity_light'],
+          text: '身份认证',
+          status: this.kyc_status,
+        },
+        {
+          img: ['password_dark', 'password_light'],
+          text: '设置交易密码',
+          status: this.setPassword,
+        },
+        {
+          img: ['coin_dark', 'coin_light'],
+          text: '充币',
+          status: this.record,
+        }];
+      return steps;
+    },
+  },
   data() {
     return {
-      steps: [
-        {
-          img: ['register_light', 'register_dark '],
-          text: '注册',
-        },
-        {
-          img: ['identity_light', 'identity_dark'],
-          text: '身份认证',
-        },
-        {
-          img: ['password_light', 'password_dark'],
-          text: '设置交易密码',
-        },
-        {
-          img: ['coin_light', 'coin_dark'],
-          text: '充币',
-        }],
       currentStep: 0,
     };
   },
-  components: {
+  mounted() {
   },
 };
 </script>

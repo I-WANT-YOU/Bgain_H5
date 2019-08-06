@@ -2,8 +2,8 @@
       <div class="bannerBox">
         <div class="swiper-container">
           <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in banner" :key="index">
-              <img :src="item.picture_path" alt="">
+            <div class="swiper-slide" v-for="(item,index) in banners" :key="index">
+              <img :src = "item.img_url"  alt=".">
             </div>
           </div>
         </div>
@@ -11,36 +11,15 @@
 </template>
 <script>
 import 'swiper/dist/css/swiper.min.css';
+import { mapGetters } from 'vuex';
 import Swiper from 'swiper';
-import p1 from '../../assets/images/s1.jpg';
-import p2 from '../../assets/images/s2.jpg';
-import p3 from '../../assets/images/s3.jpg';
 
 export default {
   name: 'HomeSwipe',
-  components: {
-  },
-  data() {
-    return {
-      banner: [
-        {
-          picture_txt: '手写的处方',
-          picture_path: p1,
-        },
-        {
-          picture_txt: '机打的处方',
-          picture_path: p2,
-        },
-        {
-          picture_txt: '机打的处方',
-          picture_path: p3,
-        },
-        {
-          picture_txt: '机打的处方',
-          picture_path: p1,
-        },
-      ],
-    };
+  computed: {
+    ...mapGetters('home', [
+      'banners',
+    ]),
   },
   mounted() {
     /* eslint-disable */
@@ -64,7 +43,6 @@ export default {
   .bannerBox{
     position: relative;
     height: 134px;
-    background-color: red;
   }
   .swiper-container {
     width: 100%;
