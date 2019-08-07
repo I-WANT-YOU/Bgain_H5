@@ -61,9 +61,29 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "fixedPurchaseStepTwo" */ '../views/product/fixed/FixedPurchaseStepTwo.vue'),
     },
     {
+      path: '/confirmOrder',
+      name: 'ConfirmOrder',
+      component: () => import(/* webpackChunkName: "confirmOrder" */ '../views/purchaseCoin/confirmOrder.vue'),
+    },
+    {
       path: '/subscriptionResults/',
       name: 'SubscriptionResults',
       component: () => import(/* webpackChunkName: "subscriptionResults" */ '../views/product/fixed/SubscriptionResults.vue'),
+    },
+    {
+      path: '/pleasePay/', // lihui
+      name: 'PleasePay',
+      component: () => import(/* webpackChunkName: "PleasePay" */ '../views/purchaseCoin/PleasePay.vue'),
+    },
+    {
+      path: '/pleasePay/', // lihu
+      name: 'PleasePay',
+      component: () => import(/* webpackChunkName: "PleasePay" */ '../views/purchaseCoin/PleasePay.vue'),
+    },
+    {
+      path: '/buyingRecord/', // lihu
+      name: 'BuyingRecord',
+      component: () => import(/* webpackChunkName: "BuyingRecord" */ '../views/purchaseCoin/BuyingRecord.vue'),
     },
     {
       path: '/test/',

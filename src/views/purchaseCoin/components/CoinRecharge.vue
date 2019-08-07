@@ -43,7 +43,11 @@
     </div>
     <!--手续费-->
     <div class="next">
-      <button>下一步</button>
+      <button
+        @click="next"
+        :class="{activeButtonStyle:activeButton}"
+        :disabled = !activeButton
+      >下一步</button>
     </div>
   </div>
 </template>
@@ -69,11 +73,14 @@ export default {
       inputValue: '',
       exchangeType: 'CNY', // 兑换
       exchangeInfo: [],
+      singleOfferPrice: '', // 单约价
       transactionsNumber: '', // 成交数量
       paymentAmount: '', // 实付金额
+      activeButton: false,
+      routerData: '',
     };
   },
-  async mounted() {
+  mounted() {
     this.getCurrencyList().then(
       () => {
         const selectedCurrency = this.currencyListToUp[0];
@@ -85,9 +92,12 @@ export default {
             this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
           },
           (err) => {
-            if (err.status) { this.$toast(errorMessage[err.status]); } else {
-              this.$toast('网络故障');
-            }
+            console.log(err);
+            if (err.status) { this.$toast(errorMessage[err.status]); }
+          },
+        ).catch(
+          () => {
+            this.$toast('网络故障');
           },
         );
       },
@@ -96,17 +106,66 @@ export default {
           this.$toast('网络故障');
         }
       },
-    );
+    ).catch(() => {
+      this.$toast('网络故障');
+    });
   },
   methods: {
     ...mapActions('coin/purchaseCoin', [
       'getCurrencyList',
       'getCurrencyPrice',
     ]),
+    ...mapActions('coin/orderInfo', [
+      'getOrderInfo',
+    ]),
+    // 下一步
+    next() {
+      const queryData = {
+        type: 'buy',
+        coinSymbol: this.activeContentTab,
+        currency_symbol: '"CNY"',
+      };
+      if (this.exchangeType === 'CNY') {
+        queryData.amount = this.inputValue;
+      } else {
+        queryData.coin_amount = this.inputValue;
+      }
+      this.getOrderInfo(this.initExchangeInfo); // 订单信息存入store
+      this.routerData = this.initExchangeInfo;
+      const data = JSON.stringify(this.routerData);
+      this.$router.push({
+        name: 'ConfirmOrder',
+        params: {
+          data,
+          queryData,
+        },
+      });
+    },
     // 改变币种
-    changeContentTab(index) {
-      this.activeContentTab = index;
+    changeContentTab(currencyType) {
+      this.activeContentTab = currencyType;
       this.exchangeType = 'CNY';
+      // 获取新的币种价格信息
+      this.getNewCurrency(currencyType);
+    },
+    // 获取新的币种价格信息
+    getNewCurrency(currencyType) {
+      // 调用接口获取单价
+      this.getCurrencyPrice(currencyType).then(
+        () => {
+          this.activeExchangeTab = 0;
+          this.exchangeType = 'CNY';
+          this.placeHolder = '请输入法币数量';
+          this.singleOfferPrice = `${this.currencyPrice.price}CNY/${this.activeContentTab}`; // 单约价
+        },
+        (err) => {
+          if (err.status) { this.$toast(errorMessage[err.status]); }
+        },
+      ).catch(
+        () => {
+          this.$toast('网络故障');
+        },
+      );
     },
     // 改变兑换方式
     changeExchangeTab(index) {
@@ -149,7 +208,7 @@ export default {
           },
         ];
       } else if (this.inputValue !== '') {
-        if (this.exchangeType === 'CNY') {
+        if (this.exchangeType !== 'CNY') {
           data = [
             {
               title: `单约价  (${this.activeContentTab})`,
@@ -161,7 +220,7 @@ export default {
             },
             {
               title: '实付金额',
-              content: `¥${this.inputValue * this.currencyPrice.price}`,
+              content: `¥${Math.floor(this.inputValue * this.currencyPrice.price * 100000000) / 100000000}`,
             },
           ];
         } else {
@@ -172,7 +231,8 @@ export default {
             },
             {
               title: '成交数量',
-              content: this.inputValue / this.currencyPrice.price,
+              // eslint-disable-next-line max-len
+              content: Math.floor((this.inputValue / this.currencyPrice.price) * 100000000) / 100000000,
             },
             {
               title: '实付金额',
@@ -210,6 +270,43 @@ export default {
           }
         }
       }
+      // 判断是否是数字
+      if (regNum.test(lastStr)) {
+        this.inputValue = val;
+        if (this.exchangeType === 'CNY') {
+          if ((this.inputValue - this.currencyPrice.min_quota) >= 0) {
+            this.activeButton = true;
+          } else {
+            this.activeButton = false;
+          }
+        } else if (this.exchangeType !== 'CNY') {
+          if (this.inputValue > 0) {
+            this.activeButton = true;
+          } else {
+            this.activeButton = false;
+          }
+        }
+      } else {
+        this.inputValue = val.substring(0, val.length - 1);
+        return false;
+      }
+      // 判断小数点后只有8位
+      if (this.inputValue.indexOf('.') > -1) { // 有小数点
+        if (this.exchangeType === 'CNY') {
+          if ((this.inputValue.length - this.inputValue.indexOf('.') - 1) > 2) {
+            this.inputValue = val.substring(0, val.length - 1);
+            this.$toast('小数点后最多可输入2位');
+          } else {
+            this.inputValue = val;
+          }
+        } else if ((this.inputValue.length - this.inputValue.indexOf('.') - 1) > 8) {
+          this.inputValue = val.substring(0, val.length - 1);
+          this.$toast('小数点后最多可输入8位');
+        } else {
+          this.inputValue = val;
+        }
+      }
+      return false;
     },
   },
 };
@@ -219,6 +316,9 @@ export default {
 <style lang="scss" scoped>
   .activeContentTab{
     color: #FFFFFF;
+  }
+  .activeButtonStyle{
+    background: #3C64EE!important;
   }
   .activeExchangeTab{
     color: #3C64EE;
@@ -326,7 +426,6 @@ export default {
         }
       }
     }
-
   }
   .tips{
     margin-top: 51px;
@@ -348,7 +447,7 @@ export default {
     >button{
       width: 331px;
       height: 46px;
-      background: #3C64EE;
+      background: #D2D8EB;
       border: none;
       border-radius: 4px;
       font-size: 16px;

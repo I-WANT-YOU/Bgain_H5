@@ -1,5 +1,7 @@
 <template>
   <div class="home">
+    <router-link to="/buyingRecord">购买记录</router-link><br />
+    <router-link to="/pleasePay">请付款</router-link><br />
     <router-link to="/purchaseCoinHome">买币冲币</router-link><br />
     <router-link to="/test">余额不足</router-link><br />
     <router-link to="/homeToLogin">tologin</router-link><br />

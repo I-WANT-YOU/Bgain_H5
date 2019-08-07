@@ -171,9 +171,7 @@ export default {
           }
         }
       } else { // 输入的是非数字
-        console.log(val);
         this.investmentAmount = val.substring(0, val.length - 1);
-        console.log(this.investmentAmount);
         return false;
       }
 
