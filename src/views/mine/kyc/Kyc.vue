@@ -116,7 +116,6 @@ export default {
         span {
           font-size: 15px;
           color: #6A707D;
-          line-height: 21px;
         }
       }
 
