@@ -51,7 +51,7 @@ const options = [
     active: 'all',
     text: '策略类型',
     value: 1,
-    children: ['指数更强', 'CTA', '套利', '高频', '混合'],
+    children: ['指数增强', 'CTA', '套利', '高频', '混合'],
   },
   {
     type: 'risk',
