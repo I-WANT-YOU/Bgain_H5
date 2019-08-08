@@ -6,10 +6,12 @@
           label="国籍"
           placeholder="请输入用户名"
         >
-          <div class="kyc__country" @click="onCountryClick">
-            <span>{{country.text}}</span>
-            <svg-icon icon-class="next" class="icon-next"></svg-icon>
-          </div>
+          <template v-slot:input>
+            <div class="kyc__country" @click="onCountryClick">
+              <span>{{country.text}}</span>
+              <svg-icon icon-class="next" class="icon-next"></svg-icon>
+            </div>
+          </template>
         </kyc-field>
         <kyc-field
           :value="firstName"

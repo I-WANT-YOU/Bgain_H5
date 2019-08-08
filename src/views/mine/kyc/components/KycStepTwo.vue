@@ -5,7 +5,9 @@
         <kyc-field
           label="证件类型"
         >
-          <div class="kyc__document--type" @click="onShowPicker">{{type}}</div>
+          <template v-slot:input>
+            <div class="kyc__document--type" @click="onShowPicker">{{type}}</div>
+          </template>
         </kyc-field>
         <kyc-field
           :value="documentNumber"
@@ -30,10 +32,11 @@
             :after-read="afterRead"
             :name="index"
           >
-            <template v-slot:default>
+            <template v-slot:default v-if="files[index] !== 'error'">
               <div class="photo__wrapper">
                 <svg-icon :icon-class="uploader.icon" class="icon-bg-place"/>
                 <svg-icon icon-class="camera" class="icon-camera"/>
+                <div class="photo__reupload" v-if="files[index] !== ''"><span>重新添加</span></div>
                 <van-image
                   v-if="files[index] !== ''"
                   class="preview-image"
@@ -46,6 +49,15 @@
                     <Loading type="spinner" size="20"/>
                   </template>
                 </van-image>
+              </div>
+            </template>
+            <template v-slot:default v-else>
+              <div class="photo__wrapper">
+                <svg-icon icon-class="kyc-fail-bg" class="icon-bg-place" />
+                <div class="photo__wrapper--fail">
+                  <svg-icon icon-class="kyc-fail-icon" class="icon-kyc-fail" />
+                  <div class="fail__title">添加失败</div>
+                </div>
               </div>
             </template>
           </Uploader>
@@ -68,14 +80,6 @@
         @click="onNextClick"
       >
         下一步
-      </bgain-button>
-      <bgain-button
-        type="info"
-        :fluid="true"
-        @click="onGetSecretClick"
-        :style="{marginTop: '30px'}"
-      >
-        获取秦健大佬的上传信息
       </bgain-button>
     </div>
     <Popup v-model="showPicker" position="bottom">
@@ -264,6 +268,7 @@ export default {
           Toast.clear();
         })
         .catch((error) => {
+          this.files.splice(index, 1, 'error');
           Toast(error);
         });
     },
@@ -277,11 +282,9 @@ export default {
         await this.getPolicy();
         this.upload(file, index);
       } catch (error) {
+        this.files.splice(index, 1, 'error');
         Toast(error);
       }
-    },
-    onGetSecretClick() {
-      this.getPolicy();
     },
   },
 };
@@ -344,6 +347,50 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+        }
+
+        .photo__reupload {
+          position: absolute;
+          box-sizing: border-box;
+          top: 3px;
+          right: 3px;
+          display: flex;
+          opacity: 0.75;
+          background: #9D9D9D;
+          border-radius: 1px;
+          transform: scale(0.75);
+          padding: 2px;
+          z-index: 1001;
+
+          span {
+            display: inline-block;
+            font-size: 12px;
+            color: #FFFFFF;
+          }
+        }
+
+        .photo__wrapper--fail {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          .icon-kyc-fail {
+            width: 16px;
+            height: 16px;
+            margin-bottom: 2.3px;
+          }
+
+          .fail__title {
+            font-size: 14px;
+            color: #FF5C5C;
+            line-height: 20px;
+          }
         }
       }
 

@@ -11,6 +11,8 @@ const state = {
 
 const getters = {
   authLevel: state => get(state.basicInfo, 'authlevel', 0),
+  username: state => get(state.basicInfo, 'username', ''),
+  countryCode: state => get(state.basicInfo, 'country_calling_code', '+86'),
   singleCurrency: state => get(state.userBanalce, 'single_currency', {}),
   currencies: state => map(state.userBanalce.single_currency, item => item.currency),
 };

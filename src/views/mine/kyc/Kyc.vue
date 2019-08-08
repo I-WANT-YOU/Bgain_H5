@@ -21,6 +21,9 @@
       @change-step="onChangeStep"
     >
     </kyc-step-two>
+    <kyc-step-three
+      v-if="step === 3"
+    ></kyc-step-three>
   </div>
 </template>
 
@@ -30,10 +33,12 @@ import BgainNavBar from '@/components/BgainNavBar.vue';
 import KycNoticeBar from './components/KycNoticeBar.vue';
 import KycStepOne from './components/KycStepOne.vue';
 import KycStepTwo from './components/KycStepTwo.vue';
+import KycStepThree from './components/KycStepThree.vue';
 
 export default {
   name: 'Kyc',
   components: {
+    KycStepThree,
     KycStepTwo,
     KycStepOne,
     KycNoticeBar,
