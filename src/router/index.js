@@ -7,13 +7,18 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/Testing.vue'),
+    },
+    {
       path: '/home',
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
     },
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/test',
     },
     {
       path: '/login',
@@ -69,11 +74,6 @@ const router = new Router({
       path: '/subscriptionResults/',
       name: 'SubscriptionResults',
       component: () => import(/* webpackChunkName: "subscriptionResults" */ '../views/product/fixed/SubscriptionResults.vue'),
-    },
-    {
-      path: '/test/',
-      name: 'fixedPop',
-      component: () => import(/* webpackChunkName: "fixedPop" */ '../components/fixedDetail/FixedPop.vue'),
     },
     {
       path: '/country',
