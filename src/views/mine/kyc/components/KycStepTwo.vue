@@ -53,9 +53,9 @@
             </template>
             <template v-slot:default v-else>
               <div class="photo__wrapper">
-                <svg-icon icon-class="kyc-fail-bg" class="icon-bg-place" />
+                <svg-icon icon-class="kyc-fail-bg" class="icon-bg-place"/>
                 <div class="photo__wrapper--fail">
-                  <svg-icon icon-class="kyc-fail-icon" class="icon-kyc-fail" />
+                  <svg-icon icon-class="kyc-fail-icon" class="icon-kyc-fail"/>
                   <div class="fail__title">添加失败</div>
                 </div>
               </div>
@@ -193,13 +193,10 @@ export default {
       return DOCUMENT_TYPE;
     },
     disabledNext() {
-      console.log(this.files);
-      console.log(this.files.every((file) => {
-        console.log('file !== \'', file !== '');
-        console.log('file !== \'error', file !== 'error');
-        return file !== '' && file !== 'error';
-      }));
-      return !(this.files.every(file => file !== '' || file !== 'error')) || this.documentNumber === '';
+      if (this.documentType === 'ID') {
+        return !(this.files.every(file => file !== '' && file !== 'error')) || this.documentNumber === '';
+      }
+      return !(this.files.filter((file, index) => index <= 1).every(file => file !== '' && file !== 'error')) || this.documentNumber === '';
     },
   },
   methods: {
