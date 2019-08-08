@@ -1,7 +1,7 @@
 <template>
   <div class="kyc-result__container">
     <bgain-nav-bar title="身份认证"></bgain-nav-bar>
-    <kyc-result-card status="PENDING"/>
+    <kyc-result-card :status="status" :subtitle="subtitle"/>
   </div>
 </template>
 
@@ -10,7 +10,13 @@ import { createNamespacedHelpers } from 'vuex';
 import KycResultCard from './components/KycResultCard.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 
-const { mapActions, mapState } = createNamespacedHelpers('user');
+const { mapGetters } = createNamespacedHelpers('user');
+
+const STATUS = {
+  auditing: 'PENDING',
+  failed: 'FAIL',
+  certified: 'SUCCESS',
+};
 
 export default {
   name: 'KycResult',
@@ -19,10 +25,14 @@ export default {
     BgainNavBar,
   },
   computed: {
-    ...mapState(['kycInfo']),
-  },
-  methods: {
-    ...mapActions(['getKycInfo']),
+    ...mapGetters(['submitKycStatus', 'submitKycMsg']),
+    status() {
+      return STATUS[this.submitKycStatus];
+    },
+    subtitle() {
+      if (this.submitKycStatus !== 'failed') return '';
+      return this.submitKycMsg;
+    },
   },
 };
 </script>
