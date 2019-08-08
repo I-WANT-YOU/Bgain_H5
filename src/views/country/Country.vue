@@ -58,14 +58,12 @@ export default {
       height: 54px;
       box-sizing: border-box;
       padding: 18px 20px 15px 20px;
-      font-family: PingFangSC-Regular;
       font-size: 15px;
       color: #333333;
       letter-spacing: 0;
     }
   }
   p {
-    font-family: PingFangSC-Regular;
     font-size: 12.5px;
     color: #bbbbbb;
     letter-spacing: 0;

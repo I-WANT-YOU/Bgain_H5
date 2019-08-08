@@ -10,11 +10,15 @@ import './assets/css/common.css';
 import './assets/scripts/geetest';
 import './icons';
 
+import vVisible from '@/directive/v-visible';
+
 Vue.config.productionTip = false;
 
 if (process.env.NODE_ENV === 'development') {
   eruda.init();
 }
+
+Vue.use(vVisible);
 
 new Vue({
   router,

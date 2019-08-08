@@ -46,4 +46,10 @@ export const GET_FUNDS_INFORMATION = 'GET_FUNDS_INFORMATION';
  * 用户相关
  */
 export const GET_USER_SUMMARY = 'GET_USER_SUMMARY';
+export const GET_KYC_INFO = 'GET_KYC_INFO';
 export const GET_USER_BALANCE_SUMMARY = 'GET_USER_BALANCE_SUMMARY';
+
+/**
+ * App 相关
+ */
+export const GET_UPLOAD_POLICY = 'GET_UPLOAD_POLICY';

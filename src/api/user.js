@@ -15,6 +15,34 @@ class UserService {
     }
   }
 
+  static async submitKyc(options) {
+    try {
+      const requestOptions = {
+        url: '/user/do-kyc',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: options,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getKycInfo() {
+    try {
+      const requestOptions = {
+        url: '/user/get-kyc-info',
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   static async getUserBalanceSummary() {
     try {
       const requestOptions = {

@@ -13,3 +13,18 @@ export const AUTH_LEVEL = {
   NEW_USER: 1, // 新用户
   TRADE_PASSWORD: 2, // 已设置交易密码
 };
+
+export const DOCUMENT_TYPE = [
+  {
+    label: '中国大陆身份证',
+    value: 'ID',
+  },
+  {
+    label: '驾驶证',
+    value: 'DRIVER_LICENSE',
+  },
+  {
+    label: '护照',
+    value: 'PASSPORT',
+  },
+];
