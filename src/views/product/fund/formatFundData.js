@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { strip } from '@utils/tools';
 
 export const fundProductTypeList = [
-  { type: 'SmartBeta', value: '指数更强' },
+  { type: 'SmartBeta', value: '指数增强' },
   { type: 'CTA', value: 'CTA' },
   { type: 'Arbitrage', value: '套利' },
   { type: 'HighFrequency', value: '高频' },
@@ -88,7 +88,7 @@ export const formatRisk = (data) => {
   return data;
 };
 
-export function echartsOption(X, series, min, max, num) {
+export function echartsOption(X, series, min, max, num, tooltip = true) {
   return {
     grid: {
       left: '11%',
@@ -97,6 +97,7 @@ export function echartsOption(X, series, min, max, num) {
       top: '5%',
     },
     tooltip: {
+      show: tooltip,
       showContent: false,
       trigger: 'axis',
     },

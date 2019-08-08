@@ -41,16 +41,7 @@
         @click="onClick"
       >立即认购</Button>
     </div>
-    <van-dialog v-model="show" class="dialog" :show-confirm-button="false">
-      <div class="dialog-con">
-        <svg-icon icon-class="prompt" class="svg-prompt" />
-        <div class="title">您当前可用余额不足，请先充币</div>
-        <div class="buttons">
-          <Button class="buttons-cancel" @click="onCancel">取消</Button>
-          <Button class="buttons-confirm" @click="onConfirm">立即充币</Button>
-        </div>
-      </div>
-    </van-dialog>
+    <InsufficientBalanceDialog v-model="show" @cancel="onCancel" />
     <PaymentPasswordDialog
       @close="maskShow=false"
       @submit="getPaymentPassword"
@@ -65,6 +56,7 @@ import { strip } from '@utils/tools';
 import { Field, Button, Toast } from 'vant';
 import { mapActions, mapState } from 'vuex';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
+import InsufficientBalanceDialog from '../components/InsufficientBalanceDialog.vue';
 
 export default {
   name: 'FundSubscribe',
@@ -73,6 +65,7 @@ export default {
     Field,
     Button,
     PaymentPasswordDialog,
+    InsufficientBalanceDialog,
   },
   data() {
     return {
@@ -90,6 +83,7 @@ export default {
   },
   mounted() {
     this.getFundBuyInfo(this.$route.params.id).then(() => {
+      this.changIcon();
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
@@ -188,13 +182,12 @@ export default {
     },
     onClick() {
       if (this.mininvest <= this.num && this.num * 1 <= this.balance * 1) {
-        // 点击认购
-        // 输入交易密码 完成后跳页面;
         this.maskShow = true;
       }
     },
     onCancel() {
       // 余额 this.fundBuyInfo.balance
+      console.log('1');
       if (this.fundBuyInfo.min_invest_amt * 1 > this.balance * 1
         || this.fundBuyInfo.min_inverst_amount_fbp > this.balance_fbp) {
         this.$router.go(-1);
@@ -354,7 +347,7 @@ export default {
       .svg-prompt {
         width: 40px;
         height: 52px;
-        margin: 24px 0 36px;
+        margin: 24px 0;
       }
       .title {
         font-size: 16px;

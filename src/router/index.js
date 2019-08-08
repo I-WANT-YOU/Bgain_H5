@@ -100,21 +100,21 @@ const router = new Router({
           name: 'current',
           component: () => import('../views/product/current/Current.vue'),
           meta: {
-            title: '活期',
+            title: '天天赚',
           },
         },
         {
           path: 'fixed',
           component: () => import('../views/product/fixed/Fixed.vue'),
           meta: {
-            title: '定期',
+            title: '定期盈',
           },
         },
         {
           path: 'fund',
           component: () => import('../views/product/fund/Fund.vue'),
           meta: {
-            title: '基金',
+            title: '冠军基金',
           },
         },
       ],
@@ -143,6 +143,16 @@ const router = new Router({
       path: '/product/fund/result',
       name: 'result',
       component: () => import('../views/product/fund/BuyResult.vue'),
+    },
+    {
+      path: '/product/fund/product-files',
+      name: 'product-files',
+      component: () => import('../views/product/fund/ProductFiles.vue'),
+    },
+    {
+      path: '/product/fund/trade-rules',
+      name: 'trade-rules',
+      component: () => import('../views/product/fund/TradeRules.vue'),
     },
     // 活期交易记录
     {
@@ -219,6 +229,7 @@ const router = new Router({
       name: 'setTradePassword',
       component: () => import('../views/passwordConfig/SetTradePassword.vue'),
     },
+    // 我的
     {
       path: '/mine',
       name: 'Mine',
@@ -233,6 +244,18 @@ const router = new Router({
       path: '/mine/safety/kyc-result',
       name: 'kyc-result',
       component: () => import('../views/mine/kyc/KycResult.vue'),
+    },
+    // 我的定期
+    {
+      path: '/mine/fund',
+      name: 'MineFund',
+      component: () => import('../views/mine/fund/MineFund.vue'),
+    },
+    // 定期交易历史记录
+    {
+      path: '/mine/fund/trade-record-history',
+      name: 'TradeRecordHistory',
+      component: () => import('../views/mine/fund/TradeRecordHistory.vue'),
     },
   ],
 });
