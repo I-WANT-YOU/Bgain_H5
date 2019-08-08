@@ -7,8 +7,8 @@
         </template>
       </kyc-field>
       <kyc-field
-        @input="onInput"
         v-model="token"
+        @input="onInput"
         label="验证码"
         placeholder="请输入验证码"
       >
@@ -87,7 +87,9 @@ export default {
         Toast(error.message);
       }
     },
-    onSubmitClick() {},
+    onSubmitClick() {
+      this.$emit('submit', this.token);
+    },
   },
 };
 </script>

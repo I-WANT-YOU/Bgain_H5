@@ -78,6 +78,7 @@
         type="info"
         :fluid="true"
         @click="onNextClick"
+        :disabled="disabledNext"
       >
         下一步
       </bgain-button>
@@ -127,12 +128,14 @@ export default {
       type: String,
       required: true,
     },
+    files: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
       showPicker: false,
-      policy: {},
-      files: ['', '', ''],
       uploaders: {
         ID: [
           {
@@ -189,6 +192,9 @@ export default {
     columns() {
       return DOCUMENT_TYPE;
     },
+    disabledNext() {
+      return this.files.every(file => file === '' || file === 'error') || this.documentNumber === '';
+    },
   },
   methods: {
     ...mapActions('app', ['getUploadPolicy']),
@@ -199,7 +205,7 @@ export default {
       if (!checkDocumentNumber(this.documentType, this.documentNumber)) {
         Toast('请输入正确的证件号码');
       } else {
-        this.$emit('change-step', 2);
+        this.$emit('change-step', 3);
       }
     },
     onShowPicker() {

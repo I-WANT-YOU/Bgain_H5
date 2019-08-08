@@ -14,6 +14,7 @@
     </kyc-step-one>
     <kyc-step-two
       v-if="step === 2"
+      :files.sync="files"
       @change-doc-type="onChangeDocType"
       @change-doc-number="onChangeDocNumber"
       :document-type="documentType"
@@ -23,6 +24,7 @@
     </kyc-step-two>
     <kyc-step-three
       v-if="step === 3"
+      @submit="onSubmit"
     ></kyc-step-three>
   </div>
 </template>
@@ -46,7 +48,7 @@ export default {
   },
   data() {
     return {
-      step: 2,
+      step: 1,
       country: {
         key: 'China',
         label: '+86',
@@ -57,6 +59,7 @@ export default {
       lastName: '',
       documentType: 'ID',
       documentNumber: '',
+      files: ['', '', ''],
     };
   },
   computed: {},
@@ -89,6 +92,9 @@ export default {
     },
     onChangeStep(step) {
       this.step = step;
+    },
+    async onSubmit(token) {
+      console.log(token);
     },
   },
 };
