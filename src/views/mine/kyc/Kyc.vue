@@ -14,6 +14,7 @@
     </kyc-step-one>
     <kyc-step-two
       v-if="step === 2"
+      :files.sync="files"
       @change-doc-type="onChangeDocType"
       @change-doc-number="onChangeDocNumber"
       :document-type="documentType"
@@ -21,19 +22,29 @@
       @change-step="onChangeStep"
     >
     </kyc-step-two>
+    <kyc-step-three
+      v-if="step === 3"
+      @submit="onSubmit"
+    ></kyc-step-three>
   </div>
 </template>
 
 <script>
+import { Toast } from 'vant';
 import { isEmpty } from 'lodash';
+import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import KycNoticeBar from './components/KycNoticeBar.vue';
 import KycStepOne from './components/KycStepOne.vue';
 import KycStepTwo from './components/KycStepTwo.vue';
+import KycStepThree from './components/KycStepThree.vue';
+
+const { mapActions } = createNamespacedHelpers('user');
 
 export default {
   name: 'Kyc',
   components: {
+    KycStepThree,
     KycStepTwo,
     KycStepOne,
     KycNoticeBar,
@@ -41,7 +52,7 @@ export default {
   },
   data() {
     return {
-      step: 2,
+      step: 1,
       country: {
         key: 'China',
         label: '+86',
@@ -52,6 +63,7 @@ export default {
       lastName: '',
       documentType: 'ID',
       documentNumber: '',
+      files: ['', '', ''],
     };
   },
   computed: {},
@@ -62,6 +74,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['submitKyc']),
     onCountryClick() {
       this.$router.push({
         name: 'country',
@@ -84,6 +97,49 @@ export default {
     },
     onChangeStep(step) {
       this.step = step;
+    },
+    getSubmitOptions(token) {
+      if (this.documentType === 'ID') {
+        return {
+          nationality: this.country.text,
+          first_name: this.firstName,
+          last_name: this.lastName,
+          document_number: this.documentNumber,
+          document_type: this.documentType,
+          token,
+          img_url_1: this.files[0],
+          img_url_2: this.files[1],
+          img_url_3: this.files[2],
+        };
+      }
+      return {
+        nationality: this.country.text,
+        first_name: this.firstName,
+        last_name: this.lastName,
+        document_number: this.documentNumber,
+        document_type: this.documentType,
+        token,
+        img_url_1: this.files[0],
+        img_url_2: '',
+        img_url_3: this.files[1],
+      };
+    },
+    async onSubmit(token) {
+      const options = this.getSubmitOptions(token);
+      try {
+        Toast.loading({
+          duration: 0,
+          forbidClick: true,
+          message: '提交审核中...',
+        });
+        await this.submitKyc(options);
+        this.$router.push({
+          name: 'kyc-result',
+        });
+      } catch (error) {
+        Toast.clear();
+        Toast(error);
+      }
     },
   },
 };

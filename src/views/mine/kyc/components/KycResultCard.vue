@@ -4,7 +4,7 @@
       <svg-icon :icon-class="options[status].icon"/>
     </div>
     <div class="kyc-card__title">{{options[status].title}}</div>
-    <div class="kyc-card__title--sub">{{options[status].subtitle}}</div>
+    <div class="kyc-card__title--sub">{{subtitle}}</div>
     <div class="kyc-card__buttons" v-if="status === 'FAIL'">
       <bgain-button type="info" :fluid="true">重新认证</bgain-button>
     </div>
@@ -38,6 +38,10 @@ export default {
         return Object.keys(KYC_STATUS)
           .indexOf(value) !== -1;
       },
+    },
+    subtitle: {
+      type: String,
+      required: false,
     },
   },
   data() {
