@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-card__container">
+  <div class="fixed-card__container" @click="onCardClick">
     <div class="fixed-card__title">
       {{dataSource.product_name}}
       <svg-icon v-if="dataSource.support_fbp"
@@ -33,6 +33,13 @@ export default {
     dataSource: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    onCardClick() {
+      this.$router.push({
+        path: `/product/fixed/${this.dataSource.product_id}`,
+      });
     },
   },
 };
