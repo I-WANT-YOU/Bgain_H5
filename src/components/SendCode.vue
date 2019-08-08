@@ -13,6 +13,11 @@ export default {
       type: Number,
       default: 60,
     },
+    autosend: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
   data() {
     return {
@@ -26,6 +31,9 @@ export default {
   mounted() {
     this.timeText = this.sendTime;
     this.texts = `已发送 (${this.timeText} s)`;
+    if (this.autosend) {
+      this.onClick();
+    }
   },
   methods: {
     onClick() {
@@ -63,7 +71,6 @@ export default {
 .send-code-wrap {
   display: inline-block;
   .send-code {
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #2a55e7;
     letter-spacing: 0;
