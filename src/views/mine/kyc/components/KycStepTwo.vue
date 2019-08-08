@@ -193,7 +193,13 @@ export default {
       return DOCUMENT_TYPE;
     },
     disabledNext() {
-      return this.files.every(file => file === '' || file === 'error') || this.documentNumber === '';
+      console.log(this.files);
+      console.log(this.files.every((file) => {
+        console.log('file !== \'', file !== '');
+        console.log('file !== \'error', file !== 'error');
+        return file !== '' && file !== 'error';
+      }));
+      return !(this.files.every(file => file !== '' || file !== 'error')) || this.documentNumber === '';
     },
   },
   methods: {
