@@ -1,6 +1,6 @@
 <template>
   <div class="testing__container">
-    <bgain-nav-bar title="测试页面"></bgain-nav-bar>
+    <bgain-nav-bar title="测试页面" :showArrow="false"></bgain-nav-bar>
     <grid :gutter="10">
       <grid-item
         @click="onLogout"
