@@ -1,8 +1,11 @@
 <template>
   <sticky>
-    <nav-bar v-bind="$attrs" :border="false" @click-left="onClickLeft">
+    <nav-bar v-bind="$attrs" :border="false" v-on="$listeners" @click-left="onClickLeft">
       <template v-slot:left v-if="showArrow">
         <svg-icon icon-class="go-back" class="icon-go-back"></svg-icon>
+      </template>
+      <template v-slot:right>
+        <slot name="right"></slot>
       </template>
     </nav-bar>
   </sticky>
@@ -33,14 +36,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .van-nav-bar__title {
-    font-size: 17px;
-    font-weight: normal;
-    color: #0F3256;
-  }
+.van-nav-bar__title {
+  font-size: 17px;
+  font-weight: normal;
+  color: #0f3256;
+}
 
-  .icon-go-back {
-    width: 10px;
-    height: 18px;
-  }
+.icon-go-back {
+  width: 10px;
+  height: 18px;
+}
 </style>

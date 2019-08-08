@@ -75,6 +75,34 @@ class FundService {
       throw new Error(error);
     }
   }
+
+  static async getFundTradeRules(id) {
+    try {
+      const requestOptions = {
+        url: `/fund-product/trade-rules/${id}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getFundInformation(id) {
+    try {
+      const requestOptions = {
+        url: `/fund/fund-information/${id}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FundService;
