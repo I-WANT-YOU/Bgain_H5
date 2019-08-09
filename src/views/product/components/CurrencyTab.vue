@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { head } from 'lodash';
 import { Tab, Tabs } from 'vant';
 
 export default {
@@ -31,7 +32,7 @@ export default {
   },
   data() {
     return {
-      currency: 'BTC',
+      currency: head(this.currencies),
     };
   },
   methods: {
