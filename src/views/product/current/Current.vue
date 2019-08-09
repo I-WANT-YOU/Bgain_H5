@@ -1,6 +1,8 @@
 <template>
-  <currency-tab :currencies="currencies"
-                @currency-change="onCurrencyChange">
+  <currency-tab
+    v-if="currencies.length !== 0"
+    :currencies="currencies"
+    @currency-change="onCurrencyChange">
     <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
       <current-card :data-source="product"></current-card>
       <current-panel></current-panel>
@@ -9,6 +11,7 @@
 </template>
 
 <script>
+import { head, isEmpty } from 'lodash';
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import CurrencyTab from '../components/CurrencyTab.vue';
@@ -28,7 +31,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      currency: 'BTC',
+      currency: '',
       product: {},
     };
   },
@@ -42,7 +45,7 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
-    await this.onRefresh(this.currency);
+    await this.onRefresh();
     Toast.clear();
   },
   methods: {
@@ -54,7 +57,13 @@ export default {
     async onRefresh(currency) {
       try {
         await this.getAllCurrentProduct();
-        this.product = this.getProduct(currency);
+        if (!isEmpty(currency)) {
+          this.product = this.getProduct(currency);
+        } else {
+          const initCurrency = head(this.currencies);
+          this.currency = initCurrency;
+          this.product = this.getProduct(initCurrency);
+        }
         this.isLoading = false;
       } catch (error) {
         Toast(error.message);
