@@ -235,6 +235,12 @@ const router = new Router({
       name: 'Mine',
       component: () => import('../views/mine/Mine.vue'),
     },
+    // 安全中心
+    {
+      path: '/mine/safety',
+      name: 'security-center',
+      component: () => import('../views/mine/safety/SecurityCenter.vue'),
+    },
     {
       path: '/mine/safety/kyc',
       name: 'kyc',

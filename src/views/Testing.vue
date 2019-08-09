@@ -87,6 +87,11 @@ export default {
           text: '密码设置',
           to: '/passwordConfig',
         },
+        {
+          icon: 'info-o',
+          text: '安全中心',
+          to: '/mine/safety',
+        },
       ],
     };
   },
