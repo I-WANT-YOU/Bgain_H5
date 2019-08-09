@@ -1,7 +1,7 @@
 <template>
-  <div class="trade-rules">
+  <span class="trade-rules">
     <BgainNavBar title="交易规则与费率" />
-    <div class="trade-rules-con">
+    <span class="trade-rules-con">
       <Tabs
         class="tabs"
         title-active-color="#3c64ee"
@@ -95,14 +95,25 @@
               </td>
             </tr>
             <tr>
-              <td>{{rateSell.length && rateSell[0].data}}~{{rateSell.length && rateSell[1].data}}天(不含)</td>
+              <td>
+                {{rateSell.length &&
+                rateSell[0].data}}~{{rateSell.length && rateSell[1].data}}天(不含)
+              </td>
               <td>
                 <span class="rate">{{rateSell.length && rateSell[1].rate * 100}}%</span>
                 <span class="rate old">({{rateSell.length && rateSell[1].rate1 * 100}}%)</span>
               </td>
             </tr>
             <tr>
-              <td>>={{rateSell.length && rateSell[2].data}}天</td>
+              <td>
+                <div class="gts">
+                  <span class="gt">
+                    <div class="top">&gt;</div>
+                    <div>=</div>
+                  </span>
+                  <span>{{rateSell.length && rateSell[2].data}}天</span>
+                </div>
+              </td>
               <td>
                 <span class="rate">{{rateSell.length && rateSell[2].rate * 100}}%</span>
                 <span class="rate old">({{rateSell.length && rateSell[2].rate1 * 100}}%)</span>
@@ -129,8 +140,8 @@
           </div>
         </Tab>
       </Tabs>
-    </div>
-  </div>
+    </span>
+  </span>
 </template>
 
 <script>
@@ -249,6 +260,19 @@ export default {
           }
           tr {
             height: 35px;
+          }
+          .gts {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .gt {
+              font-size: 10px;
+              transform: scaleY(0.9);
+              margin-right: 4px;
+              .top{
+                margin-bottom: -6px;
+              }
+            }
           }
           .rate {
             font-size: 13px;

@@ -4,8 +4,10 @@
     <div class="info">
       <div class="info-top">
         <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
+          <!-- eslint-disable -->
           <span>{{fundDetail.market_change_percent >= 0 ? `+${fundDetail.market_change_percent}` : fundDetail.market_change_percent}}</span>
           <span class="percent">%</span>
+          <!-- eslint-enable -->
           <i />
         </span>
         <span class="texts">
@@ -44,10 +46,9 @@
       </div>
     </div>
     <div class="tradeshow">
-      <div
-        @click="$router.push({path: '/product/fund/trade-rules', query:{productId: $route.params.id}})"
-        class="title"
-      >
+      <!-- eslint-disable -->
+      <div @click="$router.push({path: '/product/fund/trade-rules', query:{productId: $route.params.id}})" class="title" >
+      <!-- eslint-enable -->
         <span>交易说明</span>
         <div class="skip">
           交易规则、常见问题等
@@ -113,10 +114,9 @@
       </div>
     </div>
     <div class="fundarchives">
-      <div
-        @click="$router.push({path: '/product/fund/product-files', query:{productId: $route.params.id}})"
-        class="title"
-      >
+      <!-- eslint-disable -->
+      <div @click="$router.push({path: '/product/fund/product-files', query:{productId: $route.params.id}})" class="title" >
+      <!-- eslint-enable -->
         <span>基金档案</span>
         <div class="skip">
           基金团队、策略说明、实盘业绩等
@@ -211,7 +211,8 @@ export default {
       const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
       if (this.chart.containPixel('grid', pointInPixel)) {
         this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
-        this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x)[0].nav;
+        this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x);
+        this.chart_y = this.chart_y[0].nav;
       }
     },
     onSubmit() {

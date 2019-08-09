@@ -1,0 +1,280 @@
+<template>
+  <div class="transaction-details">
+    <BgainNavBar title="交易详情" />
+    <div class="fund-info">
+      <div class="icon-wrap">
+        <svg-icon
+          class="buy"
+          v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'"
+          :icon-class="fundOrderDetail.trade_type === 'BUY'?'mine-record-buy':'mine-record-sell'"
+        />
+        <svg-icon class="carry" v-else icon-class="mine-record-carry" />
+      </div>
+      <div class="fund-name">{{fundOrderDetail.fund_product_name}}</div>
+      <div class="fund-amount">{{fundOrderDetail.amount}}</div>
+      <diV class="fund-currency">
+        {{ fundOrderDetail.trade_type !== 'SUB_CARRY' ? '认购金额' : '扣除金额'}}
+        ({{fundOrderDetail.currency_type}})
+      </diV>
+      <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="steps">
+        <div class="step">
+          <svg-icon class="step-icon" icon-class="step" />
+          <!-- <svg-icon class="step-icon" icon-class="steps"/> -->
+        </div>
+        <div class="step-text">
+          <div class="step-x active">
+            <div v-if="fundOrderDetail.trade_type === 'BUY'">扣减资金，提交认购申请</div>
+            <div v-else>冻结基金份额，提交赎回申请</div>
+            <div>{{formatDate(fundOrderDetail.create_at)}}</div>
+          </div>
+          <div class="step-x">
+            <div v-if="fundOrderDetail.trade_type === 'BUY'">确定份额，募集期结束，进入锁定期</div>
+            <div v-else>确定赎回，扣减基金份额</div>
+            <div>{{formatDate(fundOrderDetail.confirmed_date)}}</div>
+          </div>
+          <div class="step-x">
+            <div v-if="fundOrderDetail.trade_type === 'BUY'">进入开放期，基金可赎回或继续认购</div>
+            <div v-else>赎回资金到账</div>
+            <div>
+              {{formatDate((fundOrderDetail.next_start_date))}}
+              至 {{formatDate((fundOrderDetail.next_end_date))}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="trade-info">
+      <div class="title">交易信息</div>
+      <div class="show">
+        <div class="text">
+          <span class="left">交易类型</span>
+          <span>{{fundOrderDetail.trade_type}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">交易状态</span>
+          <span>{{fundOrderDetail.fund_order_status}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">交易时间</span>
+          <span>{{formatDate(fundOrderDetail.create_at)}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">订单编号</span>
+          <span>{{fundOrderDetail.order_num}}</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="fundOrderDetail.fund_order_status === '完成'" class="confirm-info">
+      <div class="title">确定信息</div>
+      <div class="show">
+        <div class="text">
+          <span class="left">确定份额</span>
+          <span>{{fundOrderDetail.confirmed_shares}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">确定净值</span>
+          <span>{{fundOrderDetail.confirmed_nav}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">手续费</span>
+          <span>{{fundOrderDetail.fee_amt}}{{fundOrderDetail.currency_type}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">确定时间</span>
+          <span>{{formatDate(fundOrderDetail.confirmed_date)}}</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="fundOrderDetail.trade_type === 'SUB_CARRY'" class="deduction-info">
+      <div class="title">扣除信息</div>
+      <div class="show">
+        <div class="text">
+          <span class="left">扣除份额</span>
+          <span>{{fundOrderDetail.confirmed_shares}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">产品净值</span>
+          <span>{{fundOrderDetail.confirmed_nav}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">扣除金额</span>
+          <span>{{fundOrderDetail.fee_amt}}{{fundOrderDetail.currency_type}}</span>
+        </div>
+      </div>
+      <div class="show">
+        <div class="text">
+          <span class="left">扣除时间</span>
+          <span>{{formatDate(fundOrderDetail.confirmed_date)}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
+import { formatDate } from '@utils/tools';
+import format from './js/format';
+
+const { mapActions, mapState } = createNamespacedHelpers('product/fund');
+
+export default {
+  name: 'TransactionDetails',
+  components: {
+    BgainNavBar,
+  },
+  data() {
+    return {
+      options: [],
+    };
+  },
+  mounted() {
+    Toast.loading({
+      duration: 0,
+      mask: true,
+      forbidClick: true,
+      message: '加载中...',
+    });
+    this.getFundOrderDetail(this.$route.query.id).then(() => {
+      this.option = format(this.fundOrderDetail);
+      Toast.clear();
+    });
+  },
+  methods: {
+    ...mapActions(['getFundOrderDetail']),
+    formatDate(date) {
+      return formatDate(date);
+    },
+  },
+  computed: {
+    ...mapState(['fundOrderDetail']),
+  },
+};
+</script>
+
+<style lang='scss' scoped>
+.transaction-details {
+  background: #fbfbfb;
+  height: 100%;
+  .fund-info {
+    box-sizing: border-box;
+    background: #ffffff;
+    padding: 0 20px;
+    .icon-wrap {
+      .buy {
+        width: 32px;
+        height: 18px;
+      }
+      .carry {
+        width: 78px;
+        height: 18px;
+      }
+    }
+    .fund-name {
+      text-align: center;
+      font-size: 14px;
+      color: #0f3256;
+      margin: 18px 0 8px;
+    }
+    .fund-amount {
+      text-align: center;
+      font-size: 26px;
+      color: #0f3256;
+      margin-bottom: 8px;
+    }
+    .fund-currency {
+      font-size: 12px;
+      color: #a8aeb9;
+      text-align: center;
+      &::after {
+        display: block;
+        height: 20px;
+        content: "";
+        width: 100%;
+        border-bottom: 1px dashed #dddddd;
+        transform: scaleY(0.5);
+      }
+    }
+    .steps {
+      display: flex;
+      .step {
+        .step-icon {
+          height: 145px;
+          width: 20px;
+          margin: 22px 0 35px 18px;
+        }
+      }
+      .step-text {
+        box-sizing: border-box;
+        margin-left: 25px;
+        padding-top: 24px;
+        font-size: 12px;
+        color: #a8aeb9;
+        letter-spacing: 0;
+        .step-x {
+          margin-bottom: 35px;
+          &:nth-child(3) {
+            margin-bottom: 0;
+          }
+          &.active {
+            color: #6a707d;
+          }
+        }
+      }
+    }
+  }
+  .trade-info,
+  .confirm-info,
+  .deduction-info {
+    margin-top: 10px;
+    color: #0f3256;
+    background: #ffffff;
+    .title {
+      font-size: 15px;
+      box-sizing: border-box;
+      height: 50px;
+      padding-left: 15px;
+      line-height: 50px;
+      font-weight: 600;
+    }
+    .show {
+      font-size: 14px;
+      &::before {
+        display: block;
+        content: "";
+        width: 100%;
+        border-top: 1px solid #eeeeee;
+      }
+      .text {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 0 20px 0 15px;
+        .left {
+          color: #a8aeb9;
+        }
+      }
+    }
+  }
+}
+</style>

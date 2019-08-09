@@ -1,4 +1,4 @@
-import { get, map } from 'lodash';
+import { get } from 'lodash';
 import * as Auth from '@utils/auth';
 import UserService from '@api/user';
 import * as types from '../mutationTypes';
@@ -6,7 +6,7 @@ import * as types from '../mutationTypes';
 const state = {
   basicInfo: {},
   kycInfo: {},
-  userBanalce: {},
+  userBalance: {},
   submitKycResult: {},
 };
 
@@ -16,8 +16,7 @@ const getters = {
   countryCode: state => get(state.basicInfo, 'country_calling_code', '+86'),
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
-  singleCurrency: state => get(state.userBanalce, 'single_currency', {}),
-  currencies: state => map(state.userBanalce.single_currency, item => item.currency),
+  singleCurrency: state => get(state.userBalance, 'single_currency', {}),
 };
 
 const mutations = {
@@ -28,7 +27,7 @@ const mutations = {
     state.kycInfo = payload;
   },
   [types.GET_USER_BALANCE_SUMMARY](state, payload) {
-    state.userBanalce = payload;
+    state.userBalance = payload;
   },
   [types.GET_SUBMIT_KYC_RESULT](state, payload) {
     state.submitKycResult = payload;

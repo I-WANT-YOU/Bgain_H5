@@ -4,40 +4,31 @@
     <div class="mine-content">
       <div class="userInfo">
         <div class="income">
-          <div v-if="authenticated"
-               class="login">
+          <div v-if="authenticated" class="login">
             <div class="currency">
               <span>总资产</span>
-              <span @click="onClickCurrency"
-                    class="currency-type">{{currency}}</span>
-              <span @click="onClickCurrency"
-                    class="icons-pull">
-                <svg-icon icon-class="mine-pull"
-                          class="icon-pull" />
+              <span @click="onClickCurrency" class="currency-type">{{currency}}</span>
+              <span @click="onClickCurrency" class="icons-pull">
+                <svg-icon icon-class="mine-pull" class="icon-pull" />
               </span>
             </div>
             <div class="assets">
               <span>{{asset}}</span>
               <span class="icon">
-                <svg-icon icon-class="next"
-                          class="icon-next" />
+                <svg-icon icon-class="next" class="icon-next" />
               </span>
             </div>
           </div>
-          <div v-else
-               class="logout"
-               @click="onSkip('/login')">请登录/注册</div>
+          <div v-else class="logout" @click="onSkip('/login')">请登录/注册</div>
         </div>
         <div class="incomes">
           <div>
             <div>累计收益</div>
-            <div class="num"
-                 :class="authenticated ? '' : 'loginText'">{{income}}</div>
+            <div class="num" :class="authenticated ? '' : 'loginText'">{{income}}</div>
           </div>
           <div>
             <div>待收收益</div>
-            <div class="num"
-                 :class="authenticated ? '' : 'loginText'">{{accumulatedIncome}}</div>
+            <div class="num" :class="authenticated ? '' : 'loginText'">{{accumulatedIncome}}</div>
           </div>
         </div>
         <div class="line"></div>
@@ -46,54 +37,42 @@
             <div class="balance-info-text">
               <span>可用余额({{currency}})</span>
               <span>
-                <svg-icon icon-class="next"
-                          class="icon-next" />
+                <svg-icon icon-class="next" class="icon-next" />
               </span>
             </div>
             <div :class="authenticated ? '' : 'loginText'">{{balance}}</div>
           </div>
           <div class="top-up">
             <span class="recharge">充币</span>
-            <span class="extract"
-                  @click="onClick">提币</span>
+            <span class="extract" @click="onClick">提币</span>
           </div>
         </div>
       </div>
       <div class="investment">
         <div class="title">我的投资</div>
         <div class="icons">
-          <div @click="onSkip('/product/current')"
-               class="icon-wrap">
-            <svg-icon icon-class="mine-current"
-                      class="icon" />
+          <div @click="onSkip('/product/current')" class="icon-wrap">
+            <svg-icon icon-class="mine-current" class="icon" />
             <span>活期</span>
           </div>
-          <div @click="onSkip('/product/fixed')"
-               class="icon-wrap">
-            <svg-icon icon-class="mine-fixed"
-                      class="icon" />
+          <div @click="onSkip('/product/fixed')" class="icon-wrap">
+            <svg-icon icon-class="mine-fixed" class="icon" />
             <span>定期</span>
           </div>
-          <div @click="onSkip('/mine/fund')"
-               class="icon-wrap">
-            <svg-icon icon-class="mine-fund"
-                      class="icon" />
+          <div @click="onSkip('/mine/fund')" class="icon-wrap">
+            <svg-icon icon-class="mine-fund" class="icon" />
             <span>基金</span>
           </div>
         </div>
       </div>
-      <div v-if="showBanner"
-           class="banner">
-        <img src="../../assets/images/mine_banner.png"
-             alt />
+      <div v-if="showBanner" class="banner">
+        <img src="../../assets/images/mine_banner.png" alt />
       </div>
-
       <div class="option">
         <div class="wrap">
           <div class="item">
             <div class="icon-wrap">
-              <svg-icon icon-class="mine-record"
-                        class="icon" />
+              <svg-icon icon-class="mine-record" class="icon" />
             </div>
             <div>
               <div class="title">资金记录</div>
@@ -102,8 +81,7 @@
           </div>
           <div class="item">
             <div class="icon-wrap">
-              <svg-icon icon-class="mine-coupons"
-                        class="icon" />
+              <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
             <div>
               <div class="title">优惠卷</div>
@@ -113,8 +91,7 @@
           <div class="line"></div>
           <div class="item">
             <div class="icon-wrap">
-              <svg-icon icon-class="mine-question"
-                        class="icon" />
+              <svg-icon icon-class="mine-question" class="icon" />
             </div>
             <div>
               <div class="title">常见问题</div>
@@ -123,8 +100,7 @@
           </div>
           <div class="item">
             <div class="icon-wrap">
-              <svg-icon icon-class="mine-activity"
-                        class="icon" />
+              <svg-icon icon-class="mine-activity" class="icon" />
             </div>
             <div>
               <div class="title">活动中心</div>
@@ -134,9 +110,7 @@
         </div>
       </div>
     </div>
-    <ActionSheet v-model="showCurrency"
-                 :actions='options'
-                 @select="onSelectCurrency" />
+    <ActionSheet v-model="showCurrency" :actions="options" @select="onSelectCurrency" />
     <BaseFooter />
   </div>
 </template>
@@ -144,7 +118,7 @@
 <script>
 import Header from '@component/mine/Header.vue';
 import BaseFooter from '@component/BaseFooter.vue';
-import { ActionSheet } from 'vant';
+import { ActionSheet, Toast } from 'vant';
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -164,22 +138,35 @@ export default {
       asset: '0.00',
       showBanner: false,
       showCurrency: false,
+      options: ['BTC', 'USDT', 'ETH', 'EOS'],
     };
   },
   mounted() {
+    Toast.loading({
+      duration: 0,
+      mask: true,
+      forbidClick: true,
+      message: '加载中...',
+    });
     if (this.authenticated) {
-      this.getUserBalanceSummary().then(() => {
-        this.currency = this.singleCurrency[0].currency;
-        this.getCurreny();
-      });
+      try {
+        this.getUserBalanceSummary().then(() => {
+          this.currency = this.singleCurrency[0].currency;
+          this.options = this.singleCurrency
+            .map(item => item.currency)
+            .map(item => ({ name: item }));
+          this.getCurreny();
+          Toast.clear();
+        });
+      } catch (error) {
+        Toast.clear();
+        throw error;
+      }
     }
   },
   computed: {
     ...mapState('auth', ['authenticated']),
-    ...mapGetters('user', ['singleCurrency', 'currencies']),
-    options() {
-      return this.currencies.map(item => ({ name: item }));
-    },
+    ...mapGetters('user', ['singleCurrency']),
   },
   methods: {
     ...mapActions('user', ['getUserBalanceSummary']),

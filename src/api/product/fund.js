@@ -103,6 +103,84 @@ class FundService {
       throw new Error(error);
     }
   }
+
+  static async getFundOrderHistory(status) {
+    try {
+      const requestOptions = {
+        url: '/fund-product-order/history',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          fund_order_status: status,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getFundOrderDetail(id) {
+    try {
+      const requestOptions = {
+        url: `/fund-product-order/get-fund-order-detail/${id}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getFundOwnerDetail(id) {
+    try {
+      const requestOptions = {
+        url: `/fund/owner-fund-detail/${id}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async sellFund(options) {
+    try {
+      const requestOptions = {
+        url: '/fund/owner-fund-detail',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: options,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async sellFundDetail(options) {
+    try {
+      const requestOptions = {
+        url: '/fund/fund-details-before-sell',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          fund_id: options.fund_id,
+          fund_user_stat_id: options.fund_user_stat_id,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FundService;
