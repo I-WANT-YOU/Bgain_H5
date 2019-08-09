@@ -209,26 +209,6 @@ const router = new Router({
       name: 'current-sell-result',
       component: () => import('../views/product/current/CurrentSellResult.vue'),
     },
-    {
-      path: '/passwordconfig',
-      name: 'passwordConfig',
-      component: () => import('../views/passwordConfig/PasswordConfig.vue'),
-    },
-    {
-      path: '/passwordconfig/reset/loginpassword',
-      name: 'resetLoginPassword',
-      component: () => import('../views/passwordConfig/ResetLoginPassword.vue'),
-    },
-    {
-      path: '/passwordconfig/reset/tradepassword',
-      name: 'resetTradePassword',
-      component: () => import('../views/passwordConfig/ResetTradePassword.vue'),
-    },
-    {
-      path: '/passwordconfig/set/tradepassword',
-      name: 'setTradePassword',
-      component: () => import('../views/passwordConfig/SetTradePassword.vue'),
-    },
     // 我的
     {
       path: '/mine',
@@ -240,6 +220,26 @@ const router = new Router({
       path: '/mine/safety',
       name: 'security-center',
       component: () => import('../views/mine/safety/SecurityCenter.vue'),
+    },
+    {
+      path: '/mine/safety/password',
+      name: 'password',
+      component: () => import('@views/mine/password/Password.vue'),
+    },
+    {
+      path: '/mine/safety/password/login/change',
+      name: 'change-login-password',
+      component: () => import('@views/mine/password/ChangeLoginPassword.vue'),
+    },
+    {
+      path: '/mine/safety/password/payment/reset',
+      name: 'reset-payment-password',
+      component: () => import('@views/mine/password/ResetPaymentPassword.vue'),
+    },
+    {
+      path: '/mine/safety/password/payment/set',
+      name: 'set-payment-password',
+      component: () => import('@views/mine/password/SetPaymentPassword.vue'),
     },
     {
       path: '/mine/safety/kyc',

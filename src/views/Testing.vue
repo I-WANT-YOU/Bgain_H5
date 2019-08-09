@@ -85,7 +85,7 @@ export default {
         {
           icon: 'label-o',
           text: '密码设置',
-          to: '/passwordConfig',
+          to: '/mine/safety/password',
         },
         {
           icon: 'info-o',

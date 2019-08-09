@@ -6,7 +6,7 @@
         <cell title="平台账号">
           <div class="filed--username">{{account}}</div>
         </cell>
-        <cell title="密码设置">
+        <cell title="密码设置" to="/mine/safety/password">
           <span class="filed--password">交易密码、登录密码</span>
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
