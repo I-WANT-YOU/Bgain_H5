@@ -7,17 +7,17 @@
   >
     <div class="bgain-dialog__container">
       <svg-icon icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
-      <div class="dialog__title">提示</div>
+      <div class="dialog__title">{{title}}</div>
       <div class="dialog__content">
-        <span>是否确认退出登录</span>
+        <span>{{content}}</span>
       </div>
       <div class="dialog__buttons">
-        <Button class="dialog__buttons--cancel" @click="onCancel">取消</Button>
+        <Button class="dialog__buttons--cancel" @click="onCancel">{{cancelText}}</Button>
         <Button
           type="info"
           class="dialog__buttons--submit"
           @click="onSubmit">
-          确定
+          {{submitText}}
         </Button>
       </div>
     </div>
@@ -30,10 +30,32 @@ import {
 } from 'vant';
 
 export default {
-  name: 'LogoutDialog',
+  name: 'BgainBaseDialog',
   components: {
     Popup,
     Button,
+  },
+  props: {
+    title: {
+      type: String,
+      default: '提示',
+      required: false,
+    },
+    content: {
+      type: String,
+      default: '确认提交吗',
+      required: false,
+    },
+    cancelText: {
+      type: String,
+      default: '取消',
+      required: false,
+    },
+    submitText: {
+      type: String,
+      default: '确定',
+      required: false,
+    },
   },
   methods: {
     onCancel() {

@@ -27,7 +27,12 @@
       <div class="logout-button" @click="onLogoutClick">
         <span>安全退出</span>
       </div>
-      <logout-dialog v-model="visible" @submit="onLogout" @cancel="onCancel"></logout-dialog>
+      <bgain-base-dialog
+        v-model="visible"
+        content="是否确认退出登录"
+        @submit="onLogout"
+        @cancel="onCancel"
+      ></bgain-base-dialog>
     </div>
   </div>
 </template>
@@ -36,10 +41,10 @@
 import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import { checkEmailFormat, getDesensitizedUsername } from '@utils/tools';
+import BgainBaseDialog from '@/components/BgainBaseDialog.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import BgainCellGroup from '../components/BgainCellGroup.vue';
 import BgainCell from '../components/BgainCell.vue';
-import LogoutDialog from './components/LogoutDialog.vue';
 
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
 const {
@@ -58,7 +63,7 @@ const STATUS = {
 export default {
   name: 'SecurityCenter',
   components: {
-    LogoutDialog,
+    BgainBaseDialog,
     BgainNavBar,
     CellGroup: BgainCellGroup,
     Cell: BgainCell,
