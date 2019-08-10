@@ -41,19 +41,14 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
-      path: '/unLoginHome/:status',
-      name: 'UnLoginHome',
-      component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/UnLoginHome.vue'),
-    },
-    {
-      path: '/loginHome/:status',
-      name: 'LoginHome',
-      component: () => import(/* webpackChunkName: "loginHome" */ '../views/home/LoginHome.vue'),
-    },
-    {
       path: '/registerHome/:status',
       name: 'RegisterHome',
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
+    },
+    {
+      path: '/purchaseCoinHome/',
+      name: 'PurchaseCoinHome',
+      component: () => import(/* webpackChunkName: "PurchaseCoinHome" */ '../views/purchaseCoin/purchaseCoinHome.vue'),
     },
     {
       path: '/homeToLogin/',
@@ -71,9 +66,54 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "fixedPurchaseStepTwo" */ '../views/product/fixed/FixedPurchaseStepTwo.vue'),
     },
     {
+      path: '/confirmOrder',
+      name: 'ConfirmOrder',
+      component: () => import(/* webpackChunkName: "confirmOrder" */ '../views/purchaseCoin/confirmOrder.vue'),
+    },
+    {
       path: '/subscriptionResults/',
       name: 'SubscriptionResults',
       component: () => import(/* webpackChunkName: "subscriptionResults" */ '../views/product/fixed/SubscriptionResults.vue'),
+    },
+    {
+      path: '/pleasePay/', // lihu-请付款支付页面
+      name: 'PleasePay',
+      component: () => import(/* webpackChunkName: "PleasePay" */ '../views/purchaseCoin/PleasePay.vue'),
+    },
+    {
+      path: '/toBeRelease/', // lihu-待放行
+      name: 'ToBeRelease',
+      component: () => import(/* webpackChunkName: "ToBeRelease" */ '../views/purchaseCoin/EbankTool.vue'),
+    },
+    {
+      path: '/buyingRecord/', // lihui-买币记录
+      name: 'BuyingRecord',
+      component: () => import(/* webpackChunkName: "BuyingRecord" */ '../views/purchaseCoin/BuyingRecord.vue'),
+    },
+    {
+      path: '/fillingRecord/', // lihui-冲币记录
+      name: 'FillingRecord',
+      component: () => import(/* webpackChunkName: "FillingRecord" */ '../views/purchaseCoin/FillingRecord.vue'),
+    },
+    {
+      path: '/fillingDetail/', // lihui-冲币详情
+      name: 'FillingDetail',
+      component: () => import(/* webpackChunkName: "FillingDetail" */ '../views/purchaseCoin/FillingDetail.vue'),
+    },
+    {
+      path: '/appeal/', // lihui-申诉
+      name: 'Appeal',
+      component: () => import(/* webpackChunkName: "Appeal" */ '../views/purchaseCoin/Appeal.vue'),
+    },
+    {
+      path: '/buyingIllustration/', // lihui-冲币说明
+      name: 'BuyingIllustration',
+      component: () => import(/* webpackChunkName: "BuyingIllustration" */ '../views/purchaseCoin/BuyingIllustration.vue'),
+    },
+    {
+      path: '/test/',
+      name: 'fixedPop',
+      component: () => import(/* webpackChunkName: "fixedPop" */ '../components/fixedDetail/FixedPop.vue'),
     },
     {
       path: '/country',

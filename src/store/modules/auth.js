@@ -5,6 +5,7 @@ import * as types from '../mutationTypes';
 
 const state = {
   authenticated: !!Auth.getToken(),
+  userInfo: {},
 };
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
   },
   [types.UNAUTHENTICATED](state) {
     state.authenticated = false;
+  },
+  getUserInfo(state, userInfo) {
+    state.userInfo = { ...userInfo };
   },
 };
 

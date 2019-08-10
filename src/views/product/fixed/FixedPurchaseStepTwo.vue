@@ -36,6 +36,7 @@
 
 <script>
 import { Switch } from 'vant';
+import { mapActions } from 'vuex';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 
 
@@ -90,7 +91,22 @@ export default {
       show: true,
     };
     this.$set(this.expectedReturnData, 0, changData); // 预期收益
-    console.log(this.expectedReturnData);
+    // 获取优惠卷
+    const params = {
+      id: JSON.parse(sessionStorage.getItem('showData')).productId,
+      amount: this.investmentAmount,
+    };
+    this.getAvailableCoupons(params).then(
+      () => {
+        console.log('getAvailableCoupons');
+      },
+      () => {},
+    );
+  },
+  methods: {
+    ...mapActions('product/fixed', [
+      'getAvailableCoupons',
+    ]),
   },
 };
 </script>
