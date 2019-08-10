@@ -161,6 +161,25 @@ class AuthService {
       throw new Error(error);
     }
   }
+
+  // 设置交易密码
+  static async setPaymentPassword({ password, token }) {
+    try {
+      const requestOptions = {
+        url: '/auth/set-payment-password',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          password,
+          token,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default AuthService;
