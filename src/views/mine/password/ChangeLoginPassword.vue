@@ -49,12 +49,12 @@ import BgainNavBar from '@component/BgainNavBar.vue';
 import Footer from '@component/Footer.vue';
 import SendCode from '@component/SendCode.vue';
 import { Field, Button, Toast } from 'vant';
-import done from './done';
 import { mapActions } from 'vuex';
+import done from './done';
 
 
 export default {
-  name: 'SetTradePassword',
+  name: 'ChangeLoginPassword',
   components: {
     BgainNavBar,
     SendCode,
@@ -86,7 +86,7 @@ export default {
   },
   mounted() {
     const countryCode = '+86';
-    this.countryCode = countryCode ? countryCode : '';
+    this.countryCode = countryCode || '';
   },
   methods: {
     ...mapActions({
@@ -116,8 +116,8 @@ export default {
       this.showInfo = true;
       this.getToken({
         countryCode: this.countryCode,
-        username: "",
-      })
+        username: '',
+      });
     },
   },
 };
