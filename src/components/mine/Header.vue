@@ -24,6 +24,7 @@
 <script>
 import { Sticky } from 'vant';
 import { mapState } from 'vuex';
+
 export default {
   name: 'Header',
   components: {

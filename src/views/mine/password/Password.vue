@@ -6,7 +6,7 @@
         <cell title="修改登录密码" :to="{name: 'change-login-password'}">
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
-        <cell v-if="authLevel === 0" title="设置交易密码" :to="{name: 'set-payment-password'}">
+        <cell v-if="authLevel === 1" title="设置交易密码" :to="{name: 'set-payment-password'}">
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
         <cell v-else title="重置交易密码" :to="{name: 'reset-payment-password'}">

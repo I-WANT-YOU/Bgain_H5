@@ -120,6 +120,15 @@ const actions = {
       throw error;
     }
   },
+  // 设置交易密码
+  async setPaymentPassword(context, params) {
+    try {
+      const response = await AuthService.setPaymentPassword(params);
+      return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default {
