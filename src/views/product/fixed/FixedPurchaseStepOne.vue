@@ -80,6 +80,7 @@ export default {
       investmentAmount: '',
       oldValue: '',
       activeButton: false,
+      productId: '',
       // expectedReturn: '-',
     };
   },
@@ -88,6 +89,7 @@ export default {
       sessionStorage.setItem('info', this.$route.params.info);
     }
     const info = JSON.parse(sessionStorage.getItem('info'));
+    this.productId = info.productId;
     this.getFixedBuyInfo(info.productId).then(
       () => {
         // 设置title
@@ -140,7 +142,6 @@ export default {
       // 判断是否是数字
       if (regNum.test(lastStr)) { // 输入是数字
         this.investmentAmount = val;
-        console.log(this.tabActiveCurrency);
         // 判断是否大于可用余额 大于产品剩余剩余额度
         if (this.tabActiveCurrency === true) {
           // 判断是否激活按钮 进行下一步
@@ -170,9 +171,7 @@ export default {
           }
         }
       } else { // 输入的是非数字
-        console.log(val);
         this.investmentAmount = val.substring(0, val.length - 1);
-        console.log(this.investmentAmount);
         return false;
       }
 
@@ -211,6 +210,7 @@ export default {
         investmentAmount: this.investmentAmount,
         expectedReturn: this.expectedReturn,
         currencyType: this.tabActiveType,
+        productId: this.productId,
         title: this.title,
       };
       const stepTwoData = JSON.stringify(routeData);

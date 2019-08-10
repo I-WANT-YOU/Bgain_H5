@@ -10,17 +10,22 @@
       <HomeTip/>
     </div>
     <!--登陆注册后有-->
-    <div class="notice-container" v-show="userStatus === 'login' || userStatus === 'register'">
+    <div class="notice-container" v-show="userStatus === 'login'">
       <HomeNotice/>
     </div>
     <!--注册后信息不全有-->
-    <div class="guide-container" v-show="userStatus === 'register'">
-      <HomeGuide/>
+    <div class="guide-container" v-show="guideStatus">
+      <HomeGuide
+        :kyc_status= "kyc_status"
+        :setPassword ="setPassword"
+        :record ="record"
+      />
     </div>
     <!--未登录有-->
     <div class="toLogin-container" v-show="userStatus === 'unLogin'">
       <HomeToLogin/>
     </div>
+     <!--信息列表-->
     <div class="list-container">
       <HomeProductList/>
     </div>
@@ -34,6 +39,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+import errorMessage from '../../constants/responseStatus';
 import HomeSwipe from '../../components/home/HomeSwipe.vue';
 import HomeTip from '../../components/home/HomeTip.vue';
 import HomeGuide from '../../components/home/HomeGuide.vue';
@@ -58,10 +65,75 @@ export default {
   data() {
     return {
       userStatus: '',
+      kyc_status: 0, // 是否身份认证
+      setPassword: 0, // 是否设置了交易密码
+      record: 0, // 是否有充值记录
+      guideStatus: false, // 新手引导
     };
   },
+  computed: {
+    ...mapState('user', [
+      'basicInfo',
+    ]),
+    ...mapState('home', [
+      'recordList',
+    ]),
+  },
   mounted() {
-    this.userStatus = this.$route.params.status;
+    // 判断用户是否登陆
+    if (!localStorage.getItem('access_token')) { // 未登录
+      this.userStatus = 'unLogin';
+    } else {
+      this.userStatus = 'login';
+    }
+    // 用户登陆 验证用户信息
+    if (this.userStatus === 'login') {
+      Promise.all([this.getRecord(), this.getUserSummary()]).then(
+        () => {
+          // 是否有充值记录
+          if (this.recordList.wallet_record_list.length !== 0) {
+            this.record = 1;
+          } else {
+            this.record = 0;
+          }
+          // 判断用户是否身份认证
+          if (this.basicInfo.kyc_stauts === 'UN_CERTIFIED') { // 未认证
+            this.kyc_status = 0;
+          } else {
+            this.kyc_status = 1;
+          }
+          // 判断用户是否设置了支付密码
+          if (this.basicInfo.authlevel === '2') { // 未认证
+            this.setPassword = 1;
+          } else if (this.basicInfo.authlevel === '1') {
+            this.setPassword = 0;
+          }
+          if (this.record && this.kyc_status && this.setPassword) {
+            this.guideStatus = false;
+          } else {
+            this.guideStatus = true;
+          }
+        },
+        // 登陆用户
+        (err) => {
+          if (err.status) {
+            this.$toast(errorMessage[err.status]);
+          } else {
+            this.$toast('网络错误');
+          }
+        },
+      );
+    }
+  },
+  methods: {
+    // 触发action的方法 getRecord
+    ...mapActions('user', [
+      'getUserSummary',
+    ]),
+    ...mapActions('home', [
+      'getRecord',
+      'getAllHomeInfo',
+    ]),
   },
 };
 </script>

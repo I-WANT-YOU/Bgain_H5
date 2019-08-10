@@ -14,6 +14,19 @@ class HomeService {
       throw new Error(error);
     }
   }
+
+  static async getRecord() {
+    try {
+      const requestOptions = {
+        url: '/wallet/get-deposit-record',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default HomeService;

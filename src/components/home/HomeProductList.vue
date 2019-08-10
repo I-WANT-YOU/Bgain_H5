@@ -26,18 +26,18 @@
             <span>当前净值</span>
             <span>成立以来</span>
           </li>
-          <li v-for="(item) in funds" :key="item.id">
+          <li v-for="(item) in newFunds" :key="item.id">
             <div class="found-li-style">
-              <div>
-                <div>{{ item.fund_product_name }}</div>
+              <div class="item-one">
+                <span>{{ item.fund_product_name }}</span>
                 <div>
                   <img :src="initialSrc" v-show="item.status==='INITIAL'">
                   <div>{{item.fund_product_type}}</div>
                   <div>{{item.risk_level_type.substring(0,2)}}</div>
                 </div>
               </div>
-              <div>{{ item.current_nav }}</div>
-              <div>
+              <div class="item-two">{{ item.current_nav }}</div>
+              <div class="item-three">
                 <span>
                   {{item.total_ups_and_downs.substring(0,1)==='-' ?
                   item.total_ups_and_downs: `+${item.total_ups_and_downs}` }}
@@ -138,11 +138,19 @@ export default {
       'isLogin',
       'hasUnreadMessage',
     ]),
+    newFunds() {
+      let fundList = [];
+      const fundInitial = this.funds.filter(item => item.status === 'INITIAL');
+      const fundUnInitial = this.funds.filter(item => item.status !== 'INITIAL');
+      fundList = fundList.concat(fundInitial);
+      fundList = fundList.concat(fundUnInitial);
+      return fundList;
+    },
   },
   mounted() {
     this.getAllHomeInfo().then(
       () => {
-        console.log(this.fixeds);
+        // 初始化图表
         let num = 0;
         while (num < this.currents.length) {
           this.initChart(num);
@@ -224,7 +232,7 @@ export default {
 
 <style lang="scss" >
 .product-list{
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
   .tab-title{
     display: flex;
@@ -269,47 +277,46 @@ export default {
     /*基金涨幅榜*/
     .found-li-title{
       display: flex;
+      justify-content: space-between;
       height: 16px;
-      margin: 8px 36px 4px 24px ;
+      margin: 10px 36px 4px 24px ;
       font-size: 11px;
       color: #A8AEB9;
       text-align: center;
       >span:nth-child(1){
-        width: 168px;
+        /*width: 168px;*/
         text-align: left;
       }
       >span:nth-child(2){
-        width: 68px;
-        text-align: right;
+        /*width: 68px;*/
+        text-align: center;
       }
       >span:nth-child(3){
-         width: 80px;
+         /*width: 80px;*/
         text-align: right;
        }
     }
     .found-li-style{
       margin:0 17px 0 24px;
+      padding:14px 0;
       display: flex;
-      flex-direction: row;
+      justify-content: space-between;
       align-items: center;
-      height: 69px;
       border-bottom: 0.5px solid #E5E9F6;
-      >div:nth-child(1){
-        width: 168px;
-        text-align: left;
-        height: 42px;
-        >div{
-          text-align: left;
-        }
-        >div:nth-child(1){
+      .item-one{
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        >span:nth-child(1){
           height: 21px;
+          line-height: 21px;
           font-size: 15px;
           color: #0F3256;
         }
         >div:nth-child(2){
           display: flex;
           flex-direction: row;
-          height: 16px;
           margin-top: 4px;
           font-size: 12px;
           color: #A8AEB9;
@@ -331,14 +338,14 @@ export default {
           }
         }
       }
-      >div:nth-child(2){
+      .item-two{
         width: 68px;
-        text-align: right;
         font-size: 15px;
         color: #0F3256;
       }
       >div:nth-child(3){
         display: flex;
+        justify-content:flex-end;
         font-size: 15px;
         color: #FF5656;
         >span{
