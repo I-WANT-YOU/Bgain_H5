@@ -7,13 +7,18 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/Testing.vue'),
+    },
+    {
       path: '/home',
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
     },
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/test',
     },
     {
       path: '/login',
@@ -132,23 +137,24 @@ const router = new Router({
       children: [
         {
           path: 'current',
+          name: 'current',
           component: () => import('../views/product/current/Current.vue'),
           meta: {
-            title: '活期',
+            title: '天天赚',
           },
         },
         {
           path: 'fixed',
           component: () => import('../views/product/fixed/Fixed.vue'),
           meta: {
-            title: '定期',
+            title: '定期盈',
           },
         },
         {
           path: 'fund',
           component: () => import('../views/product/fund/Fund.vue'),
           meta: {
-            title: '基金',
+            title: '冠军基金',
           },
         },
       ],
@@ -177,6 +183,16 @@ const router = new Router({
       path: '/product/fund/result',
       name: 'result',
       component: () => import('../views/product/fund/BuyResult.vue'),
+    },
+    {
+      path: '/product/fund/product-files',
+      name: 'product-files',
+      component: () => import('../views/product/fund/ProductFiles.vue'),
+    },
+    {
+      path: '/product/fund/trade-rules',
+      name: 'trade-rules',
+      component: () => import('../views/product/fund/TradeRules.vue'),
     },
     // 活期交易记录
     {
@@ -233,25 +249,59 @@ const router = new Router({
       name: 'current-sell-result',
       component: () => import('../views/product/current/CurrentSellResult.vue'),
     },
+    // 我的
     {
-      path: '/passwordconfig',
-      name: 'passwordConfig',
-      component: () => import('../views/passwordConfig/PasswordConfig.vue'),
+      path: '/mine',
+      name: 'Mine',
+      component: () => import('../views/mine/Mine.vue'),
+    },
+    // 安全中心
+    {
+      path: '/mine/safety',
+      name: 'security-center',
+      component: () => import('../views/mine/safety/SecurityCenter.vue'),
     },
     {
-      path: '/passwordconfig/reset/loginpassword',
-      name: 'resetLoginPassword',
-      component: () => import('../views/passwordConfig/ResetLoginPassword.vue'),
+      path: '/mine/safety/password',
+      name: 'password',
+      component: () => import('@views/mine/password/Password.vue'),
     },
     {
-      path: '/passwordconfig/reset/tradepassword',
-      name: 'resetTradePassword',
-      component: () => import('../views/passwordConfig/ResetTradePassword.vue'),
+      path: '/mine/safety/password/login/change',
+      name: 'change-login-password',
+      component: () => import('@views/mine/password/ChangeLoginPassword.vue'),
     },
     {
-      path: '/passwordconfig/set/tradepassword',
-      name: 'setTradePassword',
-      component: () => import('../views/passwordConfig/SetTradePassword.vue'),
+      path: '/mine/safety/password/payment/reset',
+      name: 'reset-payment-password',
+      component: () => import('@views/mine/password/ResetPaymentPassword.vue'),
+    },
+    {
+      path: '/mine/safety/password/payment/set',
+      name: 'set-payment-password',
+      component: () => import('@views/mine/password/SetPaymentPassword.vue'),
+    },
+    {
+      path: '/mine/safety/kyc',
+      name: 'kyc',
+      component: () => import('../views/mine/kyc/Kyc.vue'),
+    },
+    {
+      path: '/mine/safety/kyc-result',
+      name: 'kyc-result',
+      component: () => import('../views/mine/kyc/KycResult.vue'),
+    },
+    // 我的定期
+    {
+      path: '/mine/fund',
+      name: 'MineFund',
+      component: () => import('../views/mine/fund/MineFund.vue'),
+    },
+    // 定期交易历史记录
+    {
+      path: '/mine/fund/trade-record-history',
+      name: 'TradeRecordHistory',
+      component: () => import('../views/mine/fund/TradeRecordHistory.vue'),
     },
   ],
 });

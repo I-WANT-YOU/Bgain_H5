@@ -44,7 +44,7 @@ import { Field, Button, Toast } from 'vant';
 import done from './done';
 
 export default {
-  name: 'ResetTradePassword',
+  name: 'ResetPaymentPassword',
   components: {
     BgainNavBar,
     Field,
@@ -90,7 +90,7 @@ export default {
   },
   mounted() {
     const countryCode = '+86';
-    this.countryCode = countryCode ? countryCode : '';
+    this.countryCode = countryCode || '';
   },
   methods: {
     onClick() {
@@ -106,7 +106,7 @@ export default {
     },
     onSend() {
       this.showInfo = true;
-    }
+    },
   },
 };
 </script>

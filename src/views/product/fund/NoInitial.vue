@@ -1,6 +1,6 @@
 <template>
   <div class="noiniaial">
-    <BgainNavBar :title="title" />
+    <BgainNavBar :title="fundDetail.fund_name ? fundDetail.fund_name : title" />
     <div class="info">
       <div class="info-top">
         <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
@@ -30,18 +30,24 @@
     <div class="networth">
       <div class="title">
         <span>净值走势</span>
-        <div class="purchase">申购倒计时 1天19小时24分</div>
+        <div
+          v-if="fundDetail.status === 'OPEN'"
+          class="purchase"
+        >申购倒计时 {{formatDate(fundDetail.next_open_date - fundDetail.server_time,'D天h小时m分')}}</div>
       </div>
       <div class="echarts">
         <div class="echarts-info">
           <span>日期 {{formatDate(chart_x, 'MM-DD')}}</span>
-          <span>单位净值 {{chart_y}}</span>
+          <span class="echarts-info-num">单位净值 {{chart_y}}</span>
         </div>
-        <div class="my-echarts" ref="echarts" style="width: 305px;height: 136px;"></div>
+        <div class="my-echarts" ref="echarts" style="width: 315px;height: 136px;"></div>
       </div>
     </div>
     <div class="tradeshow">
-      <div class="title">
+      <div
+        @click="$router.push({path: '/product/fund/trade-rules', query:{productId: $route.params.id}})"
+        class="title"
+      >
         <span>交易说明</span>
         <div class="skip">
           交易规则、常见问题等
@@ -93,24 +99,24 @@
           <svg-icon icon-class="fund-retreat" />
           <div class="percent">{{fundDetail.max_retracement_scale * 1}}%</div>
           <div class="text">最大回撤</div>
-          <!--  -->
         </div>
         <div>
           <svg-icon icon-class="fund-managementfee" />
           <div class="percent">{{fundDetail.manage_fee_rate * 1}}%</div>
           <div class="text">管理费(年化)</div>
-          <!-- manage_fee_rate -->
         </div>
         <div>
           <svg-icon icon-class="fund-meritpay" />
           <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
-          <!-- carry_rate_user -->
         </div>
       </div>
     </div>
     <div class="fundarchives">
-      <div class="title">
+      <div
+        @click="$router.push({path: '/product/fund/product-files', query:{productId: $route.params.id}})"
+        class="title"
+      >
         <span>基金档案</span>
         <div class="skip">
           基金团队、策略说明、实盘业绩等
@@ -125,7 +131,9 @@
     <div class="risk">
       <div class="title">
         <span>风险说明</span>
-        <svg-icon icon-class="next" class="next" />
+        <span>
+          <svg-icon icon-class="next" class="next" />
+        </span>
       </div>
     </div>
     <div class="foot"></div>
@@ -134,19 +142,24 @@
         v-if="!this.fundDetail.status === 'OPEN'"
         class="open"
       >{{formatDate(fundDetail.next_open_date,'YYYY-MM-DD')}}开放认购</div>
-      <Button type="info" class="button" @click="onSubmit">立即认购</Button>
+      <Button
+        v-if="this.fundDetail.status === 'OPEN'"
+        type="info"
+        class="button"
+        @click="onSubmit"
+      >立即认购</Button>
+      <Button v-else type="info" class="button" @click="onSubmit">到时提醒我</Button>
     </div>
   </div>
 </template>
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
-import { formatDate, strip } from '@utils/tools';
+import { formatDate } from '@utils/tools';
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import { Button } from 'vant';
-import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
-import { formatRisk, formatType, echartsOption } from './formatFundData';
+import { formatRiskText, formatType, echartsOption } from './formatFundData';
 
 export default {
   name: 'NoInitial',
@@ -162,19 +175,20 @@ export default {
       type: '',
       risk: '',
       chart_x: '03-16',
-      chart_y: '1.000',
+      chart_y: '1.0000',
     };
   },
   mounted() {
     this.getFundProductDetail(this.$route.params.id).then(() => {
       this.type = formatType(this.fundDetail).fund_product_type;
-      this.risk = formatRisk(this.fundDetail).risk_level_type;
+      this.risk = formatRiskText(this.fundDetail).risk_level_type;
       this.setEcharts();
     });
   },
   methods: {
     ...mapActions({
       getFundProductDetail: 'product/fund/getFundProductDetail',
+      getUserSummary: 'user/getUserSummary',
     }),
     formatDate(date, format) {
       return formatDate(date, format);
@@ -183,8 +197,8 @@ export default {
       this.chart_x = formatDate(this.fundNavHistories[0].get_nav_time, 'MM-DD');
       this.chart_y = this.fundNavHistories[0].nav;
       this.chart = echarts.init(this.$refs.echarts);
-      const X = this.fundNavHistories.map((item) => item.get_nav_time);
-      const series = this.fundNavHistories.map((item) => item.nav);
+      const X = this.fundNavHistories.map(item => item.get_nav_time);
+      const series = this.fundNavHistories.map(item => item.nav);
       const min = Math.min.apply(null, series);
       const max = Math.max.apply(null, series);
       const num = (max - min) * 1.2;
@@ -193,23 +207,23 @@ export default {
       this.chart.setOption(echartsOption(X, series, min, max, num));
     },
     onMouseMove(params) {
-      var pointInPixel = [params.offsetX, params.offsetY];
-      var pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
+      const pointInPixel = [params.offsetX, params.offsetY];
+      const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
       if (this.chart.containPixel('grid', pointInPixel)) {
         this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
         this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x)[0].nav;
       }
     },
     onSubmit() {
-      const password = true;
       // 开放认购
       if (this.fundDetail.status === 'OPEN') {
-        if (password) {
-          this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
-        } else {
-          console.log('设置交易密码');
-          this.$router.push('/passwordconfig/set/tradepassword');
-        }
+        this.getUserSummary().then(() => {
+          if (this.authLevel === 2) {
+            this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
+          } else {
+            this.$router.push('/passwordconfig/set/tradepassword');
+          }
+        });
       } else {
         console.log('短信通知');
       }
@@ -219,6 +233,7 @@ export default {
     ...mapGetters({
       fundDetail: 'product/fund/fundDetail',
       fundNavHistories: 'product/fund/fundNavHistories',
+      authLevel: 'user/authLevel',
     }),
   },
 };
@@ -353,6 +368,11 @@ export default {
         box-sizing: border-box;
         padding: 0 20px;
         margin-bottom: 14px;
+        .echarts-info-num {
+          display: inline-block;
+          width: 90px;
+          text-align: left;
+        }
       }
     }
   }

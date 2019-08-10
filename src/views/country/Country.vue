@@ -1,6 +1,6 @@
 <template>
   <div class="country">
-    <Header class title="选择国籍" :backPath="goBack" />
+    <Header title="选择国籍" />
     <List class="list">
       <Cell
         class="list-item"
@@ -11,14 +11,13 @@
         @click="skip(item)"
       />
     </List>
-    <div class="none"></div>
     <Footer />
   </div>
 </template>
 
 <script>
 import { List, Cell } from 'vant';
-import Header from '@component/Header.vue';
+import Header from '@component/BgainNavBar.vue';
 import Footer from '@component/Footer.vue';
 import countries from '@/constants/country';
 
@@ -59,21 +58,16 @@ export default {
       height: 54px;
       box-sizing: border-box;
       padding: 18px 20px 15px 20px;
-      font-family: PingFangSC-Regular;
       font-size: 15px;
       color: #333333;
       letter-spacing: 0;
     }
   }
   p {
-    font-family: PingFangSC-Regular;
     font-size: 12.5px;
     color: #bbbbbb;
     letter-spacing: 0;
     text-align: center;
-  }
-  .none {
-    height: 50px;
   }
 }
 </style>

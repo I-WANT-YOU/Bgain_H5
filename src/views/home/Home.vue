@@ -15,6 +15,7 @@
     <router-link to="/product/fixed">定期</router-link><br/>
     <router-link to="/product/current">活期</router-link><br/>
     <router-link to="/product/fund">基金</router-link><br/>
+    <router-link to="/mine/safety/kyc">KYC</router-link><br/>
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" /><br/>
     <button @click="onClick">Geetest</button><br/>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div><br/>
@@ -47,8 +48,7 @@
     <br />
     <SendCode ref="sendCode" />
     <br />
-    <Loading />
-    <Loading type="spinner" />
+    <router-link to='/mine'>我的</router-link>
   </div>
 </template>
 

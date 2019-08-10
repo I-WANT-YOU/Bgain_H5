@@ -39,11 +39,17 @@ export const GET_FUND_CURRENCIES = 'GET_FUND_CURRENCIES';
 export const GET_FUND_PRODUCT_DETAIL = 'GET_FUND_PRODUCT_DETAIL';
 export const GET_FUND_BUY_INFO = 'GET_FUND_BUY_INFO';
 export const GET_HOLDING_FUNDS = 'GET_HOLDING_FUNDS';
+export const BUY_FUNDS = 'BUY_FUNDS';
+export const GET_FUNDS_TRADE_RULES = 'GET_FUNDS_TRADE_RULES';
+export const GET_FUNDS_INFORMATION = 'GET_FUNDS_INFORMATION';
 
 /**
  * 用户相关
  */
 export const GET_USER_SUMMARY = 'GET_USER_SUMMARY';
+export const GET_KYC_INFO = 'GET_KYC_INFO';
+export const GET_USER_BALANCE_SUMMARY = 'GET_USER_BALANCE_SUMMARY';
+export const GET_SUBMIT_KYC_RESULT = 'GET_SUBMIT_KYC_RESULT';
 
 /**
  * 冲币买币
@@ -56,3 +62,8 @@ export const GET_USER_PAYMENT_INFO = 'GET_USER_PAYMENT_INFO';
 export const GET_ORDER_INFO_BY_ID = 'GET_ORDER_INFO_BY_ID'; // 根据ID查询订单 GET_ORDER_LIST
 export const GET_ORDER_LIST = 'GET_ORDER_LIST'; // 订单列表
 export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息
+
+/**
+ * App 相关
+ */
+export const GET_UPLOAD_POLICY = 'GET_UPLOAD_POLICY';

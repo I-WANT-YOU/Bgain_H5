@@ -1,5 +1,6 @@
 <template>
   <currency-tab
+    v-if="currencies.length !== 0"
     :currencies="currencies"
     @currency-change="onCurrencyChange"
   >
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import { head, isEmpty } from 'lodash';
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import CurrencyTab from '../components/CurrencyTab.vue';
@@ -32,9 +34,8 @@ export default {
   data() {
     return {
       isLoading: false,
-      currency: 'BTC',
+      currency: '',
       products: [],
-      fixed: {},
     };
   },
   computed: {
@@ -43,8 +44,12 @@ export default {
       getProducts: 'getFixedProductsByCurrency',
     }),
   },
-  mounted() {
-    this.onRefresh(this.currency);
+  async mounted() {
+    Toast.loading({
+      message: '加载中...',
+    });
+    await this.onRefresh();
+    Toast.clear();
   },
   methods: {
     ...mapActions([
@@ -57,7 +62,13 @@ export default {
     async onRefresh(currency) {
       try {
         await this.getAllFixedProduct();
-        this.products = this.getProducts(currency);
+        if (!isEmpty(currency)) {
+          this.products = this.getProducts(currency);
+        } else {
+          const initCurrency = head(this.currencies);
+          this.currency = initCurrency;
+          this.products = this.getProducts(initCurrency);
+        }
         this.isLoading = false;
       } catch (error) {
         Toast(error.message);

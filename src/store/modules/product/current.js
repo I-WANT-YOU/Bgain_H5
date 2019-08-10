@@ -42,6 +42,8 @@ const getters = {
   maxSellAmount: ({ sellInfo }) => Number(get(sellInfo, 'amount', '0')),
   buyAmount: ({ buyResult }) => get(buyResult, 'amount', '0'),
   buyStartDate: ({ buyResult }) => get(buyResult, 'interestStartDate', 0),
+  sellAmount: ({ sellResult }) => get(sellResult, 'amount', '0'),
+  sellDate: ({ sellResult }) => get(sellResult, 'transferOutTime', 0),
 };
 
 const mutations = {
@@ -143,6 +145,23 @@ const actions = {
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_CURRENT_BUY_RESULT, {
         interestStartDate: get(data, 'interest_start_date', 0),
+        amount,
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async sellCurrentProduct({ commit }, { amount, currency, password }) {
+    try {
+      const response = await CurrentService.sellCurrentProduct({
+        amount,
+        currency,
+        password,
+      });
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_CURRENT_SELL_RESULT, {
+        transferOutTime: get(data, 'transfer_out_time', 0),
         amount,
       });
     } catch (error) {

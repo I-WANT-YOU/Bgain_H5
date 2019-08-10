@@ -62,11 +62,10 @@
 
     .content__button {
       padding: 0 22px;
+      margin-bottom: 70px;
     }
 
     .content__description {
-      position: absolute;
-      bottom: 50px;
       padding-left: 20px;
 
       @media screen and (max-device-width: 374px) {

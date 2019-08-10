@@ -8,7 +8,7 @@
           @click="onSwitch(fundBuyInfo.currency_type)"
         >{{fundBuyInfo.currency_type}}购买</div>
         <span>|</span>
-        <div :class="['tab', currency === 'FBP'?'active':'']" @click="onSwitch('FBP')">FBP购买</div>
+        <div :class="['tab', currency === 'BGP'?'active':'']" @click="onSwitch('BGP')">BGP购买</div>
       </div>
       <div class="form">
         <div class="info">
@@ -41,16 +41,13 @@
         @click="onClick"
       >立即认购</Button>
     </div>
-    <van-dialog v-model="show" class="dialog" :show-confirm-button="false">
-      <div class="dialog-con">
-        <svg-icon icon-class="prompt" class="svg-prompt" />
-        <div class="title">您当前可用余额不足，请先充币</div>
-        <div class="buttons">
-          <Button class="buttons-cancel" @click="onCancel">取消</Button>
-          <Button class="buttons-confirm" @click="onConfirm">立即充币</Button>
-        </div>
-      </div>
-    </van-dialog>
+    <InsufficientBalanceDialog v-model="show" @cancel="onCancel" />
+    <PaymentPasswordDialog
+      @close="maskShow=false"
+      @submit="getPaymentPassword"
+      v-model="maskShow"
+      class="mask"
+    />
   </div>
 </template>
 <script>
@@ -58,6 +55,8 @@ import BgainNavBar from '@component/BgainNavBar.vue';
 import { strip } from '@utils/tools';
 import { Field, Button, Toast } from 'vant';
 import { mapActions, mapState } from 'vuex';
+import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
+import InsufficientBalanceDialog from '../components/InsufficientBalanceDialog.vue';
 
 export default {
   name: 'FundSubscribe',
@@ -65,6 +64,8 @@ export default {
     BgainNavBar,
     Field,
     Button,
+    PaymentPasswordDialog,
+    InsufficientBalanceDialog,
   },
   data() {
     return {
@@ -77,16 +78,18 @@ export default {
       inDisabled: false,
       balance: '100',
       mininvest: '0.01',
+      maskShow: false,
     };
   },
   mounted() {
     this.getFundBuyInfo(this.$route.params.id).then(() => {
+      this.changIcon();
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
       } else if (this.fundBuyInfo.support_fbp
         && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance_fbp * 1) {
-        this.changIconFBP();
+        this.changIconBGP();
       } else {
         this.show = true;
       }
@@ -126,18 +129,19 @@ export default {
   methods: {
     ...mapActions({
       getFundBuyInfo: 'product/fund/getFundBuyInfo',
+      buyFund: 'product/fund/buyFund',
     }),
     onSwitch(text) {
       this.num = '';
-      if (text !== 'FBP') {
+      if (text !== 'BGP') {
         this.changIcon();
       } else {
-        this.changIconFBP();
+        this.changIconBGP();
       }
       this.onDialog(text);
     },
-    changIconFBP() {
-      this.currency = 'FBP';
+    changIconBGP() {
+      this.currency = 'BGP';
       this.balance = this.fundBuyInfo.balance_fbp;
       this.mininvest = this.fundBuyInfo.min_inverst_amount_fbp;
     },
@@ -151,15 +155,15 @@ export default {
       this.poundage = strip(this.fundBuyInfo.fund_fee_rate_buy[0].rate1 * this.num);
     },
     onDialog(text) {
-      if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 > this.balance * 1) {
+      if (text === 'BGP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 > this.balance * 1) {
         this.show = true;
         this.changIcon();
-      } else if (text === 'FBP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance * 1) {
-        this.changIconFBP();
-      } else if (text !== 'FBP' && this.fundBuyInfo.min_invest_amt > this.balance * 1) {
+      } else if (text === 'BGP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance * 1) {
+        this.changIconBGP();
+      } else if (text !== 'BGP' && this.fundBuyInfo.min_invest_amt > this.balance * 1) {
         this.show = true;
-        this.changIconFBP();
-      } else if (text !== 'FBP' && this.fundBuyInfo.min_invest_amt <= this.balance * 1) {
+        this.changIconBGP();
+      } else if (text !== 'BGP' && this.fundBuyInfo.min_invest_amt <= this.balance * 1) {
         this.changIcon();
       }
     },
@@ -177,21 +181,13 @@ export default {
       }
     },
     onClick() {
-      // const parmas = {
-      //   product_id: this.fundBuyInfo.fund_product_id,
-      //   currency_type: this.currency,
-      //   // payment_password: 152535,
-      //   amount: this.num * 1,
-      // };
-      if (this.mininvest <= this.num && this.num <= this.fundBuyInfo.balance) {
-        // 点击认购
-        // 输入交易密码 完成后跳页面;
-      } else {
-
+      if (this.mininvest <= this.num && this.num * 1 <= this.balance * 1) {
+        this.maskShow = true;
       }
     },
     onCancel() {
-      // 余额 this.fundBuyInfo.balance 
+      // 余额 this.fundBuyInfo.balance
+      console.log('1');
       if (this.fundBuyInfo.min_invest_amt * 1 > this.balance * 1
         || this.fundBuyInfo.min_inverst_amount_fbp > this.balance_fbp) {
         this.$router.go(-1);
@@ -201,6 +197,19 @@ export default {
     onConfirm() {
       this.show = false;
       this.$router.push('/');
+    },
+    getPaymentPassword(paymentPassword) {
+      this.buyFund({
+        product_id: this.fundBuyInfo.fund_product_id,
+        currency_type: this.fundBuyInfo.currency_type,
+        payment_password: paymentPassword * 1,
+        amount: this.num * 1,
+        payment_currency: this.currency,
+      }).then(() => {
+        this.$router.push({ path: '/product/fund/result', query: { status: 'success', currency: this.currency } });
+      }).catch(() => {
+        this.$router.push({ path: '/product/fund/result', query: { status: 'fail' } });
+      });
     },
   },
   computed: {
@@ -338,7 +347,7 @@ export default {
       .svg-prompt {
         width: 40px;
         height: 52px;
-        margin: 24px 0 36px;
+        margin: 24px 0;
       }
       .title {
         font-size: 16px;

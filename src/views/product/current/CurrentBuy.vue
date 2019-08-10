@@ -6,7 +6,6 @@
         <div class="panel__title">转入数量({{currency}})</div>
         <Field
           v-model="amount"
-          @input="onAmountInput"
           :placeholder="`起投 ${minBuyAmount} ${currency}`"
           :border="false">
         </Field>
@@ -21,7 +20,7 @@
           type="info"
           :fluid="true"
           :disabled="amount === ''"
-          @click="onSubmitClick"
+          @click="onBuyClick"
         >
           转入
         </bgain-button>
@@ -35,7 +34,8 @@
         </div>
       </div>
     </div>
-    <payment-password-dialog v-model="visible" @close="onClose"/>
+    <insufficient-balance-dialog v-model="balanceVisible" @cancel="onBalanceCancel"/>
+    <payment-password-dialog v-model="visible" @close="onClose" @submit="onSubmitClick"/>
   </div>
 </template>
 
@@ -45,8 +45,11 @@ import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import BgainButton from '@/components/BgainButton.vue';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
+import InsufficientBalanceDialog from '../components/InsufficientBalanceDialog.vue';
+import { AUTH_LEVEL } from '@/constants/options';
 
 const { mapGetters, mapActions } = createNamespacedHelpers('product/current');
+const { mapGetters: mapUserGetters, mapActions: mapUserActions } = createNamespacedHelpers('user');
 
 export default {
   name: 'CurrentBuy',
@@ -54,6 +57,7 @@ export default {
     BgainNavBar,
     BgainButton,
     PaymentPasswordDialog,
+    InsufficientBalanceDialog,
     Field,
     Divider,
   },
@@ -62,6 +66,7 @@ export default {
       amount: '',
       currency: '',
       visible: false,
+      balanceVisible: false,
     };
   },
   watch: {
@@ -71,7 +76,9 @@ export default {
         this.amount = '0.';
       } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.') {
         this.amount = '0';
-      } else if (oldValue.indexOf('.') > 0 && newValue.substr(newValue.length - 1) === '.') {
+      } else if (oldValue.indexOf('.') > 0
+        && oldValue.indexOf('.') !== newValue.lastIndexOf('.')
+        && newValue.substr(newValue.length - 1) === '.') {
         Toast('只能输入一个小数点');
         this.amount = value.replace(/\.{2,}/g, '.')
           .replace('.', '$#$')
@@ -79,6 +86,8 @@ export default {
           .replace('$#$', '.');
       } else if (!(/^\d+\.?\d{0,8}$/.test(newValue))) {
         this.amount = value.substr(0, value.indexOf('.') + 9);
+      } else if (newValue === '') {
+        this.amount = '';
       } else {
         this.amount = value;
       }
@@ -86,6 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters(['minBuyAmount', 'buyBalance']),
+    ...mapUserGetters(['authLevel']),
   },
   async mounted() {
     this.currency = this.$route.params.currency;
@@ -93,38 +103,38 @@ export default {
       message: '加载中...',
     });
     await this.fetchBuyInfo(this.currency);
+    this.checkBalanceDialogVisible();
     Toast.clear();
   },
   methods: {
     ...mapActions(['getCurrentBuyInfo', 'buyCurrentProduct']),
+    ...mapUserActions(['getUserSummary']),
     async fetchBuyInfo(currency) {
       try {
-        await this.getCurrentBuyInfo(currency);
+        await Promise.all([this.getCurrentBuyInfo(currency), this.getUserSummary()]);
       } catch (error) {
         Toast(error.message);
       }
     },
-    onAmountInput(amount) {
-      const re = /^\d+$/;
-      // console.log(amount);
-      // console.log(this.amount);
-      // this.amount = 1;
-      // if (amount === '.') {
-      //   this.amount = '0.';
-      // }
-      // else if (amount[amount.length - 1] === '.' && oldValue.indexOf('.') > 0) {
-      //   console.log(amount.slice(0, amount.length - 1));
-      //   this.amount = amount.slice(0, amount.length - 1);
-      //   Toast('只能输入一个小数点');
-      // }
-      // console.log('amount', amount);
+    async onBuyClick() {
+      try {
+        if (this.authLevel !== AUTH_LEVEL.TRADE_PASSWORD) {
+          this.$router.push({
+            name: 'setTradePassword',
+          });
+        } else {
+          this.visible = true;
+        }
+      } catch (error) {
+        Toast(error.message);
+      }
     },
-    async onSubmitClick() {
+    async onSubmitClick(password) {
       try {
         await this.buyCurrentProduct({
-          amount: 0.1,
-          currency: 'BTC',
-          password: '123456',
+          amount: this.amount,
+          currency: this.currency,
+          password,
         });
         this.$router.push({
           name: 'current-buy-result',
@@ -133,9 +143,15 @@ export default {
         Toast(error.message);
       }
     },
-    onConfirm() {
-      console.log(123);
-      this.visible = false;
+    checkBalanceDialogVisible() {
+      if (this.minBuyAmount > this.buyBalance) {
+        this.balanceVisible = true;
+      }
+    },
+    onBalanceCancel() {
+      this.$router.push({
+        name: 'current',
+      });
     },
     onClose() {
       this.visible = false;
