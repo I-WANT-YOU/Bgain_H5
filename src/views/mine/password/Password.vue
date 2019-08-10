@@ -6,7 +6,10 @@
         <cell title="修改登录密码" :to="{name: 'change-login-password'}">
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
-        <cell title="设置交易密码" :to="{name: 'set-payment-password'}">
+        <cell v-if="authLevel === 0" title="设置交易密码" :to="{name: 'set-payment-password'}">
+          <svg-icon icon-class="next" class="icon-next"></svg-icon>
+        </cell>
+        <cell v-else title="重置交易密码" :to="{name: 'reset-payment-password'}">
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
       </cell-group>
@@ -15,9 +18,13 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import BgainCellGroup from '../components/BgainCellGroup.vue';
 import BgainCell from '../components/BgainCell.vue';
+
+const { mapActions, mapGetters } = createNamespacedHelpers('user');
 
 export default {
   name: 'Password',
@@ -25,6 +32,19 @@ export default {
     BgainNavBar,
     CellGroup: BgainCellGroup,
     Cell: BgainCell,
+  },
+  computed: {
+    ...mapGetters(['authLevel']),
+  },
+  async mounted() {
+    try {
+      await this.getUserSummary();
+    } catch (error) {
+      Toast(error.message);
+    }
+  },
+  methods: {
+    ...mapActions(['getUserSummary']),
   },
 };
 </script>
@@ -35,7 +55,7 @@ export default {
     background: #f8f8f8;
 
     .password__content {
-      padding-top: 13px;
+      padding-top: 10px;
 
       .icon-next {
         width: 9px;
