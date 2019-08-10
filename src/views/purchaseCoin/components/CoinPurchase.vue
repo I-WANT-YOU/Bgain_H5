@@ -41,15 +41,15 @@
 
 <script>
 import { Toast } from 'vant';
+import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import QRCode from 'qrcodejs2';
 import errorMessage from '../../../constants/responseStatus';
 
+Vue.use(Toast);
 export default {
   name: 'CoinPurchase',
   components: {
-    // eslint-disable-next-line
-    Toast,
   },
   data() {
     return {
@@ -61,8 +61,14 @@ export default {
     };
   },
   mounted() {
+    this.$toast.loading({
+      mask: true,
+      duration: 0,
+      message: '加载中...',
+    });
     this.getPurchaseCoinAddress().then(
       () => {
+        this.$toast.clear();
         this.qrcode = new QRCode(this.$refs.qrcode, {
           text: this.address[this.activeContentTab],
           width: 111,
@@ -88,11 +94,15 @@ export default {
     copy() {
       this.$refs.myCopy.select();
       document.execCommand('Copy');
+      this.$toast('复制成功');
     },
     changeContentTab(index) {
       this.activeContentTab = index;
       this.qrcode.makeCode(this.address[index]);
     },
+  },
+  beforeDestroy() {
+    this.$toast.clear();
   },
   computed: {
     ...mapState('coin/purchaseCoin', [
@@ -165,6 +175,7 @@ export default {
           overflow: hidden;
           background: #EDF0FA;
           border: none;
+          resize: none;
         }
       }
       >div:nth-child(3){
@@ -174,6 +185,7 @@ export default {
         >button{
           width: 70px;
           height:26px;
+          padding:0;
           background: #3C64EE;
           border-radius: 4px;;
           border:none;

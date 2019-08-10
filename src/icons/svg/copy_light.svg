@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>复制icon可点击</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="M端-银行卡请付款" transform="translate(-324.000000, -407.000000)">
+            <g id="产品信息备份" transform="translate(36.000000, 368.000000)">
+                <g id="复制icon可点击" transform="translate(288.000000, 39.000000)">
+                    <path d="M12,12 L12,10.0012817 L5,10 L5,3 L3,3 L3,7 L3,1 C3,0.44771525 3.44771525,1.01453063e-16 4,0 L14,0 C14.5522847,-1.01453063e-16 15,0.44771525 15,1 L15,11 C15,11.5522847 14.5522847,12 14,12 L12,12 Z M5,2 L5,10 L13,10 L13,2 L5,2 Z" id="形状结合" fill-opacity="0.6" fill="#3C64EE"></path>
+                    <rect id="矩形" stroke="#3C64EE" stroke-width="2" x="1" y="4" width="10" height="10" rx="1"></rect>
+                    <rect id="矩形" fill="#3C64EE" x="4" y="8" width="4" height="2" rx="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

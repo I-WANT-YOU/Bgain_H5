@@ -53,3 +53,6 @@ export const GET_CURRENCY_LIST = 'GET_CURRENCY_LIST';
 export const GET_CURRENCY_PRICE = 'GET_CURRENCY_PRICE';
 export const GET_ORDER_INFO = 'GET_ORDER_INFO';
 export const GET_USER_PAYMENT_INFO = 'GET_USER_PAYMENT_INFO';
+export const GET_ORDER_INFO_BY_ID = 'GET_ORDER_INFO_BY_ID'; // 根据ID查询订单 GET_ORDER_LIST
+export const GET_ORDER_LIST = 'GET_ORDER_LIST'; // 订单列表
+export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息

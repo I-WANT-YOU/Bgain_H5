@@ -4,7 +4,7 @@
   <div class="paymentMethods">
     <div class="paymentMethods-title"><span>支付方式</span></div>
     <div class="paymentMethods-content">
-      <div v-for="(item,index) in paymentMethods"
+      <div v-for="(item,key,index) in paymentType"
            :class="{activeSelected:selectedIndex === index}"
            :key="index"
            @click="toggleSelect(index)">
@@ -13,7 +13,7 @@
                     v-show="selectedIndex === index"/>
         </div>
         <div>
-          <svg-icon icon-class="weixin" style = "width: 60px;height: 44px"/>
+          <svg-icon :icon-class=key style = "width: 60px;height: 44px"/>
         </div>
         <div>
           <span>{{item}}</span>
@@ -27,13 +27,18 @@
         <span>{{item.content}}</span>
       </div>
   </div>
-  <div class="pushOrder"><button>提交订单</button></div>
+  <div class="pushOrder"><button @click="orderSubmit">提交订单</button></div>
 </div>
 </template>
 
 <script>
+import { Toast } from 'vant';
+import Vue from 'vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import BgainNavBar from '../../components/BgainNavBar.vue';
+import errorMessage from '../../constants/responseStatus';
 
+Vue.use(Toast);
 export default {
   name: 'confirmOrder',
   components: {
@@ -64,18 +69,55 @@ export default {
     toggleSelect(index) {
       this.selectedIndex = index;
     },
+    ...mapActions('coin/orderInfo', [
+      'getOrderInfoById',
+      'submitOrder',
+    ]),
+    // 提交订单
+    orderSubmit() {
+      alert('这是伪数据');
+      const currentParams = {
+        pay_type: 'EBANK',
+        id: '9',
+      };
+      this.submitOrder(currentParams).then(
+        (res) => {
+          console.log(errorMessage[res.status]);
+        },
+        (err) => {
+          this.$toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
+        },
+      );
+    },
+  },
+  computed: {
+    ...mapState('coin/orderInfo', [
+      'orderInfoById',
+      'orderInformation', // 生成订单 返回信息
+    ]),
+    ...mapGetters('coin/orderInfo', [
+      'paymentType',
+    ]),
   },
   mounted() {
+    // 从路由中获取订单id
     const orderInfo = this.$route.params;
+    // 根据订单id查询订单
     console.log(orderInfo);
     try {
       if (orderInfo.data) {
         sessionStorage.setItem('orderInfo', orderInfo.data);
+        sessionStorage.setItem('orderId', orderInfo.orderId);
       }
     } catch (e) {
       console.log(e);
     }
     this.orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
+    this.orderId = sessionStorage.getItem('orderId');
+    console.log(this.orderId);
   },
 };
 </script>
@@ -102,7 +144,7 @@ export default {
        padding:0 30px;
        margin-top: 11px;
        display: flex;
-       justify-content: space-between;
+       justify-content: space-around;
        >div{
          position: relative;
          width: 90px;

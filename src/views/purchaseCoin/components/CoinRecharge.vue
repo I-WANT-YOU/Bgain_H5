@@ -3,7 +3,7 @@
     <!--tabs-->
     <div class="tabs-container">
       <div class="content-tabs">
-          <span v-for="(item,index) in currencyListToUp" :key="index"
+          <span v-for="(item,index) in currencyList" :key="index"
                 :class="{activeContentTab:activeContentTab === item}"
                 @click = "changeContentTab(item)"
           >
@@ -54,14 +54,14 @@
 
 <script>
 import { Toast } from 'vant';
+import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import errorMessage from '../../../constants/responseStatus';
 
+Vue.use(Toast);
 export default {
   name: 'CoinRecharge',
   components: {
-    // eslint-disable-next-line
-      Toast,
   },
   data() {
     return {
@@ -71,7 +71,7 @@ export default {
       exchangeTabsData: ['按兑换金额', '按兑换数量'],
       placeHolder: '',
       inputValue: '',
-      exchangeType: 'CNY', // 兑换
+      exchangeType: '', // 兑换类型
       exchangeInfo: [],
       singleOfferPrice: '', // 单约价
       transactionsNumber: '', // 成交数量
@@ -81,89 +81,102 @@ export default {
     };
   },
   mounted() {
-    this.getCurrencyList().then(
+    this.$toast.loading({
+      mask: true,
+      duration: 0,
+      message: '加载中...',
+    });
+    this.getCurrencyList().then( // 获取币种列表
       () => {
-        const selectedCurrency = this.currencyListToUp[0];
-        this.activeContentTab = selectedCurrency;
-        // 调用接口获取单价
-        this.getCurrencyPrice(this.currencyListToUp[0]).then(
-          () => {
-            this.activeContentTab = this.currencyPrice.currency_type.toUpperCase();
-            this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
-          },
-          (err) => {
-            console.log(err);
-            if (err.status) { this.$toast(errorMessage[err.status]); }
-          },
-        ).catch(
-          () => {
-            this.$toast('网络故障');
-          },
-        );
+        this.$toast.clear();
+        this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
+        this.exchangeType = 'CNY'; // 兑换方式选择
+        this.getNewCurrencyPrice(this.activeContentTab);
       },
       (err) => {
+        this.$toast.clear();
         if (err.status) { this.$toast(errorMessage[err.status]); } else {
           this.$toast('网络故障');
         }
       },
-    ).catch(() => {
-      this.$toast('网络故障');
-    });
+    );
+  },
+  beforeDestroy() {
+    this.$toast.clear();
   },
   methods: {
     ...mapActions('coin/purchaseCoin', [
-      'getCurrencyList',
+      'getCurrencyList', // 获取列表
       'getCurrencyPrice',
     ]),
     ...mapActions('coin/orderInfo', [
-      'getOrderInfo',
+      'generateOrderInfo',
     ]),
     // 下一步
     next() {
+      // 点击下一步 （生成订单的参数）
       const queryData = {
-        type: 'buy',
-        coinSymbol: this.activeContentTab,
-        currency_symbol: '"CNY"',
+        type: 'BUY',
+        coin_symbol: this.activeContentTab,
+        currency_symbol: 'CNY',
       };
       if (this.exchangeType === 'CNY') {
         queryData.amount = this.inputValue;
       } else {
         queryData.coin_amount = this.inputValue;
       }
-      this.getOrderInfo(this.initExchangeInfo); // 订单信息存入store
-      this.routerData = this.initExchangeInfo;
-      const data = JSON.stringify(this.routerData);
-      this.$router.push({
-        name: 'ConfirmOrder',
-        params: {
-          data,
-          queryData,
-        },
+      this.$toast.loading({
+        mask: false,
+        duration: 0,
+        message: '加载中...',
       });
+      //  发送请求 生成订单
+      this.generateOrderInfo(queryData).then(
+        () => {
+          this.$toast.clear();
+          // 跳转到支付方式选择页面 传递参数id
+          this.routerData = this.initExchangeInfo;
+          const data = JSON.stringify(this.routerData);
+          this.$router.push({
+            name: 'ConfirmOrder',
+            params: {
+              data,
+              orderId: this.orderInformation.id,
+            },
+          });
+        },
+        (err) => {
+          this.$toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
+        },
+      );
     },
     // 改变币种
     changeContentTab(currencyType) {
       this.activeContentTab = currencyType;
+      this.inputValue = '';
       this.exchangeType = 'CNY';
       // 获取新的币种价格信息
-      this.getNewCurrency(currencyType);
+      this.getNewCurrencyPrice(currencyType);
     },
     // 获取新的币种价格信息
-    getNewCurrency(currencyType) {
+    getNewCurrencyPrice(currencyType) {
       // 调用接口获取单价
       this.getCurrencyPrice(currencyType).then(
         () => {
+          this.$toast.clear();
           this.activeExchangeTab = 0;
           this.exchangeType = 'CNY';
-          this.placeHolder = '请输入法币数量';
+          this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
           this.singleOfferPrice = `${this.currencyPrice.price}CNY/${this.activeContentTab}`; // 单约价
         },
         (err) => {
-          if (err.status) { this.$toast(errorMessage[err.status]); }
-        },
-      ).catch(
-        () => {
-          this.$toast('网络故障');
+          this.$toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
         },
       );
     },
@@ -182,11 +195,15 @@ export default {
   },
   computed: {
     ...mapState('coin/purchaseCoin', [
-      'currencyList',
-      'currencyPrice',
+      'currencyData', // 币种列表 是否有订单
+      'currencyPrice', //  币种价格
+    ]),
+    // 订单信息
+    ...mapState('coin/orderInfo', [
+      'orderInformation',
     ]),
     ...mapGetters('coin/purchaseCoin', [
-      'currencyListToUp',
+      'currencyList', // 币种列表
     ]),
     // 生成兑换信息列表
     initExchangeInfo() {
@@ -196,7 +213,7 @@ export default {
         data = [
           {
             title: `单约价  (${this.activeContentTab})`,
-            content: `${this.currencyPrice.price}CNY/${this.activeContentTab}`,
+            content: '--',
           },
           {
             title: `成交数量  (${this.activeContentTab})`,
@@ -383,8 +400,10 @@ export default {
           font-size: 18px;
         }
         >div:nth-child(1){
+          flex-grow: 1;
           input{
             display: block;
+            width: 100%;
             height: 25px;
             padding: 0;
             margin:0;

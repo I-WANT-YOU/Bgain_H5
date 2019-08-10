@@ -1,7 +1,11 @@
 <template>
   <div class="home">
+    <router-link to="/confirmOrder">支付页面</router-link><br />
+    <router-link to="/fillingRecord">冲币记录记录</router-link><br />
     <router-link to="/buyingRecord">购买记录</router-link><br />
+    <router-link to="/appeal">申诉</router-link><br />
     <router-link to="/pleasePay">请付款</router-link><br />
+    <router-link to="/toBeRelease">待放行</router-link><br />
     <router-link to="/purchaseCoinHome">买币冲币</router-link><br />
     <router-link to="/test">余额不足</router-link><br />
     <router-link to="/homeToLogin">tologin</router-link><br />
@@ -38,14 +42,18 @@
     <router-link to="/product/fund/result">基金认证结果</router-link>
     <router-link to="/passwordConfig">密码设置</router-link>
     <br />
-    <router-link :to="{ path: '/passwordconfig/set/tradepassword', query : {fillPath:'/'} }">设置交易密码</router-link>
+    <router-link :to="{ path: '/passwordconfig/set/tradepassword',
+    query : {fillPath:'/'} }">设置交易密码</router-link>
     <br />
     <SendCode ref="sendCode" />
     <br />
+    <Loading />
+    <Loading type="spinner" />
   </div>
 </template>
 
 <script>
+import { Loading } from 'vant';
 import SendCode from '@component/SendCode.vue';
 import Geetest from '../../components/Geetest.vue';
 
@@ -54,6 +62,7 @@ export default {
   components: {
     Geetest,
     SendCode,
+    Loading,
   },
   data() {
     return {
@@ -84,6 +93,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .loading{
+    /*width: 100vw;*/
+    /*height: 100vh;*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0, 0, 0.2);
+  }
 .home {
   font-size: 18px;
 }

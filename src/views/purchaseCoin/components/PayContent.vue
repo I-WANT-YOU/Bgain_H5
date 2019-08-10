@@ -1,54 +1,85 @@
 <template>
   <div class="payContent">
       <div class="paymentInfo">
-        <div v-for="(item,index) in orderInfo" :key="index">
-          <span>{{item.title}}</span>
-          <span>{{item.content}}</span>
+        <div>
+          <span>实付金额</span>
+          <span>{{'¥'+orderInfoById.amount}}</span>
+        </div>
+        <div>
+          <span>单约价</span>
+          <span>
+            {{this.orderInfoById.price}}
+            {{this.orderInfoById.src_currency_type?
+            this.orderInfoById.src_currency_type.toUpperCase():''}}
+            /{{this.orderInfoById.dest_currency_type?
+            this.orderInfoById.dest_currency_type.toUpperCase():''}}
+          </span>
+        </div>
+        <div>
+          <span>数量</span>
+          <span>{{orderInfoById.quantity}}</span>
         </div>
       </div>
     <div class="paymentInfo userInfo">
-      <div v-for="(item,index) in userInfo" :key="index">
-        <span>{{item.title}}</span>
-        <span>{{item.content}}</span>
+      <div>
+        <span>收款人</span>
+        <span>{{orderInfoById.pay_name}}</span>
+      </div>
+      <div>
+        <span>{{formateTitle[0]}}</span>
+        <span>{{orderInfoById.pay_data}}</span>
+      </div>
+      <div>
+        <span>{{formateTitle[1]}}</span>
+        <span>{{orderInfoById.pay_id}}</span>
+      </div>
+      <div v-show="orderInfoById.pay_type==='ebank'">
+        <span>{{formateTitle[2]}}</span>
+        <span style = "font-size: 12px;color: #A8AEB9;">切勿备注BTC、Bgain等敏感字样，防冻结</span>
+      </div>
+      <div>
+        <span>订单号</span>
+        <span>{{orderInfoById.otc_order_id}}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'PayContent',
-  data() {
-    return {
-      orderInfo: [
-        {
-          title: '实付金额',
-          content: '--',
-        },
-        {
-          title: '单约价',
-          content: '--',
-        },
-        {
-          title: '数量',
-          content: '--',
-        },
-      ],
-      userInfo: [
-        {
-          title: '实付金额',
-          content: '--',
-        },
-        {
-          title: '单约价',
-          content: '--',
-        },
-        {
-          title: '数量',
-          content: '--',
-        },
-      ],
-    };
+  computed: {
+    ...mapState('coin/orderInfo', [
+      'orderInfoById',
+    ]),
+    // 根据不同的付款方式 生成不同的title
+    formateTitle() {
+      let currentTitle = [];
+      if (this.orderInfoById) {
+        switch (this.orderInfoById.pay_type) {
+          case 'ebank':
+            currentTitle = [
+              '银行卡号', '开户行', '开户支行',
+            ];
+            break;
+          case 'weixin':
+            currentTitle = [
+              '收款二维码', '微信账号', '',
+            ];
+            break;
+          case 'alipay':
+            currentTitle = [
+              '收款二维码', '支付宝账号', '',
+            ];
+            break;
+          default:
+            break;
+        }
+      }
+      return currentTitle;
+    },
   },
 };
 </script>

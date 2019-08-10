@@ -6,11 +6,11 @@
   <div class="pay-title">
     <div class="title-info">
       <div class="info-img">
-        <img src="../../../assets/images/BTC.svg" alt="."/>
+        <img :src="orderInfoById.icon_url" alt="."/>
       </div>
       <div class="info-text">
-        <span>请付款</span>
-        <span>请在15:00内付款给卖家</span>
+        <span>{{title}}</span>
+        <span>{{subTitle}}</span>
       </div>
     </div>
     <div class="x-line">
@@ -20,8 +20,67 @@
 </template>
 
 <script>
+/* eslint-disable max-len */
+
+import { mapState } from 'vuex';
+import publicMethods from '@utils/publicMethods';
+
 export default {
   name: 'PayHeader',
+  data() {
+    return {
+      countTime: '',
+    };
+  },
+  props:[
+    'title',
+    'subTitle',
+  ],
+  methods: {
+    // 设置倒计时
+    setTime() {
+      const test = publicMethods.countDownMinute(this.orderInfoById.minuend_date, this.orderInfoById.system_date);
+      this.countTime = test;
+      this.orderInfoById.minuend_date = this.orderInfoById.minuend_date - 1000;
+      if (this.orderInfoById.minuend_date - this.orderInfoById.system_date === 0) {
+        this.timer.clearInterval();
+      }
+    },
+  },
+  mounted() {
+    this.timer = setInterval(this.setTime, 1000);
+  },
+  computed: {
+    ...mapState('coin/orderInfo', [
+      'orderInfoById',
+    ]),
+    // 用户订单状态和倒计时
+    // OrderStatus() {
+    //   let currentStatus = '';
+    //   if (this.orderInfoById.otc_order_status) {
+    //     switch (this.orderInfoById.otc_order_status) {
+    //       case 'pending':
+    //         currentStatus = '请付款';
+    //         break;
+    //       case 'payed':
+    //         currentStatus = '待放行';
+    //         break;
+    //       case 'dispute':
+    //         currentStatus = '申诉中';
+    //         break;
+    //       case 'finished':
+    //         currentStatus = '已完成';
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    //   return currentStatus;
+    // },
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
 };
 </script>
 

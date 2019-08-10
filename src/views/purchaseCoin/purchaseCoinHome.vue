@@ -11,14 +11,19 @@
         >{{item}}</span>
       </div>
       <div class="header-action">
-        <svg-icon icon-class="purchaseCoinIllustration" class="purchase-img"/>
-        <svg-icon icon-class="purchaseCoinRecord" class="purchase-img img-margin"/>
+        <div @click="toTips"  v-show="activeHeaderTab === 1">
+          <svg-icon
+            icon-class="purchaseCoinIllustration" class="purchase-img"/>
+        </div>
+        <div @click="toRecords">
+          <svg-icon
+            icon-class="purchaseCoinRecord" class="purchase-img"/>
+        </div>
       </div>
     </header>
-    <CoinPurchase v-show="activeHeaderTab===0"/>
-    <CoinRecharge v-show="activeHeaderTab===1"/>
+    <CoinPurchase v-if="activeHeaderTab===0"/>
+    <CoinRecharge v-else/>
   </div>
-
 </template>
 
 <script>
@@ -33,13 +38,31 @@ export default {
   },
   data() {
     return {
-      activeHeaderTab: 1,
+      activeHeaderTab: 0, // 默认冲币 0
       headerTabsData: ['充币', '买币'],
     };
   },
   methods: {
     changeHeaderTab(index) {
       this.activeHeaderTab = index;
+    },
+    // 跳转到提示
+    toTips() {
+      this.$router.push({
+        name: 'BuyingIllustration',
+      });
+    },
+    // 跳转到历史记录
+    toRecords() {
+      if (this.activeHeaderTab === 0) { // 冲币历史记录
+        this.$router.push({
+          name: 'FillingRecord',
+        });
+      } else if (this.activeHeaderTab === 1) { // 买币记录
+        this.$router.push({
+          name: 'BuyingRecord',
+        });
+      }
     },
   },
 };
@@ -91,14 +114,19 @@ export default {
     }
     .header-action{
       width: 80px;
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      >div{
+        display: flex;
+        align-items: flex-start;
+        margin-top: 12px;
+        margin-right: 18px;
+      }
       .purchase-img{
         display: inline-block;
-        margin-top: 12px;
         width: 22px;
         height: 22px;
-      }
-      .img-margin{
-        margin-left: 18px;
       }
     }
 

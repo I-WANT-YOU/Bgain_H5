@@ -20,7 +20,7 @@ class HomeService {
       const requestOptions = {
         url: '/wallet/get-deposit-record',
         method: 'post',
-      }
+      };
       const response = await request(requestOptions);
       return handlerResponse(response);
     } catch (error) {
