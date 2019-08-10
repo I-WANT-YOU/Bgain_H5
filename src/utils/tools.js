@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
-import user from '@modules/user';
 
 // 处理数字精度
 export const strip = (num, precision = 12) => +parseFloat(num.toPrecision(precision));
