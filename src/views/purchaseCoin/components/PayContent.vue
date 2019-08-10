@@ -1,6 +1,6 @@
 <template>
   <div class="payContent">
-      <div class="paymentInfo">
+    <div class="paymentInfo">
         <div>
           <span>实付金额</span>
           <span>{{'¥'+orderInfoById.amount}}</span>
@@ -43,6 +43,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -86,7 +87,6 @@ export default {
 
 <style lang="scss" scoped>
   .payContent{
-    height: 364px;
     .paymentInfo{
       margin:11px 21px 0px 21px;
       padding-bottom: 10px;
