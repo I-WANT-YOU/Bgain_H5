@@ -43,7 +43,7 @@ const actions = {
   async register({ commit }, params) {
     try {
       const response = await AuthService.register(params);
-      const data = Auth.handlerSuccessResponse(response);
+      const data = await Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
@@ -84,7 +84,7 @@ const actions = {
   async changePassword({ commit }, params) {
     try {
       const response = await AuthService.changePassword(params);
-      const data = Auth.handlerSuccessResponse(response);
+      const data = await Auth.handlerSuccessResponse(response);
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
