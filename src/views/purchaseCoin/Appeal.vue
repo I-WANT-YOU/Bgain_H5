@@ -2,16 +2,21 @@
 <div class="appeal">
   <BgainNavBar title = '申诉'/>
   <div class="appealReason">
-    <div>
+     <!--title-->
+    <div class="reason-title">
       <span>请选择申诉理由</span>
     </div>
-
-    <div>
-      <label v-for="(item,index) in appealReasons" :key="index" for="index">
-        <input name = 'reason' type="radio" id="index"/>{{item}}
-      </label>
-    </div>
-    <div>
+    <!--单选框-->
+    <RadioGroup v-model="radio" class="radioGroup" @change = 'radioChange'>
+      <div
+        v-for="(item,index) in appealReasons"
+        :key="index"
+      >
+        <Radio :name="index">{{item}}</Radio>
+      </div>
+    </RadioGroup>
+    <!-- 文字输入-->
+    <div class="reason-text" v-show = 'otherReason'>
       <textarea v-model="userInput"></textarea>
     </div>
   </div>
@@ -21,18 +26,26 @@
       <p v-for="(item,index) in tipsList" :key="index">{{item}}</p>
     </div>
   </div>
-  <div class="commit"></div>
+  <div class="commit">
+    <button :class="{activeButtonStyle:activeButton}" @click="submitAppeal">提交</button>
+  </div>
 </div>
 </template>
 
 <script>
+import { RadioGroup, Radio, Toast } from 'vant';
+import Vue from 'vue';
+import { mapActions } from 'vuex';
 import BgainNavBar from '../../components/BgainNavBar.vue';
 
+Vue.use(Toast);
 export default {
   name: 'Appeal',
   data() {
     return {
-      radio: '4',
+      otherReason: false,
+      activeButton: false,
+      radio: -1,
       userInput: '',
       appealReasons: [
         '我已完成付款，买家未及时放行',
@@ -47,17 +60,104 @@ export default {
   },
   components: {
     BgainNavBar,
+    RadioGroup,
+    Radio,
+  },
+  methods: {
+    ...mapActions('coin/appealingInfo', [
+      'postAppealingInfo',
+    ]),
+    // 单选框改变事件
+    radioChange() {
+      switch (this.radio) {
+        case 0:
+          this.activeButton = true;
+          this.otherReason = false;
+          break;
+        case 1:
+          this.activeButton = true;
+          this.otherReason = false;
+          break;
+        case 2:
+          this.activeButton = true;
+          this.otherReason = true;
+          break;
+        default:
+          this.activeButton = false;
+          this.otherReason = false;
+          break;
+      }
+    },
+    // 提交申诉
+    submitAppeal() {
+      let params = {};
+      if (this.otherReason === true) { // 其他理由
+        params = {
+          order_id: sessionStorage.getItem('appealPageOrderId'),
+          appeal_reason: this.userInput,
+        };
+      } else {
+        params = {
+          order_id: sessionStorage.getItem('appealPageOrderId'),
+          appeal_reason: this.appealReasons[this.radio],
+        };
+      }
+      // 发送请求
+      this.postAppealingInfo(params).then(
+        () => {
+          this.$toast('提交成功');
+        },
+        () => {
+          this.$toast('提交失败');
+        },
+      );
+    },
+  },
+  watch: {
+    userInput(val) {
+      if (val.length === 19) {
+        this.userInput = val.substring(0, val.length - 1);
+      }
+    },
+  },
+  mounted() {
+    this.activeButton = false;
+    if (this.$route.params.orderId) {
+      const { orderId } = this.$route.params;
+      sessionStorage.setItem('appealPageOrderId', orderId);
+    }
   },
 };
 </script>
 
 <style lang="scss" >
+  .activeButtonStyle{
+    background: #3C64EE!important;
+  }
 .appeal{
   font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
   // 申诉理由
   .appealReason{
-    >div:nth-child(1){
+      // radio 组件
+    .radioGroup{
+      font-size: 13px;
+      padding:0 30px;
+      .van-radio{
+        margin-top: 20px;
+      }
+      .van-radio__icon{
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        .van-icon{
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+    /*title*/
+    .reason-title{
       margin-top: 18px;
       padding-left: 20px;
       font-size: 15px;
@@ -67,33 +167,16 @@ export default {
         line-height: 21px;
       }
     }
-    >div:nth-child(2){
-      padding-left: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      >label{
-        display: flex;
-        align-items: center;
-        height: 18px;
-        margin-top: 20px;
-        line-height: 18px;
-        font-size: 13px;
-        color: #0F3256;
-        >input{
-          width: 14px;
-          height: 14px;
-          margin-right: 6px;
-        }
-      }
-    }
-    >div:nth-child(3){
+    .reason-text{
       padding:16px 30px 0 30px;
       >textarea{
         width: 100%;
         height: 140px;
         padding: 0;
-        resize:none
+        resize:none;
+        border: 1px solid #EEEEEE;
+        border-radius: 4px;
+       font-size: 15px;
       }
     }
   }
@@ -116,6 +199,21 @@ export default {
         color: #A8AEB9;
         line-height: 26px;
       }
+    }
+  }
+  // 提交
+  .commit{
+    margin-top: 33px;
+    display: flex;
+    justify-content: center;
+    >button{
+      width: 331px;
+      height: 46px;
+      background: #D2D8EB;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #FFFFFF;
+      border: none;
     }
   }
 

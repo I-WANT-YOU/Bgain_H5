@@ -1,7 +1,7 @@
 <template>
 <div class="payHeader">
   <div class="header">
-    <svg-icon icon-class="back-fixed" class="icon-img"/>
+    <div @click="back"><svg-icon icon-class="back-fixed" class="icon-img" /></div>
   </div>
   <div class="pay-title">
     <div class="title-info">
@@ -33,7 +33,7 @@ export default {
       // buttonTime:'',
     };
   },
-  props:[
+  props: [
     'title',
     'subTitle',
     'countTime',
@@ -43,14 +43,23 @@ export default {
     // 设置倒计时
     setTime() {
       const test = publicMethods.countDownMinute(this.orderInfoById.minuend_date, this.orderInfoById.system_date);
-      this.countTime = '预计在'+test+'内收到资产';
-      this.buttonTime = '申诉（'+test+'）';
+      this.countTime = `预计在${test}内收到资产`;
+      this.buttonTime = `申诉（${test}）`;
       this.orderInfoById.minuend_date = this.orderInfoById.minuend_date - 1000;
       if (this.orderInfoById.minuend_date - this.orderInfoById.system_date === 0) {
         this.timer.clearInterval();
         this.countTime = '没有收到资产，请申诉';
         this.buttonTime = '申诉';
       }
+    },
+    // 回退到上一页
+    back() {
+      if (window.history.length <= 1) {
+        this.$router.push({ path: '/' });
+        return false;
+      }
+      this.$router.go(-1);
+      return false;
     },
   },
   mounted() {

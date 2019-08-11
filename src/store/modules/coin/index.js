@@ -1,6 +1,6 @@
 import purchaseCoin from './purchaseCoin';
 import orderInfo from './orderInfo';
-import userPaymentInfo from './userPaymentInfo';
+import appealingInfo from './appealingInfo';
 
 
 const state = {
@@ -15,7 +15,7 @@ const actions = {
 const modules = {
   purchaseCoin,
   orderInfo,
-  userPaymentInfo,
+  appealingInfo,
 };
 
 export default {
