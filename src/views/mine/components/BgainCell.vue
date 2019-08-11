@@ -16,14 +16,14 @@ export default {
   },
   computed: {
     titleClass() {
-      return ['bagin-cell__title--override'];
+      return ['bgain-cell__title--override'];
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .bagin-cell__title--override {
+  .bgain-cell__title--override {
     color: #6A707D;
   }
 </style>
