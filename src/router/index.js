@@ -301,6 +301,11 @@ const router = new Router({
       name: 'receiving-address',
       component: () => import('../views/mine/address/ReceivingAddress.vue'),
     },
+    {
+      path: '/mine/balance',
+      name: 'balance',
+      component: () => import('../views/mine/balance/Balance.vue'),
+    },
     // 我的定期
     {
       path: '/mine/fund',

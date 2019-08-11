@@ -18,8 +18,12 @@ const getters = {
   otcStatus: state => get(state.basicInfo, 'otc_kyc_status', 'UN_CERTIFIED').toUpperCase(),
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
-  singleCurrency: state => get(state.userBanalce, 'single_currency', {}),
+  singleCurrency: state => get(state.userBanalce, 'single_currency', []),
   currencies: state => map(state.userBanalce.single_currency, item => item.currency),
+  balances: state => get(state.userBanalce, 'single_currency', []).map(({ currency, balance }) => ({
+    currency,
+    balance,
+  })),
 };
 
 const mutations = {
