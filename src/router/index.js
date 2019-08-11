@@ -292,6 +292,11 @@ const router = new Router({
       component: () => import('../views/mine/kyc/KycResult.vue'),
     },
     {
+      path: '/mine/safety/kyc/fields',
+      name: 'kyc-fields',
+      component: () => import('../views/mine/kyc/KycFields.vue'),
+    },
+    {
       path: '/mine/safety/address',
       name: 'receiving-address',
       component: () => import('../views/mine/address/ReceivingAddress.vue'),
