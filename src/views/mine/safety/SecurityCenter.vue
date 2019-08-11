@@ -10,7 +10,7 @@
           <span class="filed--password">交易密码、登录密码</span>
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
-        <cell title="收货地址">
+        <cell title="收货地址" :to="{name: 'receiving-address'}">
           <svg-icon icon-class="next" class="icon-next"></svg-icon>
         </cell>
       </cell-group>
