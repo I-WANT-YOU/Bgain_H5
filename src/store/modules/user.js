@@ -19,6 +19,10 @@ const getters = {
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),
+  balances: state => get(state.userBanalce, 'single_currency', []).map(({ currency, balance }) => ({
+    currency,
+    balance,
+  })),
 };
 
 const mutations = {

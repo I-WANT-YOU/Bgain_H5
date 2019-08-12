@@ -291,6 +291,21 @@ const router = new Router({
       name: 'kyc-result',
       component: () => import('../views/mine/kyc/KycResult.vue'),
     },
+    {
+      path: '/mine/safety/kyc/fields',
+      name: 'kyc-fields',
+      component: () => import('../views/mine/kyc/KycFields.vue'),
+    },
+    {
+      path: '/mine/safety/address',
+      name: 'receiving-address',
+      component: () => import('../views/mine/address/ReceivingAddress.vue'),
+    },
+    {
+      path: '/mine/balance',
+      name: 'balance',
+      component: () => import('../views/mine/balance/Balance.vue'),
+    },
     // 我的基金
     {
       path: '/mine/fund',

@@ -55,7 +55,7 @@
             <svg-icon icon-class="mine-current" class="icon" />
             <span>活期</span>
           </div>
-          <div @click="onSkip('/product/fixed')" class="icon-wrap">
+          <div @click="onSkip('/mine/fixed')" class="icon-wrap">
             <svg-icon icon-class="mine-fixed" class="icon" />
             <span>定期</span>
           </div>

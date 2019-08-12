@@ -1,7 +1,7 @@
 <template>
 <div class="payHeader">
   <div class="header">
-    <svg-icon icon-class="back-fixed" class="icon-img"/>
+    <div @click="back"><svg-icon icon-class="back-fixed" class="icon-img" /></div>
   </div>
   <div class="pay-title">
     <div class="title-info">
@@ -10,7 +10,7 @@
       </div>
       <div class="info-text">
         <span>{{title}}</span>
-        <span>{{subTitle}}</span>
+        <span>{{subTitle?subTitle:countTime}}</span>
       </div>
     </div>
     <div class="x-line">
@@ -29,57 +29,49 @@ export default {
   name: 'PayHeader',
   data() {
     return {
-      countTime: '',
+      // countTime: '',
+      // buttonTime:'',
     };
   },
-  props:[
+  props: [
     'title',
     'subTitle',
+    'countTime',
+    'buttonTime',
   ],
   methods: {
     // 设置倒计时
     setTime() {
       const test = publicMethods.countDownMinute(this.orderInfoById.minuend_date, this.orderInfoById.system_date);
-      this.countTime = test;
+      this.countTime = `预计在${test}内收到资产`;
+      this.buttonTime = `申诉（${test}）`;
       this.orderInfoById.minuend_date = this.orderInfoById.minuend_date - 1000;
       if (this.orderInfoById.minuend_date - this.orderInfoById.system_date === 0) {
         this.timer.clearInterval();
+        this.countTime = '没有收到资产，请申诉';
+        this.buttonTime = '申诉';
       }
+    },
+    // 回退到上一页
+    back() {
+      if (window.history.length <= 1) {
+        this.$router.push({ path: '/' });
+        return false;
+      }
+      this.$router.go(-1);
+      return false;
     },
   },
   mounted() {
-    this.timer = setInterval(this.setTime, 1000);
+    // this.timer = setInterval(this.setTime, 1000);
   },
   computed: {
     ...mapState('coin/orderInfo', [
       'orderInfoById',
     ]),
-    // 用户订单状态和倒计时
-    // OrderStatus() {
-    //   let currentStatus = '';
-    //   if (this.orderInfoById.otc_order_status) {
-    //     switch (this.orderInfoById.otc_order_status) {
-    //       case 'pending':
-    //         currentStatus = '请付款';
-    //         break;
-    //       case 'payed':
-    //         currentStatus = '待放行';
-    //         break;
-    //       case 'dispute':
-    //         currentStatus = '申诉中';
-    //         break;
-    //       case 'finished':
-    //         currentStatus = '已完成';
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   }
-    //   return currentStatus;
-    // },
   },
   beforeDestroy() {
-    clearInterval(this.timer);
+    // clearInterval(this.timer);
   },
 };
 </script>

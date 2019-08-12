@@ -1,7 +1,7 @@
 <template>
   <div class="purchaseCoinHome">
     <header class="header">
-      <div class="header-back">
+      <div class="header-back" @click="back">
         <svg-icon icon-class="back-fixed" class="header-img"/>
       </div>
       <div class="header-tabs">
@@ -63,6 +63,15 @@ export default {
           name: 'BuyingRecord',
         });
       }
+    },
+    // 回退到上一页
+    back() {
+      if (window.history.length <= 1) {
+        this.$router.push({ path: '/' });
+        return false;
+      }
+      this.$router.go(-1);
+      return false;
     },
   },
 };
