@@ -2,18 +2,30 @@
   <div class="trade-record-history">
     <BgainNavBar title="历史交易记录" />
     <div class="trade-record-history-con">
-      <div v-for='(fund,key) in options'
-           :key='key'
-           class="trade-record-card">
-        <div class="line">
-          <span class="product-name">{{fund.fund_name}}</span>
-          <span>{{fund.amount}} {{fund.currency_type}}</span>
+      <div v-if="options.length" class="record-show">
+        <div @click="onSk(fund)" v-for="fund in options" :key="fund.id" class="trade-record-card">
+          <div class="line">
+            <span class="product-name">{{fund.fund_name}}</span>
+            <span>{{fund.amount}} {{fund.currency_type}}</span>
+          </div>
+          <div class="line time">
+            <span>{{fund.create_date}}</span>
+            <span>{{fund.fund_order_status}}</span>
+          </div>
+          <div class="icon-wrap">
+            <svg-icon
+              class="buy"
+              v-if="fund.trade_type !== 'SUB_CARRY'"
+              :icon-class="fund.trade_type === 'BUY'
+              ?'mine-record-buy':'mine-record-sell'"
+            />
+            <svg-icon class="carry" v-else icon-class="mine-record-carry" />
+          </div>
         </div>
-        <div class="line time">
-          <span>{{fund.create_date}}</span>
-          <span>{{fund.fund_order_status}}</span>
-        </div>
-        <span :class="['type',fund.trade_type === '认购' ? '' : 'cut']">{{fund.trade_type}}</span>
+      </div>
+      <div v-else class="record-dis">
+        <svg-icon icon-class="mine-fund-no-record" class="icon" />
+        <div class="text">暂无历史交易记录</div>
       </div>
     </div>
   </div>
@@ -21,63 +33,11 @@
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
-import { formatDate } from '@utils/tools';
+import { Toast } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
+import format from './js/format';
 
-const fundOrderStatusList = [
-  {
-    type: 'PENDING',
-    text: '待确定',
-  },
-  {
-    type: 'CONFIRMED',
-    text: '确定',
-  },
-  {
-    type: 'COMPLETE',
-    text: '完成',
-  },
-  {
-    type: 'FAILURE',
-    text: '失败',
-  },
-  {
-    type: 'CANCEL',
-    text: '已撤单',
-  },
-];
-const tradeTypeList = [
-  {
-    type: 'BUY',
-    text: '认购',
-  },
-  {
-    type: 'SELL',
-    text: '赎回',
-  },
-  {
-    type: 'SUB_CARRY',
-    text: '业绩报酬扣除',
-  },
-];
-
-const datas = [
-  {
-    fund_name: '41基金',
-    currency_type: 'USDT',
-    trade_type: tradeTypeList.filter(item => (item.type === 'BUY'))[0].text,
-    create_date: formatDate(1554052999000),
-    amount: 28.12345678,
-    fund_order_status: fundOrderStatusList.filter(item => (item.type === 'CONFIRMED'))[0].text,
-  },
-  {
-    fund_name: '41基金',
-    currency_type: 'USDT',
-    trade_type: tradeTypeList.filter(item => (item.type === 'BUY'))[0].text,
-    create_date: formatDate(1554052981000),
-    amount: 101.101101,
-    fund_order_status: fundOrderStatusList.filter(item => (item.type === 'CONFIRMED'))[0].text,
-  },
-];
+const { mapActions, mapGetters } = createNamespacedHelpers('product/fund');
 
 export default {
   name: 'TradeRecordHistory',
@@ -86,11 +46,38 @@ export default {
   },
   data() {
     return {
-      options: datas,
+      options: [],
     };
+  },
+  mounted() {
+    Toast.loading({
+      duration: 0,
+      mask: true,
+      forbidClick: true,
+      message: '加载中...',
+    });
+    this.getFundOrderHistory().then(() => {
+      this.options = this.orderHistory.map(item => format(item));
+      Toast.clear();
+    });
+  },
+  methods: {
+    ...mapActions(['getFundOrderHistory']),
+    onSk(fund) {
+      this.$router.push({
+        path: '/mine/fund/transaction-details',
+        query: {
+          id: fund.id,
+        },
+      });
+    },
+  },
+  computed: {
+    ...mapGetters(['orderHistory']),
   },
 };
 </script>
+
 
 <style lang='scss' scoped>
 .trade-record-history {
@@ -99,37 +86,49 @@ export default {
   flex-direction: column;
   .trade-record-history-con {
     flex: 1;
-    .trade-record-card {
-      display: flex;
-      flex-direction: column;
-      font-size: 14px;
-      color: #0f3256;
-      box-sizing: border-box;
-      padding: 11px 20px;
-      line-height: 20px;
-      border-bottom: 1px solid #eeeeee;
-      .line {
+    .record-show {
+      .trade-record-card {
         display: flex;
-        justify-content: space-between;
-        &.time {
-          font-size: 12px;
-          color: #a8aeb9;
+        flex-direction: column;
+        font-size: 14px;
+        color: #0f3256;
+        box-sizing: border-box;
+        padding: 11px 20px;
+        line-height: 20px;
+        border-bottom: 1px solid #eeeeee;
+        .line {
+          display: flex;
+          justify-content: space-between;
+          &.time {
+            font-size: 12px;
+            color: #a8aeb9;
+          }
+        }
+        .icon-wrap {
+          margin-top: 4px;
+          .buy {
+            width: 32px;
+            height: 18px;
+          }
+          .carry {
+            width: 78px;
+            height: 18px;
+          }
         }
       }
-      .type {
-        font-size: 11px;
-        border-radius: 0 0 4px 4px;
-        margin-top: 2px;
-        width: 32px;
-        height: 18px;
-        line-height: 18px;
-        text-align: center;
-        background: #fdf4f4;
-        color: #ff5c5c;
-        &.cut {
-          background: #eaefff;
-          color: #3c64ee;
-        }
+    }
+    .record-dis {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .icon {
+        width: 130px;
+        height: 98px;
+        margin: 102px 0 23px;
+      }
+      .text {
+        font-size: 14px;
+        color: #a8aeb9;
       }
     }
   }

@@ -306,17 +306,59 @@ const router = new Router({
       name: 'balance',
       component: () => import('../views/mine/balance/Balance.vue'),
     },
-    // 我的定期
+    // 我的基金
     {
       path: '/mine/fund',
       name: 'MineFund',
       component: () => import('../views/mine/fund/MineFund.vue'),
     },
-    // 定期交易历史记录
+    // 基金交易历史记录
     {
       path: '/mine/fund/trade-record-history',
       name: 'TradeRecordHistory',
       component: () => import('../views/mine/fund/TradeRecordHistory.vue'),
+    },
+    // 待确定交易
+    {
+      path: '/mine/fund/trade-pending-record',
+      name: 'TradePendingRecord',
+      component: () => import('../views/mine/fund/TradePendingRecord.vue'),
+    },
+    // 交易详情
+    {
+      path: '/mine/fund/transaction-details',
+      name: 'TransactionDetails',
+      component: () => import('../views/mine/fund/TransactionDetails.vue'),
+    },
+    // 在持基金详情
+    {
+      path: '/mine/fund/fund-hold-detail/:id',
+      name: 'FundDetail',
+      component: () => import('../views/mine/fund/FundDetail.vue'),
+    },
+    // 基金赎回
+    {
+      path: '/mine/fund/fund-sell',
+      name: 'FundSell',
+      component: () => import('../views/mine/fund/FundSell.vue'),
+    },
+    // 赎回结果
+    {
+      path: '/mine/fund/fund-sell-result',
+      name: 'FundSellResult',
+      component: () => import('../views/mine/fund/SellResult.vue'),
+    },
+    // 我的定期
+    {
+      path: '/mine/fixed',
+      name: 'MineFixed',
+      component: () => import('../views/mine/fixed/MineFixed.vue'),
+    },
+    // 我的定期详情
+    {
+      path: '/mine/fixed-detail/:status',
+      name: 'MineFixedDetail',
+      component: () => import('../views/mine/fixed/FixedDetail.vue'),
     },
   ],
 });

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, map } from 'lodash';
 import dayjs from 'dayjs';
 import { FundService } from '@api/product';
 import * as Auth from '@utils/auth';
@@ -15,8 +15,10 @@ const state = {
   fundBuyResult: {},
   fundTradeRules: {},
   fundInformation: {},
+  fundOrderHistory: [],
+  fundOrderDetail: {},
+  fundOwnerDetail: {},
 };
-
 const getters = {
   initialFunds: state => state.funds.filter(({ status }) => status === FUND_STATUS.INITIAL),
   otherFunds: state => state.funds.filter(({ status }) => status !== FUND_STATUS.INITIAL),
@@ -27,12 +29,17 @@ const getters = {
   nextOpenDate: state => formatDate(state.fundBuyResult.next_open_date),
   submitDate: state => formatDate(state.fundBuyResult.submit_date),
   amount: state => state.fundBuyResult.amount,
-  fundNav: state => get(state.fundInformation, 'fund_nav_from_cms', []).map((item) => {
-    item.nav_time = dayjs(new Date(item.nav_time)) * 1;
-    return item;
-  }),
+  fundNav: state => get(state.fundInformation, 'fund_nav_from_cms', [])
+    .map((item) => {
+      item.nav_time = dayjs(new Date(item.nav_time)) * 1;
+      return item;
+    }),
   holdFunds: state => get(state.holdingFunds, 'fund_user_stat_summary_list', []),
   holdCurencies: state => get(state.holdingFunds, 'fund_holding_total_msg', []),
+  orderHistory: state => map(state.fundOrderHistory, (item) => {
+    item.create_date = formatDate(item.create_date);
+    return item;
+  }, []),
 };
 
 const mutations = {
@@ -59,6 +66,15 @@ const mutations = {
   },
   [types.GET_FUNDS_INFORMATION](state, payload) {
     state.fundInformation = payload;
+  },
+  [types.GET_FUNDS_ORDER_HISTORY](state, payload) {
+    state.fundOrderHistory = payload;
+  },
+  [types.GET_FUNDS_ORDER_DETAIL](state, payload) {
+    state.fundOrderDetail = payload;
+  },
+  [types.GET_FUND_OWNER_DETAIL](state, payload) {
+    state.fundOwnerDetail = payload;
   },
 };
 
@@ -106,6 +122,7 @@ const actions = {
     try {
       const response = await FundService.getHoldingFunds();
       const data = await Auth.handlerSuccessResponse(response);
+      console.log(data);
       commit(types.GET_HOLDING_FUNDS, data);
     } catch (error) {
       throw error;
@@ -145,6 +162,73 @@ const actions = {
     }
   },
 
+  // 基金历史交易记录
+  async getFundOrderHistory({ commit }, status) {
+    try {
+      const response = await FundService.getFundOrderHistory(status);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_FUNDS_ORDER_HISTORY, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 基金订单详情
+  async getFundOrderDetail({ commit }, status) {
+    try {
+      const response = await FundService.getFundOrderDetail(status);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_FUNDS_ORDER_DETAIL, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 在持基金详情
+  async getFundOwnerDetail({ commit }, productId) {
+    try {
+      const response = await FundService.getFundOwnerDetail(productId);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_FUND_OWNER_DETAIL, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 赎回基金
+  async sellFund({ commit }, options) {
+    try {
+      const response = await FundService.sellFund(options);
+      const data = await Auth.handlerSuccessResponse(response);
+      console.log(commit, data);
+      // commit(types.GET_FUND_OWNER_DETAIL, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 基金赎回前详情
+  async sellFundDetail(context, options) {
+    try {
+      const response = await FundService.sellFundDetail(options);
+      return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 撤单
+  async cancelOrder(context, options) {
+    try {
+      const response = await FundService.cancelOrder({
+        order_id: options.orderId,
+        payment_password: options.password,
+      });
+      return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default {

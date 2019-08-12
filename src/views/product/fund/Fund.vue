@@ -32,7 +32,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { Sticky, PullRefresh } from 'vant';
+import { Sticky, PullRefresh, Toast } from 'vant';
 import formatFundData, { fundProductTypeList, riskLevelTypeList } from './formatFundData';
 import Screen from './components/Screen.vue';
 import Initial from './components/Initial.vue';
@@ -148,7 +148,19 @@ export default {
     },
   },
   mounted() {
-    this.getFundProducts(this.params);
+    Toast.loading({
+      duration: 0,
+      mask: true,
+      forbidClick: true,
+      message: '加载中...',
+    });
+    try {
+      this.getFundProducts(this.params).then(() => {
+        Toast.clear();
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 };
 </script>

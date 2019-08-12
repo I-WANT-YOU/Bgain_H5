@@ -1,0 +1,246 @@
+<template>
+  <div class="mine-fixed">
+    <BgainNavBar>
+      <template v-slot:title>
+        <div class="tab-wrap">
+          <div class="tabs">
+            <div @click="onTab('1')" :class="['tab', 'tab1', active==='1'?'active':'']">持有中</div>
+            <div @click="onTab('2')" :class="['tab', 'tab2', active==='2'?'active':'']">已结束</div>
+          </div>
+        </div>
+      </template>
+    </BgainNavBar>
+    <div class="mine-fixed-con">
+      <div class="asset-wrap">
+        <div v-show="active === '1'" class="holding">
+          <div class="info">
+            <span>在投资产(BTC)</span>
+            <span class="icon-wrap">
+              BTC
+              <svg-icon icon-class="mine-pull" class="icon-pull" />
+            </span>
+          </div>
+          <div class="amount">10.00000000</div>
+        </div>
+        <div class="income">
+          <div class="title">{{active === '1' ? '待收' : '已得'}}收益</div>
+          <div class="currencies">
+            <div class="icon">
+              <img class="icon-img" src alt />
+              <div class="icon-info">
+                <div class="currency-type">BTC</div>
+                <div>123,3.345126</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list">
+        <div class="no" v-if="!userPortfolio.length">
+          <div>暂无购买记录</div>
+          <div class="skip">浏览产品</div>
+        </div>
+        <div v-else class="has">
+          <FixedCard
+            v-for="(item,key) in userPortfolio"
+            :status="active === '1'"
+            :option="item"
+            :key="key"
+          />
+        </div>
+      </div>
+    </div>
+    <ActionSheet v-model="showMune" :actions="[]" />
+  </div>
+</template>
+
+<script>
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { ActionSheet } from 'vant';
+import FixedCard from './components/FixedCard.vue';
+
+export default {
+  name: 'MineFixed',
+  components: {
+    BgainNavBar,
+    FixedCard,
+    ActionSheet,
+  },
+  data() {
+    return {
+      active: '1',
+      list: [],
+      showMune: false,
+    };
+  },
+  methods: {
+    ...mapActions('product/fixed', ['getUserPortfolio', 'getUserPortfolioHistory']),
+    ...mapActions('user', ['getUserBalanceSummary']),
+    onTab(tab) {
+      this.active = tab;
+      this.onChangeList();
+    },
+    async onChangeList() {
+      if (this.active === '1') {
+        await this.getUserPortfolio();
+      } else {
+        await this.getUserPortfolioHistory();
+      }
+    },
+  },
+  computed: {
+    ...mapState('user', ['userBalance']),
+    ...mapState('product/fixed', ['userPortfolio']),
+    ...mapGetters('user', ['singleCurrency']),
+  },
+  mounted() {
+    this.onChangeList();
+  },
+};
+</script>
+
+<style lang='scss' scoped>
+.mine-fixed {
+  height: 100%;
+  background: #f8f8f8;
+  display: flex;
+  flex-direction: column;
+  .tab-wrap {
+    height: 100%;
+    display: flex;
+    font-size: 14px;
+    color: #6a707d;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    margin-top: 10px;
+    .tabs {
+      display: flex;
+      .tab {
+        width: 64px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        border: 1px solid #eeeeee;
+        border-radius: 2px;
+        &.tab1 {
+          border-radius: 2px 0 0 2px;
+          border-right: 0;
+        }
+        &.tab2 {
+          border-radius: 0 2px 2px 0;
+          border-left: 0;
+        }
+        &.active {
+          background: #3c64ee;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+  .mine-fixed-con {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    .asset-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 17px 0 10px;
+      background: #ffffff;
+      .holding {
+        width: 335px;
+        height: 100px;
+        background: url("../../../assets/images/mine-fixed/holding.png");
+        background-size: 100% 100%;
+        color: #ffffff;
+        box-sizing: border-box;
+        padding: 24px 0 0 15px;
+        .info {
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+          .icon-wrap {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            .icon-pull {
+              width: 11px;
+              height: 7px;
+              margin-left: 7px;
+            }
+          }
+        }
+        .amount {
+          font-size: 24px;
+        }
+      }
+      .income {
+        width: 100%;
+        margin-top: 20px;
+        box-sizing: border-box;
+        padding: 0 20px;
+        font-size: 14px;
+        color: #0f3256;
+        .title {
+          margin-bottom: 11px;
+        }
+        .currencies {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          box-sizing: border-box;
+          .icon {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+            .icon-img {
+              width: 25px;
+              height: 25px;
+              margin-right: 12px;
+              border-radius: 50%;
+              background: #000;
+            }
+            .currency-type {
+              font-size: 12px;
+              color: #a8aeb9;
+              margin-bottom: 6px;
+            }
+          }
+        }
+      }
+    }
+    .list {
+      flex: 1;
+      background: #ffffff;
+      padding-top: 12.5px;
+      .no {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #a8aeb9;
+        font-size: 24px;
+        .skip {
+          margin-top: 10px;
+          font-size: 15px;
+          color: #222222;
+          border: 1px solid #222222;
+          padding: 10px;
+          border-radius: 3px;
+        }
+      }
+      .has {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}
+</style>

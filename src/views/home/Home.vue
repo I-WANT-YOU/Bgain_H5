@@ -69,6 +69,7 @@ export default {
       geetest: null,
       options: null,
       show: false,
+      checked: false,
     };
   },
   mounted() {

@@ -1,9 +1,8 @@
 <template>
-  <div class="fund-card">
+  <div @click="onSkip" class="fund-card">
     <div class="title">
       <span class="icon-wrap">
-        <svg-icon class="icon"
-                  :icon-class="option.currency_type.toLocaleLowerCase()" />
+        <svg-icon class="icon" :icon-class="iconClass" />
       </span>
       <span>{{option.fund_product_name}}</span>
     </div>
@@ -32,6 +31,17 @@
 export default {
   name: 'FundCard',
   props: ['option'],
+  computed: {
+    iconClass() {
+      const str = this.option.currency_type.toLocaleLowerCase();
+      return str === 'fbp' ? 'bgp' : str;
+    },
+  },
+  methods: {
+    onSkip() {
+      this.$router.push(`/mine/fund/fund-hold-detail/${this.option.fund_product_id}`);
+    },
+  },
 };
 </script>
 

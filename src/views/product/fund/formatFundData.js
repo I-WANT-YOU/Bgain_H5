@@ -165,8 +165,7 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
           color: '#C6D0F0',
         },
       },
-    },
-    ],
+    }],
   };
 }
 

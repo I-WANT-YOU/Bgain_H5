@@ -1,22 +1,17 @@
 <template>
   <div class="mine-fund">
-    <BgainNavBar @click-right="onRecord"
-                 title="持仓基金">
-      <template v-slot:right
-                class="slot-right">
-        <svg-icon icon-class="mine-fund-record"
-                  class="record" />
+    <BgainNavBar @click-right="onRecord" title="持仓基金">
+      <template v-slot:right class="slot-right">
+        <svg-icon icon-class="mine-fund-record" class="record" />
       </template>
     </BgainNavBar>
     <div class="mine-fund-con">
       <div class="information">
         <div class="currency">
-          <div @click="showSelectFun"
-               class="currency-wrap">
+          <div @click="showSelectFun" class="currency-wrap">
             <span>{{currency}}估值</span>
             <div class="icon-wrap">
-              <svg-icon class="icon-select"
-                        icon-class="mine-fund-down" />
+              <svg-icon class="icon-select" icon-class="mine-fund-down" />
             </div>
           </div>
         </div>
@@ -35,47 +30,46 @@
           </div>
           <div class="assets-change-con">
             <!-- eslint-disable -->
-            <span :class="['num', 'profit', (holdFunds.length && holdRate !== '---') ? '' : 'computed']">{{holdRate}}</span>
+            <span
+              :class="['num', 'profit', (holdFunds.length && holdRate !== '---') ? '' : 'computed']"
+            >{{holdRate}}</span>
             <!-- eslint-enable -->
             <span>持仓收益率</span>
           </div>
         </div>
         <div class="tradeing">
           <div>
-            <span class="num">2</span> 笔交易待确定中，在途资金 {{pending}}{{currency}}
+            <span class="num">{{pendings}}</span>
+            笔交易待确定中，在途资金 {{pending}}{{currency}}
           </div>
-          <div class="icon-wrap">
-            <svg-icon icon-class="next"
-                      class="icon" />
+          <div @click="$router.push('/mine/fund/trade-pending-record')" class="icon-wrap">
+            <svg-icon icon-class="next" class="icon" />
           </div>
         </div>
       </div>
       <div class="record">
         <template v-if="holdFunds.length">
-          <FundCard v-for="option in holdFunds"
-                    :option="option"
-                    :key="option.fund_product_id" />
+          <FundCard v-for="option in holdFunds" :option="option" :key="option.fund_user_stat_id" />
         </template>
         <template v-else>
           <div class="no-record">
-            <svg-icon icon-class="mine-fund-no-record"
-                      class="no-record-icon" />
+            <svg-icon icon-class="mine-fund-no-record" class="no-record-icon" />
             <div>暂无持仓记录</div>
           </div>
         </template>
       </div>
     </div>
-    <ActionSheet v-model="showSelect"
-                 :actions='currencyList'
-                 @select="onSelect" />
+    <ActionSheet v-model="showSelect" :actions="currencyList" @select="onSelect" />
   </div>
 </template>
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
-import { ActionSheet } from 'vant';
-import { mapActions, mapGetters } from 'vuex';
+import { ActionSheet, Toast } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
 import FundCard from './components/FundCard.vue';
+
+const { mapActions, mapGetters } = createNamespacedHelpers('product/fund');
 
 export default {
   name: 'MineFund',
@@ -88,11 +82,12 @@ export default {
     return {
       list: ['1'],
       currency: 'BTC',
-      yesterday: '+123.12345678',
-      hold: '-123.12345678',
-      holdRate: '+2.23%',
-      amount: '1,123.123456',
-      pending: '',
+      yesterday: '---', // 昨日盈亏
+      hold: '---', // 持仓收益
+      holdRate: '---', // 持仓收益率
+      amount: '--', // 资金
+      pending: '', // 在途资金
+      pendings: 0, // 待交易订单数
       showSelect: false,
       currencyList: [],
     };
@@ -103,18 +98,34 @@ export default {
       immediate: true,
     },
   },
-  mounted() {
-    this.getHoldingFunds().then(() => {
-      this.currencyList = Object.keys(this.holdCurencies).map(item => ({ name: item }));
-      this.onChangeCurrency('BTC');
+  async mounted() {
+    Toast.loading({
+      duration: 0,
+      mask: true,
+      forbidClick: true,
+      message: '加载中...',
     });
+    try {
+      await this.getHoldingFunds();
+      await this.getFundOrderHistory('pending');
+      this.currencyList = Object.keys(this.holdCurencies).map(item => ({
+        name: item.toLocaleUpperCase(),
+      }));
+      this.onChangeCurrency('BTC');
+      this.pendings = this.orderHistory.filter(item => item.fund_order_status === 'PENDING').length;
+      Toast.clear();
+    } catch (error) {
+      Toast.clear();
+      throw error;
+    }
   },
   computed: {
-    ...mapGetters('product/fund', ['holdFunds', 'holdCurencies']),
+    ...mapGetters(['holdFunds', 'holdCurencies', 'orderHistory']),
   },
   methods: {
-    ...mapActions('product/fund', ['getHoldingFunds']),
+    ...mapActions(['getHoldingFunds', 'getFundOrderHistory']),
     onRecord() {
+      // 历史交易记录
       this.$router.push('/mine/fund/trade-record-history');
     },
     listHandler(value) {
@@ -130,11 +141,12 @@ export default {
     },
     onChangeCurrency(currency) {
       this.currency = currency;
-      this.yesterday = this.holdCurencies[currency].total_yesterday_change;
-      this.hold = this.holdCurencies[currency].total_pnl;
-      this.pending = this.holdCurencies[currency].pending_amount;
-      this.holdRate = '--';
-      this.amount = this.holdCurencies[currency].total_holding_market_value;
+      const currencys = this.holdCurencies[currency] ? this.holdCurencies[currency]
+        : this.holdCurencies[currency.toLocaleLowerCase()];
+      this.yesterday = currencys.total_yesterday_change;
+      this.hold = currencys.total_pnl;
+      this.pending = currencys.pending_amount;
+      this.amount = currencys.total_holding_market_value;
     },
     onSelect(item) {
       this.onChangeCurrency(item.name);
@@ -269,6 +281,7 @@ export default {
     }
     .record {
       flex: 1;
+      background: #f8f8f8;
       .no-record {
         display: flex;
         flex-direction: column;
