@@ -36,14 +36,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.van-nav-bar__title {
-  font-size: 17px;
-  font-weight: normal;
-  color: #0f3256;
-}
+  .van-nav-bar {
+    height: 44px;
+    line-height: 44px;
+  }
 
-.icon-go-back {
-  width: 10px;
-  height: 18px;
-}
+  .van-nav-bar__title {
+    font-size: 17px;
+    font-weight: normal;
+    color: #0f3256;
+  }
+
+  .icon-go-back {
+    width: 10px;
+    height: 18px;
+  }
 </style>
