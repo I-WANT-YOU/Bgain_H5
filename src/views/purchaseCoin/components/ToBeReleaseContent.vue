@@ -47,11 +47,6 @@
         </div>
       </div>
     </div>
-    <!--提示信息和按钮-->
-    <div class="footer">
-      <span>99%的用户会在15分钟内收到资产</span>
-      <button>申诉（30:00）</button>
-    </div>
   </div>
 </template>
 
@@ -142,35 +137,6 @@ export default {
         }
       }
 
-    }
-  }
-  .footer{
-    position: fixed;
-    bottom: 65px;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    >span{
-      width: 100%;
-      height: 30px;
-      padding-left: 22px;
-      line-height: 30px;
-      font-size: 12px;
-      color: #6A707D;
-      background: #FAF4DC;
-    }
-    >button{
-      width: 331px;
-      height: 46px;
-      margin-top: 10px;
-      background: #D2D8EB;
-      border-radius: 4px;
-      font-size: 16px;
-      color: #FFFFFF;
-      border: none;
-      text-align: center;
     }
   }
 </style>

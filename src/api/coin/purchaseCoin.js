@@ -101,6 +101,21 @@ class CoinService {
       throw new Error(error);
     }
   }
+
+  // 用户提交申诉
+  static async postAppealingInfo(userAppeal) {
+    try {
+      const requestOptions = {
+        url: '/otc/appeal',
+        method: 'post',
+        data: userAppeal,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CoinService;
