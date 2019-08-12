@@ -348,6 +348,18 @@ const router = new Router({
       name: 'FundSellResult',
       component: () => import('../views/mine/fund/SellResult.vue'),
     },
+    // 我的定期
+    {
+      path: '/mine/fixed',
+      name: 'MineFixed',
+      component: () => import('../views/mine/fixed/MineFixed.vue'),
+    },
+    // 我的定期详情
+    {
+      path: '/mine/fixed-detail/:status',
+      name: 'MineFixedDetail',
+      component: () => import('../views/mine/fixed/FixedDetail.vue'),
+    },
   ],
 });
 

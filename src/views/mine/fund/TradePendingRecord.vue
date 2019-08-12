@@ -3,7 +3,7 @@
     <BgainNavBar title="待确定中" />
     <div class="trade-pending-con">
       <div v-if="list.length" class="record-show">
-        <div v-for="fund in list" @click="onClick(fund.id)" :key='fund.id' class="trade-card">
+        <div v-for="fund in list" @click="onClick(fund.id)" :key="fund.id" class="trade-card">
           <div class="title">
             <span>{{fund.fund_name}}</span>
             <span>{{fund.amount}} {{fund.currency_type}}</span>
@@ -101,7 +101,7 @@ export default {
   methods: {
     ...mapActions(['getFundOrderHistory']),
     onClick(id) {
-      console.log(id);
+      this.$router.push({ path: '/mine/fund/transaction-details', query: { id } });
     },
   },
   computed: {

@@ -74,6 +74,34 @@ class FixedService {
       throw new Error(error);
     }
   }
+
+  static async getUserPortfolio() {
+    try {
+      const requestOptions = {
+        url: '/portfolio/get-user-portfolio',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getUserPortfolioHistory() {
+    try {
+      const requestOptions = {
+        url: '/portfolio/get-portfolio-history',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FixedService;

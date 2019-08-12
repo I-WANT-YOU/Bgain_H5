@@ -42,13 +42,21 @@
           </div>
         </div>
       </div>
+      <div
+        v-if="fundOrderDetail.fund_order_status === '待确定'"
+        @click="onCancelOrder"
+        class="cancel-order"
+      >
+        <span>撤单</span>
+        <svg-icon icon-class="next" class="cancel-order-icon" />
+      </div>
     </div>
     <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="trade-info">
       <div class="title">交易信息</div>
       <div class="show">
         <div class="text">
           <span class="left">交易类型</span>
-          <span>{{fundOrderDetail.trade_type}}</span>
+          <span>{{fundOrderDetail.trade_type === 'BUY' ? '认购' : '赎回'}}</span>
         </div>
       </div>
       <div class="show">
@@ -124,11 +132,20 @@
         </div>
       </div>
     </div>
+    <BgainBaseDialog
+      v-model="showDialog"
+      content="您是否确认撤消该笔交易订单?"
+      @cancel="onCancel"
+      @submit="showPaymentDialog"
+    />
+    <PaymentPasswordDialog v-model="showPayment" @submit="onSurePayment" @close="onClosePayment"/>
   </div>
 </template>
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
+import PaymentPasswordDialog from '@views/product/components/PaymentPasswordDialog.vue';
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
 import { formatDate } from '@utils/tools';
@@ -140,10 +157,14 @@ export default {
   name: 'TransactionDetails',
   components: {
     BgainNavBar,
+    BgainBaseDialog,
+    PaymentPasswordDialog,
   },
   data() {
     return {
       options: [],
+      showDialog: false,
+      showPayment: false,
     };
   },
   mounted() {
@@ -159,9 +180,30 @@ export default {
     });
   },
   methods: {
-    ...mapActions(['getFundOrderDetail']),
+    ...mapActions(['getFundOrderDetail', 'cancelOrder']),
     formatDate(date) {
       return formatDate(date);
+    },
+    onCancel() {
+      this.showDialog = false;
+    },
+    showPaymentDialog() {
+      this.showDialog = false;
+      this.showPayment = true;
+    },
+    onCancelOrder() {
+      this.showDialog = true;
+    },
+    onClosePayment() {
+      this.showPayment = false;
+    },
+    onSurePayment(password) {
+      this.cancelOrder({
+        orderId: this.$route.query.id,
+        password,
+      }).then(() => {
+        this.$router.go(-1);
+      });
     },
   },
   computed: {
@@ -178,6 +220,7 @@ export default {
     box-sizing: border-box;
     background: #ffffff;
     padding: 0 20px;
+    position: relative;
     .icon-wrap {
       .buy {
         width: 32px;
@@ -238,6 +281,20 @@ export default {
             color: #6a707d;
           }
         }
+      }
+    }
+    .cancel-order {
+      position: absolute;
+      font-size: 14px;
+      color: #3c64ee;
+      display: flex;
+      align-items: center;
+      right: 20px;
+      top: 28px;
+      .cancel-order-icon {
+        width: 5px;
+        height: 10px;
+        margin-left: 4px;
       }
     }
   }

@@ -208,11 +208,23 @@ const actions = {
   },
 
   // 基金赎回前详情
-  async sellFundDetail({ commit }, options) {
+  async sellFundDetail(context, options) {
     try {
       const response = await FundService.sellFundDetail(options);
-      const data = await Auth.handlerSuccessResponse(response);
-      console.log(commit, data);
+      return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 撤单
+  async cancelOrder(context, options) {
+    try {
+      const response = await FundService.cancelOrder({
+        order_id: options.orderId,
+        payment_password: options.password,
+      });
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }

@@ -53,15 +53,15 @@
         <div class="icons">
           <div @click="onSkip('/product/current')" class="icon-wrap">
             <svg-icon icon-class="mine-current" class="icon" />
-            <span>活期</span>
+            <span>天天赚</span>
           </div>
           <div @click="onSkip('/mine/fixed')" class="icon-wrap">
             <svg-icon icon-class="mine-fixed" class="icon" />
-            <span>定期</span>
+            <span>定期盈</span>
           </div>
           <div @click="onSkip('/mine/fund')" class="icon-wrap">
             <svg-icon icon-class="mine-fund" class="icon" />
-            <span>基金</span>
+            <span>冠军基金</span>
           </div>
         </div>
       </div>
@@ -142,21 +142,21 @@ export default {
     };
   },
   mounted() {
-    Toast.loading({
-      duration: 0,
-      mask: true,
-      forbidClick: true,
-      message: '加载中...',
-    });
     if (this.authenticated) {
+      Toast.loading({
+        duration: 0,
+        mask: true,
+        forbidClick: true,
+        message: '加载中...',
+      });
       try {
         this.getUserBalanceSummary().then(() => {
+          Toast.clear();
           this.currency = this.singleCurrency[0].currency;
           this.options = this.singleCurrency
             .map(item => item.currency)
             .map(item => ({ name: item }));
           this.getCurreny();
-          Toast.clear();
         });
       } catch (error) {
         Toast.clear();

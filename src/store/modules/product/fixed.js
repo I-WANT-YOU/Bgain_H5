@@ -8,6 +8,7 @@ const state = {
   fixed: {},
   fixedBuyInfo: {},
   availabelCoupons: [],
+  userPortfolio: [],
 };
 
 const getters = {
@@ -32,6 +33,9 @@ const mutations = {
   },
   [types.GET_AVAILABEL_COUPONS](state, payload) {
     state.availabelCoupons = payload;
+  },
+  [types.GET_USER_PORTFOLIO](state, payload) {
+    state.userPortfolio = payload;
   },
 };
 
@@ -107,6 +111,27 @@ const actions = {
       throw error;
     }
   },
+
+  async getUserPortfolio({ commit }) {
+    try {
+      const response = await FixedService.getUserPortfolio();
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_USER_PORTFOLIO, get(data, 'portfolios', []));
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getUserPortfolioHistory({ commit }) {
+    try {
+      const response = await FixedService.getUserPortfolioHistory();
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_USER_PORTFOLIO, get(data, 'portfolios', []));
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 export default {

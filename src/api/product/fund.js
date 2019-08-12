@@ -164,16 +164,13 @@ class FundService {
     }
   }
 
-  static async sellFundDetail(options) {
+  static async cancelOrder(options) {
     try {
       const requestOptions = {
-        url: '/fund/fund-details-before-sell',
+        url: '/fund-product-order/cancel',
         headers: { 'Content-Type': 'application/json' },
         method: 'post',
-        data: {
-          fund_id: options.fund_id,
-          fund_user_stat_id: options.fund_user_stat_id,
-        },
+        data: options,
       };
       const response = await request(requestOptions);
       return handlerResponse(response);

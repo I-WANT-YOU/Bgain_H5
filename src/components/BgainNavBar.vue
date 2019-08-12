@@ -1,8 +1,17 @@
 <template>
   <sticky>
-    <nav-bar v-bind="$attrs" :border="false" v-on="$listeners" @click-left="onClickLeft">
+    <nav-bar
+      v-bind="$attrs"
+      :title="title"
+      :border="false"
+      v-on="$listeners"
+      @click-left="onClickLeft"
+    >
       <template v-slot:left v-if="showArrow">
         <svg-icon icon-class="go-back" class="icon-go-back"></svg-icon>
+      </template>
+      <template v-if="!title" v-slot:title>
+        <slot name="title"></slot>
       </template>
       <template v-slot:right>
         <slot name="right"></slot>
@@ -21,6 +30,11 @@ export default {
       type: Boolean,
       required: false,
       default: true,
+    },
+    title: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
   components: {

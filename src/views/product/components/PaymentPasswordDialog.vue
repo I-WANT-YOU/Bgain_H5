@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     onClose() {
+      this.password = '';
       this.$emit('close');
     },
     onForgotClick() {
