@@ -17,6 +17,7 @@
           </span>
         </div>
       </div>
+      <Menu v-model="showMune" @close='closeMenu'/>
     </header>
   </Sticky>
 </template>
@@ -24,15 +25,18 @@
 <script>
 import { Sticky } from 'vant';
 import { mapState } from 'vuex';
+import Menu from './Meun.vue';
 
 export default {
   name: 'Header',
   components: {
     Sticky,
+    Menu,
   },
   data() {
     return {
       isFixed: false,
+      showMune: false,
     };
   },
   computed: {
@@ -50,7 +54,10 @@ export default {
       console.log('mine');
     },
     onMore() {
-      console.log('more');
+      this.showMune = true;
+    },
+    closeMenu() {
+      this.showMune = false;
     },
   },
 };

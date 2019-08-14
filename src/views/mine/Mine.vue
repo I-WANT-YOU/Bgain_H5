@@ -145,7 +145,6 @@ export default {
     if (this.authenticated) {
       Toast.loading({
         duration: 0,
-        mask: true,
         forbidClick: true,
         message: '加载中...',
       });
@@ -155,7 +154,7 @@ export default {
           this.currency = this.singleCurrency[0].currency;
           this.options = this.singleCurrency
             .map(item => item.currency)
-            .map(item => ({ name: item }));
+            .map(item => ({ name: item === 'FBP' ? 'BGP' : item }));
           this.getCurreny();
         });
       } catch (error) {
@@ -174,7 +173,7 @@ export default {
 
     },
     getCurreny() {
-      const curreny = this.singleCurrency.filter(item => item.currency === this.currency)[0];
+      const curreny = this.singleCurrency.filter(item => item.currency === (this.currency === 'BGP' ? 'FBP' : this.currency))[0];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
       this.accumulatedIncome = curreny.investment_earned_profit;

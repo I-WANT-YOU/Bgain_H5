@@ -83,6 +83,9 @@ export default {
       }
     },
   },
+  mounted() {
+    Toast.clear();
+  },
   methods: {
     ...mapActions({
       login: 'auth/login',

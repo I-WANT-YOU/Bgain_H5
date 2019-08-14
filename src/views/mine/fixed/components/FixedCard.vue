@@ -50,7 +50,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.option);
+    // console.log(this.option);
     // product_left_days
   },
 };

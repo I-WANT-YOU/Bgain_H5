@@ -2,8 +2,16 @@
   <div class="fixed-detail">
     <BgainNavBar :title="option.product_name" />
     <div class="line income">
-      <div class="text">已得收益</div>
-      <div class="num">0.111111111 {{option.payment_currency}}</div>
+      <div class="text">
+        <div class="come">{{statu ? '待收' : '已得'}}收益</div>
+        <div class="prev">产品原始收益</div>
+        <div class="prev">使用加息卷获得</div>
+      </div>
+      <div class="num">
+        <div class="come">0.111111111 {{option.payment_currency}}</div>
+        <div class="prev">0.1 {{option.payment_currency}}</div>
+        <div class="prev coupon">0.011111111 {{option.payment_currency}}</div>
+      </div>
     </div>
     <div class="line">
       <div class="text">认购数量</div>
@@ -26,7 +34,7 @@
       <div class="num">2018-09-10 至 2018-10-07</div>
     </div>
     <div class="line">
-      <div class="text">收款日</div>
+      <div class="text">{{statu ? '预计' : ''}}收款日</div>
       <div class="num">2018-10-11</div>
     </div>
     <div class="line roll-in">
@@ -43,8 +51,8 @@
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
 import { Switch } from 'vant';
+import BgainNavBar from '@component/BgainNavBar.vue';
 
 export default {
   name: 'FixedDetail',
@@ -62,19 +70,14 @@ export default {
     return {
       checked: false,
       option: {},
-      statu: {},
+      statu: '',
     };
   },
   mounted() {
-    console.log(this.statu);
     this.option = this.$route.query;
     this.statu = this.$route.params.status;
+    console.log(this.$route.params.status);
     console.log(this.option);
-    if (this.$route.params.status === 'true') {
-      console.log('1');
-    } else {
-      console.log('2');
-    }
   },
 };
 </script>
@@ -100,6 +103,23 @@ export default {
     .num {
       font-size: 15px;
       color: #0f3256;
+    }
+  }
+  .income {
+    height: auto;
+    padding: 25px 20px 16px;
+    .prev {
+      font-size: 12px;
+      color: #a8aeb9;
+      margin-top: 10px;
+    }
+    .coupon {
+      color: #ff5c5c;
+    }
+    .num {
+      .prev {
+        text-align: right;
+      }
     }
   }
   .roll-in {

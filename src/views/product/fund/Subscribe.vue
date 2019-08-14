@@ -187,7 +187,6 @@ export default {
     },
     onCancel() {
       // 余额 this.fundBuyInfo.balance
-      console.log('1');
       if (this.fundBuyInfo.min_invest_amt * 1 > this.balance * 1
         || this.fundBuyInfo.min_inverst_amount_fbp > this.balance_fbp) {
         this.$router.go(-1);
@@ -204,7 +203,7 @@ export default {
         currency_type: this.fundBuyInfo.currency_type,
         payment_password: paymentPassword * 1,
         amount: this.num * 1,
-        payment_currency: this.currency,
+        payment_currency: this.currency === 'BGP' ? 'FBP' : this.currency,
       }).then(() => {
         this.$router.push({ path: '/product/fund/result', query: { status: 'success', currency: this.currency } });
       }).catch(() => {

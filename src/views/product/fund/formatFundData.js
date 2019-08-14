@@ -35,7 +35,7 @@ export const formatType = (data) => {
       data.fund_product_type = 'CTA';
       break;
     default:
-      data.fund_product_type = 'CTA';
+      break;
   }
   return data;
 };
@@ -59,7 +59,7 @@ export const formatRiskText = (data) => {
       data.risk_level_type = 'R5高风险';
       break;
     default:
-      data.risk_level_type = 'R5高风险';
+      break;
   }
   return data;
 };
@@ -68,7 +68,7 @@ export const formatRiskText = (data) => {
 export const formatRisk = (data) => {
   switch (data.risk_level_type) {
     case 'R1_LOW_RISK':
-      data.risk_level_type = 'R';
+      data.risk_level_type = 'R1';
       break;
     case 'R2_MEDIUM_LOW_LEVEL':
       data.risk_level_type = 'R2';
@@ -83,7 +83,7 @@ export const formatRisk = (data) => {
       data.risk_level_type = 'R5';
       break;
     default:
-      data.risk_level_type = 'R5';
+      break;
   }
   return data;
 };
