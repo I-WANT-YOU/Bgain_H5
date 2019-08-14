@@ -7,6 +7,7 @@ import auth from '@modules/auth';
 import home from '@modules/home';
 import product from '@modules/product';
 import user from '@modules/user';
+import message from '@modules/message';
 
 
 Vue.use(Vuex);
@@ -19,5 +20,6 @@ export default new Vuex.Store({
     product,
     user,
     coin,
+    message,
   },
 });
