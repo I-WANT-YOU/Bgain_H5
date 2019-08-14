@@ -92,6 +92,11 @@ export default {
           text: '安全中心',
           to: '/mine/safety',
         },
+        {
+          icon: 'free-postage',
+          text: '活动中心',
+          to: '/activity',
+        },
       ],
     };
   },

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 import * as Auth from '@utils/auth';
 import UserService from '@api/user';
 import * as types from '../mutationTypes';
@@ -14,8 +14,20 @@ const getters = {
   authLevel: state => get(state.basicInfo, 'authlevel', 0),
   username: state => get(state.basicInfo, 'username', ''),
   countryCode: state => get(state.basicInfo, 'country_calling_code', '+86'),
-  kycStatus: state => get(state.basicInfo, 'kyc_stauts', 'UN_CERTIFIED').toUpperCase(),
-  otcStatus: state => get(state.basicInfo, 'otc_kyc_status', 'UN_CERTIFIED').toUpperCase(),
+  kycStatus: (state) => {
+    const status = get(state.basicInfo, 'kyc_stauts', 'UN_CERTIFIED');
+    if (isNil(status)) {
+      return 'UN_CERTIFIED';
+    }
+    return status.toUpperCase();
+  },
+  otcStatus: (state) => {
+    const status = get(state.basicInfo, 'otc_kyc_status', 'UN_CERTIFIED');
+    if (isNil(status)) {
+      return 'UN_CERTIFIED';
+    }
+    return status.toUpperCase();
+  },
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),

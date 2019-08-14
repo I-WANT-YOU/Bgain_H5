@@ -10,7 +10,7 @@
           :key="balance.currency">
           <template v-slot:title>
             <svg-icon :icon-class="`icon-${balance.currency.toLowerCase()}`"
-                      class="currency-icon" />
+                      class="currency-icon"/>
             <span class="currency-label">{{balance.currency}}</span>
           </template>
           <template v-slot:value>
