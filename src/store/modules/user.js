@@ -8,6 +8,7 @@ const state = {
   kycInfo: {},
   userBalance: {},
   submitKycResult: {},
+  isSignInInfo: {},
 };
 
 const getters = {
@@ -49,6 +50,9 @@ const mutations = {
   },
   [types.GET_SUBMIT_KYC_RESULT](state, payload) {
     state.submitKycResult = payload;
+  },
+  [types.GET_USER_IS_SIGN_IN](state, payload) {
+    state.isSignInInfo = payload;
   },
 };
 
@@ -105,6 +109,16 @@ const actions = {
       const response = await UserService.getUserBalanceSummary();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_BALANCE_SUMMARY, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  // 判断用户是否签到
+  async getUserIsSignIn({ commit }) {
+    try {
+      const response = await UserService.getUserIsSignIn();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_IS_SIGN_IN, data);
     } catch (error) {
       throw error;
     }
