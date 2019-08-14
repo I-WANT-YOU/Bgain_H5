@@ -52,7 +52,6 @@ export default {
   mounted() {
     Toast.loading({
       duration: 0,
-      mask: true,
       forbidClick: true,
       message: '加载中...',
     });

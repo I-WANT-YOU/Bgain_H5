@@ -6,13 +6,23 @@
     :close-on-click-overlay="false"
   >
     <div class="bgain-dialog__container">
-      <svg-icon icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
+      <svg-icon
+        v-if="showClose"
+        icon-class="close"
+        class="icon-close"
+        @click.native="onCancel"
+      ></svg-icon>
       <div class="dialog__title">{{title}}</div>
       <div class="dialog__content">
         <span>{{content}}</span>
       </div>
       <div class="dialog__buttons">
-        <Button class="dialog__buttons--cancel" @click="onCancel">{{cancelText}}</Button>
+        <Button
+          class="dialog__buttons--cancel"
+          v-if="showCancel"
+          @click="onCancel">
+          {{cancelText}}
+        </Button>
         <Button
           type="info"
           class="dialog__buttons--submit"
@@ -54,6 +64,16 @@ export default {
     submitText: {
       type: String,
       default: '确定',
+      required: false,
+    },
+    showClose: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    showCancel: {
+      type: Boolean,
+      default: true,
       required: false,
     },
   },
@@ -100,6 +120,8 @@ export default {
 
     .dialog__content {
       flex: 1;
+      padding: 0 20px;
+      text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;

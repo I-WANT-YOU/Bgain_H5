@@ -9,6 +9,8 @@ import { FUND_STATUS } from '@/constants/options';
 const state = {
   funds: [],
   currencies: [],
+  risk: [],
+  productType: [],
   fund: {},
   fundBuyInfo: {},
   holdingFunds: {},
@@ -48,6 +50,12 @@ const mutations = {
   },
   [types.GET_FUND_CURRENCIES](state, payload) {
     state.currencies = payload;
+  },
+  [types.GET_FUND_RISK_TYPE](state, payload) {
+    state.risk = payload;
+  },
+  [types.GET_FUND_PRODUCT_TYPE](state, payload) {
+    state.productType = payload;
   },
   [types.GET_FUND_PRODUCT_DETAIL](state, payload) {
     state.fund = payload;
@@ -89,6 +97,8 @@ const actions = {
       }));
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_FUND_CURRENCIES, get(data, 'coins', []));
+      commit(types.GET_FUND_RISK_TYPE, get(data, 'risk_level_types', []));
+      commit(types.GET_FUND_PRODUCT_TYPE, get(data, 'types', []));
       commit(types.GET_FUND_PRODUCTS, get(data, 'fund_products', []));
     } catch (error) {
       throw error;

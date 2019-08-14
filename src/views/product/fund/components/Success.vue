@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="buttons">
-      <Button class="show">查看详情</Button>
+      <Button class="show" @click="showDetail">查看详情</Button>
       <Button class="continue" @click="onContinue">继续浏览</Button>
     </div>
   </div>
@@ -42,6 +42,9 @@ export default {
   methods: {
     onContinue() {
       this.$router.push('/product/fund');
+    },
+    showDetail() {
+      this.$router.push('/mine/fund');
     },
   },
   computed: {

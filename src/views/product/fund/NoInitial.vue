@@ -4,10 +4,12 @@
     <div class="info">
       <div class="info-top">
         <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
-          <!-- eslint-disable -->
-          <span>{{fundDetail.market_change_percent >= 0 ? `+${fundDetail.market_change_percent}` : fundDetail.market_change_percent}}</span>
+          <span>
+            {{fundDetail.market_change_percent >= 0
+            ? `+${fundDetail.market_change_percent}`
+            : fundDetail.market_change_percent}}
+          </span>
           <span class="percent">%</span>
-          <!-- eslint-enable -->
           <i />
         </span>
         <span class="texts">
@@ -46,11 +48,14 @@
       </div>
     </div>
     <div class="tradeshow">
-      <!-- eslint-disable -->
-      <div @click="$router.push({path: '/product/fund/trade-rules', query:{productId: $route.params.id}})" class="title" >
-      <!-- eslint-enable -->
+      <div class="title">
         <span>交易说明</span>
-        <div class="skip">
+        <div
+          @click="$router.push({path:
+          '/product/fund/trade-rules',
+          query:{productId: $route.params.id}})"
+          class="skip"
+        >
           交易规则、常见问题等
           <svg-icon icon-class="next" class="next" />
         </div>
@@ -114,11 +119,14 @@
       </div>
     </div>
     <div class="fundarchives">
-      <!-- eslint-disable -->
-      <div @click="$router.push({path: '/product/fund/product-files', query:{productId: $route.params.id}})" class="title" >
-      <!-- eslint-enable -->
+      <div class="title">
         <span>基金档案</span>
-        <div class="skip">
+        <div
+          @click="$router.push({
+          path: '/product/fund/product-files',
+          query:{productId: $route.params.id}})"
+          class="skip"
+        >
           基金团队、策略说明、实盘业绩等
           <svg-icon icon-class="next" class="next" />
         </div>
@@ -150,21 +158,30 @@
       >立即认购</Button>
       <Button v-else type="info" class="button" @click="onSubmit">到时提醒我</Button>
     </div>
+    <BgainBaseDialog
+      v-model="payment"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      @submit="setPayment"
+      @cancel="cancelPayment"
+    />
   </div>
 </template>
 
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import { formatDate } from '@utils/tools';
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
-import { Button } from 'vant';
+import { Button, Toast } from 'vant';
 import { formatRiskText, formatType, echartsOption } from './formatFundData';
 
 export default {
   name: 'NoInitial',
   components: {
     BgainNavBar,
+    BgainBaseDialog,
     Button,
   },
   data() {
@@ -176,14 +193,20 @@ export default {
       risk: '',
       chart_x: '03-16',
       chart_y: '1.0000',
+      payment: false,
     };
   },
-  mounted() {
-    this.getFundProductDetail(this.$route.params.id).then(() => {
-      this.type = formatType(this.fundDetail).fund_product_type;
-      this.risk = formatRiskText(this.fundDetail).risk_level_type;
-      this.setEcharts();
+  async mounted() {
+    Toast.loading({
+      duration: 0,
+      forbidClick: true,
+      message: '加载中...',
     });
+    await this.getFundProductDetail(this.$route.params.id);
+    this.type = formatType(this.fundDetail).fund_product_type;
+    this.risk = formatRiskText(this.fundDetail).risk_level_type;
+    this.setEcharts();
+    Toast.clear();
   },
   methods: {
     ...mapActions({
@@ -215,19 +238,24 @@ export default {
         this.chart_y = this.chart_y[0].nav;
       }
     },
-    onSubmit() {
+    async onSubmit() {
       // 开放认购
       if (this.fundDetail.status === 'OPEN') {
-        this.getUserSummary().then(() => {
-          if (this.authLevel === 2) {
-            this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
-          } else {
-            this.$router.push('/passwordconfig/set/tradepassword');
-          }
-        });
+        await this.getUserSummary();
+        if (this.authLevel === 2) {
+          this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
+        } else {
+          this.payment = true;
+        }
       } else {
         console.log('短信通知');
       }
+    },
+    setPayment() {
+      this.$router.push('/mine/safety/password/payment/set');
+    },
+    cancelPayment() {
+      this.payment = false;
     },
   },
   computed: {

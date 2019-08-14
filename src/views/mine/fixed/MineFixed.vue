@@ -57,7 +57,7 @@
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { ActionSheet } from 'vant';
+import { ActionSheet, Toast } from 'vant';
 import FixedCard from './components/FixedCard.vue';
 
 export default {
@@ -82,10 +82,17 @@ export default {
       this.onChangeList();
     },
     async onChangeList() {
+      Toast.loading({
+        message: '加载中...',
+        duration: 0,
+        forbidClick: true,
+      });
       if (this.active === '1') {
         await this.getUserPortfolio();
+        Toast.clear();
       } else {
         await this.getUserPortfolioHistory();
+        Toast.clear();
       }
     },
   },

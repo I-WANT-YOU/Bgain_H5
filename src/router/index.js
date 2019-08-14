@@ -360,6 +360,12 @@ const router = new Router({
       name: 'MineFixedDetail',
       component: () => import('../views/mine/fixed/FixedDetail.vue'),
     },
+    // 消息中心
+    {
+      path: '/message',
+      name: 'Message',
+      component: () => import('../views/message/Message.vue'),
+    },
   ],
 });
 
