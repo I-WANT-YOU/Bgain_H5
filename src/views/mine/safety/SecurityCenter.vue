@@ -91,9 +91,15 @@ export default {
   },
   async mounted() {
     try {
+      Toast.loading({
+        duration: 0,
+        forbidClick: true,
+      });
       await this.getUserSummary();
+      Toast.clear();
     } catch (error) {
       Toast(error.message);
+      Toast.clear();
     }
   },
   methods: {
