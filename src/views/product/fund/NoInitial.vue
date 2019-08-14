@@ -164,7 +164,9 @@
       content="您还未设置交易密码，暂无法进行购买"
       @submit="setPayment"
       @cancel="cancelPayment"
-    />
+    >
+      <template v-slot:content><div>sss</div></template>
+    </BgainBaseDialog>
   </div>
 </template>
 
@@ -193,7 +195,7 @@ export default {
       risk: '',
       chart_x: '03-16',
       chart_y: '1.0000',
-      payment: false,
+      payment: true,
     };
   },
   async mounted() {

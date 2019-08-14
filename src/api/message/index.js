@@ -11,6 +11,7 @@ class MessageService {
         data: {
           page_size: 10,
           page_number: 0,
+          announcement_type: 'USER_MSG',
         },
       };
       const response = await request(requestOptions);
