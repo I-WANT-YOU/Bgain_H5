@@ -27,7 +27,8 @@
         <Button
           type="info"
           class="dialog__buttons--submit"
-          @click="onSubmit">
+          @click="onSubmit"
+          :style="{background: submitColor}">
           {{submitText}}
         </Button>
       </div>
@@ -75,6 +76,11 @@ export default {
     showCancel: {
       type: Boolean,
       default: true,
+      required: false,
+    },
+    submitColor: {
+      type: String,
+      default: '#ccc',
       required: false,
     },
   },
@@ -154,6 +160,7 @@ export default {
         height: 40px;
         border-radius: 4px;
         font-size: 15px;
+        border: 0;
       }
     }
   }

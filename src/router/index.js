@@ -366,6 +366,12 @@ const router = new Router({
       name: 'Message',
       component: () => import('../views/message/Message.vue'),
     },
+    // 消息中心详情
+    {
+      path: '/message-detail',
+      name: 'MessageDetail',
+      component: () => import('../views/message/MessageDetail.vue'),
+    },
     {
       path: '/activity',
       name: 'activity',
