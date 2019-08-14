@@ -14,9 +14,9 @@ import vVisible from '@/directive/v-visible';
 
 Vue.config.productionTip = false;
 
-if (process.env.NODE_ENV === 'development') {
-  eruda.init();
-}
+// if (process.env.NODE_ENV === 'development') {
+//   eruda.init();
+// }
 
 Vue.use(vVisible);
 

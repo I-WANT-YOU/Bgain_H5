@@ -111,6 +111,8 @@ export default {
         afterStatus = '申诉中';
       } else if (orderStatus === 'finished') {
         afterStatus = '已完成';
+      }else if(orderStatus ==='canceled'){
+        afterStatus = '已取消';
       }
       return afterStatus;
     },
@@ -130,9 +132,6 @@ export default {
     ...mapState('coin/orderInfo', [
       'orderList',
     ]),
-    // ...mapGetters('coin/orderInfo', [
-    //   'standerOrderList',
-    // ]),
   },
   mounted() {
     this.$toast.loading({

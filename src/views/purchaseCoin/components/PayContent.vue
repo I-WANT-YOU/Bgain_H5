@@ -42,15 +42,31 @@
         <span>{{orderInfoById.otc_order_id}}</span>
       </div>
     </div>
+    <!--支付宝微信二维码弹窗-->
+    <div class="hadCodePop" :class="{showPop:showCodePop}">
+      <div class="background"></div>
+      <div class="back-img">
+        <div ref="qrcode" class="qrcode-img"></div>
+        <div @click="closeCodePop">
+          <svg-icon icon-class="close_x" alt="."/>
+        </div>
+      </div>
+    </div>
   </div>
-
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import QRCode from 'qrcodejs2';
 
 export default {
   name: 'PayContent',
+  data(){
+    return{
+      showCodePop: false, // 是都显示弹窗
+      qRCode: {}, // 二维码
+    }
+  },
   computed: {
     ...mapState('coin/orderInfo', [
       'orderInfoById',
@@ -64,16 +80,19 @@ export default {
             currentTitle = [
               '银行卡号', '开户行', '开户支行',
             ];
+            this.showCodePop = false;
             break;
           case 'weixin':
             currentTitle = [
               '收款二维码', '微信账号', '',
             ];
+            this.showCodePop = true;
             break;
           case 'alipay':
             currentTitle = [
               '收款二维码', '支付宝账号', '',
             ];
+            this.showCodePop = true;
             break;
           default:
             break;
@@ -82,10 +101,37 @@ export default {
       return currentTitle;
     },
   },
+  mounted(){
+    // 判断支付宝和微信 显示二维码
+    this.qRCode = new QRCode(this.$refs.qrcode, {
+      text: '', // 二维码code
+      width: 111,
+      height: 111,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H,
+    })
+  },
+
+  methods:{
+    /*关闭弹窗*/
+    closeCodePop(){
+      this.showCodePop = false;
+    }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+  /*二维码弹窗*/
+  .showPop{
+    display: block;
+  }
+  /*二维码图片*/
+  .qrcode-img{
+    width: 111px;
+    height: 111px;
+  }
   .payContent{
     .paymentInfo{
       margin:11px 21px 0px 21px;
@@ -108,5 +154,29 @@ export default {
       }
     }
     .userInfo{}
+    // 弹窗
+    .hadCodePop{
+      position: absolute;
+      display: none;
+      top: 0;
+      .background{
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        opacity: 0.6;
+        background: #000000;
+        z-index: 99;
+      }
+      .back-img{
+        position: absolute;
+        left: 22.5px;
+        top: 150px;
+        width: 320px;
+        height: 291px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
   }
 </style>

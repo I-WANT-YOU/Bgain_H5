@@ -7,7 +7,7 @@ import {get} from "lodash";
 const state = {
   purchaseCoinInfo: [],
   currencyData: {
-    link_coin_currency_types:[],
+    link_coin_currency_types:[]
   },
   currencyPrice: {},
 };
@@ -19,10 +19,9 @@ const getters = {
   description: state => state.purchaseCoinInfo.map(item => item.description.split('；')),
   // 买币的列表
   currencyList: state=>{
-    console.log(state.currencyData);
     let currentList = [];
     if(!state.currencyData.link_coin_currency_types){
-      currentList = state.currencyData.map(item=>item.toUpperCase());
+      currentList = state.currencyData.link_coin_currency_types.map(item=>item.toUpperCase());
     }else{
       currentList =  state.currencyData.link_coin_currency_types.map(item => item.toUpperCase());
     }
@@ -36,7 +35,6 @@ const mutations = {
     state.purchaseCoinInfo = payload;
   },
   [types.GET_CURRENCY_LIST](state, payload) {
-    console.log(payload);
     state.currencyData = payload;
   },
   [types.GET_CURRENCY_PRICE](state, payload) {

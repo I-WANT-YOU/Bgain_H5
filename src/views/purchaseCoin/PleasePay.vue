@@ -12,9 +12,11 @@
       <!--待放行-->
       <ToBeReleaseContent v-if = "orderStatus === 'payed'" />
       <!--申诉中-->
-      <PayContent v-if = "orderStatus === 'dispute'" />
+      <FinishedContent v-if = "orderStatus === 'dispute'" />
       <!--已完成-->
       <FinishedContent v-if = "orderStatus === 'finished'"/>
+      <!--已取消-->
+      <FinishedContent v-if = "orderStatus === 'canceled'" />
     </div>
     <!--提示信息和按钮-->
     <div class="footer" v-show="!!tips">

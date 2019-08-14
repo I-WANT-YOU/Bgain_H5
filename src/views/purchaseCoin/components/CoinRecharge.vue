@@ -80,31 +80,12 @@ export default {
       routerData: '',
     };
   },
-  mounted() {
-    this.$toast.loading({
-      mask: true,
-      duration: 0,
-      message: '加载中...',
-    });
-    this.getCurrencyList().then( // 获取币种列表
-      () => {
-        this.$toast.clear();
-        this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
-        this.exchangeType = 'CNY'; // 兑换方式选择
-        this.getNewCurrencyPrice(this.activeContentTab);
-      },
-      (err) => {
-        this.$toast.clear();
-        if (err.status) { this.$toast(errorMessage[err.status]); } else {
-          this.$toast('网络故障');
-        }
-      },
-    );
-  },
-  beforeDestroy() {
-    this.$toast.clear();
-  },
+
   methods: {
+    // 获取用户信息 判断是否设置交易密码
+    ...mapActions('user',[
+      'getUserSummary'
+    ]),
     ...mapActions('coin/purchaseCoin', [
       'getCurrencyList', // 获取列表
       'getCurrencyPrice',
@@ -192,6 +173,29 @@ export default {
         this.exchangeType = this.activeContentTab;
       }
     },
+    // 获取币种列表（设计交易密码 设置OYC 设置KYC）
+    getLaterCurrencyList(){
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...',
+      });
+      this.getCurrencyList().then( // 获取币种列表
+        () => {
+          console.log(this.currencyData);
+          this.$toast.clear();
+          this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
+          this.exchangeType = 'CNY'; // 兑换方式选择
+          this.getNewCurrencyPrice(this.activeContentTab);
+        },
+        (err) => {
+          this.$toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
+        },
+      );
+    }
   },
   computed: {
     ...mapState('coin/purchaseCoin', [
@@ -204,6 +208,10 @@ export default {
     ]),
     ...mapGetters('coin/purchaseCoin', [
       'currencyList', // 币种列表
+    ]),
+    // 用户信息判断是否设置交易密码
+    ...mapState('user', [
+      'basicInfo', // 币种列表
     ]),
     // 生成兑换信息列表
     initExchangeInfo() {
@@ -326,8 +334,30 @@ export default {
       return false;
     },
   },
-};
+  mounted() {
+    // 获取用户信息 判断用户是否设置了交易密码
+    this.getUserSummary().then(
+      () => {
+        if(this.basicInfo.authlevel === 1){  // 1 未设置 2 已设置
+          alert('未设置交易密码');
+        }else if(this.basicInfo.authlevel === 2){
+          // 已设置交易密码 加载数据
+          this.getLaterCurrencyList();
+        }
+      },
+      (err) => {
+        this.$toast.clear();
+        if (err.status) { this.$toast(errorMessage[err.status]); } else {
+          this.$toast('网络故障');
+        }
+      },
+    );
+  },
 
+  beforeDestroy() {
+    this.$toast.clear();
+  },
+};
 </script>
 
 <style lang="scss" scoped>

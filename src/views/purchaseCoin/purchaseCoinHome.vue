@@ -29,19 +29,25 @@
 <script>
 import CoinPurchase from './components/CoinPurchase.vue';
 import CoinRecharge from './components/CoinRecharge.vue';
+import {Toast} from 'vant';
+import Vue from 'vue';
 
+Vue.use(Toast);
 export default {
   name: 'purchaseCoinHome',
+
   components: {
     CoinPurchase,
     CoinRecharge,
   },
+
   data() {
     return {
       activeHeaderTab: 0, // 默认冲币 0
       headerTabsData: ['充币', '买币'],
     };
   },
+
   methods: {
     changeHeaderTab(index) {
       this.activeHeaderTab = index;

@@ -76,12 +76,12 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "subscriptionResults" */ '../views/product/fixed/SubscriptionResults.vue'),
     },
     {
-      path: '/pleasePay/', // lihu-请付款支付页面
+      path: '/pleasePay/orderId', // lihui-请付款支付页面
       name: 'PleasePay',
       component: () => import(/* webpackChunkName: "PleasePay" */ '../views/purchaseCoin/PleasePay.vue'),
     },
     {
-      path: '/toBeRelease/', // lihu-待放行
+      path: '/toBeRelease/', // lihui-待放行
       name: 'ToBeRelease',
       component: () => import(/* webpackChunkName: "ToBeRelease" */ '../views/purchaseCoin/EbankTool.vue'),
     },
