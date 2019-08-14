@@ -1,6 +1,6 @@
 /* eslint-disable */
 import CoinService from '@api/coin/purchaseCoin';
-import { handlerSuccessResponse, handlerSuccessResponseV2 } from '@utils/auth';
+import { handlerSuccessResponse, handlerSuccessResponseV2,handlerSuccessResponseV3 } from '@utils/auth';
 import * as types from '../../mutationTypes';
 import {get} from "lodash";
 
@@ -57,7 +57,7 @@ const actions = {
   async getCurrencyList({ commit }) {
     try {
       const response = await CoinService.getCurrencyList();
-      const data = await handlerSuccessResponseV2(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.GET_CURRENCY_LIST, data);
     } catch (error) {
       throw error;

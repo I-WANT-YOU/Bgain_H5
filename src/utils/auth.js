@@ -28,3 +28,9 @@ export const handlerSuccessResponseV2 = (response) => {
   }
   return Promise.resolve(response.data);
 };
+export const handlerSuccessResponseV3 = (response) => {
+  if (!response || !(response.code === 0)) {
+    return Promise.reject(response);
+  }
+  return Promise.resolve(response.data);
+};

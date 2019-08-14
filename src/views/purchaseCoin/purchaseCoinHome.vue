@@ -22,7 +22,7 @@
       </div>
     </header>
     <CoinPurchase v-if="activeHeaderTab===0"/>
-    <CoinRecharge v-else/>
+    <CoinRecharge @activeHeaderTabFromChild="(params)=>{this.activeHeaderTab = params}" v-else/>
   </div>
 </template>
 

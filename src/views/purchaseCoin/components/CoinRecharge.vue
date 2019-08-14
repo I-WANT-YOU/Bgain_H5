@@ -49,6 +49,24 @@
         :disabled = !activeButton
       >下一步</button>
     </div>
+    <!--是否设置交易弹窗-->
+    <BgainBaseDialog
+      v-model="isShowSetPassword"
+      :showCancel="false"
+      submitText="设置交易密码"
+      content="您还未设置交易密码，暂无法进行购买"
+      @submit="()=>{this.$router.push({name:'set-payment-password'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--是否设置KYC-->
+    <BgainBaseDialog
+      v-model="isShowSetKYC"
+      :showCancel="false"
+      submitText="设置交易密码"
+      content="您还未设置交易密码，暂无法进行购买"
+      @submit="()=>{this.$router.push({name:'set-payment-password'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
   </div>
 </template>
 
@@ -57,14 +75,18 @@ import { Toast } from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import errorMessage from '../../../constants/responseStatus';
+import BgainBaseDialog from '../../../components/BgainBaseDialog.vue';
 
 Vue.use(Toast);
 export default {
   name: 'CoinRecharge',
   components: {
+    BgainBaseDialog,
   },
   data() {
     return {
+      isShowSetKYC:false,
+      isShowSetPassword:false,
       activeContentTab: '',
       activeExchangeTab: 0,
       headerTabsData: ['充币', '买币'],
@@ -189,7 +211,38 @@ export default {
           this.getNewCurrencyPrice(this.activeContentTab);
         },
         (err) => {
-          this.$toast.clear();
+          // this.$toast.clear();
+          // 判断是否进行了OTC认证
+          if(currencyData.code === 165){ // 未进行OTC判断
+            // 验证是否进行了KYC验证
+            this.$router.push({name:'kyc'})
+          } else if (currencyData.code === 166){ // 服务异常
+            Toast('服务器异常');
+          }else if (currencyData.code === 167){ // otc不支持该币种购买
+            Toast('服务器异常');
+          }else if (currencyData.code === 168){ // otc待处理订单超过两条
+            Toast('服务器异常');
+          }else if (currencyData.code === 169){ // otc购买数量为零
+            Toast('服务器异常');
+          }else if (currencyData.code === 170){ // otc 购买金额不在可购买范围之内
+            Toast('服务器异常');
+          }  else if (currencyData.code === 171){ // otc 用户当天可用额度不足
+            Toast('服务器异常');
+          } else if (currencyData.code === 172){ // otc 第三方服务闭市
+            Toast('服务器异常');
+          } else if (currencyData.code === 173){ // otc 订单不存
+            Toast('服务器异常');
+          } else if (currencyData.code === 174){ // otc 用户没有权限对此订单操作
+            Toast('服务器异常');
+          } else if (currencyData.code === 175){ // otc 当前订单不可申诉
+            Toast('服务器异常');
+          } else if (currencyData.code === 176){ // otc 用户总体可用额度不足
+            Toast('服务器异常');
+          } else if (currencyData.code === 177){ // otc 用户存在一笔未支付订单
+            Toast('服务器异常');
+          }else if (currencyData.code === 178){ // 服务异常
+            Toast('服务器异常');
+          }
           if (err.status) { this.$toast(errorMessage[err.status]); } else {
             this.$toast('网络故障');
           }
@@ -339,8 +392,9 @@ export default {
     this.getUserSummary().then(
       () => {
         if(this.basicInfo.authlevel === 1){  // 1 未设置 2 已设置
-          alert('未设置交易密码');
+          this.isShowSetPassword = true;
         }else if(this.basicInfo.authlevel === 2){
+          this.isShowSetPassword = false;
           // 已设置交易密码 加载数据
           this.getLaterCurrencyList();
         }
