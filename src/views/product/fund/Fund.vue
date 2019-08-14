@@ -31,12 +31,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import { Sticky, PullRefresh, Toast } from 'vant';
 import formatFundData, { fundProductTypeList, riskLevelTypeList } from './formatFundData';
 import Screen from './components/Screen.vue';
 import Initial from './components/Initial.vue';
 import NoInitial from './components/NoInitial.vue';
+
+const { mapGetters, mapActions, mapState } = createNamespacedHelpers('product/fund');
 
 const options = [
   {
@@ -80,9 +82,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions({
-      getFundProducts: 'product/fund/getFundProducts',
-    }),
+    ...mapActions(['getFundProducts']),
     onReset() {
       this.options = this.options.map((item) => {
         item.active = 'all';
@@ -132,10 +132,8 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({
-      initialFunds: 'product/fund/initialFunds',
-      otherFunds: 'product/fund/otherFunds',
-    }),
+    ...mapGetters(['otherFunds', 'initialFunds']),
+    ...mapState(['currencies', 'risk', 'productType']),
     showInitialFunds() {
       return this.initialFunds.map(
         item => formatFundData(item),
@@ -150,16 +148,17 @@ export default {
   mounted() {
     Toast.loading({
       duration: 0,
-      mask: true,
       forbidClick: true,
       message: '加载中...',
     });
     try {
       this.getFundProducts(this.params).then(() => {
         Toast.clear();
+        this.options[0].children = this.currencies;
       });
     } catch (error) {
-      throw error;
+      Toast.clear();
+      Toast(error);
     }
   },
 };

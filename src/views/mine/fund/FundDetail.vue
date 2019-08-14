@@ -242,9 +242,8 @@ export default {
     };
   },
   async mounted() {
-    Toast({
+    Toast.loading({
       duration: 0,
-      mask: true,
       forbidClick: true,
       message: '加载中...',
     });
@@ -257,7 +256,7 @@ export default {
       Toast.clear();
     } catch (error) {
       Toast.clear();
-      throw error;
+      Toast(error);
     }
   },
   methods: {

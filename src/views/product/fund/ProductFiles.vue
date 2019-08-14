@@ -24,9 +24,7 @@
             <img class="administrator-logo" :src="option.administrator_logo" alt />
             <div class="administrator-name">{{option.administrator}}</div>
           </div>
-          <div
-            class="administrator-describe con"
-          >{{option.administrator_describe}}</div>
+          <div class="administrator-describe con">{{option.administrator_describe}}</div>
         </Tab>
         <Tab class="tab" title="策略说明">
           <div class="con">{{option.policy_explain}}</div>
@@ -64,10 +62,9 @@ export default {
       option: {},
     };
   },
-  mounted() {
-    this.getFundInformation(this.$route.query.productId).then(() => {
-      this.option = this.fundInformation;
-    });
+  async mounted() {
+    await this.getFundInformation(this.$route.query.productId);
+    this.option = this.fundInformation;
   },
   computed: {
     ...mapState('product/fund', ['fundInformation']),

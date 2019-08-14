@@ -12,15 +12,20 @@
         <div>持仓市值</div>
       </div>
       <div class="con">
-        <!-- eslint-disable -->
-        <div class="num">{{!option.yesterday_change ? 0 : option.yesterday_change > 0 ? `+${option.yesterday_change}` : option.yesterday_change}}</div>
-        <!-- eslint-enable -->
+        <div class="num">
+          {{!option.yesterday_change
+          ? 0 : option.yesterday_change > 0
+          ? `+${option.yesterday_change}`
+          : option.yesterday_change}}
+        </div>
         <div>昨日盈亏</div>
       </div>
       <div class="con">
-        <!-- eslint-disable -->
-        <div :class="['num', option.holding_profit > 0 ? '' : 'loss']">{{option.holding_profit > 0 ? `+${option.holding_profit}` : option.holding_profit}}</div>
-        <!-- eslint-enable -->
+        <div :class="['num', option.holding_profit > 0 ? '' : 'loss']">
+          {{option.holding_profit > 0
+          ? `+${option.holding_profit}`
+          : option.holding_profit}}
+        </div>
         <div>持仓收益</div>
       </div>
     </div>
