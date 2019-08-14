@@ -49,7 +49,7 @@
         :disabled = !activeButton
       >下一步</button>
     </div>
-    <!--是否设置交易弹窗-->
+    <!--是否显示交易密码弹窗-->
     <BgainBaseDialog
       v-model="isShowSetPassword"
       :showCancel="false"
@@ -62,19 +62,68 @@
     <BgainBaseDialog
       v-model="isShowSetKYC"
       :showCancel="false"
-      submitText="设置交易密码"
-      @submit="()=>{this.$router.push({name:'set-payment-password'})}"
+      submitText="身份认证"
+      content="为保证您在平台交易的资金安全请先完成身份认证"
+      @submit="goToLYC"
       @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
     >
+      <!--suppress XmlUnboundNsPrefix -->
       <template v-slot:content>
-        <van-radio name="1">我同意授权Bgain开通OTC服务</van-radio>
+        <van-checkbox icon-size="15px" v-model="KYCChecked">
+          <span style="font-size: 12px;line-height: 28px;color: #2A64F7; ">我同意授权Bgain开通OTC服务</span>
+        </van-checkbox>
       </template>
     </BgainBaseDialog>
+    <!--KYC校验中-->
+    <BgainBaseDialog
+      v-model="isShowKYCCheck"
+      :showCancel="true"
+      submitText="知道了"
+      content="您的身份认证申请已提交，审核结果将在3个工作日内公布"
+      @submit="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--OTC校验中-->
+    <BgainBaseDialog
+      v-model="isShowOTCCheck"
+      :showCancel="true"
+      submitText="知道了"
+      content="您的身份认证申请已提交，审核结果将在1个工作日内公布"
+      @submit="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--KYC重新验证-->
+    <BgainBaseDialog
+      v-model="isShowResetKYC"
+      :showCancel="false"
+      submitText="重新认证"
+      content="您的身份消息认证失败，重新认证后可进行买币"
+      @submit="()=>{this.$router.push({name:'kyc'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--OTC重新验证-->
+    <BgainBaseDialog
+      v-model="isShowResetOTC"
+      :showCancel="false"
+      submitText="重新认证"
+      content="您的身份消息认证失败，重新认证后可进行买币"
+      @submit="()=>{this.$router.push({name:'kyc'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--已认证去授权-->
+    <BgainBaseDialog
+      v-model="isShowAuthorize"
+      :showCancel="false"
+      submitText="一键授权"
+      content="确认授权Bgain开通OTC服务"
+      @submit="goToAuthorize"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
   </div>
 </template>
 
 <script>
-import { Toast ,Radio} from 'vant';
+import { Toast ,Checkbox,} from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import errorMessage from '../../../constants/responseStatus';
@@ -85,12 +134,18 @@ export default {
   name: 'CoinRecharge',
   components: {
     BgainBaseDialog,
-    'van-radio': Radio,
+    'van-checkbox': Checkbox,
   },
   data() {
     return {
-      isShowSetKYC:true,
-      isShowSetPassword:false,
+      KYCChecked: false, // 判断是否同意KYC验证协议
+      isShowSetPassword:false, // 设置密码
+      isShowSetKYC:false,  // 设置身份验证
+      isShowKYCCheck: false, //身份证验证中
+      isShowOTCCheck: false, // OTC验证中
+      isShowResetKYC:false, // KYC重新验证
+      isShowResetOTC:false, // OTC重新验证
+      isShowAuthorize: false, // 已认证去授权
       activeContentTab: '',
       activeExchangeTab: 0,
       headerTabsData: ['充币', '买币'],
@@ -110,7 +165,8 @@ export default {
   methods: {
     // 获取用户信息 判断是否设置交易密码
     ...mapActions('user',[
-      'getUserSummary'
+      'getUserSummary',
+      'toGrantAuthorization',
     ]),
     ...mapActions('coin/purchaseCoin', [
       'getCurrencyList', // 获取列表
@@ -119,6 +175,26 @@ export default {
     ...mapActions('coin/orderInfo', [
       'generateOrderInfo',
     ]),
+
+    /*关于弹窗的方法*/
+    goToLYC(){
+      if(this.KYCChecked){
+        this.$router.push({name:'kyc'});
+      }
+    },
+    // 一键授权
+    goToAuthorize(){
+      this.toGrantAuthorization().then(
+        ()=>{
+          // 授权成功
+          this.isShowAuthorize =false;
+          this.isShowOTCCheck = true;
+        },
+        ()=>{
+          Toast('授权失败');
+        },
+      )
+    },
     // 下一步
     next() {
       // 点击下一步 （生成订单的参数）
@@ -217,9 +293,31 @@ export default {
         (err) => {
            // this.$toast.clear();
           // 判断是否进行了OTC认证
-          if(currencyData.code === 165){ // 未进行OTC判断
-            // 验证是否进行了KYC验证
-            this.$router.push({name:'kyc'})
+          if(err.code === 165){ // 未进行OTC判断
+            switch (err.data.link_coin_currency_types.is_kyc) {
+              case 0: // 身份未验证
+                this.isShowSetKYC = true;
+                break;
+              case 1: // KYC审核中
+                this.isShowKYCCheck = true;
+                break;
+              case 2: // OTC审核中
+                this.isShowOTCCheck = true;
+                break;
+              case 3: // KYC重新验证
+                this.isShowResetKYC = true;
+                break;
+              case 4: // OTC重新验证
+                this.isShowResetOTC = true;
+                break;
+              case 5: // 已认证去授权
+                this.isShowAuthorize = true;
+                break;
+              default:
+                break;
+            }
+
+            this.isShowSetKYC = true;
           } else if (currencyData.code === 166){ // 服务异常
             Toast('服务器异常');
           }else if (currencyData.code === 167){ // otc不支持该币种购买
@@ -418,6 +516,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  /*设置身份验证弹窗样式*/
   .activeContentTab{
     color: #FFFFFF;
   }
