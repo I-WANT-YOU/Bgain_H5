@@ -14,7 +14,8 @@
       ></svg-icon>
       <div class="dialog__title">{{title}}</div>
       <div class="dialog__content">
-        <span>{{content}}</span>
+        <span v-if="content !== ''">{{content}}</span>
+        <slot name="content"></slot>
       </div>
       <div class="dialog__buttons">
         <Button

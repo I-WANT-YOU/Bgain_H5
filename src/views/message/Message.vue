@@ -5,12 +5,21 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
 import BgainBarNav from '@component/BgainNavBar.vue';
+
+const { mapActions } = createNamespacedHelpers('message');
 
 export default {
   name: 'Message',
   components: {
     BgainBarNav,
+  },
+  methods: {
+    ...mapActions(['getAllNews']),
+  },
+  mounted() {
+    this.getAllNews();
   },
 };
 </script>
