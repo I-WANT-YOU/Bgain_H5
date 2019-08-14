@@ -12,13 +12,12 @@
       </div>
     </div>
     <div class="menu-con">
-      <div class="item" @click="onSkip('/registerHome/login')">首页</div>
-      <div class="item" @click="onSkip('/product/fund')">冠军基金</div>
-      <div class="item" @click="onSkip('/product/current')">天天赚</div>
-      <div class="item" @click="onSkip('/product/fixed')">定期盈</div>
-      <div class="item" @click="onSkip('/mine')">我的</div>
-      <div class="item" @click="onSkip('')">联系我们</div>
-      <div class="item" @click="onSkip('/message')">消息中心</div>
+      <div
+        v-for="(item, key) in options"
+        :key="key"
+        class="item"
+        @click="onSkip(item.path)"
+      >{{item.text}}</div>
     </div>
   </Popup>
 </template>
@@ -31,6 +30,19 @@ export default {
   components: {
     Popup,
   },
+  data() {
+    return {
+      options: [
+        { text: '首页', path: '/registerHome/login' },
+        { text: '冠军基金', path: '/product/fund' },
+        { text: '天天赚', path: '/product/current' },
+        { text: '定期盈', path: '/product/fixed' },
+        { text: '我的', path: '/mine' },
+        { text: '联系我们', path: '' },
+        { text: '消息中心', path: '/message' },
+      ],
+    };
+  },
   methods: {
     onClose() {
       this.$emit('close');
@@ -38,7 +50,6 @@ export default {
     onSkip(router) {
       this.onClose();
       this.$router.push(router);
-      console.log(router);
     },
   },
 };
