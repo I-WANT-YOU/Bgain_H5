@@ -366,6 +366,11 @@ const router = new Router({
       name: 'Message',
       component: () => import('../views/message/Message.vue'),
     },
+    {
+      path: '/activity',
+      name: 'activity',
+      component: () => import('../views/activity/ActivityCenter.vue'),
+    },
   ],
 });
 
