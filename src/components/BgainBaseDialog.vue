@@ -80,7 +80,7 @@ export default {
     },
     submitColor: {
       type: String,
-      default: '#ccc',
+      default: '',
       required: false,
     },
   },
