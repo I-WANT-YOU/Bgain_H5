@@ -63,15 +63,18 @@
       v-model="isShowSetKYC"
       :showCancel="false"
       submitText="设置交易密码"
-      content="您还未设置交易密码，暂无法进行购买"
       @submit="()=>{this.$router.push({name:'set-payment-password'})}"
       @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
-    />
+    >
+      <template v-slot:content>
+        <van-radio name="1">我同意授权Bgain开通OTC服务</van-radio>
+      </template>
+    </BgainBaseDialog>
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast ,Radio} from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import errorMessage from '../../../constants/responseStatus';
@@ -82,10 +85,11 @@ export default {
   name: 'CoinRecharge',
   components: {
     BgainBaseDialog,
+    'van-radio': Radio,
   },
   data() {
     return {
-      isShowSetKYC:false,
+      isShowSetKYC:true,
       isShowSetPassword:false,
       activeContentTab: '',
       activeExchangeTab: 0,
@@ -197,21 +201,21 @@ export default {
     },
     // 获取币种列表（设计交易密码 设置OYC 设置KYC）
     getLaterCurrencyList(){
-      this.$toast.loading({
-        mask: true,
-        duration: 0,
-        message: '加载中...',
-      });
+      // this.$toast.loading({
+      //   mask: true,
+      //   duration: 0,
+      //   message: '加载中...',
+      // });
       this.getCurrencyList().then( // 获取币种列表
         () => {
           console.log(this.currencyData);
-          this.$toast.clear();
+          // this.$toast.clear();
           this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
           this.exchangeType = 'CNY'; // 兑换方式选择
           this.getNewCurrencyPrice(this.activeContentTab);
         },
         (err) => {
-          // this.$toast.clear();
+           // this.$toast.clear();
           // 判断是否进行了OTC认证
           if(currencyData.code === 165){ // 未进行OTC判断
             // 验证是否进行了KYC验证
@@ -243,9 +247,9 @@ export default {
           }else if (currencyData.code === 178){ // 服务异常
             Toast('服务器异常');
           }
-          if (err.status) { this.$toast(errorMessage[err.status]); } else {
-            this.$toast('网络故障');
-          }
+          // if (err.status) { this.$toast(errorMessage[err.status]); } else {
+          //   this.$toast('网络故障');
+          // }
         },
       );
     }
@@ -400,7 +404,6 @@ export default {
         }
       },
       (err) => {
-        this.$toast.clear();
         if (err.status) { this.$toast(errorMessage[err.status]); } else {
           this.$toast('网络故障');
         }
