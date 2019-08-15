@@ -16,32 +16,39 @@
             icon-class="purchaseCoinIllustration" class="purchase-img"/>
         </div>
         <div @click="toRecords">
+          <p :class="{activeRedCircle:true}"></p>
           <svg-icon
             icon-class="purchaseCoinRecord" class="purchase-img"/>
         </div>
       </div>
     </header>
     <CoinPurchase v-if="activeHeaderTab===0"/>
-    <CoinRecharge v-else/>
+    <CoinRecharge @activeHeaderTabFromChild="(params)=>{this.activeHeaderTab = params}" v-else/>
   </div>
 </template>
 
 <script>
 import CoinPurchase from './components/CoinPurchase.vue';
 import CoinRecharge from './components/CoinRecharge.vue';
+import {Toast} from 'vant';
+import Vue from 'vue';
 
+Vue.use(Toast);
 export default {
   name: 'purchaseCoinHome',
+
   components: {
     CoinPurchase,
     CoinRecharge,
   },
+
   data() {
     return {
       activeHeaderTab: 0, // 默认冲币 0
       headerTabsData: ['充币', '买币'],
     };
   },
+
   methods: {
     changeHeaderTab(index) {
       this.activeHeaderTab = index;
@@ -85,6 +92,10 @@ export default {
   }
   .activeContentTab{
     color: #FFFFFF;
+  }
+  // 历史记录有小红点
+  .activeRedCircle{
+    background: red;
   }
   font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
@@ -131,6 +142,19 @@ export default {
         align-items: flex-start;
         margin-top: 12px;
         margin-right: 18px;
+      }
+      // 小红点实现
+      >div:nth-child(2){
+        position: relative;
+        >p{
+          position: absolute;
+          top:-2px;
+          right: -2px;
+          border-radius:10px;
+          margin:0;
+          width: 12px;
+          height: 12px;
+        }
       }
       .purchase-img{
         display: inline-block;

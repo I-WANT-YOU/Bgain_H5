@@ -49,28 +49,117 @@
         :disabled = !activeButton
       >下一步</button>
     </div>
+    <!--是否显示交易密码弹窗-->
+    <BgainBaseDialog
+      v-model="isShowSetPassword"
+      :showCancel="false"
+      submitText="设置交易密码"
+      content="您还未设置交易密码，暂无法进行购买"
+      @submit="()=>{this.$router.push({name:'set-payment-password'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--是否设置KYC-->
+    <BgainBaseDialog
+      v-model="isShowSetKYC"
+      :showCancel="false"
+      submitText="身份认证"
+      content="为保证您在平台交易的资金安全请先完成身份认证"
+      @submit="goToLYC"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--是否设置OTC-->
+    <BgainBaseDialog
+      v-model="isShowSetOTC"
+      :showCancel="false"
+      submitText="身份认证"
+      content="为保证您在平台交易的资金安全请先完成身份认证"
+      @submit="goToLYC"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+      :submitColor="popColor"
+    >
+      <!--suppress XmlUnboundNsPrefix -->
+      <template v-slot:content>
+        <van-checkbox icon-size="15px" v-model="OTCChecked" @click="changeCheckStatus">
+          <span style="font-size: 12px;line-height: 28px;color: #2A64F7; ">我同意授权Bgain开通OTC服务</span>
+        </van-checkbox>
+      </template>
+    </BgainBaseDialog>
+    <!--KYC校验中-->
+    <BgainBaseDialog
+      v-model="isShowKYCCheck"
+      :showCancel="false"
+      submitText="知道了"
+      content="您的身份认证申请已提交，审核结果将在3个工作日内公布"
+      @submit="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--OTC校验中-->
+    <BgainBaseDialog
+      v-model="isShowOTCCheck"
+      :showCancel="false"
+      submitText="知道了"
+      content="您的身份认证申请已提交，审核结果将在1个工作日内公布"
+      @submit="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--KYC重新验证-->
+    <BgainBaseDialog
+      v-model="isShowResetKYC"
+      :showCancel="false"
+      submitText="重新认证"
+      content="您的身份消息认证失败，重新认证后可进行买币"
+      @submit="()=>{this.$router.push({name:'kyc'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--OTC重新验证-->
+    <BgainBaseDialog
+      v-model="isShowResetOTC"
+      :showCancel="false"
+      submitText="重新认证"
+      content="您的身份消息认证失败，重新认证后可进行买币"
+      @submit="()=>{this.$router.push({name:'kyc'})}"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
+    <!--已认证去授权-->
+    <BgainBaseDialog
+      v-model="isShowAuthorize"
+      :showCancel="false"
+      submitText="一键授权"
+      content="确认授权Bgain开通OTC服务"
+      @submit="goToAuthorize"
+      @cancel="()=>{this.$emit('activeHeaderTabFromChild', 0)}"
+    />
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast ,Checkbox,} from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import errorMessage from '../../../constants/responseStatus';
+import BgainBaseDialog from '../../../components/BgainBaseDialog.vue';
 
 Vue.use(Toast);
 export default {
   name: 'CoinRecharge',
   components: {
+    BgainBaseDialog,
+    'van-checkbox': Checkbox,
   },
   data() {
     return {
-      activeContentTab: '',
-      activeExchangeTab: 0,
-      headerTabsData: ['充币', '买币'],
-      exchangeTabsData: ['按兑换金额', '按兑换数量'],
-      placeHolder: '',
-      inputValue: '',
+      isShowSetPassword:false, // 设置密码
+      isShowSetKYC:false,  // KYC身份验证
+      isShowSetOTC:true, // OTC身份验证
+      isShowKYCCheck: false, //KYC证验证中
+      isShowOTCCheck: false, // OTC验证中
+      isShowResetKYC:false, // KYC重新验证
+      isShowResetOTC:false, // OTC重新验证
+      isShowAuthorize: false, // 已认证去授权
+      OTCChecked: true, // radio判断是否OTC
+      popColor:'#3C64EE',
+      exchangeTabsData:['按兑换金额','按兑换数量'],
+      activeExchangeTab:0,
       exchangeType: '', // 兑换类型
       exchangeInfo: [],
       singleOfferPrice: '', // 单约价
@@ -78,33 +167,18 @@ export default {
       paymentAmount: '', // 实付金额
       activeButton: false,
       routerData: '',
+      inputValue:'',
+      placeHolder:'',
+      activeContentTab: '',
     };
   },
-  mounted() {
-    this.$toast.loading({
-      mask: true,
-      duration: 0,
-      message: '加载中...',
-    });
-    this.getCurrencyList().then( // 获取币种列表
-      () => {
-        this.$toast.clear();
-        this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
-        this.exchangeType = 'CNY'; // 兑换方式选择
-        this.getNewCurrencyPrice(this.activeContentTab);
-      },
-      (err) => {
-        this.$toast.clear();
-        if (err.status) { this.$toast(errorMessage[err.status]); } else {
-          this.$toast('网络故障');
-        }
-      },
-    );
-  },
-  beforeDestroy() {
-    this.$toast.clear();
-  },
+
   methods: {
+    // 获取用户信息 判断是否设置交易密码
+    ...mapActions('user',[
+      'getUserSummary',
+      'toGrantAuthorization',
+    ]),
     ...mapActions('coin/purchaseCoin', [
       'getCurrencyList', // 获取列表
       'getCurrencyPrice',
@@ -112,6 +186,36 @@ export default {
     ...mapActions('coin/orderInfo', [
       'generateOrderInfo',
     ]),
+
+    /*关于弹窗的方法*/
+    goToLYC(){
+      if(this.OTCChecked){
+        this.$router.push({name:'kyc'});
+      }
+    },
+    // 一键授权
+    goToAuthorize(){
+      this.toGrantAuthorization().then(
+        ()=>{
+          // 授权成功
+          this.isShowAuthorize =false;
+          this.isShowOTCCheck = true;
+        },
+        ()=>{
+          Toast('授权失败');
+        },
+      )
+    },
+    // 改变选项
+    changeCheckStatus(){
+      if(this.popColor === '#3C64EE'){
+        this.popColor = '#D2D8EB';
+        this.OTCChecked = false;
+      }else{
+        this.popColor = '#3C64EE';
+        this.OTCChecked = true;
+      }
+    },
     // 下一步
     next() {
       // 点击下一步 （生成订单的参数）
@@ -192,6 +296,82 @@ export default {
         this.exchangeType = this.activeContentTab;
       }
     },
+    // 获取币种列表（设计交易密码 设置OYC 设置KYC）
+    getLaterCurrencyList(){
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...',
+      });
+      this.getCurrencyList().then( // 获取币种列表
+        () => {
+          this.$toast.clear();
+          this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
+          this.exchangeType = 'CNY'; // 兑换方式选择
+          this.getNewCurrencyPrice(this.activeContentTab);
+        },
+        (err) => {
+           this.$toast.clear();
+          // 判断是否进行了OTC认证
+          if(err.code === 165){ // 未进行OTC判断
+            switch (err.data.link_coin_currency_types[0].is_kyc) {
+              case 0: // KYC未验证
+                this.isShowSetKYC = true;
+                break;
+              case -1: // KYC未验证
+                this.isShowSetOTC = true;
+                break;
+              case 1: // KYC审核中
+                this.isShowKYCCheck = true;
+                break;
+              case 2: // OTC审核中
+                this.isShowOTCCheck = false;
+                break;
+              case 3: // KYC重新验证
+                this.isShowResetKYC = true;
+                break;
+              case 4: // OTC重新验证
+                this.isShowResetOTC = true;
+                break;
+              case 5: // 已认证去授权
+                this.isShowAuthorize = true;
+                break;
+              default:
+                break;
+            }
+          } else if (err.code === 166){ // 服务异常
+            Toast('服务器异常');
+          }else if (err.code === 167){ // otc不支持该币种购买
+            Toast('服务器异常');
+          }else if (err.code === 168){ // otc待处理订单超过两条
+            Toast('服务器异常');
+          }else if (err.code === 169){ // otc购买数量为零
+            Toast('服务器异常');
+          }else if (err.code === 170){ // otc 购买金额不在可购买范围之内
+            Toast('服务器异常');
+          }  else if (err.code === 171){ // otc 用户当天可用额度不足
+            Toast('服务器异常');
+          } else if (err.code === 172){ // otc 第三方服务闭市
+            Toast('服务器异常');
+          } else if (err.code === 173){ // otc 订单不存
+            Toast('服务器异常');
+          } else if (err.code === 174){ // otc 用户没有权限对此订单操作
+            Toast('服务器异常');
+          } else if (err.code === 175){ // otc 当前订单不可申诉
+            Toast('服务器异常');
+          } else if (currencyData.code === 176){ // otc 用户总体可用额度不足
+            Toast('服务器异常');
+          } else if (err.code === 177){ // otc 用户存在一笔未支付订单
+            Toast('服务器异常');
+          }else if (err.code === 178){ // 服务异常
+            Toast('服务器异常');
+          }
+          // if (err.status) { this.$toast(errorMessage[err.status]); } else {
+          //   this.$toast('网络故障');
+          // }
+        },
+      );
+    }
   },
   computed: {
     ...mapState('coin/purchaseCoin', [
@@ -204,6 +384,10 @@ export default {
     ]),
     ...mapGetters('coin/purchaseCoin', [
       'currencyList', // 币种列表
+    ]),
+    // 用户信息判断是否设置交易密码
+    ...mapState('user', [
+      'basicInfo', // 币种列表
     ]),
     // 生成兑换信息列表
     initExchangeInfo() {
@@ -326,11 +510,34 @@ export default {
       return false;
     },
   },
-};
+  mounted() {
+    // 获取用户信息 判断用户是否设置了交易密码
+    this.getUserSummary().then(
+      () => {
+        if(this.basicInfo.authlevel === 1){  // 1 未设置 2 已设置
+          this.isShowSetPassword = true;
+        }else if(this.basicInfo.authlevel === 2){
+          this.isShowSetPassword = false;
+          // 已设置交易密码 加载数据
+          this.getLaterCurrencyList();
+        }
+      },
+      (err) => {
+        if (err.status) { this.$toast(errorMessage[err.status]); } else {
+          this.$toast('网络故障');
+        }
+      },
+    );
+  },
 
+  beforeDestroy() {
+    this.$toast.clear();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
+  /*设置身份验证弹窗样式*/
   .activeContentTab{
     color: #FFFFFF;
   }

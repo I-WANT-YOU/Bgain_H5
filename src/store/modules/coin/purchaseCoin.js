@@ -1,13 +1,13 @@
 /* eslint-disable */
 import CoinService from '@api/coin/purchaseCoin';
-import { handlerSuccessResponse, handlerSuccessResponseV2 } from '@utils/auth';
+import { handlerSuccessResponse, handlerSuccessResponseV2,handlerSuccessResponseV3 } from '@utils/auth';
 import * as types from '../../mutationTypes';
 import {get} from "lodash";
 
 const state = {
   purchaseCoinInfo: [],
   currencyData: {
-    link_coin_currency_types:[],
+    link_coin_currency_types:[]
   },
   currencyPrice: {},
 };
@@ -19,10 +19,9 @@ const getters = {
   description: state => state.purchaseCoinInfo.map(item => item.description.split('；')),
   // 买币的列表
   currencyList: state=>{
-    console.log(state.currencyData);
     let currentList = [];
     if(!state.currencyData.link_coin_currency_types){
-      currentList = state.currencyData.map(item=>item.toUpperCase());
+      currentList = state.currencyData.link_coin_currency_types.map(item=>item.toUpperCase());
     }else{
       currentList =  state.currencyData.link_coin_currency_types.map(item => item.toUpperCase());
     }
@@ -36,7 +35,6 @@ const mutations = {
     state.purchaseCoinInfo = payload;
   },
   [types.GET_CURRENCY_LIST](state, payload) {
-    console.log(payload);
     state.currencyData = payload;
   },
   [types.GET_CURRENCY_PRICE](state, payload) {
@@ -59,7 +57,7 @@ const actions = {
   async getCurrencyList({ commit }) {
     try {
       const response = await CoinService.getCurrencyList();
-      const data = await handlerSuccessResponseV2(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.GET_CURRENCY_LIST, data);
     } catch (error) {
       throw error;

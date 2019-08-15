@@ -113,6 +113,18 @@ const actions = {
       throw error;
     }
   },
+
+  // 用户一键授权OTC验证
+  async toGrantAuthorization({ commit }) {
+    try {
+       await UserService.toGrantAuthorization();
+      // const data = await Auth.handlerSuccessResponseV2(response);
+      // commit(types.GET_KYC_INFO, data);
+      }catch(error){
+    throw error;
+    }
+  },
+
   // 判断用户是否签到
   async getUserIsSignIn({ commit }) {
     try {

@@ -16,7 +16,7 @@
           <svg-icon :icon-class=key style = "width: 60px;height: 44px"/>
         </div>
         <div>
-          <span>{{item}}</span>
+          <span>{{toCN(key)}}</span>
         </div>
       </div>
     </div>
@@ -65,6 +65,16 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState('coin/orderInfo', [
+      'orderInfoById',
+      'orderInformation', // 生成订单接口 返回信息
+      'allPayInfo', // 选择支付方式后接口 返回的信息
+    ]),
+    ...mapGetters('coin/orderInfo', [
+      'paymentType',
+    ]),
+  },
   methods: {
     toggleSelect(index) {
       this.selectedIndex = index;
@@ -73,16 +83,40 @@ export default {
       'getOrderInfoById',
       'submitOrder',
     ]),
+    // 格式化银行微信支付宝为中文
+    toCN(type){
+      let payType = '';
+      switch (type) {
+        case 'ebank':
+          payType ='银行卡';
+          break;
+        case 'weixin':
+          payType = '微信';
+          break;
+        case 'alipay':
+          payType = '支付宝';
+          break;
+      }
+      return payType;
+    },
     // 提交订单
     orderSubmit() {
-      alert('这是伪数据');
+      Toast.loading({
+        mask: false,
+        message: '加载中...'
+      })
       const currentParams = {
         pay_type: 'EBANK',
-        id: '9',
+        id: this.orderInformation.id,
       };
       this.submitOrder(currentParams).then(
-        (res) => {
-          console.log(errorMessage[res.status]);
+        () => {
+          Toast.clear();
+          // 跳转到请付款页面
+          this.$router.push({
+            name:'PleasePay',
+            params:{orderId:this.orderInformation.id}
+          })
         },
         (err) => {
           this.$toast.clear();
@@ -93,20 +127,11 @@ export default {
       );
     },
   },
-  computed: {
-    ...mapState('coin/orderInfo', [
-      'orderInfoById',
-      'orderInformation', // 生成订单 返回信息
-    ]),
-    ...mapGetters('coin/orderInfo', [
-      'paymentType',
-    ]),
-  },
+
   mounted() {
     // 从路由中获取订单id
     const orderInfo = this.$route.params;
     // 根据订单id查询订单
-    console.log(orderInfo);
     try {
       if (orderInfo.data) {
         sessionStorage.setItem('orderInfo', orderInfo.data);

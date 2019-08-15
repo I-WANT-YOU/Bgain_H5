@@ -100,6 +100,10 @@ export default {
       .info-img{
         width: 54px;
         height: 54px;
+        >img{
+          width: 54px;
+          height: 54px;
+        }
       }
       .info-text{
         >span{
