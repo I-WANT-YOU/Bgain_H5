@@ -1,12 +1,12 @@
-import { get } from 'lodash';
+import { get, map } from 'lodash';
 import MessageService from '@api/message';
 import { formatDate } from '@utils/tools';
-import { handlerSuccessResponse } from '@/utils/auth';
+import { handlerSuccessResponse, handlerSuccessResponseV2 } from '@/utils/auth';
 import * as types from '../../mutationTypes';
 
 const state = {
   news: [],
-  system: [],
+  systemDetail: {},
 };
 
 const getters = {
@@ -15,14 +15,22 @@ const getters = {
       item.create_date = formatDate(item.create_date);
       return item;
     }),
+  announcementList: state => map(state.news, (item) => {
+    item.create_date = formatDate(item.create_date);
+    return item;
+  }, []),
+  announcementDetail: state => ({
+    ...state.systemDetail,
+    createdAt: formatDate(`${state.systemDetail.createdAt}000` * 1),
+  }),
 };
 
 const mutations = {
   [types.GET_USER_NEWS](state, payload) {
     state.news = payload;
   },
-  [types.GET_USER_SYSTEM_NEWS](state, payload) {
-    state.system = payload;
+  [types.GET_USER_SYSTEM_NEWS_DETAIL](state, payload) {
+    state.systemDetail = payload;
   },
 };
 
@@ -49,7 +57,6 @@ const actions = {
   async setAllNewsRead() {
     try {
       const response = await MessageService.setAllNewsRead();
-      console.log(response);
       return await handlerSuccessResponse(response);
     } catch (error) {
       throw error;
@@ -59,9 +66,18 @@ const actions = {
   async getSystemAnnouncements({ commit }) {
     try {
       const response = await MessageService.getSystemAnnouncements();
-      const data = await handlerSuccessResponse(response);
-      console.log(data);
-      commit(types.GET_USER_SYSTEM_NEWS, data);
+      const data = await handlerSuccessResponseV2(response);
+      commit(types.GET_USER_NEWS, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getSystemAnnouncementsDetail({ commit }, id) {
+    try {
+      const response = await MessageService.getSystemAnnouncementsDetail(id);
+      const data = await handlerSuccessResponseV2(response);
+      commit(types.GET_USER_SYSTEM_NEWS_DETAIL, data);
     } catch (error) {
       throw error;
     }

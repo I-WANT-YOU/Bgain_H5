@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import eruda from 'eruda';
+// import eruda from 'eruda';
 import App from './App.vue';
 import router from './router';
 import store from './store';

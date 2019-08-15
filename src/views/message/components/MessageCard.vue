@@ -2,13 +2,18 @@
   <div @click="onClick">
     <SwipeCell class="message-card" :right-width="78">
       <template v-slot:default>
-        <div :class="['title', option.read ? '' : 'active']">
+        <div
+          :class="['title',
+          (type === 'message' && !option.read) ? 'active' : '',
+          type !== 'message' ? 'ass' : ''
+          ]"
+        >
           <i></i>
           <span>{{option.title}}</span>
         </div>
         <div class="time">{{option.create_date}}</div>
       </template>
-      <template v-slot:right>
+      <template v-if="type === 'message'" v-slot:right>
         <div class="delete">删除</div>
       </template>
     </SwipeCell>
@@ -28,10 +33,22 @@ export default {
       type: Object,
       required: true,
     },
+    type: {
+      type: String,
+      default: 'message',
+      required: false,
+    },
+  },
+  mounted() {
+    this.type = this.$route.params.type;
   },
   methods: {
     onClick() {
-      this.$router.push({ path: '/message-detail', query: this.option });
+      if (this.type === 'message') {
+        this.$router.push({ path: '/message-detail/message', query: this.option });
+      } else {
+        this.$router.push({ path: '/message-detail/announcement', query: { id: this.option.id } });
+      }
     },
   },
 };
@@ -70,6 +87,10 @@ export default {
     i {
       background: #ff5c5c;
     }
+  }
+  .ass {
+    font-size: 15px;
+    color: #0f3256;
   }
   .delete {
     width: 78px;
