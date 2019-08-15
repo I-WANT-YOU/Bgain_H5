@@ -1,6 +1,6 @@
 <template>
   <div @click="onClick">
-    <SwipeCell class="message-card" :right-width="78">
+    <SwipeCell class="message-card">
       <template v-slot:default>
         <div
           :class="['title',
@@ -14,14 +14,17 @@
         <div class="time">{{option.create_date}}</div>
       </template>
       <template v-if="type === 'message'" v-slot:right>
-        <div class="delete">删除</div>
+        <div class="delete" @click="deleteMessage">删除</div>
       </template>
     </SwipeCell>
   </div>
 </template>
 
 <script>
-import { SwipeCell } from 'vant';
+import { SwipeCell, Toast } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapActions } = createNamespacedHelpers('message');
 
 export default {
   name: 'MessageCard',
@@ -43,11 +46,19 @@ export default {
     this.type = this.$route.params.type;
   },
   methods: {
+    ...mapActions(['deleteNewsRead']),
     onClick() {
       if (this.type === 'message') {
         this.$router.push({ path: '/message-detail/message', query: this.option });
       } else {
         this.$router.push({ path: '/message-detail/announcement', query: { id: this.option.id } });
+      }
+    },
+    async deleteMessage() {
+      try {
+        this.$emit('delete', this.option.uuid);
+      } catch (error) {
+        Toast(error);
       }
     },
   },
@@ -93,7 +104,7 @@ export default {
     color: #0f3256;
   }
   .delete {
-    width: 78px;
+    width: 77px;
     height: 61px;
     font-size: 14px;
     color: #ffffff;

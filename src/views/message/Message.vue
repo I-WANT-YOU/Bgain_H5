@@ -6,7 +6,13 @@
       </template>
     </BgainBarNav>
     <div class="message-center-con">
-      <MessageCard v-for="(option,key) in list" :type="type" :key="key" :option="option" />
+      <MessageCard
+        v-for="(option,key) in list"
+        @delete="onDelete"
+        :type="type"
+        :key="key"
+        :option="option"
+      />
     </div>
   </div>
 </template>
@@ -31,10 +37,16 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['getAllNews', 'setAllNewsRead', 'getSystemAnnouncements']),
+    ...mapActions(['getAllNews', 'setAllNewsRead', 'getSystemAnnouncements', 'deleteNewsRead']),
     async readAll() {
       await this.setAllNewsRead();
       await this.getAllNews();
+      this.list = this.newList;
+    },
+    async onDelete(uuid) {
+      await this.deleteNewsRead(uuid);
+      await this.getAllNews();
+      this.list = this.newList;
     },
   },
   computed: {
