@@ -18,9 +18,9 @@ request.interceptors.request.use(
       requestConfig.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      requestConfig.headers.Authorization = 'Bearer 10';
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   requestConfig.headers.Authorization = 'Bearer 10';
+    // }
 
     requestConfig.headers.language = 'ZH_CN';
 

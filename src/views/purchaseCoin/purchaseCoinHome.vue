@@ -16,7 +16,7 @@
             icon-class="purchaseCoinIllustration" class="purchase-img"/>
         </div>
         <div @click="toRecords">
-          <p :class="{activeRedCircle:true}"></p>
+          <p :class="{activeRedCircle:false}" @hasRecord="(params)=>{this.activeRedCircle = params}"></p>
           <svg-icon
             icon-class="purchaseCoinRecord" class="purchase-img"/>
         </div>

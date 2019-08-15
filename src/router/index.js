@@ -41,19 +41,19 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
-      path: '/registerHome/:status',
+      path: '/registerHome',
       name: 'RegisterHome',
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
     },
     {
-      path: '/purchaseCoinHome/',
+      path: '/purchaseCoinHome',
       name: 'PurchaseCoinHome',
       component: () => import(/* webpackChunkName: "PurchaseCoinHome" */ '../views/purchaseCoin/purchaseCoinHome.vue'),
     },
     {
       path: '/homeToLogin/',
       name: 'HomeToLogin',
-      component: () => import(/* webpackChunkName: "HomeToLogin" */ '../components/home/HomeToLogin.vue'),
+      component: () => import(/* webpackChunkName: "HomeToLogin" */ '../views/home/components/HomeToLogin.vue'),
     },
     {
       path: '/fixedPurchaseStepOne',
@@ -113,7 +113,7 @@ const router = new Router({
     {
       path: '/test/',
       name: 'fixedPop',
-      component: () => import(/* webpackChunkName: "fixedPop" */ '../components/fixedDetail/FixedPop.vue'),
+      component: () => import(/* webpackChunkName: "fixedPop" */ '../views/product/fixed/components/FixedPop.vue'),
     },
     {
       path: '/country',

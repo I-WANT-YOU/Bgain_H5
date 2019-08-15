@@ -19,7 +19,7 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" /><br/>
     <button @click="onClick">Geetest</button><br/>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div><br/>
-    <router-link to="/registerHome/unLogin">未登录业主页</router-link><br/>
+    <router-link to="/registerHome/">----主页------</router-link><br/>
     <router-link to="/registerHome/register">注册业主页</router-link><br/>
     <router-link to="/registerHome/login">登陆页主页</router-link><br />
     <router-link to="/subscriptionResults">认购结果</router-link><br />

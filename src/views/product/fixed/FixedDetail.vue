@@ -79,7 +79,7 @@
 <script>
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
-import FixedDetailSteps from '../../../components/fixedDetail/FiedDetailSteps.vue';
+import FixedDetailSteps from './components/FiedDetailSteps.vue';
 import errorMessage from '../../../constants/responseStatus';
 import DownApp from '../../../components/DownApp.vue';
 

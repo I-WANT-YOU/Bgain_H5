@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import invitedfriend from '../../assets/images/home/invitedfriend.svg';
-import quickcurrencypassing from '../../assets/images/home/quickcurrencypassing.svg';
+import invitedfriend from '../../../assets/images/home/invitedfriend.svg';
+import quickcurrencypassing from '../../../assets/images/home/quickcurrencypassing.svg';
 
 export default {
   name: 'HomeNotice',

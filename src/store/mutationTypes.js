@@ -69,7 +69,8 @@ export const GET_ORDER_INFO = 'GET_ORDER_INFO';
 export const POST_USER_APPEAL = 'POST_USER_APPEAL'; // 用户提交申诉
 export const GET_ORDER_INFO_BY_ID = 'GET_ORDER_INFO_BY_ID'; // 根据ID查询订单 GET_ORDER_LIST
 export const GET_ORDER_LIST = 'GET_ORDER_LIST'; // 订单列表
-export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息
+export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息HAD_PAY_INFO
+export const HAD_PAY_INFO = 'HAD_PAY_INFO'; // 用户选择已付款
 
 /**
  * App 相关

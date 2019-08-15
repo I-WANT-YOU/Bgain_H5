@@ -23,12 +23,33 @@
       <span>{{tips}}</span>
       <div><button @click="goToNext(orderStatus)">{{buttonTime}}</button></div>
     </div>
+    <BgainBaseDialog
+      v-model="isShowConfirm"
+      :showCancel="true"
+      title="付款确认"
+      submitText="付款确认"
+      content=""
+      @submit="payConfirm"
+      @cancel="()=>{this.isShowConfirm=false}"
+      :submitColor="popColor"
+    >
+      <!--suppress XmlUnboundNsPrefix -->
+      <template v-slot:content>
+        <div style="display: flex;flex-direction: column;align-items: center">
+          <span style="font-size: 16px;color: #0F3256;letter-spacing: 0.15px;line-height: 24px;">确认已向卖家付款</span>
+          <span style="font-size: 16px;color: #0F3256;letter-spacing: 0.15px;line-height: 24px;">（恶意点击将直接冻结账户）</span>
+          <van-checkbox icon-size="15px" v-model="confirmChecked" @click="changeCheckStatus">
+            <span style="font-size: 12px;line-height: 28px;color: #2A64F7; ">我同意授权Bgain开通OTC服务</span>
+          </van-checkbox>
+        </div>
+      </template>
+    </BgainBaseDialog>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { Toast } from 'vant';
+import { Toast ,Checkbox} from 'vant';
 import Vue from 'vue';
 import publicMethods from '@utils/publicMethods';
 import PayContent from './components/PayContent.vue';
@@ -36,15 +57,20 @@ import ToBeReleaseContent from './components/ToBeReleaseContent.vue';
 import PayHeader from './components/PayHeader.vue';
 import errorMessage from '../../constants/responseStatus';
 import FinishedContent from '@/views/purchaseCoin/components/FinishedContent.vue';
+import BgainBaseDialog from '../../components/BgainBaseDialog.vue';
 
 Vue.use(Toast);
 export default {
   name: 'PleasePay',
   components: {
-    FinishedContent, PayHeader, PayContent, ToBeReleaseContent,
+    FinishedContent, PayHeader, PayContent, ToBeReleaseContent,BgainBaseDialog,
+    'van-checkbox':Checkbox,
   },
   data() {
     return {
+      confirmChecked: false,
+      popColor:'#D2D8EB', // 弹窗按钮颜色
+      isShowConfirm:false, // 付款弹窗
       payType: '', // 支付类型
       formatedOrderStatus: '', // 中文化的订单状态
       subTitle: '', // 副标题
@@ -57,12 +83,59 @@ export default {
   computed: {
     ...mapState('coin/orderInfo', [
       'orderInfoById',
+      'hadPayInfo',
     ]),
   },
   methods: {
     ...mapActions('coin/orderInfo', [
-      'getOrderInfoById',
+      'getOrderInfoById', // 根据id获取订单信息
+      'confirmHadPay' // 用户点击取人付款
     ]),
+    /*弹窗方法*/
+    // 改变check状态
+    changeCheckStatus(){
+      if(this.popColor === '#3C64EE'){
+        this.popColor = '#D2D8EB';
+        this.confirmChecked = false;
+      }else{
+        this.popColor = '#3C64EE';
+        this.confirmChecked = true;
+      }
+    },
+    // 进入下一页
+    payConfirm(){
+      if(this.confirmChecked){
+        Toast.loading({
+          mask:false,
+          duration: 0,
+          message: '加载中...',
+        })
+        this.confirmHadPay(sessionStorage.getItem('orderId')).then(
+          ()=>{
+            Toast.clear();
+            switch (this.hadPayInfo.code) {
+              case 177:
+                Toast('操作失败');
+                break;
+              case 0:
+                this.queryOrderDetailById();
+                break;
+              default:
+                break;
+            }
+          },
+          (err) => {
+            this.$toast.clear();
+            if (err.status) { this.$toast(errorMessage[err.status]); } else {
+              this.$toast('网络故障');
+            }
+          },
+        );
+
+      }
+    },
+    /*弹窗方法 !!*/
+
     // 查询订单信息（调用接口） // 用来二次调用
     queryOrderDetailById() {
       const orderId = sessionStorage.getItem('orderId');
@@ -150,7 +223,7 @@ export default {
     goToNext(orderStatus) {
       if (orderStatus === 'pending') { // 请付款-->待放行
         // 重新查询订单状态
-        this.queryOrderDetailById();
+        this.isShowConfirm = true;
       } else if (orderStatus === 'payed') { // 待放行-->申诉
         this.$router.push(
           {
@@ -247,8 +320,6 @@ export default {
           text-align: center;
         }
       }
-
     }
   }
-
 </style>

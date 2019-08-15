@@ -116,6 +116,20 @@ class CoinService {
       throw new Error(error);
     }
   }
+
+  // 用户确认已付款
+  static async confirmHadPay(orderId) {
+    try {
+      const requestOptions = {
+        url: '/otc/confirm-payment/'+orderId,
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CoinService;

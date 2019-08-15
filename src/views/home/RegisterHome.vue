@@ -1,7 +1,17 @@
 <template>
   <div class="registerHome">
     <header>
-      这是头部
+      <div class="logo-img" @click="()=>{this.$router.push({name:'RegisterHome'})}">
+        <svg-icon icon-class="logo" class="logo-icon"/>
+      </div>
+      <div class="user-img" @click="()=>{this.$router.push({name:'login'})}">
+        <div>
+          <svg-icon icon-class="user_write" class="user-icon" />
+        </div>
+        <div>
+          <svg-icon icon-class="more_write" class="more-icon"/>
+        </div>
+      </div>
     </header>
     <!--all-->
     <HomeSwipe/>
@@ -41,14 +51,14 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import errorMessage from '../../constants/responseStatus';
-import HomeSwipe from '../../components/home/HomeSwipe.vue';
-import HomeTip from '../../components/home/HomeTip.vue';
-import HomeGuide from '../../components/home/HomeGuide.vue';
-import HomeProductList from '../../components/home/HomeProductList.vue';
-import HomeMoreProducts from '../../components/home/HomeMoreProducts.vue';
-import HomeNotice from '../../components/home/HomeNotice.vue';
+import HomeSwipe from './components/HomeSwipe.vue';
+import HomeTip from './components/HomeTip.vue';
+import HomeGuide from './components/HomeGuide.vue';
+import HomeProductList from './components/HomeProductList.vue';
+import HomeMoreProducts from './components/HomeMoreProducts.vue';
+import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
-import HomeToLogin from '../../components/home/HomeToLogin.vue';
+import HomeToLogin from './components/HomeToLogin.vue';
 
 export default {
   name: 'RegisterHome',
@@ -148,8 +158,40 @@ export default {
       width: 100%;
       height: 49px;
       line-height: 49px;
-      background-color: rebeccapurple;
+      background-color: #3C64EE;
       text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .logo-img{
+        padding-left: 22.5px;
+        .logo-icon{
+          width: 71.5px;
+          height: 22px;
+        }
+      }
+      .user-img{
+        display: flex;
+        align-items: center;
+        >div{
+          display: flex;
+          align-items: center;
+        }
+        >div:nth-child(1){
+          margin-right: 16px;
+        } >div:nth-child(2){
+            margin-right: 22px;
+          }
+        .user-icon{
+          width: 17px;
+          height: 16px;
+        }
+        .more-icon{
+          width: 16px;
+          height: 14px;
+        }
+      }
+
     }
     .home-tip-container{
       margin-top: 17px;

@@ -49,6 +49,7 @@
         :disabled="!activeButton"
         @click="toStepTwo">下一步</button>
     </div>
+    <!--当前余额不足的弹窗-->
     <div class="pop-container" v-show="popShow"><FixedPop/></div>
   </div>
 </template>
@@ -58,7 +59,7 @@ import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
-import FixedPop from '../../../components/fixedDetail/FixedPop.vue';
+import FixedPop from './components/FixedPop.vue';
 
 const { mapActions, mapState } = createNamespacedHelpers('product/fixed');
 
