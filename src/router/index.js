@@ -362,13 +362,13 @@ const router = new Router({
     },
     // 消息中心
     {
-      path: '/message',
+      path: '/message/:type',
       name: 'Message',
       component: () => import('../views/message/Message.vue'),
     },
     // 消息中心详情
     {
-      path: '/message-detail',
+      path: '/message-detail/:type',
       name: 'MessageDetail',
       component: () => import('../views/message/MessageDetail.vue'),
     },

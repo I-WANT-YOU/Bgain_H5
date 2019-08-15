@@ -1,12 +1,12 @@
 <template>
   <div class="message-center">
-    <BgainBarNav title="消息中心">
-      <template v-slot:right>
+    <BgainBarNav :title="`${type === 'message' ? '消息' : '公告'}中心`">
+      <template v-if="type === 'message'" v-slot:right>
         <span class="read-all" @click="readAll">全部已读</span>
       </template>
     </BgainBarNav>
     <div class="message-center-con">
-      <MessageCard v-for="(option,key) in newList" :key="key" :option="option" />
+      <MessageCard v-for="(option,key) in list" :type="type" :key="key" :option="option" />
     </div>
   </div>
 </template>
@@ -24,18 +24,31 @@ export default {
     BgainBarNav,
     MessageCard,
   },
+  data() {
+    return {
+      type: 'message',
+      list: [],
+    };
+  },
   methods: {
-    ...mapActions(['getAllNews', 'setAllNewsRead']),
-    readAll() {
-      this.setAllNewsRead();
-      this.getAllNews();
+    ...mapActions(['getAllNews', 'setAllNewsRead', 'getSystemAnnouncements']),
+    async readAll() {
+      await this.setAllNewsRead();
+      await this.getAllNews();
     },
   },
   computed: {
-    ...mapGetters(['newList']),
+    ...mapGetters(['newList', 'announcementList']),
   },
-  mounted() {
-    this.getAllNews();
+  async mounted() {
+    this.type = this.$route.params.type;
+    if (this.$route.params.type === 'message') {
+      await this.getAllNews();
+      this.list = this.newList;
+    } else {
+      await this.getSystemAnnouncements();
+      this.list = this.announcementList;
+    }
   },
 };
 </script>

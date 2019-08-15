@@ -39,7 +39,7 @@ export default {
         { text: '定期盈', path: '/product/fixed' },
         { text: '我的', path: '/mine' },
         { text: '联系我们', path: '' },
-        { text: '消息中心', path: '/message' },
+        { text: '消息中心', path: '/message/message' },
       ],
     };
   },

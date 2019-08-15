@@ -66,6 +66,22 @@ class MessageService {
       throw new Error(error);
     }
   }
+
+  // 获取系统消息详情
+  static async getSystemAnnouncementsDetail(id) {
+    try {
+      const requestOptions = {
+        url: `/announcement/get-system-announcement-details/${id}`,
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  //
 }
 
 export default MessageService;

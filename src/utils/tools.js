@@ -72,3 +72,9 @@ export const getDesensitizedUsername = (username) => {
   }
   return username;
 };
+
+export const numberWithThousands = (num = 0) => {
+  const parts = num.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
