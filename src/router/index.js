@@ -366,6 +366,59 @@ const router = new Router({
       name: 'Message',
       component: () => import('../views/message/Message.vue'),
     },
+    // 消息中心详情
+    {
+      path: '/message-detail',
+      name: 'MessageDetail',
+      component: () => import('../views/message/MessageDetail.vue'),
+    },
+    {
+      path: '/activity',
+      name: 'activity',
+      component: () => import('../views/activity/ActivityCenter.vue'),
+    },
+    {
+      path: '/BGPRecord',
+      name: 'BGPRecord',
+      component: () => import('../views/activity/BGPRecord.vue'),
+    },
+    {
+      path: '/BGPDetailList',
+      name: 'BGPDetailList',
+      component: () => import('../views/activity/BGPDetailList.vue'),
+    },
+    {
+      path: '/activity/product/:id',
+      name: 'product-detail',
+      component: () => import('../views/activity/product/ProductDetail.vue'),
+    },
+    {
+      path: '/activity/product/:id/buy',
+      name: 'product-buy',
+      component: () => import('../views/activity/product/ProductBuy.vue'),
+    },
+    {
+      path: '/activity/product/result/:orderId',
+      name: 'product-result',
+      component: () => import('../views/activity/product/ProductResult.vue'),
+    },
+    {
+      path: '/activity/product/:id/result-fail',
+      name: 'product-result-fail',
+      component: () => import('../views/activity/product/ProductResultFail.vue'),
+    },
+    // 会员中心
+    {
+      path: '/member',
+      name: 'member',
+      component: () => import('../views/member/Member.vue'),
+    },
+    // 更多福利
+    {
+      path: '/more-welfare',
+      name: 'welfare',
+      component: () => import('../views/member/MoreWelfare.vue'),
+    },
   ],
 });
 

@@ -56,6 +56,20 @@ class UserService {
     }
   }
 
+  // 用户是否签到
+  static async getUserIsSignIn() {
+    try {
+      const requestOptions = {
+        url: '/membership/sign',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // 用户一键授权
   static async toGrantAuthorization() {
     try {

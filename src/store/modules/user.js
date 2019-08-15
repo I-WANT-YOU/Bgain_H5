@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 import * as Auth from '@utils/auth';
 import UserService from '@api/user';
 import * as types from '../mutationTypes';
@@ -8,14 +8,27 @@ const state = {
   kycInfo: {},
   userBalance: {},
   submitKycResult: {},
+  isSignInInfo: {},
 };
 
 const getters = {
   authLevel: state => get(state.basicInfo, 'authlevel', 0),
   username: state => get(state.basicInfo, 'username', ''),
   countryCode: state => get(state.basicInfo, 'country_calling_code', '+86'),
-  kycStatus: state => get(state.basicInfo, 'kyc_stauts', 'UN_CERTIFIED').toUpperCase(),
-  otcStatus: state => get(state.basicInfo, 'otc_kyc_status', 'UN_CERTIFIED').toUpperCase(),
+  kycStatus: (state) => {
+    const status = get(state.basicInfo, 'kyc_stauts', 'UN_CERTIFIED');
+    if (isNil(status)) {
+      return 'UN_CERTIFIED';
+    }
+    return status.toUpperCase();
+  },
+  otcStatus: (state) => {
+    const status = get(state.basicInfo, 'otc_kyc_status', 'UN_CERTIFIED');
+    if (isNil(status)) {
+      return 'UN_CERTIFIED';
+    }
+    return status.toUpperCase();
+  },
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),
@@ -37,6 +50,9 @@ const mutations = {
   },
   [types.GET_SUBMIT_KYC_RESULT](state, payload) {
     state.submitKycResult = payload;
+  },
+  [types.GET_USER_IS_SIGN_IN](state, payload) {
+    state.isSignInInfo = payload;
   },
 };
 
@@ -104,6 +120,17 @@ const actions = {
        await UserService.toGrantAuthorization();
       // const data = await Auth.handlerSuccessResponseV2(response);
       // commit(types.GET_KYC_INFO, data);
+      }catch(error){
+    throw error;
+    }
+  },
+
+  // 判断用户是否签到
+  async getUserIsSignIn({ commit }) {
+    try {
+      const response = await UserService.getUserIsSignIn();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_IS_SIGN_IN, data);
     } catch (error) {
       throw error;
     }

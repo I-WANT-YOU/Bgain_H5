@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>积分icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="90.5400815%" id="linearGradient-1">
+            <stop stop-color="#FF5757" offset="0%"></stop>
+            <stop stop-color="#E92323" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="23" cy="23" r="23"></circle>
+        <linearGradient x1="48.8077799%" y1="3.88816551%" x2="48.8077799%" y2="33.9997468%" id="linearGradient-4">
+            <stop stop-color="#FF5E5E" offset="0%"></stop>
+            <stop stop-color="#FF5151" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="78.9772727%" id="linearGradient-5">
+            <stop stop-color="#FFEEB4" offset="0%"></stop>
+            <stop stop-color="#FFD672" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#FF5E5E" offset="0%"></stop>
+            <stop stop-color="#E72323" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="9.77450284%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#F96F6F" offset="0%"></stop>
+            <stop stop-color="#F53B3B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-8">
+            <stop stop-color="#F54949" offset="0%"></stop>
+            <stop stop-color="#E72323" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-9">
+            <stop stop-color="#FFD978" offset="0%"></stop>
+            <stop stop-color="#FFCC5F" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="M端_活动中心_6" transform="translate(-147.000000, -242.000000)">
+            <g id="积分icon" transform="translate(147.000000, 242.000000)">
+                <g id="编组-2">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="蒙版" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    <path d="M6.49012499,23.7045841 C11.7817958,20.5681947 17.3204878,19 23.1062012,19 C28.8908143,19 34.3619077,20.5675983 39.5194815,23.702795 C39.8178453,23.884214 40,24.2081119 40,24.5573022 L40,46 L6,46 L6,24.5648379 C5.9999955,24.211654 6.18629861,23.884663 6.49012499,23.7045841 Z" id="矩形备份" fill="url(#linearGradient-4)" mask="url(#mask-3)"></path>
+                    <path d="M12,8 L35,8 C36.1045695,8 37,8.8954305 37,10 L37,28 L10,28 L10,10 C10,8.8954305 10.8954305,8 12,8 Z" id="矩形" fill="url(#linearGradient-5)" mask="url(#mask-3)"></path>
+                    <path d="M17.75,14 L28.25,14 C28.6642136,14 29,14.3357864 29,14.75 C29,15.1642136 28.6642136,15.5 28.25,15.5 L17.75,15.5 C17.3357864,15.5 17,15.1642136 17,14.75 C17,14.3357864 17.3357864,14 17.75,14 Z M17.75,18.5 L27.25,18.5 C27.6642136,18.5 28,18.8357864 28,19.25 C28,19.6642136 27.6642136,20 27.25,20 L17.75,20 C17.3357864,20 17,19.6642136 17,19.25 C17,18.8357864 17.3357864,18.5 17.75,18.5 Z M17.75,23.5 L22.25,23.5 C22.6642136,23.5 23,23.8357864 23,24.25 C23,24.6642136 22.6642136,25 22.25,25 L17.75,25 C17.3357864,25 17,24.6642136 17,24.25 C17,23.8357864 17.3357864,23.5 17.75,23.5 Z" id="形状结合" fill="url(#linearGradient-6)" mask="url(#mask-3)"></path>
+                    <polygon id="矩形" fill="url(#linearGradient-7)" mask="url(#mask-3)" points="6 27 40 27 40 49 6 49"></polygon>
+                    <rect id="矩形" fill="url(#linearGradient-8)" mask="url(#mask-3)" x="16" y="33" width="14" height="2" rx="1"></rect>
+                    <polygon id="矩形备份-2" fill="#FFFFFF" opacity="0.2" mask="url(#mask-3)" points="6 27 40 27 6 49"></polygon>
+                </g>
+                <path d="M34,27 L34,11 L13,11 L13,27 L12,27 L12,11 C12,10.4477153 12.4477153,10 13,10 L34,10 C34.5522847,10 35,10.4477153 35,11 L35,27 L34,27 Z" id="形状结合" fill="url(#linearGradient-9)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

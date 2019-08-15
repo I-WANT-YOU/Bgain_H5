@@ -16,6 +16,7 @@
             icon-class="purchaseCoinIllustration" class="purchase-img"/>
         </div>
         <div @click="toRecords">
+          <p :class="{activeRedCircle:true}"></p>
           <svg-icon
             icon-class="purchaseCoinRecord" class="purchase-img"/>
         </div>
@@ -92,6 +93,10 @@ export default {
   .activeContentTab{
     color: #FFFFFF;
   }
+  // 历史记录有小红点
+  .activeRedCircle{
+    background: red;
+  }
   font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
   /*头部*/
@@ -137,6 +142,19 @@ export default {
         align-items: flex-start;
         margin-top: 12px;
         margin-right: 18px;
+      }
+      // 小红点实现
+      >div:nth-child(2){
+        position: relative;
+        >p{
+          position: absolute;
+          top:-2px;
+          right: -2px;
+          border-radius:10px;
+          margin:0;
+          width: 12px;
+          height: 12px;
+        }
       }
       .purchase-img{
         display: inline-block;

@@ -21,6 +21,38 @@ class MessageService {
     }
   }
 
+  // 设置消息已读状态
+  static async setNewsRead(uuid) {
+    try {
+      const requestOptions = {
+        url: '/announcement/set-announcement-read',
+        method: 'post',
+        data: {
+          uuid,
+          read: true,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 消息全部已读
+  static async setAllNewsRead() {
+    try {
+      const requestOptions = {
+        url: '/announcement/set-all-announcement-read',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // 获取系统消息
   static async getSystemAnnouncements() {
     try {
