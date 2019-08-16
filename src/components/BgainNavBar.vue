@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { isFunction } from 'lodash';
 import { NavBar, Sticky } from 'vant';
 
 export default {
@@ -36,6 +37,10 @@ export default {
       required: false,
       default: '',
     },
+    onArrowClick: {
+      type: Function,
+      required: false,
+    },
   },
   components: {
     NavBar,
@@ -43,7 +48,11 @@ export default {
   },
   methods: {
     onClickLeft() {
-      this.$router.go(-1);
+      if (isFunction(this.onArrowClick)) {
+        this.onArrowClick();
+      } else {
+        this.$router.go(-1);
+      }
     },
   },
 };

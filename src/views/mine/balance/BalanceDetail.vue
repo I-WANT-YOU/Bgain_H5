@@ -1,6 +1,6 @@
 <template>
   <div class="balance-detail__container">
-    <nav-bar :title="currency"></nav-bar>
+    <nav-bar :title="currency" :on-arrow-click="onArrowClick"></nav-bar>
     <div
       class="balance__noticebar"
       v-if="currency === 'BGP'">
@@ -43,13 +43,23 @@ export default {
   async mounted() {
     const { currency } = this.$route.params;
     try {
+      Toast.loading({
+        duration: 0,
+      });
       await this.getTransferDetails(currency);
+      Toast.clear();
     } catch (error) {
       Toast(error.message);
+      Toast.clear();
     }
   },
   methods: {
     ...mapUserActions(['getTransferDetails']),
+    onArrowClick() {
+      this.$router.push({
+        name: 'balance',
+      });
+    },
   },
 };
 </script>
