@@ -1,6 +1,6 @@
 <template>
   <div class="message-detail">
-    <BgainBarNav :title="`${$route.params.type === 'message' ? '消息' : '公告'}详情`" />
+    <BgainBarNav :title="`${$route.params.type === 'announcement' ? '公告' : '消息'}详情`" />
     <div class="message-detail-con">
       <div class="title">{{option.title}}</div>
       <div class="time">{{option.create_date || option.createdAt}}</div>
@@ -37,7 +37,7 @@ export default {
       if (this.$route.params.type === 'message' && !this.option.read) {
         this.option = this.$route.query;
         await this.setNewsRead(this.option.uuid);
-      } else {
+      } else if (this.$route.params.type === 'announcement') {
         await this.getSystemAnnouncementsDetail(this.$route.query.id);
         this.option = this.announcementDetail;
       }

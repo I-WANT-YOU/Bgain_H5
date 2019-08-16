@@ -76,7 +76,7 @@
           </div>
           <div>
             <div>{{formatDate(fundDetail.next_open_date,'MM-DD')}}</div>
-            <div class="font">下一次认购开放日</div>
+            <div class="font">下次可交易日</div>
           </div>
         </div>
         <div>
@@ -162,11 +162,10 @@
       v-model="payment"
       :showCancel="false"
       content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
       @submit="setPayment"
       @cancel="cancelPayment"
-    >
-      <template v-slot:content><div>sss</div></template>
-    </BgainBaseDialog>
+    />
   </div>
 </template>
 
@@ -195,7 +194,7 @@ export default {
       risk: '',
       chart_x: '03-16',
       chart_y: '1.0000',
-      payment: true,
+      payment: false,
     };
   },
   async mounted() {
@@ -244,7 +243,7 @@ export default {
       // 开放认购
       if (this.fundDetail.status === 'OPEN') {
         await this.getUserSummary();
-        if (this.authLevel === 2) {
+        if (this.authLevel === 2) { // 1新用户 2设置交易密码
           this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
         } else {
           this.payment = true;

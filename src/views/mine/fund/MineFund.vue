@@ -16,24 +16,28 @@
           </div>
         </div>
         <div class="amount">
-          <div :class="['num', holdFunds.length ? '' : 'computed']">{{amount}}</div>
+          <div
+            :class="['num', holdFunds.length ? '' : 'computed']"
+          >{{holdFunds.length ? amount : '--'}}</div>
           <span class="text">总市值(BTC)</span>
         </div>
         <div class="assets-change">
           <div class="assets-change-con">
-            <span :class="['num', holdFunds.length ? '' : 'computed']">{{yesterday}}</span>
+            <span
+              :class="['num', holdFunds.length ? '' : 'computed']"
+            >{{holdFunds.length ? yesterday : '---'}}</span>
             <span>昨日盈亏(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <span :class="['num', holdFunds.length ? '' : 'computed']">{{hold}}</span>
+            <span
+              :class="['num', holdFunds.length ? '' : 'computed']"
+            >{{holdFunds.length ? hold : '---'}}</span>
             <span>持仓收益(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <!-- eslint-disable -->
             <span
               :class="['num', 'profit', (holdFunds.length && holdRate !== '---') ? '' : 'computed']"
-            >{{holdRate}}</span>
-            <!-- eslint-enable -->
+            >{{holdFunds.length ? holdRate : '---'}}</span>
             <span>持仓收益率</span>
           </div>
         </div>

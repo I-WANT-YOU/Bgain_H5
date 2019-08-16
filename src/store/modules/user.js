@@ -98,7 +98,7 @@ const actions = {
   async getKycInfo({ commit }) {
     try {
       const response = await UserService.getKycInfo();
-      const data = await Auth.handlerSuccessResponseV2(response);
+      const data = await Auth.handlerSuccessResponseV3(response);
       commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
@@ -115,13 +115,12 @@ const actions = {
   },
 
   // 用户一键授权OTC验证
-  async toGrantAuthorization({ commit }) {
+  async toGrantAuthorization() {
     try {
-       await UserService.toGrantAuthorization();
-      // const data = await Auth.handlerSuccessResponseV2(response);
-      // commit(types.GET_KYC_INFO, data);
-      }catch(error){
-    throw error;
+      const response = await UserService.toGrantAuthorization();
+      return await Auth.handlerSuccessResponseV2(response);
+    } catch (error) {
+      throw error;
     }
   },
 

@@ -38,7 +38,7 @@ export default {
         { text: '天天赚', path: '/product/current' },
         { text: '定期盈', path: '/product/fixed' },
         { text: '我的', path: '/mine' },
-        { text: '联系我们', path: '' },
+        { text: '联系我们', path: '/contact-us' },
         { text: '消息中心', path: '/message/message' },
       ],
     };

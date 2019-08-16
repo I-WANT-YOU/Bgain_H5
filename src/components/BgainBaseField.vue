@@ -35,19 +35,19 @@ export default {
 </script>
 
 <style lang="scss">
-  .van-cell {
-    padding: 15px 20px;
+.van-cell {
+  padding: 15px 20px;
 
-    .bgain__field-override {
-      span {
-        font-size: 15px;
-        color: #6A707D;
-      }
+  .bgain__field-override {
+    span {
+      font-size: 15px;
+      color: #6a707d;
     }
   }
+}
 
-  .van-cell:not(:last-child)::after {
-    left: 22px;
-    right: 22px;
-  }
+.van-cell:not(:last-child)::after {
+  left: 22px;
+  right: 22px;
+}
 </style>

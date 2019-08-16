@@ -36,6 +36,11 @@ export default {
       required: false,
       default: '',
     },
+    goBack: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
   components: {
     NavBar,
@@ -43,26 +48,30 @@ export default {
   },
   methods: {
     onClickLeft() {
-      this.$router.go(-1);
+      if (this.goBack === '') {
+        this.$router.go(-1);
+      } else {
+        this.$router.push(this.goBack);
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .van-nav-bar {
-    height: 44px;
-    line-height: 44px;
-  }
+.van-nav-bar {
+  height: 44px;
+  line-height: 44px;
+}
 
-  .van-nav-bar__title {
-    font-size: 17px;
-    font-weight: normal;
-    color: #0f3256;
-  }
+.van-nav-bar__title {
+  font-size: 17px;
+  font-weight: normal;
+  color: #0f3256;
+}
 
-  .icon-go-back {
-    width: 10px;
-    height: 18px;
-  }
+.icon-go-back {
+  width: 10px;
+  height: 18px;
+}
 </style>

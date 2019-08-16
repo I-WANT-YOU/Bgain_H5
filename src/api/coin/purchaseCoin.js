@@ -116,6 +116,68 @@ class CoinService {
       throw new Error(error);
     }
   }
+
+  // 提币
+  static async getWithdrawal(option) {
+    try {
+      const requestOptions = {
+        url: '/wallet/withdraw',
+        method: 'post',
+        data: {
+          address: option.address,
+          amount: option.amount,
+          currency: option.currency,
+          payment_password: option.paymentPassword,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 提币信息
+  static async getWalletInfo() {
+    try {
+      const requestOptions = {
+        url: '/wallet/withdrawal-info',
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 提币记录
+  static async getWalletRecord() {
+    try {
+      const requestOptions = {
+        url: '/wallet/get-withdraw-record',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 提币记录
+  static async getWalletRecordDetail(id) {
+    try {
+      const requestOptions = {
+        url: `/wallet/transaction-details/${id}`,
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CoinService;

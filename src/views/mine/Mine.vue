@@ -44,7 +44,7 @@
           </div>
           <div class="top-up">
             <span class="recharge">充币</span>
-            <span class="extract" @click="onClick">提币</span>
+            <span class="extract" @click="onSkip('/extract-coin')">提币</span>
           </div>
         </div>
       </div>
@@ -154,12 +154,12 @@ export default {
           this.currency = this.singleCurrency[0].currency;
           this.options = this.singleCurrency
             .map(item => item.currency)
-            .map(item => ({ name: item === 'FBP' ? 'BGP' : item }));
+            .map(item => ({ name: item }));
           this.getCurreny();
         });
       } catch (error) {
         Toast.clear();
-        throw error;
+        Toast(error);
       }
     }
   },
@@ -169,11 +169,8 @@ export default {
   },
   methods: {
     ...mapActions('user', ['getUserBalanceSummary']),
-    onClick() {
-
-    },
     getCurreny() {
-      const curreny = this.singleCurrency.filter(item => item.currency === (this.currency === 'BGP' ? 'FBP' : this.currency))[0];
+      const curreny = this.singleCurrency.filter(item => item.currency === this.currency)[0];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
       this.accumulatedIncome = curreny.investment_earned_profit;

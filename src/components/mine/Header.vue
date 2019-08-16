@@ -51,6 +51,7 @@ export default {
       this.$router.push('/');
     },
     onMine() {
+      this.$router.push('/mine/safety');
       console.log('mine');
     },
     onMore() {

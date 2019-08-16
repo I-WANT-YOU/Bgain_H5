@@ -57,7 +57,7 @@ export default {
     if (this.$route.params.type === 'message') {
       await this.getAllNews();
       this.list = this.newList;
-    } else {
+    } else if (this.$route.params.type === 'announcement') {
       await this.getSystemAnnouncements();
       this.list = this.announcementList;
     }

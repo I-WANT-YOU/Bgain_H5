@@ -47,6 +47,9 @@ export default {
       this.$router.push(`/mine/fund/fund-hold-detail/${this.option.fund_product_id}`);
     },
   },
+  mounted() {
+    console.log(this.option);
+  },
 };
 </script>
 

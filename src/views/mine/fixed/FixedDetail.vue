@@ -8,8 +8,8 @@
         <div class="prev">使用加息卷获得</div>
       </div>
       <div class="num">
-        <div class="come">0.111111111 {{option.payment_currency}}</div>
-        <div class="prev">0.1 {{option.payment_currency}}</div>
+        <div class="come">{{option.return_amount}} {{option.payment_currency}}</div>
+        <div class="prev">{{option.product_profit}} {{option.payment_currency}}</div>
         <div class="prev coupon">0.011111111 {{option.payment_currency}}</div>
       </div>
     </div>
@@ -19,7 +19,11 @@
     </div>
     <div class="line">
       <div class="text">预期年化利率</div>
-      <div class="num">16% + 16%</div>
+      <div class="num">
+        {{option.product_annual_return * 100}}%
+        +
+        {{option.product_expected_annual_return * 100}}%
+      </div>
     </div>
     <div class="line">
       <div class="text">封闭期</div>
@@ -31,11 +35,15 @@
     </div>
     <div class="line">
       <div class="text">计息周期</div>
-      <div class="num">2018-09-10 至 2018-10-07</div>
+      <div class="num">
+        {{formatDate(option.interest_start_date)}}
+        至
+        {{formatDate(option.due_date)}}
+      </div>
     </div>
     <div class="line">
       <div class="text">{{statu ? '预计' : ''}}收款日</div>
-      <div class="num">2018-10-11</div>
+      <div class="num">{{formatDate(option.product_payment_date)}}</div>
     </div>
     <div class="line roll-in">
       <div class="text">自动转入分币宝</div>
@@ -53,6 +61,7 @@
 <script>
 import { Switch } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
+import { formatDate } from '@utils/tools';
 
 export default {
   name: 'FixedDetail',
@@ -76,8 +85,14 @@ export default {
   mounted() {
     this.option = this.$route.query;
     this.statu = this.$route.params.status;
+    this.checked = this.option.auto_transfer_in;
     console.log(this.$route.params.status);
     console.log(this.option);
+  },
+  methods: {
+    formatDate(num) {
+      return formatDate(num * 1, 'YYYY-MM-DD');
+    },
   },
 };
 </script>

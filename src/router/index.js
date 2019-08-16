@@ -372,6 +372,12 @@ const router = new Router({
       name: 'MessageDetail',
       component: () => import('../views/message/MessageDetail.vue'),
     },
+    // 联系我们
+    {
+      path: '/contact-us',
+      name: 'contactUs',
+      component: () => import('../views/mine/ContactUs.vue'),
+    },
     {
       path: '/activity',
       name: 'activity',
@@ -418,6 +424,24 @@ const router = new Router({
       path: '/more-welfare',
       name: 'welfare',
       component: () => import('../views/member/MoreWelfare.vue'),
+    },
+    // 提币
+    {
+      path: '/extract-coin',
+      name: 'ExtractCoin',
+      component: () => import('../views/purchaseCoin/ExtractCoin.vue'),
+    },
+    // 提币记录
+    {
+      path: '/extract-coin-record',
+      name: 'ExtractCoinRecord',
+      component: () => import('../views/purchaseCoin/ExtractCoinRecord.vue'),
+    },
+    // 提币记录详情
+    {
+      path: '/extract-coin-record-detail/:id',
+      name: 'ExtractCoinRecordDetail',
+      component: () => import('../views/purchaseCoin/ExtractCoinRecordDetail.vue'),
     },
   ],
 });
