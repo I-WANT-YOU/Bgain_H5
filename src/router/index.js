@@ -306,6 +306,11 @@ const router = new Router({
       name: 'balance',
       component: () => import('../views/mine/balance/Balance.vue'),
     },
+    {
+      path: '/mine/balance/:currency',
+      name: 'balance-detail',
+      component: () => import('../views/mine/balance/BalanceDetail.vue'),
+    },
     // 我的基金
     {
       path: '/mine/fund',
