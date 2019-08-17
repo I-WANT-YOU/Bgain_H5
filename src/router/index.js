@@ -36,6 +36,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerStepTwo" */ '../views/register/RegisterStepTwo.vue'),
     },
     {
+      path: '/fixCoupon', // lihui- 优惠券
+      name: 'FixCoupon',
+      component: () => import(/* webpackChunkName: "FixCoupon" */ '../views/coupon/FixCoupon.vue'),
+    },
+    {
       path: '/registerSuccess',
       name: 'RegisterSuccess',
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
@@ -109,6 +114,21 @@ const router = new Router({
       path: '/buyingIllustration/', // lihui-冲币说明
       name: 'BuyingIllustration',
       component: () => import(/* webpackChunkName: "BuyingIllustration" */ '../views/purchaseCoin/BuyingIllustration.vue'),
+    },
+    {
+      path: '/totalAssets/', // lihui-总资产
+      name: 'TotalAssets',
+      component: () => import(/* webpackChunkName: "TotalAssets" */ '../views/totalAssets/TotalAssets.vue'),
+    },
+    {
+      path: '/availableBalance/', // lihui-可用余额
+      name: 'AvailableBalance',
+      component: () => import(/* webpackChunkName: "AvailableBalance" */ '../views/totalAssets/AvailableBalance.vue'),
+    },
+    {
+      path: '/currencyDetails/', // lihui-货币详情
+      name: 'CurrencyDetails',
+      component: () => import(/* webpackChunkName: "CurrencyDetails" */ '../views/totalAssets/CurrencyDetails.vue'),
     },
     {
       path: '/test/',

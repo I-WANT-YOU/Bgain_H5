@@ -3,13 +3,17 @@
   <BgainNavBar title="认购结果"/>
   <div class="result">
     <div class="result-img">
-      <svg-icon :icon-class="resultImgs[0]" class="result-icon"/>
+      <svg-icon v-if="showData.result === 'success'"
+                :icon-class="resultImgs[0]"
+                class="result-icon"/>
+      <svg-icon v-else :icon-class="resultImgs[1]" class="result-icon"/>
     </div>
     <div class="result-text">
-      <span>认购成功</span>
+      <span v-if="showData.result === 'success'">认购成功</span>
+      <span v-else>认购失败</span>
     </div>
     <div class="result-count">
-      <span>认购金额 23.234 FBP</span>
+      <span>认购金额 {{showData.amount}}{{showData.currencyType}}</span>
     </div>
   </div>
   <div class="actions">
@@ -27,11 +31,22 @@ export default {
   components: { BgainNavBar },
   data() {
     return {
+      showData: {},
       resultImgs: [
         'fixed_result_success',
         'fixed_result_failed',
       ],
     };
+  },
+  mounted() {
+    try {
+      if (this.$route.params.fixedBuyResult) {
+        sessionStorage.setItem('fixedBuyResult', JSON.stringify(this.$route.params));
+      }
+      this.showData = JSON.parse(sessionStorage.getItem('fixedBuyResult')).fixedBuyResult;
+    } catch (e) {
+      console.log(e);
+    }
   },
 };
 </script>

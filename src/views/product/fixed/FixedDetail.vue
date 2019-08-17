@@ -138,6 +138,7 @@ export default {
         productId: this.$route.params.id,
         support_fbp: this.fixed.support_fbp,
         title: this.fixed.product_name,
+        expected_payment_date: this.fixed.expected_payment_date,
       });
       this.$router.push({
         name: 'FixedPurchaseStepOne',

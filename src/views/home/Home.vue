@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <router-link to="/totalAssets">lihui-总资产</router-link><br />
+    <router-link to="/availableBalance">lihui-可用余额</router-link><br />
+    <router-link to="/currencyDetails">lihui-货币详情</router-link><br />
     <router-link to="/confirmOrder">支付页面</router-link><br />
     <router-link to="/fillingRecord">冲币记录记录</router-link><br />
     <router-link to="/buyingRecord">购买记录</router-link><br />
@@ -53,7 +56,6 @@
 </template>
 
 <script>
-import { Loading } from 'vant';
 import SendCode from '@component/SendCode.vue';
 import Geetest from '../../components/Geetest.vue';
 
@@ -62,7 +64,6 @@ export default {
   components: {
     Geetest,
     SendCode,
-    Loading,
   },
   data() {
     return {
