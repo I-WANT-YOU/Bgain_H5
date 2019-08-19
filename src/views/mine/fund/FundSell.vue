@@ -5,13 +5,13 @@
       <div class="item">
         <div class="show-info">
           <div class="text">持有份额</div>
-          <div>{{holding_shares}}份</div>
+          <div>{{holdingShares}} 份</div>
         </div>
       </div>
       <div class="item">
         <div class="input">
           <div class="text">赎回份额</div>
-          <Field v-model="num" class="field" :placeholder="`最多可赎回${holding_shares}份`" />
+          <Field v-model="num" class="field" :placeholder="`最多可赎回${holdingShares}份`" />
           <span @click="onAll" class="all">全部</span>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <div class="rules">
           <div>
             <span>预估手续费</span>
-            <span class="num">{{num*redemmpt_fee_rate}} {{currency}}</span>
+            <span class="num">{{num*redemmptFeeRate}} {{currency}}</span>
           </div>
           <div class="icon">
             <span class="text">赎回规则</span>
@@ -37,44 +37,64 @@
           @click="onSell"
         >提交</BgainButton>
       </div>
+      <BgainBaseDialog
+        v-model="sellDialog"
+        :content="`持有份额不能小于${minHoldShares}份，您可以选择全部赎回或重新输入赎回份额`"
+        submitText="重新输入"
+        cancelText="全部赎回"
+        @submit="onReset"
+        @cancel="allSell"
+      />
       <PaymentPasswordDialog v-model="passwordDialog" @close="onClose" @submit="onSubmit" />
     </div>
   </div>
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
-import BgainButton from '@component/BgainButton.vue';
-import PaymentPasswordDialog from '@views/product/components/PaymentPasswordDialog.vue';
 import { Field, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import BgainButton from '@component/BgainButton.vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
+import PaymentPasswordDialog from '@views/product/components/PaymentPasswordDialog.vue';
+import { strip } from '@utils/tools';
 
-const { mapActions } = createNamespacedHelpers('product/fund');
+const { mapActions, mapState } = createNamespacedHelpers('product/fund');
 
 export default {
   name: 'FundSell',
   methods: {
     ...mapActions(['sellFundDetail', 'sellFund']),
     onAll() {
-      this.num = this.holding_shares;
+      this.num = this.holdingShares;
     },
     onSell() {
-      this.passwordDialog = true;
+      // 最小份额
+      if (this.holdingShares !== this.num
+        && this.minHoldShares > this.holdingShares * 1 - strip(this.num * 1)) {
+        this.sellDialog = true;
+      } else {
+        this.passwordDialog = true;
+      }
     },
     onClose() {
       this.passwordDialog = false;
     },
-    onSubmit(password) {
-      // "fund_id":1,
-      // "sell_shares":200,
-      // "payment_password":123456
-      // const params = {
-      //   fund_id: '',
-      //   sell_shares: this.num,
-      //   payment_password: password,
-      // };
-      // this.sellFund(params);
-      console.log(password);
+    onReset() {
+      this.num = '';
+      this.sellDialog = false;
+    },
+    allSell() {
+      this.num = this.holdingShares;
+      this.sellDialog = false;
+    },
+    async onSubmit(password) {
+      const params = {
+        fund_id: this.$route.query.fund_id,
+        sell_shares: this.num,
+        payment_password: password,
+      };
+      await this.sellFund(params);
     },
   },
   components: {
@@ -82,17 +102,23 @@ export default {
     Field,
     BgainButton,
     PaymentPasswordDialog,
+    BgainBaseDialog,
   },
   data() {
     return {
       title: '基金名称',
-      holding_shares: '287.71',
+      holdingShares: '287.71',
       currency: 'BTC',
-      redemmpt_fee_rate: 0,
+      redemmptFeeRate: 0,
       num: '',
       disabled: true,
       passwordDialog: false,
+      minHoldShares: '1', // 最小持有份额
+      sellDialog: false,
     };
+  },
+  computed: {
+    ...mapState(['fundSellDetail']),
   },
   watch: {
     num(value) {
@@ -105,6 +131,7 @@ export default {
       if (value !== '') {
         this.disabled = false;
       }
+      // 判断位数
       if (reg.test(value)) {
         this.num = '0.';
       } else if (value.indexOf('.') !== -1 && value.lastIndexOf('.') !== value.indexOf('.') && last.test(value)) {
@@ -114,31 +141,50 @@ export default {
       } else if (!num.test(value * 1)) {
         this.num = value.slice(0, value.length - 1);
       }
+      if (floatNum && floatNum.length > 2) {
+        this.num = this.num.substring(0, this.num.indexOf('.') + 3);
+        Toast('小数点最多可输入2位');
+      }
+      if (value * 1 > this.holdingShares) {
+        Toast(`最多可赎回${this.holdingShares}份, 请重新输入`);
+        this.num = this.holdingShares;
+      }
+      // 判断是否禁用按钮
       if (!(this.num * 1) && (this.num * 1) === 0) {
         this.disabled = true;
       } else {
         this.disabled = false;
       }
-      if (floatNum && floatNum.length > 2) {
-        this.num = this.num.substring(0, this.num.indexOf('.') + 3);
-        Toast('小数点最多可输入2位');
-      }
-      if (value * 1 > this.holding_shares) {
-        Toast(`最多可赎回${this.holding_shares}份`);
-        this.num = this.holding_shares;
-      }
     },
   },
   async mounted() {
+    Toast.loading({
+      duration: 0,
+      forbidClick: true,
+      message: '加载中...',
+    });
     try {
-      // console.log(this.$route.query.fund_id, this.$route.query.fund_user_stat_id);
-      // const params = {
-      //   fund_id: this.$route.query.fund_id,
-      //   fund_user_stat_id: this.$route.query.fund_user_stat_id,
-      // };
-      // await this.sellFundDetail(params); 调不通
+      const params = {
+        fundId: this.$route.query.fund_id,
+        userId: this.$route.query.fund_user_stat_id,
+      };
+      await this.sellFundDetail(params);
+      console.log(this.fundSellDetail);
+      console.log(this.$route.query);
+      // "real_holding_shares": 0E-8,
+      //   "holding_shares": 0E-8,
+      //   "currency": "BGP",
+      //   "redemmpt_fee_rate": 0,
+      //   "nav": 0E-8,
+      this.title = this.$route.query.title;
+      this.holdingShares = this.fundSellDetail.holding_shares.toString();
+      this.redemmptFeeRate = this.fundSellDetail.redemmpt_fee_rate;
+      this.currency = this.fundSellDetail.currency;
+      this.minHoldShares = this.fundSellDetail.min_holding_shares;
+      Toast.clear();
     } catch (error) {
-      throw error;
+      Toast.clear();
+      Toast(error);
     }
   },
 };
@@ -158,6 +204,9 @@ export default {
       padding: 0 20px;
       background: #ffffff;
       border-bottom: 1px solid #eeeeee;
+      .van-cell:not(:last-child)::after {
+        border: 0;
+      }
       .show-info,
       .input {
         height: 100%;

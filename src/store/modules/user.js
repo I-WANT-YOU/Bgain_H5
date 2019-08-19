@@ -9,6 +9,8 @@ const state = {
   userBalance: {},
   submitKycResult: {},
   isSignInInfo: {},
+  referInfo: {},
+  assetRecord: {},
 };
 
 const getters = {
@@ -36,6 +38,17 @@ const getters = {
     currency,
     balance,
   })),
+  bonusSummary: state => get(state.referInfo.bonus_summary, 'all', 0),
+  inviteeDetailsList: state => get(state.referInfo, 'invitee_details_list', []),
+  rewardRecordList: state => get(state.referInfo, 'reward_record_list', []),
+  everyTokens: state => get(state.referInfo.bonus_summary, 'every_tokens', {}),
+  assetRecords: state => get(state.assetRecord, 'operation_logs', [])
+    .map((item) => {
+      if (item.transaction_type) {
+        // item.transaction_type = '';
+      }
+      return item;
+    }),
 };
 
 const mutations = {
@@ -53,6 +66,12 @@ const mutations = {
   },
   [types.GET_USER_IS_SIGN_IN](state, payload) {
     state.isSignInInfo = payload;
+  },
+  [types.GET_USER_REFER](state, payload) {
+    state.referInfo = payload;
+  },
+  [types.GET_ASSET_RECORD](state, payload) {
+    state.assetRecord = payload;
   },
 };
 
@@ -130,6 +149,29 @@ const actions = {
       const response = await UserService.getUserIsSignIn();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_IS_SIGN_IN, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 邀友返利
+  async getReferInfo({ commit }) {
+    try {
+      const response = await UserService.getReferInfo();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_REFER, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 资金记录
+  async getAssetRecord({ commit }) {
+    try {
+      const response = await UserService.getAssetRecord();
+      const data = await Auth.handlerSuccessResponse(response);
+      console.log(data);
+      commit(types.GET_ASSET_RECORD, data);
     } catch (error) {
       throw error;
     }

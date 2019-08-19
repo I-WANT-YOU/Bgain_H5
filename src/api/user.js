@@ -83,6 +83,39 @@ class UserService {
       throw new Error(error);
     }
   }
+
+  // 邀友返利
+  static async getReferInfo() {
+    try {
+      const requestOptions = {
+        url: '/user/get-refer-info',
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 资金记录
+  static async getAssetRecord() {
+    try {
+      const requestOptions = {
+        url: '/balance/get-user-balance-transfer-details',
+        method: 'post',
+        data: {
+          currency: '',
+          start_date: 0,
+          end_date: 0,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default UserService;

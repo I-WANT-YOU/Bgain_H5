@@ -14,7 +14,7 @@
       <div class="fund-amount">{{fundOrderDetail.amount}}</div>
       <diV class="fund-currency">
         {{ fundOrderDetail.trade_type !== 'SUB_CARRY' ? '认购金额' : '扣除金额'}}
-        ({{fundOrderDetail.currency_type}})
+        ({{fundOrderDetail.payment_currency}})
       </diV>
       <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="steps">
         <div class="step">
@@ -80,6 +80,12 @@
     </div>
     <div v-if="fundOrderDetail.fund_order_status === '完成'" class="confirm-info">
       <div class="title">确定信息</div>
+      <div class="show">
+        <div class="text">
+          <span class="left">确定金额</span>
+          <span>{{fundOrderDetail.confirmed_shares}}</span>
+        </div>
+      </div>
       <div class="show">
         <div class="text">
           <span class="left">确定份额</span>

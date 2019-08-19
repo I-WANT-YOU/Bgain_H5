@@ -102,6 +102,11 @@ export default {
           text: '公告中心',
           to: '/message/announcement',
         },
+        {
+          icon: 'free-postage',
+          text: '邀友返利',
+          to: '/refer',
+        },
       ],
     };
   },

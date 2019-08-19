@@ -20,6 +20,7 @@ const state = {
   fundOrderHistory: [],
   fundOrderDetail: {},
   fundOwnerDetail: {},
+  fundSellDetail: {},
 };
 const getters = {
   initialFunds: state => state.funds.filter(({ status }) => status === FUND_STATUS.INITIAL),
@@ -84,6 +85,9 @@ const mutations = {
   [types.GET_FUND_OWNER_DETAIL](state, payload) {
     state.fundOwnerDetail = payload;
   },
+  [types.GET_FUND_SELL_DETAIL](state, payload) {
+    state.fundSellDetail = payload;
+  },
 };
 
 const actions = {
@@ -132,7 +136,6 @@ const actions = {
     try {
       const response = await FundService.getHoldingFunds();
       const data = await Auth.handlerSuccessResponse(response);
-      console.log(data);
       commit(types.GET_HOLDING_FUNDS, data);
     } catch (error) {
       throw error;
@@ -195,9 +198,9 @@ const actions = {
   },
 
   // 在持基金详情
-  async getFundOwnerDetail({ commit }, productId) {
+  async getFundOwnerDetail({ commit }, option) {
     try {
-      const response = await FundService.getFundOwnerDetail(productId);
+      const response = await FundService.getFundOwnerDetail(option);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_FUND_OWNER_DETAIL, data);
     } catch (error) {
@@ -206,22 +209,23 @@ const actions = {
   },
 
   // 赎回基金
-  async sellFund({ commit }, options) {
+  async sellFund(context, options) {
+    console.log(options);
     try {
       const response = await FundService.sellFund(options);
-      const data = await Auth.handlerSuccessResponse(response);
-      console.log(commit, data);
-      // commit(types.GET_FUND_OWNER_DETAIL, data);
+      console.log(response);
+      // return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
   },
 
   // 基金赎回前详情
-  async sellFundDetail(context, options) {
+  async sellFundDetail({ commit }, option) {
     try {
-      const response = await FundService.sellFundDetail(options);
-      return Auth.handlerSuccessResponse(response);
+      const response = await FundService.sellFundDetail(option);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_FUND_SELL_DETAIL, data);
     } catch (error) {
       throw error;
     }

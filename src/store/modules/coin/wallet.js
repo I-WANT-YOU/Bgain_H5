@@ -46,8 +46,7 @@ const actions = {
   async getWithdrawal(context, option) {
     try {
       const response = await CoinService.getWithdrawal(option);
-      const data = await handlerSuccessResponse(response);
-      console.log(data);
+      return handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
@@ -59,7 +58,6 @@ const actions = {
       const response = await CoinService.getWalletRecord(option);
       const data = await handlerSuccessResponse(response);
       commit(types.GET_WALLET_RECORD, data);
-      console.log(data);
     } catch (error) {
       throw error;
     }

@@ -5,12 +5,15 @@
       <div class="text">
         <div class="come">{{statu ? '待收' : '已得'}}收益</div>
         <div class="prev">产品原始收益</div>
-        <div class="prev">使用加息卷获得</div>
+        <div v-if="option.coupon_profit * 1" class="prev">使用加息卷获得</div>
       </div>
       <div class="num">
         <div class="come">{{option.return_amount}} {{option.payment_currency}}</div>
         <div class="prev">{{option.product_profit}} {{option.payment_currency}}</div>
-        <div class="prev coupon">0.011111111 {{option.payment_currency}}</div>
+        <div
+          v-if="option.coupon_profit * 1"
+          class="prev coupon"
+        >{{option.coupon_profit}} {{option.payment_currency}}</div>
       </div>
     </div>
     <div class="line">
@@ -21,8 +24,10 @@
       <div class="text">预期年化利率</div>
       <div class="num">
         {{option.product_annual_return * 100}}%
-        +
-        {{option.product_expected_annual_return * 100}}%
+        <span v-if="option.coupon_profit * 1">
+          +
+          {{option.coupon_annual_return * 100}}%
+        </span>
       </div>
     </div>
     <div class="line">
@@ -47,7 +52,7 @@
     </div>
     <div class="line roll-in">
       <div class="text">自动转入分币宝</div>
-      <on-off v-model="checked" />
+      <on-off :disabled="statu === 'false' ? true : false" v-model="checked" @change="onAuto" />
     </div>
     <div class="line roll-in">
       <div class="text">
@@ -60,20 +65,17 @@
 
 <script>
 import { Switch } from 'vant';
+import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { formatDate } from '@utils/tools';
+
+const { mapActions } = createNamespacedHelpers('product/fixed');
 
 export default {
   name: 'FixedDetail',
   components: {
     BgainNavBar,
     onOff: Switch,
-  },
-  props: {
-    status: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
@@ -86,12 +88,17 @@ export default {
     this.option = this.$route.query;
     this.statu = this.$route.params.status;
     this.checked = this.option.auto_transfer_in;
-    console.log(this.$route.params.status);
-    console.log(this.option);
   },
   methods: {
+    ...mapActions(['setAutoPortfolio']),
     formatDate(num) {
       return formatDate(num * 1, 'YYYY-MM-DD');
+    },
+    onAuto(checked) {
+      this.setAutoPortfolio({
+        status: checked,
+        id: this.option.id,
+      });
     },
   },
 };

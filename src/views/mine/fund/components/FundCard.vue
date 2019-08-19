@@ -2,7 +2,8 @@
   <div @click="onSkip" class="fund-card">
     <div class="title">
       <span class="icon-wrap">
-        <svg-icon class="icon" :icon-class="iconClass" />
+        <!-- <svg-icon class="icon" :icon-class="iconClass" /> -->
+        <img :src="option.icon_url" class="icon" alt />
       </span>
       <span>{{option.fund_product_name}}</span>
     </div>
@@ -44,11 +45,14 @@ export default {
   },
   methods: {
     onSkip() {
-      this.$router.push(`/mine/fund/fund-hold-detail/${this.option.fund_product_id}`);
+      this.$router.push({
+        path: '/mine/fund/fund-hold-detail',
+        query: {
+          id: this.option.fund_product_id,
+          currencyType: this.option.currency_type,
+        },
+      });
     },
-  },
-  mounted() {
-    console.log(this.option);
   },
 };
 </script>

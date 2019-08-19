@@ -25,15 +25,11 @@
         <div class="income">
           <div class="title">{{active === '1' ? '待收' : '已得'}}收益</div>
           <div class="currencies">
-            <div class="icon" v-for="(item,key) in singleCurrency" :key="key">
-              <img class="icon-img" :src="item.icon_url" alt="">
+            <div class="icon" v-for="(item,key) in balanceList" :key="key">
+              <img class="icon-img" :src="item.icon_url" alt />
               <div class="icon-info">
-                <div class="currency-type">{{item.currency}}</div>
-                <div>
-                  {{numberWithThousands(active === '1' ?
-                  item.expected_profit
-                  : item.investment_earned_profit)}}
-                </div>
+                <div class="currency-type">{{item.currency_type}}</div>
+                <div>{{item.amount}}</div>
               </div>
             </div>
           </div>
@@ -61,11 +57,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import { ActionSheet, Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { numberWithThousands } from '@utils/tools';
 import FixedCard from './components/FixedCard.vue';
+
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('product/fixed');
 
 export default {
   name: 'MineFixed',
@@ -86,8 +84,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('product/fixed', ['getUserPortfolio', 'getUserPortfolioHistory']),
-    ...mapActions('user', ['getUserBalanceSummary']),
+    ...mapActions(['getUserPortfolio', 'getUserPortfolioHistory', 'getUsetFixedHoldingDetail']),
     onTab(tab) {
       this.active = tab;
       this.onChangeList();
@@ -100,16 +97,21 @@ export default {
       });
       if (this.active === '1') {
         await this.getUserPortfolio();
+        await this.getUsetFixedHoldingDetail(0);
+        this.balanceList = this.userHoldFixedSummary;
         Toast.clear();
       } else {
         await this.getUserPortfolioHistory();
+        await this.getUsetFixedHoldingDetail(1);
+        this.balanceList = this.userHoldFixedSummary;
         Toast.clear();
       }
     },
     onSelect(currency) {
-      const select = this.singleCurrency.filter(item => item.currency === currency.name)[0];
-      this.currency = select.currency;
-      this.amount = select.total_asset;
+      const select = Object.entries(this.userHoldFixedAsset)
+        .filter(item => item[0] === currency.name)[0][1];
+      this.currency = currency.name;
+      this.amount = select;
       this.showMune = false;
     },
     numberWithThousands(num) {
@@ -117,18 +119,16 @@ export default {
     },
   },
   computed: {
-    ...mapState('user', ['userBalance']),
-    ...mapState('product/fixed', ['userPortfolio']),
-    ...mapGetters('user', ['singleCurrency']),
+    ...mapState(['userPortfolio']),
+    ...mapGetters(['userHoldFixedAsset', 'userHoldFixedSummary']),
   },
   async mounted() {
     this.onChangeList();
-    await this.getUserBalanceSummary();
-    this.balanceList = this.singleCurrency;
-    this.currency = this.singleCurrency[0].currency;
-    this.amount = this.singleCurrency[0].total_asset;
-    this.actions = this.singleCurrency.map(item => ({ name: item.currency }));
-    console.log(this.singleCurrency);
+    await this.getUsetFixedHoldingDetail(0);
+    this.balanceList = this.userHoldFixedSummary;
+    this.currency = 'BTC';
+    this.amount = this.userHoldFixedAsset.BTC;
+    this.actions = Object.entries(this.userHoldFixedAsset).map(item => ({ name: item[0] }));
   },
 };
 </script>

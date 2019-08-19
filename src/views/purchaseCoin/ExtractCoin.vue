@@ -61,11 +61,11 @@
     </div>
     <BgainBaseDialog
       :showCancel="false"
-      :showClose="false"
       :submitText="dialogText.button"
       :content="dialogText.content"
       v-model="showDialog"
       @submit="onSkip"
+      @cancel="goBack"
     />
     <BgainBaseDialog
       v-model="payment"
@@ -165,14 +165,19 @@ export default {
     setPayment() {
       this.$router.push('/mine/safety/password/payment/set');
     },
-    getPaymentPassword(password) {
-      this.getWithdrawal({
-        address: this.address,
-        paymentPassword: password,
-        currency: this.currency,
-        amount: this.coin,
-      });
-      this.$router.push('/extract-coin-record');
+    // 交易密码
+    async getPaymentPassword(password) {
+      try {
+        await this.getWithdrawal({
+          address: this.address,
+          paymentPassword: password,
+          currency: this.currency,
+          amount: this.coin,
+        });
+      } catch (error) {
+        Toast(error);
+      }
+      this.skip();
     },
     cancelPayment() {
       this.payment = false;
@@ -185,6 +190,9 @@ export default {
     },
     onClose() {
       this.maskShow = false;
+    },
+    goBack() {
+      this.$router.go(-1);
     },
     onSelect(select) {
       const selected = this.wallets.find(item => item.currency_type === select.name);
@@ -204,11 +212,13 @@ export default {
       this.coin = this.amount;
     },
     onSubmit() {
-      if (this.coin < this.min) {
+      if (this.address === '') {
+        Toast('提币地址不能为空');
+      } else if (this.coin < this.min) {
         Toast('提现额度不足');
       } else if (this.coin > this.amount) {
         Toast('余额不足');
-      } else if (this.authLevel === 2) { // 1新用户 2设置交易密码
+      } else if (this.authLevel === 2) { // 已设置交易密码
         this.maskShow = true;
       } else {
         this.payment = true; // 未设置交易密码
@@ -220,7 +230,7 @@ export default {
     await this.getWalletInfo();
     this.option = this.wallets.map(item => ({ name: item.currency_type }));
     this.changeInfo(this.wallets[0]);
-    // 弹窗
+    // kyc验证弹窗
     this.dialog(this.kycStatus);
   },
 };

@@ -47,12 +47,10 @@ export default {
       this.isFixed = isFixed;
     },
     onClick() {
-      console.log('back');
       this.$router.push('/');
     },
     onMine() {
       this.$router.push('/mine/safety');
-      console.log('mine');
     },
     onMore() {
       this.showMune = true;

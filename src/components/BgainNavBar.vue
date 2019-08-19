@@ -3,7 +3,7 @@
     <nav-bar
       v-bind="$attrs"
       :title="title"
-      :border="false"
+      :border="border"
       v-on="$listeners"
       @click-left="onClickLeft"
     >
@@ -36,10 +36,10 @@ export default {
       required: false,
       default: '',
     },
-    goBack: {
-      type: String,
+    border: {
+      type: Boolean,
       required: false,
-      default: '',
+      default: false,
     },
   },
   components: {
@@ -48,11 +48,7 @@ export default {
   },
   methods: {
     onClickLeft() {
-      if (this.goBack === '') {
-        this.$router.go(-1);
-      } else {
-        this.$router.push(this.goBack);
-      }
+      this.$router.go(-1);
     },
   },
 };

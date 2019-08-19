@@ -5,20 +5,14 @@
       <div class="icon-info">
         <img class="icon" :src="walletRecordDeatil.logo" alt />
         <div class="amount">-{{numberWithThousands(walletRecordDeatil.txn_amount)}}</div>
-        <div class="status">
-          {{walletRecordDeatil.status === 'UNAUDITED' ? '待审核'
-          : walletRecordDeatil.status === 'REJECT' ? '已拒绝'
-          : walletRecordDeatil.status === 'SUCCEED' ? '提币成功'
-          : walletRecordDeatil.status === 'FAILED' ? '提币失败'
-          : walletRecordDeatil.status === 'PROCESSING' ? '处理中'
-          :''}}
-        </div>
+        <div class="status">{{statu}}</div>
       </div>
       <div class="line">
         <span>TXID</span>
         <div>
           {{walletRecordDeatil.txn_id ? walletRecordDeatil.txn_id : '--'}}
-          <span @click="copyText(walletRecordDeatil.txn_id)"
+          <span
+            @click="copyText(walletRecordDeatil.txn_id)"
             v-if="walletRecordDeatil.txn_id"
           >
             <svg-icon icon-class="copy_light" />
@@ -59,9 +53,24 @@ export default {
   components: {
     BgainNavBar,
   },
-  async mounted() {
-    await this.getWalletRecordDetail(this.$route.params.id);
-    console.log(this.walletRecordDeatil);
+  data() {
+    return {
+      statu: '',
+    };
+  },
+  mounted() {
+    this.getWalletRecordDetail(this.$route.params.id);
+    if (this.walletRecordDeatil.status === 'UNAUDITED') {
+      this.statu = '待审核';
+    } else if (this.walletRecordDeatil.status === 'REJECT') {
+      this.statu = '已拒绝';
+    } else if (this.walletRecordDeatil.status === 'SUCCEED') {
+      this.statu = '提币成功';
+    } else if (this.walletRecordDeatil.status === 'FAILED') {
+      this.statu = '提币失败';
+    } else if (this.walletRecordDeatil.status === 'PROCESSING') {
+      this.statu = '处理中';
+    }
   },
   computed: {
     ...mapState('coin/wallet', ['walletRecordDeatil']),

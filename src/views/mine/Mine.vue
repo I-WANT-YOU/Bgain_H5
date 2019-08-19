@@ -34,7 +34,7 @@
         <div class="line"></div>
         <div class="balance">
           <div class="balance-info">
-            <div class="balance-info-text">
+            <div @click="$router.push({name:'balance'})" class="balance-info-text">
               <span>可用余额({{currency}})</span>
               <span>
                 <svg-icon icon-class="next" class="icon-next" />
@@ -43,7 +43,7 @@
             <div :class="authenticated ? '' : 'loginText'">{{balance}}</div>
           </div>
           <div class="top-up">
-            <span class="recharge">充币</span>
+            <span class="recharge" @click="onSkip('/purchaseCoinHome/')">充币</span>
             <span class="extract" @click="onSkip('/extract-coin')">提币</span>
           </div>
         </div>
@@ -74,7 +74,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
-            <div>
+            <div @click="go('/asset-record')">
               <div class="title">资金记录</div>
               <div class="info">资金流水，一目了然</div>
             </div>
@@ -93,7 +93,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-question" class="icon" />
             </div>
-            <div>
+            <div @click="go('/commonProblem')">
               <div class="title">常见问题</div>
               <div class="info">投资、充提币、产品介绍</div>
             </div>
@@ -102,7 +102,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-activity" class="icon" />
             </div>
-            <div>
+            <div @click="go('/activity')">
               <div class="title">活动中心</div>
               <div class="info">会员、签到、奖励</div>
             </div>
@@ -186,6 +186,9 @@ export default {
       this.currency = item.name;
       this.getCurreny();
       this.showCurrency = false;
+    },
+    go(router) {
+      this.$router.push(router);
     },
   },
 };
