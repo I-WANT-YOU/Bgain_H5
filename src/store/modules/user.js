@@ -9,6 +9,7 @@ const state = {
   userBalance: {},
   submitKycResult: {},
   isSignInInfo: {},
+  transfers: {},
 };
 
 const getters = {
@@ -32,7 +33,7 @@ const getters = {
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),
-  balances: state => get(state.userBanalce, 'single_currency', []).map(({ currency, balance }) => ({
+  balances: state => get(state.userBalance, 'single_currency', []).map(({ currency, balance }) => ({
     currency,
     balance,
   })),
@@ -54,6 +55,9 @@ const mutations = {
   [types.GET_USER_IS_SIGN_IN](state, payload) {
     state.isSignInInfo = payload;
   },
+  [types.GET_TRANSFER_DETAILS](state, payload) {
+    state.transfers = payload;
+  },
 };
 
 const actions = {
@@ -63,6 +67,16 @@ const actions = {
       const response = await UserService.getUserSummary();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_SUMMARY, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  // 交易记录
+  async getTransferDetails({ commit }, currency) {
+    try {
+      const response = await UserService.getTransferDetails(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_TRANSFER_DETAILS, data);
     } catch (error) {
       throw error;
     }
@@ -117,11 +131,11 @@ const actions = {
   // 用户一键授权OTC验证
   async toGrantAuthorization({ commit }) {
     try {
-       await UserService.toGrantAuthorization();
+      await UserService.toGrantAuthorization();
       // const data = await Auth.handlerSuccessResponseV2(response);
       // commit(types.GET_KYC_INFO, data);
-      }catch(error){
-    throw error;
+    } catch (error) {
+      throw error;
     }
   },
 

@@ -1,13 +1,15 @@
 <template>
   <div class="balance__container">
-    <bgain-nav-bar title="可用余额"/>
+    <bgain-nav-bar title="可用余额" :on-arrow-click="onArrowClick"/>
     <div class="balance__content">
       <cell-group>
         <cell
           v-for="balance in balances"
           :title="balance.currency"
           :center="true"
-          :key="balance.currency">
+          :key="balance.currency"
+          @click="onGoBalanceDetail(balance.currency)"
+        >
           <template v-slot:title>
             <svg-icon :icon-class="`icon-${balance.currency.toLowerCase()}`"
                       class="currency-icon"/>
@@ -44,13 +46,31 @@ export default {
   },
   async mounted() {
     try {
+      Toast.loading({
+        duration: 0,
+      });
       await this.getUserBalanceSummary();
+      Toast.clear();
     } catch (error) {
       Toast(error.message);
+      Toast.clear();
     }
   },
   methods: {
     ...mapActions(['getUserBalanceSummary']),
+    onGoBalanceDetail(currency) {
+      this.$router.push({
+        name: 'balance-detail',
+        params: {
+          currency,
+        },
+      });
+    },
+    onArrowClick() {
+      this.$router.push({
+        name: 'Mine',
+      });
+    },
   },
 };
 </script>

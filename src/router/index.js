@@ -326,6 +326,11 @@ const router = new Router({
       name: 'balance',
       component: () => import('../views/mine/balance/Balance.vue'),
     },
+    {
+      path: '/mine/balance/:currency',
+      name: 'balance-detail',
+      component: () => import('../views/mine/balance/BalanceDetail.vue'),
+    },
     // 我的基金
     {
       path: '/mine/fund',
@@ -382,13 +387,13 @@ const router = new Router({
     },
     // 消息中心
     {
-      path: '/message',
+      path: '/message/:type',
       name: 'Message',
       component: () => import('../views/message/Message.vue'),
     },
     // 消息中心详情
     {
-      path: '/message-detail',
+      path: '/message-detail/:type',
       name: 'MessageDetail',
       component: () => import('../views/message/MessageDetail.vue'),
     },

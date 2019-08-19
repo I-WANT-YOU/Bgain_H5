@@ -1,9 +1,9 @@
 <template>
   <div class="message-detail">
-    <BgainBarNav title="消息详情" />
+    <BgainBarNav :title="`${$route.params.type === 'message' ? '消息' : '公告'}详情`" />
     <div class="message-detail-con">
       <div class="title">{{option.title}}</div>
-      <div class="time">{{option.create_date}}</div>
+      <div class="time">{{option.create_date || option.createdAt}}</div>
       <div class="content">{{option.content}}</div>
     </div>
   </div>
@@ -11,9 +11,10 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
 import BgainBarNav from '@component/BgainNavBar.vue';
 
-const { mapActions } = createNamespacedHelpers('message');
+const { mapActions, mapGetters } = createNamespacedHelpers('message');
 
 export default {
   name: 'MessageDetail',
@@ -21,22 +22,27 @@ export default {
     BgainBarNav,
   },
   methods: {
-    ...mapActions(['setNewsRead']),
+    ...mapActions(['setNewsRead', 'getSystemAnnouncementsDetail']),
   },
   data() {
     return {
       option: {},
     };
   },
-  mounted() {
-    this.option = this.$route.query;
-    console.log(this.$route.query);
-    if (!this.option.read) {
-      try {
-        this.setNewsRead(this.option.uuid);
-      } catch (error) {
-        throw error;
+  computed: {
+    ...mapGetters(['announcementDetail']),
+  },
+  async mounted() {
+    try {
+      if (this.$route.params.type === 'message' && !this.option.read) {
+        this.option = this.$route.query;
+        await this.setNewsRead(this.option.uuid);
+      } else {
+        await this.getSystemAnnouncementsDetail(this.$route.query.id);
+        this.option = this.announcementDetail;
       }
+    } catch (error) {
+      Toast(error);
     }
   },
 };

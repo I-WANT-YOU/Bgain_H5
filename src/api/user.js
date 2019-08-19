@@ -83,6 +83,23 @@ class UserService {
       throw new Error(error);
     }
   }
+
+  static async getTransferDetails(currency) {
+    try {
+      const requestOptions = {
+        url: '/balance/get-user-balance-transfer-details',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          currency,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default UserService;
