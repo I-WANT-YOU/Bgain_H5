@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>二维码icon可点击</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="M端-支付宝请付款" transform="translate(-324.000000, -407.000000)">
+            <g id="产品信息备份" transform="translate(36.000000, 368.000000)">
+                <g id="二维码icon可点击" transform="translate(288.000000, 39.000000)">
+                    <rect id="矩形" stroke="#3C64EE" stroke-width="2" x="1" y="1" width="5" height="5" rx="1"></rect>
+                    <rect id="矩形备份-2" stroke="#3C64EE" stroke-width="2" x="9" y="1" width="5" height="5" rx="1"></rect>
+                    <rect id="矩形备份-3" stroke="#3C64EE" stroke-width="2" x="1" y="9" width="5" height="5" rx="1"></rect>
+                    <rect id="矩形" fill="#8AA2F5" x="8" y="8" width="2" height="7" rx="1"></rect>
+                    <rect id="矩形备份-4" fill="#8AA2F5" x="13" y="8" width="2" height="7" rx="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

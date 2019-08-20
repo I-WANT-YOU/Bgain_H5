@@ -1,25 +1,33 @@
 <template>
-      <div class="bannerBox">
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in banners" :key="index">
-              <img :src = "item.img_url"  alt=".">
-            </div>
-          </div>
+  <div class="bannerBox">
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" v-for="(item,index) in banners" :key="index">
+          <img :src = "item.img_url" alt=""/>
         </div>
       </div>
+    </div>
+  </div>
 </template>
 <script>
 import 'swiper/dist/css/swiper.min.css';
 import { mapGetters } from 'vuex';
 import Swiper from 'swiper';
+import {Image} from 'vant';
 
 export default {
   name: 'HomeSwipe',
+  data(){
+    return{
+    }
+  },
   computed: {
     ...mapGetters('home', [
       'banners',
     ]),
+  },
+  components:{
+    'van-image':Image,
   },
   mounted() {
     /* eslint-disable */
@@ -27,7 +35,7 @@ export default {
       direction: 'horizontal', //滑动方向，可设置水平(horizontal)或垂直(vertical)。
       loop: true, // 设置为true 则开启loop模式
       autoplay: { // 自动切换时间
-             delay: 3000,
+             delay: 300000,
              disableOnInteraction: false,
       },
       slidesPerView: 'auto', // 设置slider容器能够同时显示的slides数量(carousel模式)。类型：number or auto
@@ -53,6 +61,7 @@ export default {
     overflow: hidden;
     display: flex;
     align-items: center;
+    background: #f8f8f8;
   }
   .swiper-container .swiper-wrapper .swiper-slide img {
     width: 100%;

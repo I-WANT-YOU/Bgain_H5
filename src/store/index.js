@@ -9,6 +9,7 @@ import product from '@modules/product';
 import user from '@modules/user';
 import message from '@modules/message';
 import activity from '@modules/activity';
+import assets from '@modules/assets';
 
 
 Vue.use(Vuex);
@@ -23,5 +24,6 @@ export default new Vuex.Store({
     coin,
     message,
     activity,
+    assets,
   },
 });

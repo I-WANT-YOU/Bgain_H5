@@ -93,12 +93,12 @@ export default {
       let params = {};
       if (this.otherReason === true) { // 其他理由
         params = {
-          order_id: sessionStorage.getItem('appealPageOrderId'),
+          id: sessionStorage.getItem('appealPageOrderId'),
           appeal_reason: this.userInput,
         };
       } else {
         params = {
-          order_id: sessionStorage.getItem('appealPageOrderId'),
+          id: sessionStorage.getItem('appealPageOrderId'),
           appeal_reason: this.appealReasons[this.radio],
         };
       }

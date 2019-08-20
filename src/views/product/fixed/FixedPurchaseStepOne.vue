@@ -49,6 +49,7 @@
         :disabled="!activeButton"
         @click="toStepTwo">下一步</button>
     </div>
+    <!--当前余额不足的弹窗-->
     <div class="pop-container" v-show="popShow"><FixedPop/></div>
   </div>
 </template>
@@ -58,7 +59,7 @@ import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
-import FixedPop from '../../../components/fixedDetail/FixedPop.vue';
+import FixedPop from './components/FixedPop.vue';
 
 const { mapActions, mapState } = createNamespacedHelpers('product/fixed');
 
@@ -84,6 +85,7 @@ export default {
       // expectedReturn: '-',
     };
   },
+
   mounted() {
     if (this.$route.params.info) {
       sessionStorage.setItem('info', this.$route.params.info);
@@ -108,6 +110,7 @@ export default {
       },
     );
   },
+
   components: {
     BgainNavBar,
     FixedPop,
@@ -158,8 +161,10 @@ export default {
           }
         }
         if (this.tabActiveFBP === true) {
-          if ((this.investmentAmount - this.fixedBuyInfo.min_inverst_amount_fbp) > 0) {
+          if ((this.investmentAmount - this.fixedBuyInfo.min_inverst_amount_fbp) >= 0) {
             this.activeButton = true;
+          } else {
+            this.activeButton = false;
           }
           if ((this.investmentAmount - this.fixedBuyInfo.available) > 0) {
             this.investmentAmount = val.substring(0, val.length - 1);
@@ -195,7 +200,7 @@ export default {
     expectedReturn() {
       let expected = '-';
       if (this.investmentAmount) {
-        expected = (this.investmentAmount * 100000000 * this.fixedBuyInfo.annual_return)
+        expected = (this.investmentAmount * 100000000 * this.fixedBuyInfo.expected_return)
           / 10000000000;
       }
       return expected;
@@ -212,6 +217,7 @@ export default {
         currencyType: this.tabActiveType,
         productId: this.productId,
         title: this.title,
+        expected_payment_date: JSON.parse(sessionStorage.getItem('info')).expected_payment_date,
       };
       const stepTwoData = JSON.stringify(routeData);
       this.$router.push({

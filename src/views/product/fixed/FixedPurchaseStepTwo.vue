@@ -1,15 +1,19 @@
 <template>
   <div class="fixedStepTwo">
-    <BgainNavBar :title="title"/>
+    <BgainNavBar :title="showData.title"/>
     <div class="content">
       <div class="purchaseNum">
         <span>认购数量</span>
-        <span>{{investmentAmount+'&nbsp;'+currencyType}}</span>
+        <span>{{showData.investmentAmount+'&nbsp;'+showData.currencyType}}</span>
       </div>
-      <div class="coupon">
+      <div class="coupon" v-show="showData.currencyType !== 'FBP'">
         <span>选择优惠券</span>
-        <div>
-          <span>可用 5 张</span>
+        <div @click="()=>{
+        this.$router.push(
+        {path:'/fixCoupon',query:{productId:showData.productId,amount:showData.investmentAmount}}
+        )
+        }">
+          <span>可用 {{availabelCoupons.length}} 张</span>
           <svg-icon icon-class="next" class="next-img"/>
         </div>
       </div>
@@ -17,7 +21,7 @@
       <div class="expectedReturn">
         <div v-for="(item,index) in expectedReturnData" :key="index">
           <span>{{item.name}}</span>
-          <span>{{item.num+'&nbsp;'+currencyType}}</span>
+          <span>{{item.num}}</span>
         </div>
       </div>
   </div>
@@ -29,84 +33,249 @@
       <div><van-switch v-model="checked" size = '27px'/></div>
     </div>
     <div class="purchaseButton">
-      <button>立即认购</button>
+      <button @click="immediateBuy">立即认购</button>
     </div>
+    <PaymentPasswordDialog
+      @close="maskShow=false"
+      @submit="getPaymentPassword"
+      v-model="maskShow"
+    />
   </div>
 </template>
 
 <script>
-import { Switch } from 'vant';
-import { mapActions } from 'vuex';
+import { Switch, Toast } from 'vant';
+import { mapActions, mapState } from 'vuex';
+import PublicMethods from '@utils/publicMethods';
+import Vue from 'vue';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
+import errorMessage from '../../../constants/responseStatus';
+import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 
-
+Vue.use(Toast);
 export default {
   name: 'FixedPurchaseStepTwo',
+  // this.$set(this.expectedReturnData, 0, changData); // 预期收益
   data() {
     return {
       title: '',
       checked: false,
       showData: {},
-      currencyType: '', // 币种
-      investmentAmount: '', // 认购数量
-      expectedReturnData:
-        [
+      expectedReturnData: [],
+      maskShow: false, // 密码弹出框
+      password: '',
+    };
+  },
+
+  components: {
+    BgainNavBar,
+    'van-switch': Switch,
+    PaymentPasswordDialog,
+  },
+
+  computed: {
+    ...mapState('product/fixed', [
+      'availabelCoupons', // 获取优惠券
+      'userPortfolio', // 获取预期收益
+    ]),
+    ...mapState('product/fixed', [
+      'fixed',
+      'availabelCoupons',
+    ]),
+  },
+
+  methods: {
+    ...mapActions('product/fixed', [
+      'getAvailableCoupons', // 获取优惠券
+      'getUserPortfolio', // 获取预期收益
+      'buyFixedProduct', // 用户购买产品
+    ]),
+
+    // 立即认购 调用支付密码页面
+    immediateBuy() {
+      this.maskShow = true;
+    },
+
+    // 获取支付密码
+    getPaymentPassword(val) {
+      Toast.loading({
+        mask: false,
+        message: '加载中...',
+      });
+      this.password = val;
+      this.confirmBuy(); // 调用接口 确认认购
+    },
+    // 立即认购
+    confirmBuy() {
+      const params = {
+        product_id: this.showData.productId,
+        amount: this.showData.investmentAmount,
+        amount_currency: this.showData.currencyType,
+        payment_currency: this.showData.currencyType,
+        payment_password: this.password,
+        user_coupon_id: this.$route.query.couponId || '',
+        product_type: 'fix_income',
+        auto_transfer_in: this.checked,
+      };
+      // 请求购买接口
+      this.buyFixedProduct(params).then(
+        () => {
+          Toast.clear();
+          this.maskShow = false;
+          this.$router.push(
+            {
+              name: 'SubscriptionResults',
+              params: {
+                fixedBuyResult: {
+                  result: 'success',
+                  amount: params.amount,
+                  currencyType: params.amount_currency,
+                },
+              },
+            },
+          );
+        },
+        () => {
+          Toast.clear();
+          this.maskShow = false;
+          this.$router.push(
+            {
+              name: 'SubscriptionResults',
+              params: {
+                fixedBuyResult: {
+                  result: 'fail',
+                  amount: params.amount,
+                  currencyType: params.amount_currency,
+                },
+              },
+            },
+          );
+        },
+      );
+    },
+
+    // 格式化预计数款日的日期
+    formatDate(date) {
+      return PublicMethods.createOrderDate(date);
+    },
+
+    // 生成展示数据
+    createShowdata(isHadCoupon) {
+      if (this.showData.currencyType === 'FBP') { // 无优惠券 无预期加息收益
+        this.expectedReturnData = [
           {
             name: '预期收益',
-            num: '346.999',
-            show: true,
-          },
-          {
-            name: '预期加息收益',
-            num: '346.999',
-            show: true,
-          },
-          {
-            name: '预期总收益',
-            num: '346.999',
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
             show: true,
           },
           {
             name: '预计收款日',
-            num: '346.999',
+            num: this.formatDate(this.showData.expected_payment_date),
             show: true,
           },
-        ],
-    };
-  },
-  components: {
-    BgainNavBar,
-    'van-switch': Switch,
+        ];
+      } else if (isHadCoupon) { // 有优惠券
+        console.log(this.availabelCoupons);
+        console.log(this.$route.query);
+        // eslint-disable-next-line
+        const expectedAdd = (this.showData.investmentAmount * 100000000 * this.availabelCoupons[this.$route.query.index].coupon_return) / 10000000000;
+        // eslint-disable-next-line
+        const expectedAll = Math.floor((expectedAdd + this.showData.expectedReturn) * 10000000000) / 10000000000;
+        this.expectedReturnData = [
+          {
+            name: '预期收益',
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
+            show: true,
+          },
+          {
+            name: '预期加息收益',
+            num: `${expectedAdd} ${this.showData.currencyType}`,
+            show: true,
+          },
+          {
+            name: '预期总收益',
+            num: `${expectedAll} ${this.showData.currencyType}`,
+            show: true,
+          },
+          {
+            name: '预计收款日',
+            num: this.formatDate(this.showData.expected_payment_date),
+            show: true,
+          },
+        ];
+      } else {
+        this.expectedReturnData = [
+          {
+            name: '预期收益',
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
+            show: true,
+          },
+          {
+            name: '预期加息收益',
+            num: '--',
+            show: true,
+          },
+          {
+            name: '预期总收益',
+            num: '--',
+            show: true,
+          },
+          {
+            name: '预计收款日',
+            num: this.formatDate(this.showData.expected_payment_date),
+            show: true,
+          },
+        ];
+      }
+    },
+
+    // 获取优惠券
+    getCoupon() {
+      const params = {
+        id: this.showData.productId,
+        amount: this.showData.investmentAmount,
+      };
+      this.getAvailableCoupons(params).then(
+        () => {
+          Toast.clear();
+          // 判断是否带着优惠券页面返回
+          if (JSON.stringify(this.$route.query) === '{}') {
+            this.createShowdata(false); // 无
+          } else {
+            this.createShowdata(true); // 有优惠券
+          }
+        },
+        (err) => {
+          Toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
+        },
+      );
+    },
   },
   mounted() {
     if (this.$route.params.stepTwoData) {
       sessionStorage.setItem('showData', this.$route.params.stepTwoData); // 保存上一页的数据
     }
-    this.currencyType = JSON.parse(sessionStorage.getItem('showData')).currencyType; // 币种类型
-    this.investmentAmount = JSON.parse(sessionStorage.getItem('showData')).investmentAmount;// 认购数量
-    this.title = JSON.parse(sessionStorage.getItem('showData')).title;
-    const changData = {
-      name: '预期收益',
-      num: JSON.parse(sessionStorage.getItem('showData')).expectedReturn,
-      show: true,
-    };
-    this.$set(this.expectedReturnData, 0, changData); // 预期收益
-    // 获取优惠卷
-    const params = {
-      id: JSON.parse(sessionStorage.getItem('showData')).productId,
-      amount: this.investmentAmount,
-    };
-    this.getAvailableCoupons(params).then(
-      () => {
-        console.log('getAvailableCoupons');
-      },
-      () => {},
-    );
+    this.showData = JSON.parse(sessionStorage.getItem('showData')); // 设置传递的数据
+    console.log(this.showData);
+
+    // 获取优惠券
+    this.getCoupon();
+    // 判断币种还是积分查询 显示不同数据
+
+
+    // 获取可用优惠券
+    Toast.loading({
+      mask: true,
+      duration: 0,
+      message: '加载中...',
+    });
   },
-  methods: {
-    ...mapActions('product/fixed', [
-      'getAvailableCoupons',
-    ]),
+
+  beforeDestroy() {
+    Toast.clear();
   },
 };
 </script>

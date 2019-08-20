@@ -71,7 +71,8 @@ export const GET_ORDER_INFO = 'GET_ORDER_INFO';
 export const POST_USER_APPEAL = 'POST_USER_APPEAL'; // 用户提交申诉
 export const GET_ORDER_INFO_BY_ID = 'GET_ORDER_INFO_BY_ID'; // 根据ID查询订单 GET_ORDER_LIST
 export const GET_ORDER_LIST = 'GET_ORDER_LIST'; // 订单列表
-export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息
+export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 生成的信息HAD_PAY_INFO
+export const HAD_PAY_INFO = 'HAD_PAY_INFO'; // 用户选择已付款
 
 /**
  * App 相关
@@ -92,3 +93,15 @@ export const GET_BGP_RECORD = 'GET_BGP_RECORD';
 export const GET_BGP_DETAIL_LIST = 'GET_BGP_DETAIL_LIST';
 export const GET_ADDRESS_DETAIL = 'GET_ADDRESS_DETAIL';
 export const GET_PRODUCT_BUY_RESULT = 'GET_PRODUCT_BUY_RESULT';
+
+/*
+* 用户资产相关
+* */
+export const GET_USER_ASSETS = 'GET_USER_ASSETS';
+export const GET_USER_ASSETS_RECORD = 'GET_USER_ASSETS_RECORD';
+export const GET_USER_AVAILABLE = 'GET_USER_AVAILABLE';
+
+/*
+* 一级页面弹窗
+* */
+export const GET_POP_INFO = 'GET_POP_INFO';

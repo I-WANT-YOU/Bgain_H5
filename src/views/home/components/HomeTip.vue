@@ -1,8 +1,8 @@
 <template>
   <div class="home-tip" v-show = !!announcement>
-    <img src="../../assets/images/home_tip.svg" alt="."/>
+    <img src="../../../assets/images/home_tip.svg" alt="."/>
     <span>{{announcement}}</span>
-    <img src="../../assets/images/home_next.svg" alt="."/>
+    <img src="../../../assets/images/home_next.svg" alt="."/>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
     font-family: PingFangSC-Regular sans-serif;
     letter-spacing: 0;
     text-align: center;
-    background: url(../../assets/images/home/backRectangle.svg);
+    background: url(../../../assets/images/home/backRectangle.svg);
     >img{
       width: 20px;
       height: 20px;

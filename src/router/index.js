@@ -36,24 +36,29 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "registerStepTwo" */ '../views/register/RegisterStepTwo.vue'),
     },
     {
+      path: '/fixCoupon', // lihui- 优惠券
+      name: 'FixCoupon',
+      component: () => import(/* webpackChunkName: "FixCoupon" */ '../views/coupon/FixCoupon.vue'),
+    },
+    {
       path: '/registerSuccess',
       name: 'RegisterSuccess',
       component: () => import(/* webpackChunkName: "registerSuccess" */ '../views/register/RegisterSuccess.vue'),
     },
     {
-      path: '/registerHome/:status',
+      path: '/registerHome',
       name: 'RegisterHome',
       component: () => import(/* webpackChunkName: "unLogin" */ '../views/home/RegisterHome.vue'),
     },
     {
-      path: '/purchaseCoinHome/',
+      path: '/purchaseCoinHome',
       name: 'PurchaseCoinHome',
       component: () => import(/* webpackChunkName: "PurchaseCoinHome" */ '../views/purchaseCoin/purchaseCoinHome.vue'),
     },
     {
       path: '/homeToLogin/',
       name: 'HomeToLogin',
-      component: () => import(/* webpackChunkName: "HomeToLogin" */ '../components/home/HomeToLogin.vue'),
+      component: () => import(/* webpackChunkName: "HomeToLogin" */ '../views/home/components/HomeToLogin.vue'),
     },
     {
       path: '/fixedPurchaseStepOne',
@@ -111,9 +116,24 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "BuyingIllustration" */ '../views/purchaseCoin/BuyingIllustration.vue'),
     },
     {
+      path: '/totalAssets/', // lihui-总资产
+      name: 'TotalAssets',
+      component: () => import(/* webpackChunkName: "TotalAssets" */ '../views/totalAssets/TotalAssets.vue'),
+    },
+    {
+      path: '/availableBalance/', // lihui-可用余额
+      name: 'AvailableBalance',
+      component: () => import(/* webpackChunkName: "AvailableBalance" */ '../views/totalAssets/AvailableBalance.vue'),
+    },
+    {
+      path: '/currencyDetails/', // lihui-货币详情
+      name: 'CurrencyDetails',
+      component: () => import(/* webpackChunkName: "CurrencyDetails" */ '../views/totalAssets/CurrencyDetails.vue'),
+    },
+    {
       path: '/test/',
       name: 'fixedPop',
-      component: () => import(/* webpackChunkName: "fixedPop" */ '../components/fixedDetail/FixedPop.vue'),
+      component: () => import(/* webpackChunkName: "fixedPop" */ '../views/product/fixed/components/FixedPop.vue'),
     },
     {
       path: '/country',
@@ -423,6 +443,13 @@ const router = new Router({
       path: '/more-welfare',
       name: 'welfare',
       component: () => import('../views/member/MoreWelfare.vue'),
+    },
+
+    // 首页弹窗
+    {
+      path: '/levelOnePop',
+      name: 'LevelOnePop',
+      component: () => import('../components/LevelOnePop.vue'),
     },
   ],
 });
