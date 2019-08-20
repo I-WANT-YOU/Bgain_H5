@@ -12,6 +12,7 @@ const state = {
   referInfo: {},
   assetRecord: {},
   couponList: {},
+  transfers: {},
 };
 
 const getters = {
@@ -74,6 +75,9 @@ const mutations = {
   [types.GET_USER_COUPON_LIST](state, payload) {
     state.couponList = payload;
   },
+  [types.GET_TRANSFER_DETAILS](state, payload) {
+    state.transfers = payload;
+  },
 };
 
 const actions = {
@@ -83,6 +87,16 @@ const actions = {
       const response = await UserService.getUserSummary();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_SUMMARY, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  // 交易记录
+  async getTransferDetails({ commit }, currency) {
+    try {
+      const response = await UserService.getTransferDetails(currency);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_TRANSFER_DETAILS, data);
     } catch (error) {
       throw error;
     }
@@ -137,8 +151,9 @@ const actions = {
   // 用户一键授权OTC验证
   async toGrantAuthorization() {
     try {
-      const response = await UserService.toGrantAuthorization();
-      return await Auth.handlerSuccessResponseV2(response);
+      await UserService.toGrantAuthorization();
+      // const data = await Auth.handlerSuccessResponseV2(response);
+      // commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
     }
@@ -169,7 +184,7 @@ const actions = {
   // 资金记录
   async getAssetRecord({ commit }) {
     try {
-      const response = await UserService.getAssetRecord();
+      const response = await UserService.getTransferDetails('');
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_ASSET_RECORD, data);
     } catch (error) {

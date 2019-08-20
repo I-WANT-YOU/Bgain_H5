@@ -99,13 +99,14 @@ class UserService {
   }
 
   // 资金记录
-  static async getAssetRecord() {
+  static async getTransferDetails(currency) {
     try {
       const requestOptions = {
         url: '/balance/get-user-balance-transfer-details',
+        headers: { 'Content-Type': 'application/json' },
         method: 'post',
         data: {
-          currency: '',
+          currency,
           start_date: 0,
           end_date: 0,
         },
