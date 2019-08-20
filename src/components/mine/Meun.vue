@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       options: [
-        { text: '首页', path: '/registerHome/login' },
+        { text: '首页', path: '/registerHome' },
         { text: '冠军基金', path: '/product/fund' },
         { text: '天天赚', path: '/product/current' },
         { text: '定期盈', path: '/product/fixed' },
@@ -81,6 +81,7 @@ export default {
       line-height: 41px;
       font-size: 15px;
       color: #002262;
+      text-align: left;
       &::after {
         position: absolute;
         box-sizing: border-box;

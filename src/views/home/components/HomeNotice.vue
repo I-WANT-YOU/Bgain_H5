@@ -1,8 +1,8 @@
 <template>
   <div class="notices">
-    <div class="notice" v-for="(notice,index) in noticeData" :key="index">
+    <div class="notice" v-for="(notice,index) in noticeData" @click="go(notice)" :key="index">
       <div>
-        <img :src="notice.src">
+        <img :src="notice.src" />
       </div>
       <div>
         <span>{{notice.text}}</span>
@@ -23,45 +23,57 @@ export default {
         {
           src: invitedfriend,
           text: '邀友返利',
+          path: '/refer',
         },
         {
           src: quickcurrencypassing,
           text: '快速充币',
+          path: '/purchaseCoinHome',
         },
         {
           src: invitedfriend,
           text: '量化比赛',
+          path: 'http://fcat.fin-bee.com.cn',
         },
       ],
     };
+  },
+  methods: {
+    go(path) {
+      if (path.text === '量化比赛') {
+        window.location.href = path.path;
+      } else {
+        this.$router.push(path.path);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.notices{
+.notices {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin: 0 34px;
-  .notice{
-    >div{
-      >div:nth-child(1){
+  .notice {
+    > div {
+      > div:nth-child(1) {
         height: 40px;
       }
-      >div:nth-child(2){
-        margin-top:15px;
+      > div:nth-child(2) {
+        margin-top: 15px;
         height: 20px;
       }
     }
-    img{
+    img {
       width: 41.6px;
       height: 40px;
     }
-    span{
+    span {
       font-family: PingFangSC-Regular;
       font-size: 14px;
-      color: #0F3256;
+      color: #0f3256;
       letter-spacing: 0;
       text-align: center;
     }
