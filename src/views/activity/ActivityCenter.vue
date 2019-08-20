@@ -1,6 +1,6 @@
 <template>
   <div class="activity__container" :class="{setContainer:showSignIn}">
-    <nav-bar title="活动中心" :show-arrow="false" />
+    <nav-bar title="活动中心" />
     <!--会员值 已登陆-->
     <div class="member-num" v-if="isLogin === true" @click="onGoMemberPage">
       <div class="background">

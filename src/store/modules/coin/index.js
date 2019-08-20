@@ -1,6 +1,7 @@
 import purchaseCoin from './purchaseCoin';
 import orderInfo from './orderInfo';
 import appealingInfo from './appealingInfo';
+import wallet from './wallet';
 
 
 const state = {
@@ -16,6 +17,7 @@ const modules = {
   purchaseCoin,
   orderInfo,
   appealingInfo,
+  wallet,
 };
 
 export default {

@@ -47,7 +47,6 @@
   </div>
 </template>
 <script>
-import { get } from 'lodash';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { createNamespacedHelpers } from 'vuex';
 import Progress from './components/Progress.vue';
@@ -79,11 +78,7 @@ export default {
     },
     onGoFundPage() {
     },
-    onShare() {
-      const inviteCode = get(this.basicInfo, 'invitation_code', '');
-      if (inviteCode) {
-      }
-    },
+    onShare() { },
   },
   computed: {
     ...mapState(['basicInfo']),

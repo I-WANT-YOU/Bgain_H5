@@ -63,6 +63,15 @@ const actions = {
     }
   },
 
+  async deleteNewsRead(context, uuid) {
+    try {
+      const response = await MessageService.deleteNewsRead(uuid);
+      return await handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async getSystemAnnouncements({ commit }) {
     try {
       const response = await MessageService.getSystemAnnouncements();

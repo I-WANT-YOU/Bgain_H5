@@ -34,7 +34,7 @@
         <div class="line"></div>
         <div class="balance">
           <div class="balance-info">
-            <div class="balance-info-text">
+            <div @click="$router.push({name:'balance'})" class="balance-info-text">
               <span>可用余额({{currency}})</span>
               <span>
                 <svg-icon icon-class="next" class="icon-next" />
@@ -43,8 +43,8 @@
             <div :class="authenticated ? '' : 'loginText'">{{balance}}</div>
           </div>
           <div class="top-up">
-            <span class="recharge">充币</span>
-            <span class="extract" @click="onClick">提币</span>
+            <span class="recharge" @click="onSkip('/purchaseCoinHome/')">充币</span>
+            <span class="extract" @click="onSkip('/extract-coin')">提币</span>
           </div>
         </div>
       </div>
@@ -74,7 +74,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
-            <div>
+            <div @click="go('/asset-record')">
               <div class="title">资金记录</div>
               <div class="info">资金流水，一目了然</div>
             </div>
@@ -83,7 +83,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
-            <div>
+            <div @click="go('/coupon')">
               <div class="title">优惠卷</div>
               <div class="info">加息卷，红包</div>
             </div>
@@ -93,7 +93,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-question" class="icon" />
             </div>
-            <div>
+            <div @click="go('/commonProblem')">
               <div class="title">常见问题</div>
               <div class="info">投资、充提币、产品介绍</div>
             </div>
@@ -102,7 +102,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-activity" class="icon" />
             </div>
-            <div>
+            <div @click="go('/activity')">
               <div class="title">活动中心</div>
               <div class="info">会员、签到、奖励</div>
             </div>
@@ -154,12 +154,12 @@ export default {
           this.currency = this.singleCurrency[0].currency;
           this.options = this.singleCurrency
             .map(item => item.currency)
-            .map(item => ({ name: item === 'FBP' ? 'BGP' : item }));
+            .map(item => ({ name: item }));
           this.getCurreny();
         });
       } catch (error) {
         Toast.clear();
-        throw error;
+        Toast(error);
       }
     }
   },
@@ -169,11 +169,8 @@ export default {
   },
   methods: {
     ...mapActions('user', ['getUserBalanceSummary']),
-    onClick() {
-
-    },
     getCurreny() {
-      const curreny = this.singleCurrency.filter(item => item.currency === (this.currency === 'BGP' ? 'FBP' : this.currency))[0];
+      const curreny = this.singleCurrency.filter(item => item.currency === this.currency)[0];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
       this.accumulatedIncome = curreny.investment_earned_profit;
@@ -189,6 +186,9 @@ export default {
       this.currency = item.name;
       this.getCurreny();
       this.showCurrency = false;
+    },
+    go(router) {
+      this.$router.push(router);
     },
   },
 };

@@ -248,8 +248,11 @@ export default {
       message: '加载中...',
     });
     try {
-      await this.getFundOwnerDetail(this.$route.params.id);
-      // console.log(this.fundOwnerDetail);
+      await this.getFundOwnerDetail({
+        id: this.$route.query.id,
+        currencyType: this.$route.query.currencyType,
+      });
+      console.log(this.fundOwnerDetail);
       this.$nextTick(() => {
         // this.setEcharts();
       });
@@ -297,7 +300,14 @@ export default {
       // this.setEcharts();
     },
     onSell() {
-      this.$router.push({ path: '/mine/fund/fund-sell', query: { fund_id: this.fundOwnerDetail.fund_product_id, fund_user_stat_id: this.fundOwnerDetail.fund_user_stat_id } });
+      this.$router.push({
+        path: '/mine/fund/fund-sell',
+        query: {
+          fund_id: this.fundOwnerDetail.fund_product_id,
+          fund_user_stat_id: this.fundOwnerDetail.fund_user_stat_id,
+          title: this.fundOwnerDetail.fund_product_name,
+        },
+      });
     },
     onBuy() {
       this.$router.push('/product/fund');

@@ -158,11 +158,10 @@ const actions = {
     }
   },
 
-  async addOrUpdateAddress({ commit }, params) {
+  async addOrUpdateAddress(context, params) {
     try {
       const response = await ActivityService.addOrUpdateAddress(params);
-      const data = await Auth.handlerSuccessResponseV2(response);
-      commit(types.GET_BGP_TRANSFER_HISTORY, data);
+      return await Auth.handlerSuccessResponseV2(response);
     } catch (error) {
       throw error;
     }

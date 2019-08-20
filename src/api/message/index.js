@@ -39,6 +39,22 @@ class MessageService {
     }
   }
 
+  // /announcement/delete-announcement
+  // 删除消息
+  static async deleteNewsRead(uuid) {
+    try {
+      console.log(uuid);
+      const requestOptions = {
+        url: `/announcement/delete-announcement/${uuid}`,
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // 消息全部已读
   static async setAllNewsRead() {
     try {

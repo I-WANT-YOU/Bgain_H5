@@ -28,11 +28,10 @@ export const handlerSuccessResponseV2 = (response) => {
   }
   return Promise.resolve(response.data);
 };
+
 export const handlerSuccessResponseV3 = (response) => {
   if (!response) {
     return Promise.reject(response);
   }
-  console.log(response);
   return Promise.resolve(response);
 };
-

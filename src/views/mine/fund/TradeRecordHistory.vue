@@ -6,7 +6,7 @@
         <div @click="onSk(fund)" v-for="fund in options" :key="fund.id" class="trade-record-card">
           <div class="line">
             <span class="product-name">{{fund.fund_name}}</span>
-            <span>{{fund.amount}} {{fund.currency_type}}</span>
+            <span>{{fund.amount}} {{fund.payment_currency}}</span>
           </div>
           <div class="line time">
             <span>{{fund.create_date}}</span>
@@ -49,16 +49,20 @@ export default {
       options: [],
     };
   },
-  mounted() {
+  async mounted() {
     Toast.loading({
       duration: 0,
       forbidClick: true,
       message: '加载中...',
     });
-    this.getFundOrderHistory().then(() => {
+    try {
+      await this.getFundOrderHistory();
       this.options = this.orderHistory.map(item => format(item));
       Toast.clear();
-    });
+    } catch (error) {
+      Toast(error);
+      Toast.clear();
+    }
   },
   methods: {
     ...mapActions(['getFundOrderHistory']),

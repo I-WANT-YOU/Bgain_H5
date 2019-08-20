@@ -16,24 +16,31 @@
           </div>
         </div>
         <div class="amount">
-          <div :class="['num', holdFunds.length ? '' : 'computed']">{{amount}}</div>
+          <div
+            :class="['num', holdFunds.length ? '' : 'computed']"
+          >{{holdFunds.length ? numberWithThousands(amount) : '--'}}</div>
           <span class="text">总市值(BTC)</span>
         </div>
         <div class="assets-change">
           <div class="assets-change-con">
-            <span :class="['num', holdFunds.length ? '' : 'computed']">{{yesterday}}</span>
+            <span
+              :class="['num', holdFunds.length ? '' : 'computed']"
+            >{{holdFunds.length ? yesterday : '---'}}</span>
             <span>昨日盈亏(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <span :class="['num', holdFunds.length ? '' : 'computed']">{{hold}}</span>
+            <span
+              :class="['num', holdFunds.length ? '' : 'computed']"
+            >{{holdFunds.length ? hold : '---'}}</span>
             <span>持仓收益(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <!-- eslint-disable -->
             <span
-              :class="['num', 'profit', (holdFunds.length && holdRate !== '---') ? '' : 'computed']"
+              :class="['num',
+              holdingFunds.total_pnl_ratio ? 'profit' : '',
+              (holdRate === '---') ? 'computed' : ''
+              ]"
             >{{holdRate}}</span>
-            <!-- eslint-enable -->
             <span>持仓收益率</span>
           </div>
         </div>
@@ -64,12 +71,13 @@
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
 import { ActionSheet, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { numberWithThousands } from '@utils/tools';
 import FundCard from './components/FundCard.vue';
 
-const { mapActions, mapGetters } = createNamespacedHelpers('product/fund');
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('product/fund');
 
 export default {
   name: 'MineFund',
@@ -84,19 +92,13 @@ export default {
       currency: 'BTC',
       yesterday: '---', // 昨日盈亏
       hold: '---', // 持仓收益
-      holdRate: '---', // 持仓收益率
+      holdRate: '', // 持仓收益率
       amount: '--', // 资金
       pending: '', // 在途资金
       pendings: 0, // 待交易订单数
       showSelect: false,
       currencyList: [],
     };
-  },
-  watch: {
-    list: {
-      handler: 'listHandler',
-      immediate: true,
-    },
   },
   async mounted() {
     Toast.loading({
@@ -110,6 +112,7 @@ export default {
       this.currencyList = Object.keys(this.holdCurencies).map(item => ({
         name: item.toLocaleUpperCase(),
       }));
+      this.holdRate = this.holdingFunds.total_pnl_ratio === 0 ? 0 : `${this.holdingFunds.total_pnl_ratio}%` || '---';
       this.onChangeCurrency('BTC');
       this.pendings = this.orderHistory.filter(item => item.fund_order_status === 'PENDING').length;
       Toast.clear();
@@ -120,6 +123,7 @@ export default {
   },
   computed: {
     ...mapGetters(['holdFunds', 'holdCurencies', 'orderHistory']),
+    ...mapState(['holdingFunds']),
   },
   methods: {
     ...mapActions(['getHoldingFunds', 'getFundOrderHistory']),
@@ -127,13 +131,8 @@ export default {
       // 历史交易记录
       this.$router.push('/mine/fund/trade-record-history');
     },
-    listHandler(value) {
-      if (!value.length) {
-        this.yesterday = '计算中';
-        this.hold = '计算中';
-        this.holdRate = '计算中';
-        this.amount = '计算中';
-      }
+    numberWithThousands(num) {
+      return numberWithThousands(num);
     },
     showSelectFun() {
       this.showSelect = true;
@@ -142,10 +141,30 @@ export default {
       this.currency = currency;
       const currencys = this.holdCurencies[currency] ? this.holdCurencies[currency]
         : this.holdCurencies[currency.toLocaleLowerCase()];
-      this.yesterday = currencys.total_yesterday_change;
-      this.hold = currencys.total_pnl;
-      this.pending = currencys.pending_amount;
-      this.amount = currencys.total_holding_market_value;
+      if (currencys.total_pnl === 0) {
+        this.hold = 0;
+      } else {
+        this.hold = currencys.total_pnl
+          ? currencys.total_pnl : this.hold;
+      }
+      if (currencys.total_yesterday_change === 0) {
+        this.yesterday = 0;
+      } else {
+        this.yesterday = currencys.total_yesterday_change
+          ? currencys.total_yesterday_change : this.yesterday;
+      }
+      if (currencys.pending_amount === 0) {
+        this.pending = 0;
+      } else {
+        this.pending = currencys.pending_amount
+          ? currencys.pending_amount : this.pending;
+      }
+      if (currencys.total_holding_market_value === 0) {
+        this.amount = 0;
+      } else {
+        this.amount = currencys.total_holding_market_value
+          ? currencys.total_holding_market_value : this.amount;
+      }
     },
     onSelect(item) {
       this.onChangeCurrency(item.name);

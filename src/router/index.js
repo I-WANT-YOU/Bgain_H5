@@ -18,7 +18,7 @@ const router = new Router({
     },
     {
       path: '/',
-      redirect: '/test',
+      redirect: '/registerHome',
     },
     {
       path: '/login',
@@ -357,7 +357,7 @@ const router = new Router({
     },
     // 在持基金详情
     {
-      path: '/mine/fund/fund-hold-detail/:id',
+      path: '/mine/fund/fund-hold-detail',
       name: 'FundDetail',
       component: () => import('../views/mine/fund/FundDetail.vue'),
     },
@@ -396,6 +396,12 @@ const router = new Router({
       path: '/message-detail/:type',
       name: 'MessageDetail',
       component: () => import('../views/message/MessageDetail.vue'),
+    },
+    // 联系我们
+    {
+      path: '/contact-us',
+      name: 'contactUs',
+      component: () => import('../views/mine/ContactUs.vue'),
     },
     {
       path: '/activity',
@@ -444,7 +450,102 @@ const router = new Router({
       name: 'welfare',
       component: () => import('../views/member/MoreWelfare.vue'),
     },
-
+    // 提币
+    {
+      path: '/extract-coin',
+      name: 'ExtractCoin',
+      component: () => import('../views/purchaseCoin/ExtractCoin.vue'),
+    },
+    // 提币记录
+    {
+      path: '/extract-coin-record',
+      name: 'ExtractCoinRecord',
+      component: () => import('../views/purchaseCoin/ExtractCoinRecord.vue'),
+    },
+    // 提币记录详情
+    {
+      path: '/extract-coin-record-detail/:id',
+      name: 'ExtractCoinRecordDetail',
+      component: () => import('../views/purchaseCoin/ExtractCoinRecordDetail.vue'),
+    },
+    {
+      path: '/refer',
+      name: 'refer',
+      component: () => import('../views/refer/Refer.vue'),
+    },
+    {
+      path: '/refer-detail',
+      name: 'referDetail',
+      component: () => import('../views/refer/ReferDetail.vue'),
+    },
+    {
+      path: '/refer-rules',
+      name: 'referRules',
+      component: () => import('../views/refer/ReferRules.vue'),
+    },
+    {
+      path: '/commonProblem', // lihui- 常见问题
+      name: 'CommonProblem',
+      component: () => import('../views/staticViews/CommonProblem.vue'),
+    },
+    // 基金风险说明
+    {
+      path: '/risk-statement',
+      name: 'RiskStatement',
+      component: () => import('../views/staticViews/RiskStatement.vue'),
+    },
+    // 定期常见问题
+    {
+      path: '/fixed-questions',
+      name: 'FixedQuestions',
+      component: () => import('../views/staticViews/FixedQuestions.vue'),
+    },
+    // 定期安全保障
+    {
+      path: '/fixed-safety-security',
+      name: 'SafetySecurity',
+      component: () => import('../views/staticViews/SafetySecurity.vue'),
+    },
+    // 协议
+    {
+      path: '/agreement',
+      name: 'agreement',
+      component: () => import('../views/agreement/Agreement.vue'),
+      children: [
+        {
+          path: 'privacy',
+          name: 'privacy',
+          component: () => import('../views/agreement/subpage/Privacy.vue'),
+        },
+        {
+          path: 'service',
+          name: 'service',
+          component: () => import('../views/agreement/subpage/Service.vue'),
+        },
+        {
+          path: 'disclaimer',
+          name: 'disclaimer',
+          component: () => import('../views/agreement/subpage/Disclaimer.vue'),
+        },
+        {
+          path: 'investment',
+          name: 'investment',
+          component: () => import('../views/agreement/subpage/Investment.vue'),
+        },
+      ],
+    },
+    // 资金记录
+    {
+      path: '/asset-record',
+      name: 'AssetRecord',
+      component: () => import('../views/mine/AssetRecord.vue'),
+    },
+    // 优惠券
+    {
+      path: '/coupon',
+      name: 'Coupon',
+      component: () => import('../views/mine/coupon/Coupon.vue'),
+    },
     // 首页弹窗
     {
       path: '/levelOnePop',

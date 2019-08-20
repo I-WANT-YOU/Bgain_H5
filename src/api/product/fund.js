@@ -135,12 +135,16 @@ class FundService {
     }
   }
 
-  static async getFundOwnerDetail(id) {
+  static async getFundOwnerDetail(option) {
     try {
       const requestOptions = {
-        url: `/fund/owner-fund-detail/${id}`,
+        url: '/fund/owner-fund-detail',
         headers: { 'Content-Type': 'application/json' },
-        method: 'get',
+        method: 'post',
+        data: {
+          fund_id: option.id,
+          currency_type: option.currencyType,
+        },
       };
       const response = await request(requestOptions);
       return handlerResponse(response);
@@ -152,10 +156,28 @@ class FundService {
   static async sellFund(options) {
     try {
       const requestOptions = {
-        url: '/fund/owner-fund-detail',
+        url: '/fund/fund-sell',
         headers: { 'Content-Type': 'application/json' },
         method: 'post',
         data: options,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async sellFundDetail(option) {
+    try {
+      const requestOptions = {
+        url: '/fund/fund-details-before-sell',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          fund_id: option.fundId,
+          fund_user_stat_id: option.userId,
+        },
       };
       const response = await request(requestOptions);
       return handlerResponse(response);

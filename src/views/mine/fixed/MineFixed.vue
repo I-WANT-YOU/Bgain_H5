@@ -14,22 +14,22 @@
       <div class="asset-wrap">
         <div v-show="active === '1'" class="holding">
           <div class="info">
-            <span>在投资产(BTC)</span>
-            <span class="icon-wrap">
-              BTC
+            <span>在投资产({{currency}})</span>
+            <span class="icon-wrap" @click="showMune = true">
+              {{currency}}
               <svg-icon icon-class="mine-pull" class="icon-pull" />
             </span>
           </div>
-          <div class="amount">10.00000000</div>
+          <div class="amount">{{numberWithThousands(amount)}}</div>
         </div>
         <div class="income">
           <div class="title">{{active === '1' ? '待收' : '已得'}}收益</div>
           <div class="currencies">
-            <div class="icon">
-              <img class="icon-img" src alt />
+            <div class="icon" v-for="(item,key) in balanceList" :key="key">
+              <img class="icon-img" :src="item.icon_url" alt />
               <div class="icon-info">
-                <div class="currency-type">BTC</div>
-                <div>123,3.345126</div>
+                <div class="currency-type">{{item.currency_type}}</div>
+                <div>{{item.amount}}</div>
               </div>
             </div>
           </div>
@@ -37,8 +37,10 @@
       </div>
       <div class="list">
         <div class="no" v-if="!userPortfolio.length">
-          <div>暂无购买记录</div>
-          <div class="skip">浏览产品</div>
+          <div class="no-record">
+            <svg-icon icon-class="mine-fund-no-record" class="no-record-icon" />
+            <div>暂无持仓记录</div>
+          </div>
         </div>
         <div v-else class="has">
           <FixedCard
@@ -50,15 +52,18 @@
         </div>
       </div>
     </div>
-    <ActionSheet v-model="showMune" :actions="[]" />
+    <ActionSheet v-model="showMune" :actions="actions" @select="onSelect" />
   </div>
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import { ActionSheet, Toast } from 'vant';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { numberWithThousands } from '@utils/tools';
 import FixedCard from './components/FixedCard.vue';
+
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('product/fixed');
 
 export default {
   name: 'MineFixed',
@@ -71,12 +76,15 @@ export default {
     return {
       active: '1',
       list: [],
+      balanceList: [],
+      amount: 0,
+      currency: 'BTC',
       showMune: false,
+      actions: [],
     };
   },
   methods: {
-    ...mapActions('product/fixed', ['getUserPortfolio', 'getUserPortfolioHistory']),
-    ...mapActions('user', ['getUserBalanceSummary']),
+    ...mapActions(['getUserPortfolio', 'getUserPortfolioHistory', 'getUsetFixedHoldingDetail']),
     onTab(tab) {
       this.active = tab;
       this.onChangeList();
@@ -89,20 +97,38 @@ export default {
       });
       if (this.active === '1') {
         await this.getUserPortfolio();
+        await this.getUsetFixedHoldingDetail(0);
+        this.balanceList = this.userHoldFixedSummary;
         Toast.clear();
       } else {
         await this.getUserPortfolioHistory();
+        await this.getUsetFixedHoldingDetail(1);
+        this.balanceList = this.userHoldFixedSummary;
         Toast.clear();
       }
     },
+    onSelect(currency) {
+      const select = Object.entries(this.userHoldFixedAsset)
+        .filter(item => item[0] === currency.name)[0][1];
+      this.currency = currency.name;
+      this.amount = select;
+      this.showMune = false;
+    },
+    numberWithThousands(num) {
+      return numberWithThousands(num);
+    },
   },
   computed: {
-    ...mapState('user', ['userBalance']),
-    ...mapState('product/fixed', ['userPortfolio']),
-    ...mapGetters('user', ['singleCurrency']),
+    ...mapState(['userPortfolio']),
+    ...mapGetters(['userHoldFixedAsset', 'userHoldFixedSummary']),
   },
-  mounted() {
+  async mounted() {
     this.onChangeList();
+    await this.getUsetFixedHoldingDetail(0);
+    this.balanceList = this.userHoldFixedSummary;
+    this.currency = 'BTC';
+    this.amount = this.userHoldFixedAsset.BTC;
+    this.actions = Object.entries(this.userHoldFixedAsset).map(item => ({ name: item[0] }));
   },
 };
 </script>
@@ -209,7 +235,6 @@ export default {
               height: 25px;
               margin-right: 12px;
               border-radius: 50%;
-              background: #000;
             }
             .currency-type {
               font-size: 12px;
@@ -230,16 +255,19 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         color: #a8aeb9;
         font-size: 24px;
-        .skip {
-          margin-top: 10px;
-          font-size: 15px;
-          color: #222222;
-          border: 1px solid #222222;
-          padding: 10px;
-          border-radius: 3px;
+        .no-record {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 14px;
+          color: #a8aeb9;
+          .no-record-icon {
+            width: 102px;
+            height: 78px;
+            margin: 60px 0 12px;
+          }
         }
       }
       .has {

@@ -27,6 +27,7 @@ export default {
   computed: {
     ...mapGetters(['submitKycStatus', 'submitKycMsg']),
     status() {
+      console.log(this.submitKycStatus);
       return STATUS[this.submitKycStatus];
     },
     subtitle() {

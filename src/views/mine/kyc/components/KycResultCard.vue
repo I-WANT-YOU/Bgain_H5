@@ -33,7 +33,7 @@ export default {
     status: {
       type: String,
       required: true,
-      default: KYC_STATUS.PENDING,
+      default: KYC_STATUS.FAIL,
       validator(value) {
         return Object.keys(KYC_STATUS)
           .indexOf(value) !== -1;

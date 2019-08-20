@@ -58,14 +58,18 @@
     </div>
     <!--安全保障-->
     <div class="middle-line"></div>
-    <div class="security">
+    <div class="security" @click="goPage('/fixed-safety-security')">
       <span>安全保障</span>
-      <svg-icon icon-class="next"/>
+      <span>
+        <svg-icon icon-class="next"/>
+      </span>
     </div>
     <div class="middle-line"></div>
-    <div class="security">
+    <div class="security" @click="goPage('/fixed-questions')">
       <span>常见问题</span>
-      <svg-icon icon-class="next"/>
+      <span>
+        <svg-icon icon-class="next"/>
+      </span>
     </div>
     <div class="confirm" :class="{cancelMargin:msgFormSon}">
       <button @click="purchase">立即认购</button>
@@ -252,6 +256,9 @@ export default {
         this.toChildDate.push(formateTime);
         return true;
       });
+    },
+    goPage(path) {
+      this.$router.push(path);
     },
   },
 };

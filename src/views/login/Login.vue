@@ -36,7 +36,7 @@
       </p>
     </div>
     <Footer />
-    <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" />
+    <Geetest @loaded="onLoaded" @success="onSuccess" />
   </div>
 </template>
 
@@ -95,7 +95,7 @@ export default {
     },
     submit() {
       let flag;
-      const { username, password } = this;
+      const { username } = this;
       const reg = /^[0-9]{1,}$/;
       const mobile = /^[0-9]{1,15}$/;
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line no-useless-escape
@@ -117,38 +117,33 @@ export default {
       }
       if (flag) {
         if (this.once) {
-          this.login({
-            username,
-            password,
-          }).then(() => {
-            this.once = false;
-          }).catch(() => {
-            this.once = false;
-          });
+          this.onLogin();
         } else {
           // 滑块验证
           this.geetest.verify();
         }
       }
     },
+    async onLogin() {
+      const { username, password } = this;
+      try {
+        await this.login({
+          username,
+          password,
+          geetestOptions: this.options,
+        });
+        this.once = false;
+      } catch (error) {
+        this.once = false;
+        Toast('账号或密码错误');
+      }
+    },
     onLoaded(geetest) {
       this.geetest = geetest;
     },
     onSuccess(options) {
-      const { username, password } = this;
       this.options = options;
-      try {
-        this.login({
-          username,
-          password,
-          geetestOptions: options,
-        });
-      } catch (error) {
-        throw error;
-      }
-    },
-    onError() {
-
+      this.onLogin();
     },
     forgetPwd() { // 修改密码
       this.$router.history.push('/forgetPassword');

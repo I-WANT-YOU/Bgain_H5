@@ -14,13 +14,8 @@
         <div>已得收益</div>
       </div>
       <div class="fixed-card-item">
-        <div class="num">
-          {{option.portfolio_record_status === 'INTEREST_START'
-          ? option.product_left_days
-          : 'DUE' || 'DUE_PENDDING' ? '0'
-          : '--'}}
-        </div>
-        <div>{{option.portfolio_record_status==='PURCHASE_START'?'剩余天数':'回款日期'}}</div>
+        <div class="num">{{showText}}</div>
+        <div>{{status?'剩余天数':'回款日期'}}</div>
       </div>
     </div>
   </div>
@@ -49,9 +44,22 @@ export default {
       this.$router.push({ path: `/mine/fixed-detail/${this.status}`, query: this.option });
     },
   },
+  computed: {
+    showText() {
+      if (this.status) {
+        if (this.option.portfolio_record_status === 'INTEREST_START') {
+          return this.option.product_left_days;
+        }
+        if (this.option.portfolio_record_status === 'DUE' || this.option.portfolio_record_status === 'DUE_PENDDING') {
+          return '0天';
+        }
+        return '--';
+      }
+      return this.formatDate(this.option.end_date);
+    },
+  },
   mounted() {
     // console.log(this.option);
-    // product_left_days
   },
 };
 </script>

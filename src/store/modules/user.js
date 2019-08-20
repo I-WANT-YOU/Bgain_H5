@@ -9,6 +9,9 @@ const state = {
   userBalance: {},
   submitKycResult: {},
   isSignInInfo: {},
+  referInfo: {},
+  assetRecord: {},
+  couponList: {},
   transfers: {},
 };
 
@@ -37,6 +40,14 @@ const getters = {
     currency,
     balance,
   })),
+  bonusSummary: state => get(state.referInfo.bonus_summary, 'all', 0),
+  inviteeDetailsList: state => get(state.referInfo, 'invitee_details_list', []),
+  rewardRecordList: state => get(state.referInfo, 'reward_record_list', []),
+  everyTokens: state => get(state.referInfo.bonus_summary, 'every_tokens', {}),
+  assetRecords: state => get(state.assetRecord, 'operation_logs', []),
+  newCoupons: state => get(state.couponList, 'new_coupons', []),
+  usedCoupons: state => get(state.couponList, 'used_coupons', []),
+  expiredCoupons: state => get(state.couponList, 'expired_coupons', []),
 };
 
 const mutations = {
@@ -54,6 +65,15 @@ const mutations = {
   },
   [types.GET_USER_IS_SIGN_IN](state, payload) {
     state.isSignInInfo = payload;
+  },
+  [types.GET_USER_REFER](state, payload) {
+    state.referInfo = payload;
+  },
+  [types.GET_ASSET_RECORD](state, payload) {
+    state.assetRecord = payload;
+  },
+  [types.GET_USER_COUPON_LIST](state, payload) {
+    state.couponList = payload;
   },
   [types.GET_TRANSFER_DETAILS](state, payload) {
     state.transfers = payload;
@@ -112,7 +132,7 @@ const actions = {
   async getKycInfo({ commit }) {
     try {
       const response = await UserService.getKycInfo();
-      const data = await Auth.handlerSuccessResponseV2(response);
+      const data = await Auth.handlerSuccessResponseV3(response);
       commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
@@ -129,7 +149,7 @@ const actions = {
   },
 
   // 用户一键授权OTC验证
-  async toGrantAuthorization({ commit }) {
+  async toGrantAuthorization() {
     try {
       await UserService.toGrantAuthorization();
       // const data = await Auth.handlerSuccessResponseV2(response);
@@ -145,6 +165,39 @@ const actions = {
       const response = await UserService.getUserIsSignIn();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_IS_SIGN_IN, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 邀友返利
+  async getReferInfo({ commit }) {
+    try {
+      const response = await UserService.getReferInfo();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_REFER, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 资金记录
+  async getAssetRecord({ commit }) {
+    try {
+      const response = await UserService.getTransferDetails('');
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_ASSET_RECORD, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 优惠券
+  async getUserCouponList({ commit }) {
+    try {
+      const response = await UserService.getUserCouponList();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_COUPON_LIST, data);
     } catch (error) {
       throw error;
     }

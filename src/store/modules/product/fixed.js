@@ -9,6 +9,7 @@ const state = {
   fixedBuyInfo: {},
   availabelCoupons: [],
   userPortfolio: [],
+  userholdingDetail: {},
 };
 
 const getters = {
@@ -19,6 +20,8 @@ const getters = {
     .head()
     .get('product_summaries', [])
     .value(),
+  userHoldFixedAsset: state => get(state.userholdingDetail, 'total_asset', {}),
+  userHoldFixedSummary: state => get(state.userholdingDetail, 'pending_profit_summary_list', []),
 };
 
 const mutations = {
@@ -36,6 +39,9 @@ const mutations = {
   },
   [types.GET_USER_PORTFOLIO](state, payload) {
     state.userPortfolio = payload;
+  },
+  [types.GET_USER_HOLDING_DETAIL](state, payload) {
+    state.userholdingDetail = payload;
   },
 };
 
@@ -128,6 +134,25 @@ const actions = {
       const response = await FixedService.getUserPortfolioHistory();
       const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_PORTFOLIO, get(data, 'portfolios', []));
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async setAutoPortfolio(context, option) {
+    try {
+      const response = await FixedService.setAutoPortfolio(option);
+      return handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getUsetFixedHoldingDetail({ commit }, status) {
+    try {
+      const response = await FixedService.getUsetFixedHoldingDetail(status);
+      const data = await handlerSuccessResponseV2(response);
+      commit(types.GET_USER_HOLDING_DETAIL, data);
     } catch (error) {
       throw error;
     }

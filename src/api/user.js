@@ -84,6 +84,21 @@ class UserService {
     }
   }
 
+  // 邀友返利
+  static async getReferInfo() {
+    try {
+      const requestOptions = {
+        url: '/user/get-refer-info',
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 资金记录
   static async getTransferDetails(currency) {
     try {
       const requestOptions = {
@@ -92,7 +107,23 @@ class UserService {
         method: 'post',
         data: {
           currency,
+          start_date: 0,
+          end_date: 0,
         },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 优惠券
+  static async getUserCouponList() {
+    try {
+      const requestOptions = {
+        url: '/coupon/fetch-user-coupon-list',
+        method: 'post',
       };
       const response = await request(requestOptions);
       return handlerResponse(response);

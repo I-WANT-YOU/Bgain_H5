@@ -3,7 +3,7 @@
     <nav-bar
       v-bind="$attrs"
       :title="title"
-      :border="false"
+      :border="border"
       v-on="$listeners"
       @click-left="onClickLeft"
     >
@@ -37,6 +37,11 @@ export default {
       required: false,
       default: '',
     },
+    border: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     onArrowClick: {
       type: Function,
       required: false,
@@ -59,19 +64,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .van-nav-bar {
-    height: 44px;
-    line-height: 44px;
-  }
+.van-nav-bar {
+  height: 44px;
+  line-height: 44px;
+}
 
-  .van-nav-bar__title {
-    font-size: 17px;
-    font-weight: normal;
-    color: #0f3256;
-  }
+.van-nav-bar__title {
+  font-size: 17px;
+  font-weight: normal;
+  color: #0f3256;
+}
 
-  .icon-go-back {
-    width: 10px;
-    height: 18px;
-  }
+.icon-go-back {
+  width: 10px;
+  height: 18px;
+}
 </style>

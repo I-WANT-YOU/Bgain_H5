@@ -102,6 +102,40 @@ class FixedService {
       throw new Error(error);
     }
   }
+
+  // 自动转入分币宝
+  static async setAutoPortfolio(option) {
+    try {
+      const requestOptions = {
+        url: '/portfolio/set-auto-transfer-in',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          auto_transfer_in: option.status,
+          portfolio_id: option.id,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 我的定期资产详情
+  static async getUsetFixedHoldingDetail(status) {
+    try {
+      const requestOptions = {
+        url: `/my/cds/holding/${status}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FixedService;
