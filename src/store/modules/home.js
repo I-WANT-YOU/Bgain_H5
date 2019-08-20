@@ -6,6 +6,7 @@ import * as types from '../mutationTypes';
 const state = {
   infos: {},
   recordList: {},
+  popInfo: {},
 };
 
 const getters = {
@@ -24,6 +25,9 @@ const mutations = {
   },
   [types.GET_RECORD](state, payload) {
     state.recordList = payload;
+  },
+  [types.GET_POP_INFO](state, payload) {
+    state.popInfo = payload;
   },
 };
 
@@ -49,6 +53,17 @@ const actions = {
       const response = await HomeService.getRecord();
       const data = await handlerSuccessResponse(response);
       commit(types.GET_RECORD, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /* 判断是否显示弹窗 */
+  async getPopInfo({ commit }) {
+    try {
+      const response = await HomeService.getPopInfo();
+      const data = await handlerSuccessResponseV2(response);
+      commit(types.GET_POP_INFO, data);
     } catch (error) {
       throw error;
     }

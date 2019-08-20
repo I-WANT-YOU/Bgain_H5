@@ -1,23 +1,59 @@
 import * as types from '../../mutationTypes';
-import assetsService from '@/api/coin/purchaseCoin';
-import { handlerSuccessResponseV2 } from '@/utils/auth';
+import assetsService from '@/api/assets/assets';
+import { handlerSuccessResponse } from '@/utils/auth';
 
 const state = {
-  userAppeal: {},
+  userAssets: { // 用户总资产
+    single_currency: [],
+  },
+  userAssetsRecord: {
+    operation_logs: [],
+  }, // 用户资产记录
+  userAvailableAssetsAssets: { // 用户可用资产
+    balances: [],
+  },
 };
 const mutations = {
-  [types.POST_USER_APPEAL](state, payload) {
-    state.userAppeal = payload;
+  [types.GET_USER_ASSETS](state, payload) {
+    state.userAssets = { ...payload };
+  },
+  [types.GET_USER_ASSETS_RECORD](state, payload) {
+    state.userAssetsRecord = payload;
+  },
+  [types.GET_USER_AVAILABLE](state, payload) {
+    state.userAvailableAssetsAssets = { ...payload };
   },
 };
 
 const actions = {
-  // 传入订单信息
-  async postAppealingInfo({ commit }, appealingInfo) {
+  // 获取用户总资产信息
+  async getUserAssets({ commit }) {
     try {
-      const response = await CoinService.postAppealingInfo(appealingInfo);
-      const data = await handlerSuccessResponseV2(response);
-      commit(types.POST_USER_APPEAL, data);
+      const response = await assetsService.getUserAssets();
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_USER_ASSETS, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 获取用户资产交易记录
+  async getUserAssetsRecord({ commit }, currencyType) {
+    try {
+      const response = await assetsService.getUserAssetsRecord(currencyType);
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_USER_ASSETS_RECORD, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 获取用户可用资产
+  async getUserAvailableAssets({ commit }) {
+    try {
+      const response = await assetsService.getUserAvailableAssets();
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_USER_AVAILABLE, data);
     } catch (error) {
       throw error;
     }

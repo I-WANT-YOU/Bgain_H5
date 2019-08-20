@@ -8,21 +8,60 @@
       </div>
       <!--总资产列表-->
       <div class="totalAssets-list-container">
-        <AssetsList/>
+        <AssetsList
+          :showData = "userAssets.single_currency"
+          showSkipToNext="false"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Toast } from 'vant';
+import { mapState, mapActions } from 'vuex';
 import BgainNavBar from '../../components/BgainNavBar.vue';
 import AssetsList from './components/AssetsList.vue';
+import errorMessage from '../../constants/responseStatus';
 
 export default {
   name: 'TotalAssets',
   components: {
     BgainNavBar,
     AssetsList,
+  },
+  computed: {
+    ...mapState('assets/userAssets', [
+      'userAssets', // 用户总资产信息
+    ]),
+  },
+  methods: {
+    ...mapActions('assets/userAssets', [
+      'getUserAssets',
+    ]),
+  },
+  mounted() {
+    Toast.loading({
+      mask: true,
+      duration: 5000,
+      message: '加载中...',
+    });
+    this.getUserAssets().then(
+      () => {
+        Toast.clear();
+      },
+      (err) => {
+        Toast.clear();
+        if (err.status) {
+          Toast(errorMessage[err.status]);
+        } else {
+          Toast('网络错误');
+        }
+      },
+    );
+  },
+  beforeDestroy() {
+    Toast.clear();
   },
 };
 </script>

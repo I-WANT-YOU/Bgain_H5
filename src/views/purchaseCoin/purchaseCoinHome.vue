@@ -16,7 +16,9 @@
             icon-class="purchaseCoinIllustration" class="purchase-img"/>
         </div>
         <div @click="toRecords">
-          <p :class="{activeRedCircle:false}" @hasRecord="(params)=>{this.activeRedCircle = params}"></p>
+          <p
+             :class="{activeRedCircle:false}"
+             @hasRecord="(params)=>{this.activeRedCircle = params}"></p>
           <svg-icon
             icon-class="purchaseCoinRecord" class="purchase-img"/>
         </div>
@@ -28,10 +30,10 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
+import Vue from 'vue';
 import CoinPurchase from './components/CoinPurchase.vue';
 import CoinRecharge from './components/CoinRecharge.vue';
-import {Toast} from 'vant';
-import Vue from 'vue';
 
 Vue.use(Toast);
 export default {

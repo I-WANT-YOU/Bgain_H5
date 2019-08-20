@@ -45,11 +45,14 @@
     <div class="footer">
       <BaseFooter/>
     </div>
+    <!--一级页面强制弹窗-->
+    <LevelOnePop :showData = "popInfo" :show="isPopShow"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import { Toast } from 'vant';
 import errorMessage from '../../constants/responseStatus';
 import HomeSwipe from './components/HomeSwipe.vue';
 import HomeTip from './components/HomeTip.vue';
@@ -59,6 +62,7 @@ import HomeMoreProducts from './components/HomeMoreProducts.vue';
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
+import LevelOnePop from '../../components/LevelOnePop.vue';
 
 export default {
   name: 'RegisterHome',
@@ -71,9 +75,11 @@ export default {
     HomeGuide,
     HomeNotice,
     BaseFooter,
+    LevelOnePop,
   },
   data() {
     return {
+      isPopShow: 'block', // 一级弹窗
       userStatus: '',
       kyc_status: 0, // 是否身份认证
       setPassword: 0, // 是否设置了交易密码
@@ -87,6 +93,7 @@ export default {
     ]),
     ...mapState('home', [
       'recordList',
+      'popInfo',
     ]),
   },
   mounted() {
@@ -134,6 +141,28 @@ export default {
         },
       );
     }
+
+    // 获取页面所有信息
+    this.getPopInfo().then(
+      () => {
+        try {
+          if (this.popInfo.is_popup_window === 0) {
+            this.isPopShow = false;
+          } else {
+            this.isPopShow = true;
+          }
+        } catch (e) {
+          throw new Error(e);
+        }
+      },
+      (err) => {
+        if (err.status) {
+          Toast(errorMessage[err.status]);
+        } else {
+          Toast('网络错误');
+        }
+      },
+    );
   },
   methods: {
     // 触发action的方法 getRecord
@@ -142,7 +171,7 @@ export default {
     ]),
     ...mapActions('home', [
       'getRecord',
-      'getAllHomeInfo',
+      'getPopInfo',
     ]),
   },
 };

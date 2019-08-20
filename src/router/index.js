@@ -444,6 +444,13 @@ const router = new Router({
       name: 'welfare',
       component: () => import('../views/member/MoreWelfare.vue'),
     },
+
+    // 首页弹窗
+    {
+      path: '/levelOnePop',
+      name: 'LevelOnePop',
+      component: () => import('../components/LevelOnePop.vue'),
+    },
   ],
 });
 
