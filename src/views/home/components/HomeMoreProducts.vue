@@ -1,6 +1,6 @@
 <template>
   <div class="more-products">
-    <span>更多产品</span><img alt="." src="../../assets/images/blue_next.svg"/>
+    <span>更多产品</span><img alt="." src="../../../assets/images/blue_next.svg"/>
   </div>
 </template>
 

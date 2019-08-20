@@ -42,7 +42,7 @@
                   {{item.total_ups_and_downs.substring(0,1)==='-' ?
                   item.total_ups_and_downs: `+${item.total_ups_and_downs}` }}
                 </span>
-                <div><img alt="." src="../../assets/images/next.svg"></div>
+                <div><img alt="." src="../../../assets/images/next.svg"></div>
               </div>
             </div>
           </li>
@@ -68,7 +68,7 @@
               </div>
               <div>
                 <span>{{ item.today_annualized_interest_rate }}</span>
-                <div><img alt="." src="../../assets/images/next.svg"></div>
+                <div><img alt="." src="../../../assets/images/next.svg"></div>
               </div>
             </div>
           </li>
@@ -96,7 +96,7 @@
               </div>
               <div>
                 <span>{{ item.expected_annual_return }}</span>
-                <div><img alt="." src="../../assets/images/next.svg"></div>
+                <div><img alt="." src="../../../assets/images/next.svg"></div>
               </div>
             </div>
           </li>
@@ -109,7 +109,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
-import initial from '../../assets/images/home/initial.svg';
+import initial from '../../../assets/images/home/initial.svg';
 
 
 export default {

@@ -22,9 +22,15 @@ export default {
   name: 'FixedPop',
   methods: {
     // 取消
-    cancel() {},
+    cancel() {
+      this.$router.go(-1);
+    },
     // 冲币
-    rushMoney() {},
+    rushMoney() {
+      this.$router.push({
+        name:'PurchaseCoinHome'
+      })
+    },
   },
 };
 </script>

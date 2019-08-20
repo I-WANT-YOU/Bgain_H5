@@ -30,8 +30,8 @@ export const handlerSuccessResponseV2 = (response) => {
 };
 
 export const handlerSuccessResponseV3 = (response) => {
-  if (!response || !(response.code === 0)) {
+  if (!response) {
     return Promise.reject(response);
   }
-  return Promise.resolve(response.data);
+  return Promise.resolve(response);
 };

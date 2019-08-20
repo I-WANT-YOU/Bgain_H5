@@ -1,5 +1,9 @@
 <template>
   <div class="home">
+    <router-link to="/levelOnePop">lihui-首页弹窗</router-link><br />
+    <router-link to="/totalAssets">lihui-总资产</router-link><br />
+    <router-link to="/availableBalance">lihui-可用余额</router-link><br />
+    <router-link to="/currencyDetails">lihui-货币详情</router-link><br />
     <router-link to="/confirmOrder">支付页面</router-link><br />
     <router-link to="/fillingRecord">冲币记录记录</router-link><br />
     <router-link to="/buyingRecord">购买记录</router-link><br />
@@ -19,7 +23,7 @@
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError" /><br/>
     <button @click="onClick">Geetest</button><br/>
     <div @click="$router.push({name:'country',params:{fromPath:'home'}})">country</div><br/>
-    <router-link to="/registerHome/unLogin">未登录业主页</router-link><br/>
+    <router-link to="/registerHome/">----主页------</router-link><br/>
     <router-link to="/registerHome/register">注册业主页</router-link><br/>
     <router-link to="/registerHome/login">登陆页主页</router-link><br />
     <router-link to="/subscriptionResults">认购结果</router-link><br />
@@ -53,7 +57,6 @@
 </template>
 
 <script>
-import { Loading } from 'vant';
 import SendCode from '@component/SendCode.vue';
 import Geetest from '../../components/Geetest.vue';
 
@@ -62,7 +65,6 @@ export default {
   components: {
     Geetest,
     SendCode,
-    Loading,
   },
   data() {
     return {

@@ -1,6 +1,6 @@
 import * as types from '../../mutationTypes';
 import CoinService from '@/api/coin/purchaseCoin';
-import { handlerSuccessResponseV2 } from '@/utils/auth';
+import { handlerSuccessResponseV2 ,handlerSuccessResponseV3} from '@/utils/auth';
 
 const state = {
   orderInformation: { // 生成订单产生的信息
@@ -9,6 +9,7 @@ const state = {
   orderInfoById: {}, // 根据用户id获取的信息
   orderList: {}, // 订单列表
   allPayInfo: {}, // 用户选择支付方式后 生成的数据
+  hadPayInfo:{}, // 用户已经付款接口
 };
 
 const getters = {
@@ -31,6 +32,9 @@ const mutations = {
   [types.CHECK_PAY_TYPE_INFO](state, payload) { // 根据ID获取用户订单
     state.allPayInfo = payload;
   },
+  [types.HAD_PAY_INFO](state, payload) { // 用户确认付款
+    state.hadPayInfo = payload;
+  },
 };
 
 const actions = {
@@ -38,7 +42,7 @@ const actions = {
   async generateOrderInfo({ commit }, orderInfo) {
     try {
       const response = await CoinService.generateOrderInfo(orderInfo);
-      const data = await handlerSuccessResponseV2(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.GET_ORDER_INFO, data);
     } catch (error) {
       throw error;
@@ -72,6 +76,17 @@ const actions = {
       const response = await CoinService.submitOrder(payType);
       const data = await handlerSuccessResponseV2(response);
       commit(types.CHECK_PAY_TYPE_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 用户确认支付(请付款页面)
+  async confirmHadPay({ commit }, orderId) {
+    try {
+      const response = await CoinService.confirmHadPay(orderId);
+      const data = await handlerSuccessResponseV3(response);
+      commit(types.HAD_PAY_INFO, data);
     } catch (error) {
       throw error;
     }

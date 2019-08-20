@@ -67,7 +67,7 @@ const actions = {
     }
   },
 
-  // 获取定期产品购买页信息
+  // 获取定期产品购买页信息(stepOne)
   async getFixedBuyInfo({ commit }, productId) {
     try {
       const response = await FixedService.getFixedBuyInfo(productId);
@@ -98,7 +98,7 @@ const actions = {
   async buyFixedProduct(context, params) {
     try {
       const response = await FixedService.buyFixedProduct(params);
-      return handlerSuccessResponseV2(response);
+      return handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }
@@ -118,6 +118,7 @@ const actions = {
     }
   },
 
+  // 获取预期收益
   async getUserPortfolio({ commit }) {
     try {
       const response = await FixedService.getUserPortfolio();

@@ -80,6 +80,7 @@ export const CHECK_PAY_TYPE_INFO = 'CHECK_PAY_TYPE_INFO'; // 选择支付方式 
 export const GET_WALLET_INFO = 'GET_WALLET_INFO'; // 获取提币信息
 export const GET_WALLET_RECORD = 'GET_WALLET_RECORD'; // 获取提币记录
 export const GET_WALLET_RECORD_DETAIL = 'GET_WALLET_RECORD_DETAIL'; // 获取提币记录详情
+export const HAD_PAY_INFO = 'HAD_PAY_INFO'; // 用户选择已付款
 
 /**
  * App 相关
@@ -100,3 +101,15 @@ export const GET_BGP_RECORD = 'GET_BGP_RECORD';
 export const GET_BGP_DETAIL_LIST = 'GET_BGP_DETAIL_LIST';
 export const GET_ADDRESS_DETAIL = 'GET_ADDRESS_DETAIL';
 export const GET_PRODUCT_BUY_RESULT = 'GET_PRODUCT_BUY_RESULT';
+
+/*
+* 用户资产相关
+* */
+export const GET_USER_ASSETS = 'GET_USER_ASSETS';
+export const GET_USER_ASSETS_RECORD = 'GET_USER_ASSETS_RECORD';
+export const GET_USER_AVAILABLE = 'GET_USER_AVAILABLE';
+
+/*
+* 一级页面弹窗
+* */
+export const GET_POP_INFO = 'GET_POP_INFO';

@@ -4,29 +4,27 @@
     <div class="kyc-fields__content">
       <Field label="国籍">
         <template v-slot:input>
-          <span
-            class="kyc-fields__value"
-          >{{kycInfo.nationality ? kycInfo.nationality : 'Singapore'}}</span>
+          <span class="kyc-fields__value">{{kyc.nationality ? kyc.nationality : 'Singapore'}}</span>
         </template>
       </Field>
       <Field label="姓名">
         <template v-slot:input>
-          <span class="kyc-fields__value">{{kycInfo.first_name}}{{kycInfo.last_name}}</span>
+          <span class="kyc-fields__value">{{kyc.first_name}}{{kyc.last_name}}</span>
         </template>
       </Field>
       <Field label="名">
         <template v-slot:input>
           <span class="kyc-fields__value">
-            {{kycInfo.last_name
-            ? kycInfo.last_name : 'Singapore'}}
+            {{kyc.last_name
+            ? kyc.last_name : 'Singapore'}}
           </span>
         </template>
       </Field>
       <Field label="姓">
         <template v-slot:input>
           <span class="kyc-fields__value">
-            {{kycInfo.first_name
-            ? kycInfo.first_name : 'Singapore'}}
+            {{kyc.first_name
+            ? kyc.first_name : 'Singapore'}}
           </span>
         </template>
       </Field>
@@ -39,7 +37,7 @@
         <template v-slot:input>
           <span
             class="kyc-fields__value"
-          >{{kycInfo.document_number ? kycInfo.document_number : 'Singapore'}}</span>
+          >{{kyc.document_number ? kyc.document_number : 'Singapore'}}</span>
         </template>
       </Field>
     </div>
@@ -63,12 +61,16 @@ export default {
   data() {
     return {
       kycInfoType: 'PASSPORT',
+      kyc: {},
     };
   },
   async mounted() {
     try {
       await this.getKycInfo();
-      this.kycInfoType = this.kycInfo.document_type;
+      this.kycInfoType = this.kycInfo.data
+        ? this.kycInfo.data.document_type
+        : this.kycInfo.document_type;
+      this.kyc = this.kycInfo.data ? this.kycInfo.data : this.kycInfo;
     } catch (error) {
       Toast(error.message);
     }
