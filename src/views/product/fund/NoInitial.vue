@@ -139,7 +139,7 @@
     <div class="risk">
       <div class="title">
         <span>风险说明</span>
-        <span>
+        <span @click="go('/risk-statement')">
           <svg-icon icon-class="next" class="next" />
         </span>
       </div>
@@ -257,6 +257,9 @@ export default {
     },
     cancelPayment() {
       this.payment = false;
+    },
+    go(path) {
+      this.$router.push(path);
     },
   },
   computed: {

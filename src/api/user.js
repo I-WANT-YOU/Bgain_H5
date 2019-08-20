@@ -116,6 +116,20 @@ class UserService {
       throw new Error(error);
     }
   }
+
+  // 优惠券
+  static async getUserCouponList() {
+    try {
+      const requestOptions = {
+        url: '/coupon/fetch-user-coupon-list',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default UserService;

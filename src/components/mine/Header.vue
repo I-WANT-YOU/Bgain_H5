@@ -17,7 +17,7 @@
           </span>
         </div>
       </div>
-      <Menu v-model="showMune" @close='closeMenu'/>
+      <Menu v-model="showMenu" @close='closeMenu'/>
     </header>
   </Sticky>
 </template>
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       isFixed: false,
-      showMune: false,
+      showMenu: false,
     };
   },
   computed: {
@@ -53,10 +53,10 @@ export default {
       this.$router.push('/mine/safety');
     },
     onMore() {
-      this.showMune = true;
+      this.showMenu = true;
     },
     closeMenu() {
-      this.showMune = false;
+      this.showMenu = false;
     },
   },
 };

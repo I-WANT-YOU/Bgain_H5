@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <BgainNavBar title="安全保障"/>
     <Collapse v-model="active" accordion>
       <div class="item">
         <span class="icon"></span>
@@ -21,9 +22,10 @@
       </div>
       <div class="item">
         <span class="icon"></span>
-        <CollapseItem title="投资安全" name="4">
-        收集的客户信息仅限于了解客户和开展业务的用途；设有严格的安全系统以防止未经授权的任何人包括本公司职员获取客户信息。对客户提供的信息严格保密，除下列情形外，不会向任何外部人士披露；经过客户事先同意儿披露；应法律法规及监管要求而披露。
-        </CollapseItem>
+        <CollapseItem
+          title="投资安全"
+          name="4"
+        >收集的客户信息仅限于了解客户和开展业务的用途；设有严格的安全系统以防止未经授权的任何人包括本公司职员获取客户信息。对客户提供的信息严格保密，除下列情形外，不会向任何外部人士披露；经过客户事先同意儿披露；应法律法规及监管要求而披露。</CollapseItem>
       </div>
     </Collapse>
   </div>
@@ -31,10 +33,12 @@
 
 <script>
 import { Collapse, CollapseItem } from 'vant';
+import BgainNavBar from '@component/BgainNavBar.vue';
 
 export default {
   name: 'RiskStatement',
   components: {
+    BgainNavBar,
     Collapse,
     CollapseItem,
   },

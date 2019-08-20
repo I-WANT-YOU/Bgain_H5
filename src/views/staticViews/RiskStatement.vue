@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <BgainNavBar title="风险说明" />
     <div>尊敬的用户:</div>
     <div
       class="line"
@@ -28,8 +29,13 @@
 </template>
 
 <script>
+import BgainNavBar from '@component/BgainNavBar.vue';
+
 export default {
   name: 'RiskStatement',
+  components: {
+    BgainNavBar,
+  },
 };
 </script>
 

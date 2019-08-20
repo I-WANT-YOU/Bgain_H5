@@ -11,6 +11,7 @@ const state = {
   isSignInInfo: {},
   referInfo: {},
   assetRecord: {},
+  couponList: {},
 };
 
 const getters = {
@@ -34,7 +35,7 @@ const getters = {
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),
-  balances: state => get(state.userBanalce, 'single_currency', []).map(({ currency, balance }) => ({
+  balances: state => get(state.userBalance, 'single_currency', []).map(({ currency, balance }) => ({
     currency,
     balance,
   })),
@@ -42,13 +43,10 @@ const getters = {
   inviteeDetailsList: state => get(state.referInfo, 'invitee_details_list', []),
   rewardRecordList: state => get(state.referInfo, 'reward_record_list', []),
   everyTokens: state => get(state.referInfo.bonus_summary, 'every_tokens', {}),
-  assetRecords: state => get(state.assetRecord, 'operation_logs', [])
-    .map((item) => {
-      if (item.transaction_type) {
-        // item.transaction_type = '';
-      }
-      return item;
-    }),
+  assetRecords: state => get(state.assetRecord, 'operation_logs', []),
+  newCoupons: state => get(state.couponList, 'new_coupons', []),
+  usedCoupons: state => get(state.couponList, 'used_coupons', []),
+  expiredCoupons: state => get(state.couponList, 'expired_coupons', []),
 };
 
 const mutations = {
@@ -72,6 +70,9 @@ const mutations = {
   },
   [types.GET_ASSET_RECORD](state, payload) {
     state.assetRecord = payload;
+  },
+  [types.GET_USER_COUPON_LIST](state, payload) {
+    state.couponList = payload;
   },
 };
 
@@ -170,8 +171,18 @@ const actions = {
     try {
       const response = await UserService.getAssetRecord();
       const data = await Auth.handlerSuccessResponse(response);
-      console.log(data);
       commit(types.GET_ASSET_RECORD, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 优惠券
+  async getUserCouponList({ commit }) {
+    try {
+      const response = await UserService.getUserCouponList();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USER_COUPON_LIST, data);
     } catch (error) {
       throw error;
     }

@@ -83,7 +83,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
-            <div>
+            <div @click="go('/coupon')">
               <div class="title">优惠卷</div>
               <div class="info">加息卷，红包</div>
             </div>

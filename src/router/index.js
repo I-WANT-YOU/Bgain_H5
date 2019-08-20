@@ -475,7 +475,7 @@ const router = new Router({
       name: 'FixedQuestions',
       component: () => import('../views/staticViews/FixedQuestions.vue'),
     },
-    // 定期常见问题
+    // 定期安全保障
     {
       path: '/fixed-safety-security',
       name: 'SafetySecurity',
@@ -514,6 +514,12 @@ const router = new Router({
       path: '/asset-record',
       name: 'AssetRecord',
       component: () => import('../views/mine/AssetRecord.vue'),
+    },
+    // 优惠券
+    {
+      path: '/coupon',
+      name: 'Coupon',
+      component: () => import('../views/mine/coupon/Coupon.vue'),
     },
   ],
 });

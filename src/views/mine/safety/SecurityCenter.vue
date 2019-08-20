@@ -16,12 +16,16 @@
       </cell-group>
       <cell-group :hasMargin="true">
         <cell title="身份认证">
-          <span class="field--kyc">{{kycText}}</span>
-          <svg-icon icon-class="next" class="icon-next"></svg-icon>
+          <span class="field--kyc" @click="onKyc">{{kycText}}</span>
+          <svg-icon icon-class="next" class="icon-next" @click="onKyc"></svg-icon>
         </cell>
         <cell title="OTC认证">
-          <span class="field--kyc">{{otcText}}</span>
-          <svg-icon icon-class="next" class="icon-next"></svg-icon>
+          <span class="field--kyc" @click="onOtc">{{otcText}}</span>
+          <svg-icon
+            icon-class="next"
+            :class="['icon-next', otcStatu === 'CERTIFY_FAILED' ? '' : 'none']"
+            @click="onOtc"
+          ></svg-icon>
         </cell>
       </cell-group>
       <div class="logout-button" @click="onLogoutClick">
@@ -32,7 +36,15 @@
         content="是否确认退出登录"
         @submit="onLogout"
         @cancel="onCancel"
-      ></bgain-base-dialog>
+      />
+      <bgain-base-dialog
+        v-model="otc"
+        content="您的身份消息认证失败请重新认证"
+        submitText="重新认证"
+        @submit="onOtcSubmit"
+        :showCancel="false"
+        :showClose="false"
+      />
     </div>
   </div>
 </template>
@@ -71,10 +83,12 @@ export default {
   data() {
     return {
       visible: false,
+      otc: false,
+      otcStatu: '',
     };
   },
   computed: {
-    ...mapUserState(['basicInfo']),
+    ...mapUserState(['basicInfo', 'kycInfo']),
     ...mapUserGetters(['username', 'countryCode', 'kycStatus', 'otcStatus']),
     account() {
       if (checkEmailFormat(this.username)) {
@@ -125,53 +139,74 @@ export default {
     onCancel() {
       this.visible = false;
     },
+    onKyc() {
+      if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFIED') {
+        this.$router.push('/mine/safety/kyc/fields');
+      } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'UN_CERTIFIED') {
+        this.$router.push('/mine/safety/kyc');
+      } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFY_FAILED') {
+        this.$router.push('/mine/safety/kyc-result');
+      }
+    },
+    onOtc() {
+      if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFY_FAILED') {
+        this.otc = true;
+      }
+    },
+    onOtcSubmit() {
+      console.log('跳转otc认证页');
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .security__container {
-    height: 100%;
-    background: #F8F8F8;
+.security__container {
+  height: 100%;
+  background: #f8f8f8;
 
-    .security__content {
-      padding-top: 10px;
+  .security__content {
+    padding-top: 10px;
 
-      .filed--username {
-        font-size: 14px;
-        color: #0F3256;
+    .filed--username {
+      font-size: 14px;
+      color: #0f3256;
+    }
+
+    .filed--password {
+      font-size: 12px;
+      color: #999999;
+    }
+
+    .field--kyc {
+      font-size: 12px;
+      color: #0f3256;
+    }
+
+    .icon-next {
+      width: 9px;
+      height: 11px;
+      margin-left: 10px;
+
+      &.none {
+        opacity: 0;
       }
+    }
 
-      .filed--password {
-        font-size: 12px;
-        color: #999999;
-      }
+    .logout-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      padding: 14px 0;
+      line-height: 22px;
+      width: 100%;
 
-      .field--kyc {
-        font-size: 12px;
-        color: #0F3256;
-      }
-
-      .icon-next {
-        width: 9px;
-        height: 11px;
-        margin-left: 10px;
-      }
-
-      .logout-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #fff;
-        padding: 14px 0;
-        line-height: 22px;
-        width: 100%;
-
-        span {
-          font-size: 16px;
-          color: #3C64EE;
-        }
+      span {
+        font-size: 16px;
+        color: #3c64ee;
       }
     }
   }
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="footer__content">
-      <div class="footer__content--contact">
+      <div class="footer__content--contact" @click="onContact">
         <svg-icon icon-class="contact" />
         <span class="footer__content-text">联系我们</span>
       </div>
@@ -52,6 +52,9 @@ export default {
     },
     onCancel() {
       this.show = false;
+    },
+    onContact() {
+      this.$router.push('/contact-us');
     },
   },
 };

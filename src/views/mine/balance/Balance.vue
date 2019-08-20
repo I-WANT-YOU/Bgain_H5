@@ -45,6 +45,7 @@ export default {
   async mounted() {
     try {
       await this.getUserBalanceSummary();
+      console.log(this.balances);
     } catch (error) {
       Toast(error.message);
     }

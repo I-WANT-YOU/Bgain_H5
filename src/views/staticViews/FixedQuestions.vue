@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <BgainNavBar title="常见问题" />
     <Collapse v-model="active" accordion>
       <div class="item">
         <span class="icon"></span>
@@ -33,10 +34,12 @@
 
 <script>
 import { Collapse, CollapseItem } from 'vant';
+import BgainNavBar from '@component/BgainNavBar.vue';
 
 export default {
   name: 'RiskStatement',
   components: {
+    BgainNavBar,
     Collapse,
     CollapseItem,
   },
@@ -58,7 +61,7 @@ export default {
   .van-collapse-item__content {
     background: #f8f8f8;
   }
-  .van-collapse-item__content{
+  .van-collapse-item__content {
     padding: 16px 26px 16px 20px;
   }
   .item {
