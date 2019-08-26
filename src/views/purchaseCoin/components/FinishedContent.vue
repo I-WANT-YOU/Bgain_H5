@@ -58,7 +58,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import publicMethods from '@utils/publicMethods.js'
+import publicMethods from '@utils/publicMethods';
 
 export default {
   name: 'FinishedContent',
@@ -66,32 +66,32 @@ export default {
     ...mapState('coin/orderInfo', [
       'orderInfoById',
     ]),
-     // 格式化下单时间
-    createDate(){
-      const currentDate = publicMethods.createOrderDate(this.orderInfoById.create_date)
+    // 格式化下单时间
+    createDate() {
+      const currentDate = publicMethods.createOrderDate(this.orderInfoById.create_date);
       return currentDate;
-    }
+    },
   },
-  methods:{
+  methods: {
     // 复制功能
-    copyText(name){
-      let input = document.createElement('input');
+    copyText(name) {
+      const input = document.createElement('input');
       input.setAttribute('id', 'copyInput');
-      if(name === 'sellerName'){
+      if (name === 'sellerName') {
         input.setAttribute('value', this.orderInfoById.pay_name);
         document.getElementsByTagName('body')[0].appendChild(input);
         document.getElementById('copyInput').select();
-        document.execCommand('copy')
+        document.execCommand('copy');
         this.$toast('复制成功');
-      } else if ( name === 'orderNum'){
+      } else if (name === 'orderNum') {
         input.setAttribute('value', this.orderInfoById.otc_order_id);
         document.getElementsByTagName('body')[0].appendChild(input);
         document.getElementById('copyInput').select();
-        document.execCommand('copy')
+        document.execCommand('copy');
         this.$toast('复制成功');
       }
       document.getElementById('copyInput').remove();
-    }
+    },
   },
 };
 </script>

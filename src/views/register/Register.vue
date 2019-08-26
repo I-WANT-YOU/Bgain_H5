@@ -352,7 +352,6 @@ export default {
     onSelect(item) {
       // 点击选项时默认不会关闭菜单，可以手动关闭
       this.show = false;
-      alert(item.name);
     },
     // 同意服务协议
     radioSelect() {

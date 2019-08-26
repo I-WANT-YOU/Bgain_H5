@@ -552,6 +552,12 @@ const router = new Router({
       name: 'LevelOnePop',
       component: () => import('../components/LevelOnePop.vue'),
     },
+    // 刮刮乐-李辉
+    {
+      path: '/winningHome',
+      name: 'WinningHome',
+      component: () => import('../views/guaGuaLe/WinningHome.vue'),
+    },
   ],
 });
 
