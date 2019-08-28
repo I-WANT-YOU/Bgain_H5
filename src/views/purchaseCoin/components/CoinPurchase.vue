@@ -21,7 +21,7 @@
         <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
           </textarea>
       </div>
-      <div><button @click="copy">点击复制</button></div>
+      <div><button @click="copyText(address[activeContentTab])">点击复制</button></div>
       <div class="QRCode">
         <div ref="qrcode" class="qrcode-img"></div>
       </div>
@@ -44,6 +44,7 @@ import { Toast } from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import QRCode from 'qrcodejs2';
+import { copyText } from '@utils/tools';
 import errorMessage from '../../../constants/responseStatus';
 
 Vue.use(Toast);
@@ -91,10 +92,8 @@ export default {
     ...mapActions('coin/purchaseCoin', [
       'getPurchaseCoinAddress',
     ]),
-    copy() {
-      this.$refs.myCopy.select();
-      document.execCommand('Copy');
-      this.$toast('复制成功');
+    copyText(text) {
+      return copyText(text);
     },
     changeContentTab(index) {
       this.activeContentTab = index;

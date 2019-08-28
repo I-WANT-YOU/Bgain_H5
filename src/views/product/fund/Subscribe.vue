@@ -13,7 +13,9 @@
       <div class="form">
         <div class="info">
           <span>认购数量({{currency}})</span>
-          <span>
+          <span
+            @click="$router.push(`/product/fund/trade-rules?productId=${fundBuyInfo.fund_product_id}`)"
+          >
             交易规则
             <svg-icon icon-class="next" class="next" />
           </span>
@@ -22,7 +24,7 @@
           v-model="num"
           class="input"
           :disabled="inDisabled"
-          :placeholder="`起投${mininvest}`"
+          :placeholder="`起投${mininvest}${currency}, ${unitPrice}/份`"
           @paste.native.capture.prevent
         />
         <div class="line"></div>
@@ -79,6 +81,7 @@ export default {
       balance: '100',
       mininvest: '0.01',
       maskShow: false,
+      unitPrice: '0.01 BTC',
     };
   },
   mounted() {
@@ -87,8 +90,7 @@ export default {
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
-      } else if (this.fundBuyInfo.support_fbp
-        && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance_fbp * 1) {
+      } else if (this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.fundBuyInfo.balance_fbp * 1) {
         this.changIconBGP();
       } else {
         this.show = true;
@@ -99,7 +101,7 @@ export default {
     show(value) {
       this.inDisabled = value;
     },
-    num(value, old) {
+    num(value) {
       this.disabled = true;
       const reg = /^\./;
       const last = /\.$/;
@@ -120,9 +122,9 @@ export default {
       }
 
       this.onToast(value);
-      if (value * 1 > this.balance * 1) {
-        this.num = old;
-      }
+      // if (value * 1 > this.balance * 1) {
+      //   this.num = old;
+      // }
       this.changeRate();
     },
   },
@@ -144,11 +146,13 @@ export default {
       this.currency = 'BGP';
       this.balance = this.fundBuyInfo.balance_fbp;
       this.mininvest = this.fundBuyInfo.min_inverst_amount_fbp;
+      this.unitPrice = '1 BGP';
     },
     changIcon() {
       this.currency = this.fundBuyInfo.currency_type;
       this.balance = this.fundBuyInfo.balance;
       this.mininvest = this.fundBuyInfo.min_invest_amt;
+      this.unitPrice = `${this.fundBuyInfo.unit_price} ${this.currency}`;
     },
     changeRate() {
       this.rate = `${this.fundBuyInfo.fund_fee_rate_buy[0].rate1 * 100}%`;
@@ -156,7 +160,7 @@ export default {
     },
     onDialog(text) {
       if (text === 'BGP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 > this.balance * 1) {
-        this.show = true;
+        Toast('您当前的BGP余额不足');
         this.changIcon();
       } else if (text === 'BGP' && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.balance * 1) {
         this.changIconBGP();
@@ -169,20 +173,41 @@ export default {
     },
     onToast(num) {
       const floatNum = num.split('.')[1] && num.split('.')[1];
-      if (floatNum && floatNum.length > 8) {
-        this.num = this.num.substring(0, this.num.indexOf('.') + 9);
-        Toast('小数点最多可输入8位');
+
+      // 分币种判断小数点后位数
+      let nums = 0;
+      if (this.currency === 'BTC') {
+        nums = 4;
+      } else if (this.currency === 'ETH') {
+        nums = 3;
+      } else if (this.currency === 'USDT') {
+        nums = 1;
+      } else if (this.currency === 'EOS') {
+        nums = 8;
+      } else if (this.currency === 'BGP') {
+        nums = 2;
+      } else {
+        nums = 8;
       }
-      if (this.num.length && this.num < this.mininvest) {
-        Toast(`起投金额${this.mininvest}${this.currency}`);
+
+      if (floatNum && floatNum.length > nums) {
+        this.num = this.num.substring(0, this.num.indexOf('.') + (nums + 1));
+        Toast(`小数点后最多可输入${nums}位`);
       }
+
       if (this.num.length && this.num * 1 > this.balance * 1) {
         Toast('可用余额不足，请重新输入');
       }
     },
     onClick() {
+      if (this.num.length && this.num < this.mininvest) {
+        Toast(`起投金额${this.mininvest}${this.currency}`);
+      }
       if (this.mininvest <= this.num && this.num * 1 <= this.balance * 1) {
         this.maskShow = true;
+      }
+      if (this.num.length && this.num * 1 > this.balance * 1) {
+        Toast('可用余额不足，请重新输入');
       }
     },
     onCancel() {

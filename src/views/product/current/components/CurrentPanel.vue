@@ -21,13 +21,13 @@
       <div class="card__title">交易规则</div>
       <div class="panel-rule__card">
         <div class="rule-card__title"><svg-icon icon-class="current-in"></svg-icon>转入</div>
-        <div class="card__content">T日18:00（GMT+8）前转入，T+ 1 日计息；</div>
-        <div class="card__content">T日18:00（GMT+8）前转入，T+ 2日计息。</div>
+        <div class="card__content">T日18:00（北京时间）前转入，T+ 1 日计息；</div>
+        <div class="card__content">T日18:00（北京时间）前转入，T+ 2日计息。</div>
       </div>
       <div class="panel-rule__card">
         <div class="rule-card__title"><svg-icon icon-class="current-out"></svg-icon>转出</div>
-        <div class="card__content">T日12:00（GMT+8）前转出，T日23:59前可到账；</div>
-        <div class="card__content">T日18:00（GMT+8）前转入，T+ 2日计息。</div>
+        <div class="card__content">T日12:00（北京时间）前转出，T日23:59前可到账；</div>
+        <div class="card__content">T日18:00（北京时间）前转入，T+ 2日计息。</div>
       </div>
       <div class="card__slogan">转入 / 转出均不收取费用。</div>
     </div>

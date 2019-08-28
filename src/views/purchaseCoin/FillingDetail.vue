@@ -2,25 +2,24 @@
   <div class="fillingDetail">
     <BgainNavBar title = "记录详情"/>
     <div class="detail-tips">
-      <img src="../../assets/images/BTC.svg" alt="."/>
-      <span>{{detailInfo.amount}}</span>
-      <span>{{detailInfo.status}}</span>
+      <img :src="walletRecordDeatil.logo" alt="."/>
+      <span>+{{walletRecordDeatil.txn_amount}}</span>
+      <span>{{statu}}</span>
     </div>
     <div class="detail-info-one">
-      <div class="one-item" v-for="(item,index) in detailInfo.infoOne" :key="index">
+      <div class="one-item" v-for="(item,index) in infoOne" :key="index">
         <span>{{item.title}}</span>
         <div>
-          <textarea
-            :cols="index===0?33:35"
-            readonly
-            v-model="item.content"></textarea>
-          <svg-icon icon-class="copy_light" class="copyStyle" v-show="index === 0"/>
+          <div :class="{active: index === 0}">{{item.content}}</div>
+          <span v-show="index === 0" @click="copyText(item.content)">
+            <svg-icon icon-class="copy_light" class="copyStyle"/>
+          </span>
         </div>
 
       </div>
     </div>
     <div class="detail-info-one detail-info-two">
-      <div class="one-item two-item" v-for="(item,index) in detailInfo.infoTwo" :key="index">
+      <div class="one-item two-item" v-for="(item,index) in infoTwo" :key="index">
         <span>{{item.title}}</span>
         <span>{{item.content}}</span>
       </div>
@@ -29,51 +28,80 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+import { formatDate, copyText } from '@utils/tools';
 import BgainNavBar from '../../components/BgainNavBar.vue';
+
+const { mapActions, mapState } = createNamespacedHelpers('coin/wallet');
 
 export default {
   name: 'FillingDetail',
   components: { BgainNavBar },
   data() {
+    // txn_type: "DEPOSIT"
     return {
-      detailInfo: {
-        type: 'BTC',
-        amount: '2.8474638',
-        status: '交易成功',
-        infoOne: [
-          {
-            title: 'TXID',
-            content: '4e83rhfjisodghiodfhmgiofdjhiodfnmhioruhjiorhmtogmnhg',
-          },
-          {
-            title: '充币地址',
-            content: '4e83rhfjisodghiodfhmgiofdjhiodfnmghioruhjiorhmtogmnhg',
-          },
-          {
-            title: '转出地址',
-            content: '4e83rhfjisodghiodfhmgiofdjhiodfnmghioruhjiorhmtogmnhg',
-          },
-        ],
-        infoTwo: [
-          {
-            title: '手续费',
-            content: '0.000073278 ETH',
-          },
-          {
-            title: '交易时间',
-            content: '2019-07-30 23:23:23',
-          },
-        ],
-      },
+      infoOne: [],
+      infoTwo: [],
+      statu: '',
     };
+  },
+  methods: {
+    ...mapActions(['getWalletRecordDetail']),
+    copyText(text) {
+      return copyText(text);
+    },
+  },
+  computed: {
+    ...mapState(['walletRecordDeatil']),
+  },
+  async mounted() {
+    try {
+      await this.getWalletRecordDetail(this.$route.params.id);
+      this.infoOne = [{
+        title: 'TXID',
+        content: this.walletRecordDeatil.txn_id ? this.walletRecordDeatil.txn_id : '--',
+      },
+      {
+        title: '充币地址',
+        content: this.walletRecordDeatil.dest_address ? this.walletRecordDeatil.dest_address : '--',
+      },
+      {
+        title: '转出地址',
+        content: this.walletRecordDeatil.src_address ? this.walletRecordDeatil.src_address : '--',
+      }];
+      this.infoTwo = [{
+        title: '手续费',
+        content: `${this.walletRecordDeatil.txn_fee} ${this.walletRecordDeatil.coin}`,
+      },
+      {
+        title: '交易时间',
+        content: formatDate(this.walletRecordDeatil.txn_date),
+      }];
+
+      this.statu = '交易成功';
+      // if (this.walletRecordDeatil.status === 'UNAUDITED') {
+      //   this.statu = '待审核';
+      // } else if (this.walletRecordDeatil.status === 'REJECT') {
+      //   this.statu = '已拒绝';
+      // } else if (this.walletRecordDeatil.status === 'SUCCEED') {
+      //   this.statu = '交易成功';
+      // } else if (this.walletRecordDeatil.status === 'FAILED') {
+      //   this.statu = '交易失败';
+      // } else if (this.walletRecordDeatil.status === 'PROCESSING') {
+      //   this.statu = '处理中';
+      // }
+    } catch (error) {
+      throw error;
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
   .copyStyle{
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
   }
 .fillingDetail{
   font-family: PingFangSC-Medium sans-serif;
@@ -106,7 +134,7 @@ export default {
   }
   .detail-info-one{
     padding:38px 0px 20px 0px;
-    margin: 0 20px;
+    margin: 0 13px;
     border-bottom: 0.51px solid #EEEEEE ;
     .one-item{
       margin-bottom: 16px;
@@ -120,12 +148,15 @@ export default {
       }
       >div{
         display: flex;
-        textarea{
-          font-size: 13px;
-          color: #0F3256;
-          padding: 1px;
-          resize:none;
-          border: none;
+        font-size: 13px;
+        color: #0F3256;
+        >div{
+          width: 263px;
+          word-wrap: break-word;
+          text-align: right;
+        }
+        .active{
+          width: 238px;
         }
       }
 

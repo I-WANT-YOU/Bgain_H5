@@ -44,6 +44,20 @@ class CoinService {
     }
   }
 
+  // 充币记录
+  static async getDepositRecord() {
+    try {
+      const requestOptions = {
+        url: '/wallet/get-deposit-record',
+        method: 'post',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // 生成订单信息 getOrderInfoById
   static async generateOrderInfo(orderInfo) {
     try {
@@ -179,7 +193,7 @@ class CoinService {
     }
   }
 
-  // 提币记录
+  // 充/提币记录详情
   static async getWalletRecordDetail(id) {
     try {
       const requestOptions = {

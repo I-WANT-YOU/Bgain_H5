@@ -14,6 +14,7 @@ const state = {
   sellInfo: {},
   buyResult: {},
   sellResult: {},
+  isLogin: false,
 };
 
 const getters = {
@@ -26,7 +27,7 @@ const getters = {
     .get('history_profit_daily', [])
     .map(({ amount, date }) => ({
       amount,
-      date: formatDate(date),
+      date: formatDate(date, 'YYYY-MM-DD'),
     }))
     .value(),
   historyProfitMax: ({ historyProfit }) => Number(get(historyProfit, 'history_profit_max', '0')),
@@ -71,6 +72,12 @@ const mutations = {
   [types.GET_CURRENT_BUY_RESULT](state, payload) {
     state.buyResult = payload;
   },
+  [types.GET_CURRENT_SELL_RESULT](state, payload) {
+    state.sellResult = payload;
+  },
+  [types.GET_IS_LOGIN](state, payload) {
+    state.isLogin = payload;
+  },
 };
 
 const actions = {
@@ -80,6 +87,7 @@ const actions = {
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_CURRENT_CURRENCIES, get(data, 'currency_type_list', []));
       commit(types.GET_ALL_CURRENT_PRODUCT, get(data, 'current_profit', []));
+      commit(types.GET_IS_LOGIN, get(data, 'login', false));
     } catch (error) {
       throw error;
     }

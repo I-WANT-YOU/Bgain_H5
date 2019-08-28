@@ -52,7 +52,7 @@
                                         >
                                         </Checkbox>
                                       <span>
-                                        我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
+                                        我已阅读并同意<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/service')">《服务协议》</a>和<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/privacy')">《隐私政策》</a>
                                       </span>
                                     </div>
                             </div>
@@ -61,6 +61,7 @@
                             <Button
                               :loading="buttonIsLoading"
                               loading-type="spinner"
+                              :disabled="disabled"
                               @click="phoneNext($event)">下一步
                             </Button>
                         </div>
@@ -99,13 +100,13 @@
                                   >
                                   </Checkbox>
                                   <span>
-                                    我已阅读并同意<a href="#">《服务协议》</a>和<a href="#">《隐私政策》</a>
+                                    我已阅读并同意<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/service')">《服务协议》</a>和<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/privacy')">《隐私政策》</a>
                                   </span>
                                 </div>
                             </div>
                         </div>
                         <div class="tabs-button">
-                            <button type="primary" @click="emailNext($event)">下一步</button>
+                            <Button :disabled="disabled" @click="emailNext($event)">下一步</Button>
                         </div>
                     </form>
                 </div>
@@ -182,6 +183,23 @@ export default {
       this.phoneData.countryCode = this.$route.params.value;
     }
   },
+  computed: {
+    disabled() {
+      if (this.phoneActive
+        && this.phoneData.phone
+        && this.phoneData.password
+        && this.phoneData.checked) {
+        return false;
+      }
+      if (this.emailActive
+        && this.emailData.email
+        && this.emailData.password
+        && this.emailData.checked) {
+        return false;
+      }
+      return true;
+    },
+  },
   methods: {
     // 触发action的方法
     ...mapActions('auth', [
@@ -191,14 +209,26 @@ export default {
     isShowPhoneContent() {
       this.phoneActive = true;
       this.emailActive = false;
+      this.changeTable();
       this.phoneColor = '#333333';
       this.emailColor = '#999999';
     },
     isShowEmailContent() {
       this.phoneActive = false;
       this.emailActive = true;
+      this.changeTable();
       this.phoneColor = '#999999';
       this.emailColor = '#333333';
+    },
+    changeTable() {
+      this.phoneData.phone = '';
+      this.phoneData.password = '';
+      this.phoneData.checked = false;
+      this.phoneData.invitationCode = '';
+      this.emailData.email = '';
+      this.emailData.password = '';
+      this.emailData.checked = false;
+      this.emailData.invitationCode = '';
     },
     // 是否显示密码
     showPhonePassword() {
@@ -286,7 +316,7 @@ export default {
       // 邮箱校验
       const reEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line no-useless-escape
       if (!reEmail.test(String(this.emailData.email).toLowerCase())) {
-        this.$toast('邮箱不正确');
+        this.$toast('邮箱格式有误，请重新输入');
         return false;
       }
       // 密码校验
@@ -363,33 +393,20 @@ export default {
     },
     onSuccess(options) {
       this.options = options;
-      const registerData = this.routerData;
-      let tokenData = {};
-      if (this.routerData.countryCode) {
-        tokenData = {
-          username: this.routerData.username,
-          geetestOptions: options,
-          countryCode: this.routerData.countryCode,
-        };
-      } else {
-        tokenData = {
-          username: this.routerData.username,
-          geetestOptions: options,
-        };
-      }
-      this.getToken(tokenData).then(
-        () => {
-          this.$router.push({
-            name: 'RegisterStepTwo',
-            params: { registerData },
-          });
-        },
-        (err) => {
-          this.$toast(errorMessage[err.status]);
-        },
-      );
+      const registerData = {
+        ...this.routerData,
+        ...options,
+      };
+      this.$router.push({
+        name: 'RegisterStepTwo',
+        params: { ...registerData },
+      });
     },
     onError() {},
+    onSkip(router) {
+      console.log('1');
+      window.location.href = router;
+    },
   },
 };
 </script>
@@ -424,7 +441,6 @@ export default {
                 }
                 .tab-email{
                     display: inline-block;
-                    width: 44px;
                     height: 30px;
                     line-height: 30px;
                     text-align: center;
@@ -458,19 +474,23 @@ export default {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        font-size: 15px;
-                        color: #333333;
+                        font-size: 14px;
                         border-bottom: 2px solid #EEEEEE;
                         .van-cell{
                             padding:0;
                         }
                     }
                   .password{
+
                     >div:nth-child(1){
                       width:250px;
                       >input{
                         width: 250px;
                         border:none;
+                        padding-left: 0;
+                        &::placeholder{
+                          color: #969799;
+                        }
                       }
                     }
                   }

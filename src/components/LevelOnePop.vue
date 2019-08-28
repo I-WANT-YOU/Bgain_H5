@@ -57,7 +57,7 @@
         </div>
       <!--按钮-->
       <div class="button-container">
-        <button>去身份认证</button>
+        <button @click="onKyc">去身份认证</button>
       </div>
       <!--text文字-->
       <div class="text-container">
@@ -72,6 +72,7 @@
 
 <script>
 import { Image } from 'vant';
+import { mapState } from 'vuex';
 import boxImage from '../assets/images/levelOnePop/box.png';
 import checkImage from '../assets/images/levelOnePop/check.png';
 import coinDark from '../assets/images/levelOnePop/coin_dark.png';
@@ -96,9 +97,22 @@ export default {
   components: {
     'van-image': Image,
   },
+  mounted() {
+    console.log(this.showData);
+  },
+  computed: {
+    ...mapState('auth', ['authenticated']),
+  },
   methods: {
     closePop() {
-      this.show = 'none';
+      this.$emit('close');
+    },
+    onKyc() {
+      if (this.authenticated) {
+        this.$router.push('/mine/safety/kyc');
+      } else {
+        this.$router.push('/login');
+      }
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="kyc__notice">依据国际KYC和《反洗钱法》的要求，平台需求验证您的身份</div>
+  <div class="kyc__notice">依据国际惯例KYC和《反洗钱法》的要求，平台需要验证您的身份</div>
 </template>
 
 <script>

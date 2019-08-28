@@ -3,9 +3,7 @@
     <svg-icon icon-class="buy-result" class="buy-result" />
     <div class="title">您的认购申请已提交</div>
     <div class="info">
-      <span class="icon">日涨跌幅</span>
       <span>认购金额 {{amount}} {{currency}}</span>
-      <span class="none">日涨跌幅</span>
     </div>
     <div class="message">该交易成功与否以平台确认结果为准,请及时关注消息通知</div>
     <div class="line"></div>
@@ -13,12 +11,12 @@
       <div class="step">
         <svg-icon icon-class="step-active" class="icon" />
         <div class="step-title">扣减资金,提交认购申请</div>
-        <div class="step-time">{{confirmDate}}</div>
+        <div class="step-time">{{submitDate}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
         <div class="step-title">确认份额,募集期结束,进入锁定期</div>
-        <div class="step-time">{{submitDate}}</div>
+        <div class="step-time">{{confirmDate}}</div>
       </div>
       <div class="step">
         <svg-icon icon-class="step-inactive" class="icon" />
@@ -27,7 +25,7 @@
       </div>
     </div>
     <div class="buttons">
-      <Button class="show" @click="showDetail">查看详情</Button>
+      <!-- <Button class="show" @click="showDetail">查看详情</Button> -->
       <Button class="continue" @click="onContinue">继续浏览</Button>
     </div>
   </div>
@@ -82,7 +80,7 @@ export default {
     display: flex;
     box-sizing: border-box;
     padding: 0 30px;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-bottom: 14px;
     font-size: 14px;
@@ -154,10 +152,10 @@ export default {
       border: 1px solid #e5e9f6;
       background: #ffffff;
       border-radius: 4px;
+      margin-right: 15px;
     }
     .continue {
       background: #3c64ee;
-      margin-left: 15px;
       width: 180px;
       height: 46px;
       border-radius: 4px;

@@ -108,6 +108,7 @@ export default {
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
     this.getFixedProductById(this.$route.params.id).then(
       () => {
         // 设置购买流程（包含倒计时）
@@ -164,12 +165,15 @@ export default {
     },
     // 设置购买流程
     setSteps(status) {
+      // 设置申购倒计时
+      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
+      this.countDownTimeIsShow = true;
       switch (status) {
         case '"PURCHASE_START':
           // 设置申购倒计时
           this.currentStep = 1;
-          this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
-          this.countDownTimeIsShow = true;
+          // this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
+          // this.countDownTimeIsShow = true;
           break;
         case 'INTEREST_PENDING':
           this.currentStep = 1;
@@ -193,6 +197,7 @@ export default {
     },
     //  设置倒计时
     countDown(time) {
+      console.log(time);
       if (time - Date.now() < 0) {
         this.countDownTimeIsShow = false;
         return false;

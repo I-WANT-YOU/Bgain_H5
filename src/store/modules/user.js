@@ -40,6 +40,7 @@ const getters = {
   submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
   submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
   singleCurrency: state => get(state.userBalance, 'single_currency', {}),
+  currencyss: state => Object.entries(state.userBalance).filter(item => item[0] !== 'single_currency' && item[0] !== 'activity'),
   balances: state => get(state.userBalance, 'single_currency', []).map(({ currency, balance }) => ({
     currency,
     balance,
@@ -52,6 +53,7 @@ const getters = {
   newCoupons: state => get(state.couponList, 'new_coupons', []),
   usedCoupons: state => get(state.couponList, 'used_coupons', []),
   expiredCoupons: state => get(state.couponList, 'expired_coupons', []),
+  kycStatu: state => get(state.kycInfo.data, 'kyc_record_status', 'un_certified'),
 };
 
 const mutations = {

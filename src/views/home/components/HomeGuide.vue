@@ -6,7 +6,7 @@
       </div>
       <div class="steps">
         <div class="step" v-for="(step,index) in steps" :key="index">
-          <div class="img-container">
+          <div class="img-container" @click="onSkip(step)">
             <svg-icon :icon-class="step.img[step.status]" class="img-style"/>
           </div>
           <div class="text-container">{{step.text}}</div>
@@ -36,16 +36,19 @@ export default {
           img: ['identity_dark', 'identity_light'],
           text: '身份认证',
           status: this.kyc_status,
+          path: '/mine/safety/kyc',
         },
         {
           img: ['password_dark', 'password_light'],
           text: '设置交易密码',
           status: this.setPassword,
+          path: '/mine/safety/password/payment/set',
         },
         {
           img: ['coin_dark', 'coin_light'],
           text: '充币',
           status: this.record,
+          path: '/purchaseCoinHome',
         }];
       return steps;
     },
@@ -55,7 +58,12 @@ export default {
       currentStep: 0,
     };
   },
-  mounted() {
+  methods: {
+    onSkip(step) {
+      if (step.status === 0 && step.text !== '注册') {
+        this.$router.push(step.path);
+      }
+    },
   },
 };
 </script>

@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
+import { copyText } from '@utils/tools';
 
 export default {
   name: 'ContactUs',
@@ -60,14 +60,7 @@ export default {
   },
   methods: {
     copyText(text) {
-      const input = document.createElement('input');
-      input.setAttribute('id', 'copyInput');
-      input.setAttribute('value', text);
-      document.getElementsByTagName('body')[0].appendChild(input);
-      document.getElementById('copyInput').select();
-      document.execCommand('copy');
-      Toast('复制成功');
-      document.getElementById('copyInput').remove();
+      return copyText(text);
     },
   },
 };

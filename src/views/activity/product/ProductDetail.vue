@@ -20,6 +20,8 @@
     <bgain-base-dialog
       v-model="visible"
       @cancel="onCancel"
+      :showCancel="false"
+      :showClose="false"
       @submit="onSubmit"
       :content="content"
     />
