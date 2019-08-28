@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      this.$router.push('/');
     },
     goSafety() {
       this.$router.push('/mine/safety');

@@ -4,7 +4,7 @@
     :currencies="currencies"
     @currency-change="onCurrencyChange">
     <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
-      <current-card :data-source="product"></current-card>
+      <current-card :isLogin="isLogin" :data-source="product"></current-card>
       <current-panel></current-panel>
     </pull-refresh>
   </currency-tab>
@@ -36,7 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['currencies']),
+    ...mapState(['currencies', 'isLogin']),
     ...mapGetters({
       getProduct: 'getCurrentProductsByCurrency',
     }),

@@ -1,13 +1,16 @@
 <template>
   <div class="noiniaial">
-    <BgainNavBar :title="fundDetail.fund_name ? fundDetail.fund_name : title" />
+    <BgainNavBar
+      :onArrowClick="()=>{this.$router.push('/product/fund')}"
+      :title="fundDetail.fund_name ? fundDetail.fund_name : title"
+    />
     <div class="info">
       <div class="info-top">
-        <span :class="['gains' , fundDetail.market_change_percent >= 0 ? '' : 'active']">
+        <span :class="['gains' , fundDetail.up_down >= 0 ? '' : 'active']">
           <span>
-            {{fundDetail.market_change_percent >= 0
+            {{fundDetail.up_down >= 0
             ? `+${fundDetail.market_change_percent}`
-            : fundDetail.market_change_percent}}
+            : `-${fundDetail.market_change_percent}`}}
           </span>
           <span class="percent">%</span>
           <i />
@@ -34,17 +37,14 @@
     <div class="networth">
       <div class="title">
         <span>净值走势</span>
-        <div
-          v-if="fundDetail.status === 'OPEN'"
-          class="purchase"
-        >申购倒计时 {{formatDate(fundDetail.next_open_date - fundDetail.server_time,'D天h小时m分')}}</div>
+        <div v-if="fundDetail.status === 'OPEN'" class="purchase">申购倒计时 {{sellTime}}</div>
       </div>
       <div class="echarts">
         <div class="echarts-info">
           <span>日期 {{formatDate(chart_x, 'MM-DD')}}</span>
           <span class="echarts-info-num">单位净值 {{chart_y}}</span>
         </div>
-        <div class="my-echarts" ref="echarts" style="width: 315px;height: 136px;"></div>
+        <div class="my-echarts" ref="echarts" style="width: 345px;height: 136px;"></div>
       </div>
     </div>
     <div class="tradeshow">
@@ -63,16 +63,16 @@
       <div class="steps">
         <div class="text">
           <div>
-            <div>{{showstep ? '--' : formatDate(fundDetail.current_time,'MM-DD') }}</div>
-            <div class="font">认购提交</div>
+            <div>{{!showstep ? '--' : formatDate(fundDetail.current_time,'MM-DD') }}</div>
+            <div class="font">提交认购</div>
           </div>
           <div>
-            <div>{{showstep ? '--' : formatDate(fundDetail.due_date,'MM-DD')}}</div>
+            <div>{{!showstep ? '--' : formatDate(fundDetail.due_date,'MM-DD')}}</div>
             <div class="font">确认份额</div>
           </div>
           <div>
-            <div>{{showstep ? '--' : formatDate(fundDetail.profits_date,'MM-DD')}}</div>
-            <div class="font">查看交易</div>
+            <div>{{!showstep ? '--' : formatDate(fundDetail.profits_date,'MM-DD')}}</div>
+            <div class="font">查看收益</div>
           </div>
           <div>
             <div>{{formatDate(fundDetail.next_open_date,'MM-DD')}}</div>
@@ -80,7 +80,7 @@
           </div>
         </div>
         <div>
-          <div v-if="showstep" class="step">
+          <div v-if="!showstep" class="step">
             <span class="circle"></span>
             <span class="line"></span>
             <span class="circle"></span>
@@ -89,7 +89,7 @@
             <span class="line"></span>
             <span class="circle active"></span>
           </div>
-          <div v-if="!showstep" class="step">
+          <div v-if="showstep" class="step">
             <span class="circle active"></span>
             <span class="line active"></span>
             <span class="circle active"></span>
@@ -146,17 +146,16 @@
     </div>
     <div class="foot"></div>
     <div class="fixed">
-      <div
-        v-if="!this.fundDetail.status === 'OPEN'"
-        class="open"
-      >{{formatDate(fundDetail.next_open_date,'YYYY-MM-DD')}}开放认购</div>
       <Button
         v-if="this.fundDetail.status === 'OPEN'"
         type="info"
         class="button"
         @click="onSubmit"
       >立即认购</Button>
-      <Button v-else type="info" class="button" @click="onSubmit">到时提醒我</Button>
+      <div v-else>
+        <div class="open">{{formatDate(fundDetail.next_open_date,'YYYY-MM-DD')}}开放认购</div>
+        <Button type="info" class="button" @click="onSubmit">到时提醒我</Button>
+      </div>
     </div>
     <BgainBaseDialog
       v-model="payment"
@@ -177,6 +176,7 @@ import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import { Button, Toast } from 'vant';
 import { formatRiskText, formatType, echartsOption } from './formatFundData';
+import responseStatus from '@/constants/responseStatus';
 
 export default {
   name: 'NoInitial',
@@ -195,37 +195,47 @@ export default {
       chart_x: '03-16',
       chart_y: '1.0000',
       payment: false,
+      sellTime: '',
+      isLogin: '',
     };
   },
   async mounted() {
+    window.scrollTo(0, 0);
     Toast.loading({
       duration: 0,
       forbidClick: true,
       message: '加载中...',
     });
     await this.getFundProductDetail(this.$route.params.id);
+    const time = this.fundDetail.next_open_date - this.fundDetail.server_time;
+    const dd = parseInt(time / (60 * 60 * 24 * 1000), 0);
+    const hh = parseInt((time / (60 * 60 * 1000)) % 24, 0);
+    const mm = parseInt((time / (60 * 1000)) % 60, 0);
+    this.sellTime = `${dd}天${hh.toString().length < 2 ? `0${hh}` : hh}小时${mm.toString().length < 2 ? `0${mm}` : mm}分`;
     this.type = formatType(this.fundDetail).fund_product_type;
     this.risk = formatRiskText(this.fundDetail).risk_level_type;
     this.setEcharts();
+    this.showstep = this.fundDetail.status === 'OPEN';
     Toast.clear();
   },
   methods: {
     ...mapActions({
       getFundProductDetail: 'product/fund/getFundProductDetail',
+      sendRemind: 'product/fund/sendRemind',
       getUserSummary: 'user/getUserSummary',
     }),
     formatDate(date, format) {
       return formatDate(date, format);
     },
     setEcharts() {
-      this.chart_x = formatDate(this.fundNavHistories[0].get_nav_time, 'MM-DD');
-      this.chart_y = this.fundNavHistories[0].nav;
+      this.chart_x = formatDate(this.fundNavHistories[this.fundNavHistories.length - 1].get_nav_time, 'MM-DD');
+      this.chart_y = this.fundNavHistories[this.fundNavHistories.length - 1].nav;
       this.chart = echarts.init(this.$refs.echarts);
       const X = this.fundNavHistories.map(item => item.get_nav_time);
       const series = this.fundNavHistories.map(item => item.nav);
       const min = Math.min.apply(null, series);
       const max = Math.max.apply(null, series);
-      const num = (max - min) * 1.2;
+      const num = (max - min) * 0.3;
       // 触发事件
       this.chart.getZr().on('mousemove', this.onMouseMove);
       this.chart.setOption(echartsOption(X, series, min, max, num));
@@ -240,16 +250,31 @@ export default {
       }
     },
     async onSubmit() {
+      try {
+        await this.getUserSummary();
+      } catch (error) {
+        throw error;
+      }
       // 开放认购
       if (this.fundDetail.status === 'OPEN') {
-        await this.getUserSummary();
+        this.showstep = false;
         if (this.authLevel === 2) { // 1新用户 2设置交易密码
           this.$router.push(`/product/fund/subscribe/${this.fundDetail.id}`);
         } else {
           this.payment = true;
         }
       } else {
-        console.log('短信通知');
+        this.showstep = true;
+        if (this.authLevel) {
+          try {
+            await this.sendRemind({});
+            Toast('到时会以短信或邮箱的形式提醒您');
+          } catch (error) {
+            Toast(responseStatus[error.status]);
+          }
+        } else {
+          this.$router.push('/login');
+        }
       }
     },
     setPayment() {
@@ -421,12 +446,13 @@ export default {
         display: flex;
         margin-top: 31px;
         > div {
-          width: 90px;
+          width: 95px;
           text-align: center;
         }
       }
       .font {
         margin-top: 7px;
+        color: #0f3256;
       }
       .step {
         display: flex;
@@ -445,7 +471,7 @@ export default {
         }
         .line {
           height: 2px;
-          width: 87px;
+          width: 86px;
           background: #e5e9f6;
           &.active {
             background: #3c64ee;

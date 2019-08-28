@@ -40,6 +40,29 @@ export const formatType = (data) => {
   return data;
 };
 
+export const formatType2 = (type) => {
+  switch (type) {
+    case 'SmartBeta':
+      type = '指数型';
+      break;
+    case 'Arbitrage':
+      type = '套利';
+      break;
+    case 'HighFrequency':
+      type = '高频';
+      break;
+    case 'MixedStrategies':
+      type = '混合';
+      break;
+    case 'CTA':
+      type = 'CTA';
+      break;
+    default:
+      break;
+  }
+  return type;
+};
+
 // 风险等级
 export const formatRiskText = (data) => {
   switch (data.risk_level_type) {
@@ -160,6 +183,7 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
         color: '#4770F5',
       },
       areaStyle: {
+        origin: 'auto',
         normal: {
           opacity: 0.2,
           color: '#C6D0F0',

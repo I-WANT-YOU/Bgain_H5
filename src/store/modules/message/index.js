@@ -21,7 +21,7 @@ const getters = {
   }, []),
   announcementDetail: state => ({
     ...state.systemDetail,
-    createdAt: formatDate(`${state.systemDetail.createdAt}000` * 1),
+    createdAt: formatDate(state.systemDetail.createdAt),
   }),
 };
 

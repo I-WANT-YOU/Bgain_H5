@@ -5,7 +5,7 @@
         <svg-icon icon-class="logo" class="logo-icon" />
       </div>
       <div class="user-img">
-        <div @click="()=>{this.$router.push({name:'login'})}">
+        <div v-show="userStatus === 'login'" @click="onSafety">
           <svg-icon icon-class="user_write" class="user-icon" />
         </div>
         <div @click="onMenu">
@@ -14,7 +14,7 @@
       </div>
     </header>
     <!--all-->
-    <HomeSwipe />
+    <HomeSwipe ref="my-swiper" />
     <!--all-->
     <div class="home-tip-container">
       <HomeTip />
@@ -39,7 +39,7 @@
       <BaseFooter />
     </div>
     <!--一级页面强制弹窗-->
-    <LevelOnePop :showData="popInfo" :show="isPopShow" />
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
     <Menu v-model="showMenu" @close="showMenu=false"/>
   </div>
 </template>
@@ -110,15 +110,17 @@ export default {
             this.record = 0;
           }
           // 判断用户是否身份认证
-          if (this.basicInfo.kyc_stauts === 'UN_CERTIFIED') { // 未认证
+          if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'UN_CERTIFIED') { // 未认证
             this.kyc_status = 0;
           } else {
             this.kyc_status = 1;
           }
+          console.log(this.basicInfo.kyc_stauts);
           // 判断用户是否设置了支付密码
-          if (this.basicInfo.authlevel === '2') { // 未认证
+          console.log(this.basicInfo.authlevel);
+          if (this.basicInfo.authlevel * 1 === 2) {
             this.setPassword = 1;
-          } else if (this.basicInfo.authlevel === '1') {
+          } else if (this.basicInfo.authlevel * 1 === 1) { // 未认证
             this.setPassword = 0;
           }
           if (this.record && this.kyc_status && this.setPassword) {
@@ -143,13 +145,16 @@ export default {
       () => {
         try {
           if (this.popInfo.is_popup_window === 0) {
-            this.isPopShow = false;
+            this.isPopShow = 'none';
           } else {
-            this.isPopShow = true;
+            this.isPopShow = 'block';
           }
         } catch (e) {
           throw new Error(e);
         }
+        this.$nextTick(() => {
+          this.$refs['my-swiper'].initSwiper();
+        });
       },
       (err) => {
         if (err.status) {
@@ -171,6 +176,9 @@ export default {
     ]),
     onMenu() {
       this.showMenu = true;
+    },
+    onSafety() {
+      this.$router.push('/mine/safety');
     },
   },
 };

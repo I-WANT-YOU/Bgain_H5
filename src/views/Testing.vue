@@ -18,6 +18,7 @@
         :to="option.to"
       />
     </grid>
+    <div @click="test">点击</div>
   </div>
 </template>
 
@@ -111,6 +112,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('user', ['getUserBalanceSummary']),
     ...mapActions('auth', ['logout']),
     async onLogout() {
       try {
@@ -123,6 +125,9 @@ export default {
         Toast(error.message);
         Toast.clear();
       }
+    },
+    test() {
+      this.getUserBalanceSummary();
     },
   },
 };

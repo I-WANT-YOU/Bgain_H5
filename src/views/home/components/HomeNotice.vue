@@ -13,6 +13,7 @@
 
 <script>
 import invitedfriend from '../../../assets/images/home/invitedfriend.svg';
+import match from '../../../assets/images/home/match.svg';
 import quickcurrencypassing from '../../../assets/images/home/quickcurrencypassing.svg';
 
 export default {
@@ -31,7 +32,7 @@ export default {
           path: '/purchaseCoinHome',
         },
         {
-          src: invitedfriend,
+          src: match,
           text: '量化比赛',
           path: 'http://fcat.fin-bee.com.cn',
         },

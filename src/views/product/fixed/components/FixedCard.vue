@@ -3,7 +3,7 @@
     <div class="fixed-card__title">
       {{dataSource.product_name}}
       <svg-icon v-if="dataSource.support_fbp"
-                icon-class="fbp"
+                icon-class="bgp"
                 class="fbp-icon">
       </svg-icon>
     </div>

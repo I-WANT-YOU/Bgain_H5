@@ -1,6 +1,6 @@
 <template>
   <div class="activity__container" :class="{setContainer:showSignIn}">
-    <nav-bar title="活动中心" />
+    <nav-bar title="活动中心" :onArrowClick="()=>{this.$router.push('/mine')}" />
     <!--会员值 已登陆-->
     <div class="member-num" v-if="isLogin === true" @click="onGoMemberPage">
       <div class="background">
@@ -14,13 +14,13 @@
       </div>
     </div>
     <!--未登录-->
-    <div class="member-num-unLogin"  v-else>
+    <div class="member-num-unLogin" @click="onLogin" v-else>
       <div class="background">
         <span>领取会员权益，获得更多奖励</span>
         <div>
-          <span @click="onLogin">登录</span>
+          <span>登录</span>
           <span>/</span>
-          <span @click="onRegister">注册</span>
+          <span>注册</span>
         </div>
       </div>
     </div>
@@ -30,10 +30,10 @@
       <div class="member-integral">
         <div>
           <div>
-            <span>{{basicInfo.fbp_amt}}</span><span>积分</span>
+            <span>{{changeFbp}}</span><span>积分</span>
           </div>
           <div>
-            <span>FBP明细</span>
+            <span>BGP明细</span>
           </div>
         </div>
         <div @click="toRecord">
@@ -72,7 +72,7 @@
         <div>
           <span>获得&nbsp;</span>
           <span>{{isSignInInfo.fbp_amount}}</span>
-          <span>&nbsp;FBP</span>
+          <span>&nbsp;BGP</span>
         </div>
         <div>
           <span>已连续签到&nbsp;</span>
@@ -205,8 +205,7 @@ export default {
       });
     },
     onLogin() {
-    },
-    onRegister() {
+      this.$router.push('/login');
     },
   },
   computed: {
@@ -214,6 +213,11 @@ export default {
       'basicInfo',
       'isSignInInfo',
     ]),
+    changeFbp() {
+      const index = this.basicInfo.fbp_amt.indexOf('.');
+      return this.basicInfo.fbp_amt.slice(0, index
+        ? (index * 1 + 3) : this.basicInfo.fbp_amt.length);
+    },
   },
   mounted() {
     Toast.loading({
@@ -228,6 +232,7 @@ export default {
         }
       },
     );
+
     // 获取商品信息
     this.getBgpProducts().then(
       () => {},
@@ -250,7 +255,7 @@ export default {
         this.$toast.clear();
         this.isLogin = false;
         if (err.status) { this.$toast(errorMessage[err.status]); } else {
-          this.$toast('网络故障');
+          this.$toast('未登录');
         }
       },
     );

@@ -6,7 +6,7 @@
       </router-link>
     </div>
     <div class="login">
-    <router-link to="/login">已有账号？登录</router-link>
+    <router-link to="/login">已有账号？<span class="loginText">登录</span></router-link>
     </div>
   </div>
 </template>
@@ -38,15 +38,18 @@ export default {
     margin-top: 16px;
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
     height: 38px;
     margin-top: 16px;
     > a {
-      width: 105px;
       font-size: 15px;
       color: #3C64EE;
       line-height: 37.36px;
       text-decoration-line: none;
+      .loginText{
+        font-weight: 600;
+      }
     }
   }
 }

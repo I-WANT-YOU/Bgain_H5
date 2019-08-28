@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
+import { Toast } from 'vant';
 
 // 处理数字精度
 export const strip = (num, precision = 12) => +parseFloat(num.toPrecision(precision));
@@ -57,8 +58,13 @@ export const checkDocumentNumber = (type, docNumber) => {
 export const getDesensitizedUsername = (username) => {
   if (!username || !_.isString(username)) return '';
   if (checkEmailFormat(username)) {
-    if (username.indexOf('@') <= 1) {
-      return username;
+    // if (username.indexOf('@') <= 1) {
+    //   return username;
+    // }
+    if (username.slice(0, username.indexOf('@')).length <= 3) {
+      return `${username.substr(0, 1)}****${username.substr(
+        username.indexOf('@'),
+      )}`;
     }
     return `${username.substr(0, 3)}****${username.substr(
       username.indexOf('@'),
@@ -77,4 +83,43 @@ export const numberWithThousands = (num = 0) => {
   const parts = num.toString().split('.');
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return parts.join('.');
+};
+
+function selectText(textbox, startIndex, stopIndex) {
+  // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
+  // 选择文本。createTextRange(setSelectionRange)是input方法
+  if (textbox.createTextRange) { // ie
+    const range = textbox.createTextRange();
+    range.collapse(true);
+    range.moveStart('character', startIndex);// 起始光标
+    range.moveEnd('character', stopIndex - startIndex);// 结束光标
+    range.select();// 不兼容苹果
+  } else { // firefox/chrome
+    textbox.setSelectionRange(startIndex, stopIndex);
+    textbox.focus();
+  }
+}
+
+export const copyText = (text) => {
+  // 数字没有 .length 不能执行selectText 需要转化成字符串
+  const textString = text.toString();
+  let input = document.createElement('input');
+  if (!input) {
+    input = document.createElement('input');
+    input.id = 'copy-input';
+    input.readOnly = 'readOnly'; // 防止ios聚焦触发键盘事件
+    input.style.position = 'absolute';
+    input.style.left = '-1000px';
+    input.style.zIndex = '-1000';
+  }
+  document.body.appendChild(input);
+  input.value = textString;
+  // ios必须先选中文字且不支持 input.select();
+  selectText(input, 0, textString.length);
+  if (document.execCommand('copy')) {
+    document.execCommand('copy');
+    Toast('复制成功');
+  }
+  input.blur();
+  document.body.removeChild(input);
 };

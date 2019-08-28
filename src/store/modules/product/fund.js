@@ -27,9 +27,9 @@ const getters = {
   otherFunds: state => state.funds.filter(({ status }) => status !== FUND_STATUS.INITIAL),
   fundDetail: state => get(state.fund, 'fund_product_detail_record', {}),
   fundNavHistories: state => get(state.fund, 'fund_nav_histories', []),
-  nextEndDate: state => formatDate(state.fundBuyResult.next_end_date),
+  nextEndDate: state => formatDate(state.fundBuyResult.next_end_date, 'YYYY-MM-DD'),
   confirmDate: state => formatDate(state.fundBuyResult.confirm_date),
-  nextOpenDate: state => formatDate(state.fundBuyResult.next_open_date),
+  nextOpenDate: state => formatDate(state.fundBuyResult.next_open_date, 'YYYY-MM-DD'),
   submitDate: state => formatDate(state.fundBuyResult.submit_date),
   amount: state => state.fundBuyResult.amount,
   fundNav: state => get(state.fundInformation, 'fund_nav_from_cms', [])
@@ -238,6 +238,16 @@ const actions = {
         order_id: options.orderId,
         payment_password: options.password,
       });
+      return Auth.handlerSuccessResponse(response);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 发送短信
+  async sendRemind(context, options) {
+    try {
+      const response = await FundService.sendRemind(options);
       return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;

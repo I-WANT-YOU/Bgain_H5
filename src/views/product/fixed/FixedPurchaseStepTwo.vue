@@ -4,7 +4,8 @@
     <div class="content">
       <div class="purchaseNum">
         <span>认购数量</span>
-        <span>{{showData.investmentAmount+'&nbsp;'+showData.currencyType}}</span>
+        <span>{{showData.investmentAmount}}
+          {{showData.currencyType === 'FBP' ? 'BGP' : showData.currencyType}}</span>
       </div>
       <div class="coupon" v-show="showData.currencyType !== 'FBP'">
         <span>选择优惠券</span>
@@ -25,7 +26,7 @@
         </div>
       </div>
   </div>
-    <div class="turnToAnther">
+    <div v-if="showData.currencyType !== 'FBP'" class="turnToAnther">
       <div>
         <span>到期转入活期产品</span>
         <svg-icon icon-class="fixed_icon"/>
@@ -35,6 +36,14 @@
     <div class="purchaseButton">
       <button @click="immediateBuy">立即认购</button>
     </div>
+    <BgainBaseDialog
+      v-model="payment"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="setPayment"
+      @cancel="cancelPayment"
+    />
     <PaymentPasswordDialog
       @close="maskShow=false"
       @submit="getPaymentPassword"
@@ -45,9 +54,10 @@
 
 <script>
 import { Switch, Toast } from 'vant';
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import PublicMethods from '@utils/publicMethods';
 import Vue from 'vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
@@ -64,6 +74,7 @@ export default {
       expectedReturnData: [],
       maskShow: false, // 密码弹出框
       password: '',
+      payment: false, // 没有设置交易密码弹窗
     };
   },
 
@@ -71,6 +82,7 @@ export default {
     BgainNavBar,
     'van-switch': Switch,
     PaymentPasswordDialog,
+    BgainBaseDialog,
   },
 
   computed: {
@@ -82,6 +94,9 @@ export default {
       'fixed',
       'availabelCoupons',
     ]),
+    ...mapGetters('user', [
+      'authLevel',
+    ]),
   },
 
   methods: {
@@ -91,9 +106,15 @@ export default {
       'buyFixedProduct', // 用户购买产品
     ]),
 
+    ...mapActions('user', ['getUserSummary']),
+
     // 立即认购 调用支付密码页面
     immediateBuy() {
-      this.maskShow = true;
+      if (this.authLevel === 2) {
+        this.maskShow = true;
+      } else {
+        this.payment = true;
+      }
     },
 
     // 获取支付密码
@@ -154,6 +175,14 @@ export default {
       );
     },
 
+    async isSetPassword() {
+      try {
+        await this.getUserSummary();
+      } catch (error) {
+        throw error;
+      }
+    },
+
     // 格式化预计数款日的日期
     formatDate(date) {
       return PublicMethods.createOrderDate(date);
@@ -165,12 +194,12 @@ export default {
         this.expectedReturnData = [
           {
             name: '预期收益',
-            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType === 'FBP' ? 'BGP' : this.showData.currencyType}`,
             show: true,
           },
           {
             name: '预计收款日',
-            num: this.formatDate(this.showData.expected_payment_date),
+            num: this.formatDate(this.showData.expected_payment_date, 'YYYY-MM-DD'),
             show: true,
           },
         ];
@@ -222,7 +251,7 @@ export default {
           },
           {
             name: '预计收款日',
-            num: this.formatDate(this.showData.expected_payment_date),
+            num: this.formatDate(this.showData.expected_payment_date, 'YYYY_MM_DD'),
             show: true,
           },
         ];
@@ -253,6 +282,18 @@ export default {
         },
       );
     },
+
+    // 设置交易密码
+    setPayment() {
+      // 跳转到上设置交易密码页面
+      this.payment = false;
+      this.$router.push('/mine/safety/password/payment/set');
+    },
+
+    // 关闭设置交易密码弹窗
+    cancelPayment() {
+      this.payment = false;
+    },
   },
   mounted() {
     if (this.$route.params.stepTwoData) {
@@ -261,10 +302,12 @@ export default {
     this.showData = JSON.parse(sessionStorage.getItem('showData')); // 设置传递的数据
     console.log(this.showData);
 
+    // 判断是否设置交易密码
+    this.isSetPassword();
+
     // 获取优惠券
     this.getCoupon();
     // 判断币种还是积分查询 显示不同数据
-
 
     // 获取可用优惠券
     Toast.loading({
