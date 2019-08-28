@@ -7,17 +7,13 @@
         <p class="info info-one">2019.8.30 23:59:59失效，请及时兑换</p>
         <p class="subTitle">兑换方法</p>
         <p class="info inf-top">
-          1. 卡券兑换方法：输入兑换券码即可兑换
-          相应数额的USDT，兑换后可至账户中
-          查看；
+          1. 卡券兑换方法：输入兑换券码即可兑换相应数额的USDT，兑换后可至账户中查看。
         </p>
         <p class="info">
-          2. 每个奖品兑换券码仅可兑换一次，多次
-          兑换无效；
+          2. 每个奖品兑换券码仅可兑换一次，多次兑换无效。
         </p>
         <p class="info">
-          3. 如在兑换中有任何疑问可联系客服
-          （微信号：Bgainkefu）；
+          3. 如在兑换中有任何疑问可联系客服(微信号：Bgainkefu)。
         </p>
       </div>
     </div>
@@ -37,6 +33,11 @@ export default {
 
 <style lang="scss" scoped>
   .illustration{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding-top: 55px;
     background: rgba(1,1,1,0.8);
     font-family:PingFang SC sans-serif;
@@ -61,7 +62,7 @@ export default {
         line-height:11px;
       }
       .content{
-        padding-top: 80px;
+        padding-top: 67px;
         .subTitle{
           font-size:13px;
           font-weight:500;

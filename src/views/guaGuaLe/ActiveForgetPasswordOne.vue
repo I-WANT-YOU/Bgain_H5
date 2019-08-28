@@ -1,5 +1,6 @@
 <template>
   <div class="winning">
+    <div class="tips" @click="()=>{this.isShowTipPop = true}">兑换说明</div>
     <div class="registerOne-container">
       <div class="registerOne">
         <!--忘记密码-->
@@ -19,6 +20,7 @@
       <Footer/>
     </div>
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError"/>
+    <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>
   </div>
 </template>
 
@@ -29,18 +31,21 @@ import Footer from './components/Footer.vue';
 import BaseInput from './components/BaseInput.vue';
 import errorMessage from '../../constants/responseStatus';
 import Geetest from '../../components/Geetest.vue';
+import tipPop from './components/ExchangeIllustration.vue';
 
 export default {
   name: 'ActiveForgetPasswordOne',
   data() {
     return {
       accountInputValue: '',
+      isShowTipPop: false,
     };
   },
   components: {
     Footer,
     BaseInput,
     Geetest,
+    tipPop,
   },
   methods: {
     ...mapActions('user', [
@@ -119,11 +124,22 @@ export default {
 
 <style lang="scss" scoped>
 .winning{
+  position: relative;
   width: 100vw;
   min-height: 677px;
   overflow-y: scroll;
   background: url("../../assets/images/guaGuaLe/bg_all.jpg") no-repeat;
   background-size: 100% 100%;
+  .tips{
+    position: absolute;
+    top: 200px;
+    right: 15px;
+    font-size:14px;
+    font-weight:400;
+    text-decoration:underline;
+    color:rgba(255,255,255,1);
+    line-height:15px;
+  }
   /*注册页面1*/
   .registerOne-container{
     margin-top: 287px;

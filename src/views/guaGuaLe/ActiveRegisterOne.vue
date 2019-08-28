@@ -1,5 +1,6 @@
 <template>
   <div class="winning">
+    <div class="tips" @click="()=>{this.isShowTipPop = true}">兑换说明</div>
     <div class="registerOne-container">
       <div class="registerOne">
         <!--输入验证码-->
@@ -28,6 +29,7 @@
     <div class="footerContainer"><Footer/></div>
     <!--弹窗验证-->
     <Geetest @loaded="onLoaded" @success="onSuccess" @error="onError"/>
+    <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>
   </div>
 </template>
 
@@ -38,6 +40,7 @@ import Footer from './components/Footer.vue';
 import BaseInput from './components/BaseInput.vue';
 import PhoneInput from './components/PhoneInput.vue';
 import Geetest from '../../components/Geetest.vue';
+import tipPop from './components/ExchangeIllustration.vue';
 
 export default {
   name: 'ActiveRegisterOne',
@@ -47,6 +50,7 @@ export default {
       codeInputValue: '',
       phoneInputValue: '',
       countryCode: '+86',
+      isShowTipPop: false,
     };
   },
   components: {
@@ -54,6 +58,7 @@ export default {
     BaseInput,
     PhoneInput,
     Geetest,
+    tipPop,
   },
   watch: {
     phoneInputValue() {
@@ -129,7 +134,7 @@ export default {
     /* 校验兑换码和手机号是否符合规则 */
     checkInput(code, phone) {
       const regCode = /^[2-9A-HJ-NP-Z]*$/; // 判断字符串是否为数字和字母组合
-      const regPhone = /^[0-9]{1,15}$/;
+      const regPhone = /^[0-9]{8,15}$/;
       if (!regCode.test(code)) { // 校验code
         Toast('输入的兑换码错误');
         return false;
@@ -174,6 +179,16 @@ export default {
   height: 667px;
   background: url("../../assets/images/guaGuaLe/bg_all.jpg") no-repeat;
   background-size: 100% 100%;
+  .tips{
+    position: absolute;
+    top: 200px;
+    right: 15px;
+    font-size:14px;
+    font-weight:400;
+    text-decoration:underline;
+    color:rgba(255,255,255,1);
+    line-height:15px;
+  }
   /*注册页面1*/
   .registerOne-container{
     margin-top: 287px;

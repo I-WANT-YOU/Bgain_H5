@@ -1,5 +1,6 @@
 <template>
   <div class="winning">
+    <div class="tips" @click="()=>{this.isShowTipPop = true}">兑换说明</div>
     <div class="registerOne-container">
       <div class="registerOne">
         <!--输入验证码-->
@@ -26,11 +27,11 @@
         </div>
         <!--切换登陆注册状态-->
         <div class="userState">
-          <div @click="toForgetPassword">
-            <span>忘记密码</span>
-          </div>
           <div @click="toRegister" >
             <span>还没账户？</span><span>点击注册</span>
+          </div>
+          <div @click="toForgetPassword">
+            <span>忘记密码</span>
           </div>
         </div>
         <div class="buttons" >
@@ -47,6 +48,7 @@
       showInfo="popShowInfo"
       v-on:hidePop="(val)=>{this.isShowPop = val}"
     />
+    <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>
   </div>
 </template>
 
@@ -57,6 +59,7 @@ import Footer from './components/Footer.vue';
 import BaseInput from './components/BaseInput.vue';
 import errorMessage from '../../constants/responseStatus';
 import ExchangeSuccess from './ExchangeSuccess.vue';
+import tipPop from './components/ExchangeIllustration.vue';
 
 export default {
   name: 'ActiveLoginOne',
@@ -67,12 +70,14 @@ export default {
       passWordInputValue: '', // 密码
       isShowPop: false,
       popShowInfo: {}, // pop弹窗信息
+      isShowTipPop: false,
     };
   },
   components: {
     Footer,
     BaseInput,
     ExchangeSuccess,
+    tipPop,
   },
   computed: {
     ...mapState('user', [
@@ -173,6 +178,16 @@ export default {
   overflow-y: scroll;
   background: url("../../assets/images/guaGuaLe/bg_all.jpg") no-repeat;
   background-size: 100% 100%;
+  .tips{
+    position: absolute;
+    top: 200px;
+    right: 15px;
+    font-size:14px;
+    font-weight:400;
+    text-decoration:underline;
+    color:rgba(255,255,255,1);
+    line-height:15px;
+  }
   /*注册页面1*/
   .registerOne-container{
     margin-top: 287px;
@@ -188,11 +203,18 @@ export default {
       }
       /*注册登陆切换*/
       .userState{
-        padding:0 35px;
+        padding:0 45px 0 45px;
         display: flex;
         justify-content: space-between;
         >div{
-          display: inline-block;
+          /*display: inline-block;*/
+          display: flex;
+          align-items: center;
+          .back-icon{
+            width: 12px;
+            height: 12px;
+            padding-right: 8px;
+          }
           >span{
             font-size:12px;
             font-weight:400;
@@ -200,9 +222,9 @@ export default {
             line-height:30px;
             height: 30px;
           }
-          >span:nth-child(2){
-            text-decoration: underline;
-          }
+          /*>span:nth-child(3){*/
+            /*text-decoration: underline;*/
+          /*}*/
         }
       }
       /*button*/

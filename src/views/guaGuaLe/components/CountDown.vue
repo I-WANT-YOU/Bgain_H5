@@ -22,10 +22,12 @@ export default {
     sendCode() {
       this.$emit('sendCodeAgain', true);
       this.countDownTime = 6;
+      this.isTimeOut = false;
       this.countDown();
     },
     countDown() {
       this.timer = setInterval(() => {
+        console.log(this.countDownTime);
         if (this.countDownTime >= 1) {
           this.countDownTime -= 1;
         } else {

@@ -50,7 +50,7 @@ export default {
       flex-grow: 1;
       font-size:15px;
       font-weight:400;
-      line-height:11px;
+      line-height: normal;
       border: none;
       outline: none;
     }

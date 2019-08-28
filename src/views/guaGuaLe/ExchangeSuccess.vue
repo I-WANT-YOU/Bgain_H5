@@ -3,10 +3,10 @@
     <div class="bg-gif">
       <div class="exchangeInfo">
         <div>
-          <span>{{showInfo.amount}}</span>
+          <!--<span>{{showInfo.amount}}</span>-->
           <span>USDT</span>
         </div>
-        <span>获取时间：{{formatDate(showInfo.timestamp)}}</span>
+        <!--<span>获取时间：{{formatDate(showInfo.timestamp)}}</span>-->
         <div class="buttons" @click="confirm">
           <button>确认</button>
         </div>

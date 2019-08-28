@@ -51,7 +51,7 @@ export default {
     font-family:PingFang SC sans-serif;
     width:257px;
     height:44px;
-    padding:0 24px;
+    padding: 0 24px ;
     margin: auto;
     display: flex;
     align-items: center;
@@ -61,9 +61,9 @@ export default {
       flex-grow: 1;
       font-size:15px;
       font-weight:400;
-      line-height:11px;
       border: none;
       outline: none;
+      line-height: normal;
     }
   }
 </style>
