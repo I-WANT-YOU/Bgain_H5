@@ -131,6 +131,66 @@ class UserService {
       throw new Error(error);
     }
   }
+
+  // 刮刮乐 发送验证码
+  static async getActiveVerificationCode(params) {
+    try {
+      const requestOptions = {
+        url: '/auth/send-token',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 刮刮乐 判断兑换码的有效性
+  static async postRedeemCode(params) {
+    try {
+      const requestOptions = {
+        url: '/ticket/check',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 刮刮乐 进行兑换
+  static async codeExchange(params) {
+    try {
+      const requestOptions = {
+        url: '/ticket/receive',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 刮刮乐 判断用户名是否注册
+  static async getUserNameInfo(params) {
+    try {
+      const requestOptions = {
+        url: '/auth/valide-register-name',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default UserService;

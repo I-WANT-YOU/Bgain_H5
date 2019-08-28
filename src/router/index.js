@@ -554,9 +554,44 @@ const router = new Router({
     },
     // 刮刮乐-李辉
     {
-      path: '/winningHome',
-      name: 'WinningHome',
-      component: () => import('../views/guaGuaLe/WinningHome.vue'),
+      path: '/activeRegisterOne',
+      name: 'ActiveRegisterOne',
+      component: () => import('../views/guaGuaLe/ActiveRegisterOne.vue'),
+    },
+    {
+      path: '/activeRegisterTwo',
+      name: 'ActiveRegisterTwo',
+      component: () => import('../views/guaGuaLe/ActiveRegisterTwo.vue'),
+    },
+    {
+      path: '/activeLoginOne',
+      name: 'ActiveLoginOne',
+      component: () => import('../views/guaGuaLe/ActiveLoginOne.vue'),
+    },
+    {
+      path: '/activeLoginTwo',
+      name: 'ActiveLoginTwo',
+      component: () => import('../views/guaGuaLe/ActiveLoginTwo.vue'),
+    },
+    {
+      path: '/activeForgetPasswordOne',
+      name: 'ActiveForgetPasswordOne',
+      component: () => import('../views/guaGuaLe/ActiveForgetPasswordOne.vue'),
+    },
+    {
+      path: '/activeForgetPasswordTwo',
+      name: 'ActiveForgetPasswordTwo',
+      component: () => import('../views/guaGuaLe/ActiveForgetPasswordTwo.vue'),
+    },
+    {
+      path: '/exchangeSuccess',
+      name: 'ExchangeSuccess',
+      component: () => import('../views/guaGuaLe/ExchangeSuccess.vue'),
+    },
+    {
+      path: '/exchangeIllustration',
+      name: 'ExchangeIllustration',
+      component: () => import('../views/guaGuaLe/components/ExchangeIllustration.vue'),
     },
   ],
 });

@@ -4,9 +4,10 @@
        <span class="countryNum">{{country.value}}</span>
        <van-image :src="arrowDown" class="arrow-down-icon"/>
      </div>
-     <input placeholder="请输入手机号" maxlength="8"
-            @input="emitChange($event.target.value)"
-            :value="inputValue"/>
+     <input placeholder="请输入手机号"
+            v-on:input="$emit('input', $event.target.value)"
+            type="number"
+            v-model="phoneInputValueFromFather"/>
    </div>
 </template>
 
@@ -19,21 +20,26 @@ export default {
   data() {
     return {
       arrowDown,
+      phoneInputValueFromFather: '',
       countryNum: '+86',
       country: {
         value: '+86',
       },
     };
   },
-  model: {
-    prop: 'value',
-    event: 'input',
-  },
-  props: {
-    inputValue: {
-      type: String,
+  // model: {
+  //   prop: 'phoneInputValue',
+  //   event: 'input',
+  // },
+  props: [
+    'phoneInputValue',
+  ],
+  watch: {
+    phoneInputValueFromFather() {
+      this.phoneInputValueFromFather = this.phoneInputValue;
     },
   },
+
   components: {
     'van-image': Image,
   },
@@ -45,14 +51,19 @@ export default {
     /* 选择国家 */
     chooseCountry() {
       this.$router.push(
-        { name: 'country', params: { fromPath: 'WinningHome' } },
+        { name: 'country', params: { fromPath: this.$route.name } },
       );
+    },
+    /* 向父组件中传递国家区号 */
+    passCountryCode() {
+      this.$emit('countryCode', this.country.value);
     },
   },
   mounted() {
     /* 从country页面返回 */
     if (this.$route.params.key) {
       this.country = this.$route.params;
+      this.passCountryCode();
     }
   },
 };

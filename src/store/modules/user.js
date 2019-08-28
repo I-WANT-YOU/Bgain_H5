@@ -13,6 +13,10 @@ const state = {
   assetRecord: {},
   couponList: {},
   transfers: {},
+  vCodeInfo: {}, // 发送验证码 收到的信息
+  redeemCodeInfo: {}, // 判断兑换码的有效信息
+  codeExchangeInfo: {}, // 进行兑换返回的信息
+  userNameInfo: {}, // 校验用户名是否注册
 };
 
 const getters = {
@@ -77,6 +81,18 @@ const mutations = {
   },
   [types.GET_TRANSFER_DETAILS](state, payload) {
     state.transfers = payload;
+  },
+  [types.GET_V_CODE](state, payload) {
+    state.vCodeInfo = payload;
+  },
+  [types.REDEEM_CODE_INFO](state, payload) {
+    state.redeemCodeInfo = payload;
+  },
+  [types.CODE_EXCHANGE](state, payload) {
+    state.codeExchangeInfo = payload;
+  },
+  [types.GET_USERNAME_INFO](state, payload) {
+    state.userNameInfo = payload;
   },
 };
 
@@ -198,6 +214,46 @@ const actions = {
       const response = await UserService.getUserCouponList();
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USER_COUPON_LIST, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  /* 刮刮乐活动中发送验证码 */
+  async getActiveVerificationCode({ commit }, params) {
+    try {
+      const response = await UserService.getActiveVerificationCode(params);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_V_CODE, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  /* 判断兑换码的有效性 */
+  async postRedeemCode({ commit }, params) {
+    try {
+      const response = await UserService.postRedeemCode(params);
+      const data = await Auth.handlerSuccessResponseV2(response);
+      commit(types.REDEEM_CODE_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  /* 进行兑换 */
+  async codeExchange({ commit }, params) {
+    try {
+      const response = await UserService.codeExchange(params);
+      const data = await Auth.handlerSuccessResponseV3(response);
+      commit(types.CODE_EXCHANGE, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  /* 刮刮乐 验证用户名是否注册 */
+  async getUserNameInfo({ commit }, params) {
+    try {
+      const response = await UserService.getUserNameInfo(params);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_USERNAME_INFO, data);
     } catch (error) {
       throw error;
     }

@@ -1,8 +1,9 @@
 <template>
    <div class="baseInput">
-     <input placeholder="请输入兑换码" maxlength="8"
+     <input :placeholder="placeHolderValue" :maxlength="maxlength"
             @input="emitChange($event.target.value)"
-            :value="inputValue"/>
+            :type="typeValue"
+            :value="value"/>
    </div>
 </template>
 
@@ -14,7 +15,16 @@ export default {
     event: 'input',
   },
   props: {
-    inputValue: {
+    value: {
+      type: String,
+    },
+    placeHolderValue: {
+      type: String,
+    },
+    typeValue: {
+      type: String,
+    },
+    maxlength: {
       type: String,
     },
   },
@@ -29,10 +39,9 @@ export default {
 <style lang="scss" scoped>
   .baseInput{
     font-family:PingFang SC sans-serif;
-    width:257px;
     height:44px;
-    padding:0 24px;
-    margin: auto;
+    margin:0 35px;
+    padding: 0 21px;
     display: flex;
     align-items: center;
     background:rgba(255,255,255,1);
@@ -43,6 +52,7 @@ export default {
       font-weight:400;
       line-height:11px;
       border: none;
+      outline: none;
     }
   }
 </style>

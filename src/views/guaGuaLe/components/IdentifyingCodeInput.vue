@@ -1,23 +1,42 @@
 <template>
    <div class="baseInput">
-     <input placeholder="请输入兑换码" maxlength="8"
+     <input :placeholder="placeHolderValue"
+            type="number"
             @input="emitChange($event.target.value)"
-            :value="inputValue"/>
+            v-model="newCodeInputValue"/>
+     <CountDown v-on:sendCodeAgain ="(val)=>{this.$emit('sendCodeAgain',val)}" />
    </div>
-  <span>已发送33S</span>
 </template>
 
 <script>
+import CountDown from './CountDown.vue';
+
 export default {
   name: 'BaseInput',
+  data() {
+    return {
+      newCodeInputValue: '',
+    };
+  },
   model: {
-    prop: 'value',
+    prop: 'codeInputValue',
     event: 'input',
   },
   props: {
-    inputValue: {
+    codeInputValue: {
       type: String,
     },
+    placeHolderValue: {
+      type: String,
+    },
+  },
+  watch: {
+    newCodeInputValue() {
+      this.newCodeInputValue = this.codeInputValue;
+    },
+  },
+  components: {
+    CountDown,
   },
   methods: {
     emitChange(value) {
@@ -44,6 +63,7 @@ export default {
       font-weight:400;
       line-height:11px;
       border: none;
+      outline: none;
     }
   }
 </style>

@@ -13,10 +13,6 @@ export default {
 
 <style lang="scss" scoped>
   .footer{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     padding-bottom: 15px;
     display: flex;
     flex-direction: column;

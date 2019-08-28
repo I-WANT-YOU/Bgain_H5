@@ -98,7 +98,6 @@ export default {
     },
     // 获取验证码
     getVerificationCode() {
-      console.log(this.verificationMessage);
       const tokenData = {
         ...this.tokenData,
       };

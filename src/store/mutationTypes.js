@@ -113,3 +113,10 @@ export const GET_USER_AVAILABLE = 'GET_USER_AVAILABLE';
 * 一级页面弹窗
 * */
 export const GET_POP_INFO = 'GET_POP_INFO';
+/*
+* 呱呱乐
+* */
+export const GET_V_CODE = 'GET_V_CODE';
+export const REDEEM_CODE_INFO = 'REDEEM_CODE_INFO';
+export const CODE_EXCHANGE = 'CODE_EXCHANGE';
+export const GET_USERNAME_INFO = 'GET_USERNAME_INFO';
