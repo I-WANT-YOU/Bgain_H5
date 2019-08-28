@@ -1,6 +1,6 @@
 <template>
   <div class="product-files">
-    <BgainNavBar class="product-files-header" title="产品说明" />
+    <BgainNavBar class="product-files-header" title="基金档案" />
     <div class="product-files-con">
       <Tabs
         class="tabs"
@@ -33,7 +33,7 @@
           <div class="con">{{option.deposit_explain}}</div>
         </Tab>
         <Tab class="tab" title="实盘业绩">
-          <div class="con"></div>
+          <div class="con">{{option.firm_performance}}</div>
           <div class="echarts">
             <div class="my-echarts" ref="echarts" style="width: 334px;height: 160px;" />
           </div>
@@ -97,12 +97,10 @@ export default {
 <style lang='scss'>
 .product-files {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   .product-files-con {
     width: 100%;
-    flex: 1;
     display: flex;
     [class*="van-hairline"]::after {
       border: 0;

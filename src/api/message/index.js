@@ -7,12 +7,7 @@ class MessageService {
     try {
       const requestOptions = {
         url: '/announcement/fetch-all-announcements',
-        method: 'post',
-        data: {
-          page_size: 10,
-          page_number: 0,
-          announcement_type: 'USER_MSG',
-        },
+        method: 'get',
       };
       const response = await request(requestOptions);
       return handlerResponse(response);
@@ -28,7 +23,7 @@ class MessageService {
         url: '/announcement/set-announcement-read',
         method: 'post',
         data: {
-          uuid,
+          announcement_id: uuid,
           read: true,
         },
       };

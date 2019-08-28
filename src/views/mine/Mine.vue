@@ -12,7 +12,7 @@
                 <svg-icon icon-class="mine-pull" class="icon-pull" />
               </span>
             </div>
-            <div class="assets">
+            <div class="assets" @click="onAsset">
               <span>{{asset}}</span>
               <span class="icon">
                 <svg-icon icon-class="next" class="icon-next" />
@@ -34,7 +34,7 @@
         <div class="line"></div>
         <div class="balance">
           <div class="balance-info">
-            <div @click="$router.push({name:'balance'})" class="balance-info-text">
+            <div @click="goLogin('/mine/balance')" class="balance-info-text">
               <span>可用余额({{currency}})</span>
               <span>
                 <svg-icon icon-class="next" class="icon-next" />
@@ -43,8 +43,8 @@
             <div :class="authenticated ? '' : 'loginText'">{{balance}}</div>
           </div>
           <div class="top-up">
-            <span class="recharge" @click="onSkip('/purchaseCoinHome/')">充币</span>
-            <span class="extract" @click="onSkip('/extract-coin')">提币</span>
+            <span class="recharge" @click="goLogin('/purchaseCoinHome')">充币</span>
+            <span class="extract" @click="goLogin('/extract-coin')">提币</span>
           </div>
         </div>
       </div>
@@ -55,11 +55,11 @@
             <svg-icon icon-class="mine-current" class="icon" />
             <span>天天赚</span>
           </div>
-          <div @click="onSkip('/mine/fixed')" class="icon-wrap">
+          <div @click="goLogin('/mine/fixed')" class="icon-wrap">
             <svg-icon icon-class="mine-fixed" class="icon" />
             <span>定期盈</span>
           </div>
-          <div @click="onSkip('/mine/fund')" class="icon-wrap">
+          <div @click="goLogin('/mine/fund')" class="icon-wrap">
             <svg-icon icon-class="mine-fund" class="icon" />
             <span>冠军基金</span>
           </div>
@@ -74,7 +74,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
-            <div @click="go('/asset-record')">
+            <div @click="goLogin('/asset-record')">
               <div class="title">资金记录</div>
               <div class="info">资金流水，一目了然</div>
             </div>
@@ -83,8 +83,8 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
-            <div @click="go('/coupon')">
-              <div class="title">优惠卷</div>
+            <div @click="goLogin('/coupon')">
+              <div class="title">优惠券</div>
               <div class="info">加息卷，红包</div>
             </div>
           </div>
@@ -111,15 +111,17 @@
       </div>
     </div>
     <ActionSheet v-model="showCurrency" :actions="options" @select="onSelectCurrency" />
+    <BgainBaseDialog v-model="showDialog" @ />
     <BaseFooter />
   </div>
 </template>
 
 <script>
-import Header from '@component/mine/Header.vue';
-import BaseFooter from '@component/BaseFooter.vue';
 import { ActionSheet, Toast } from 'vant';
 import { mapState, mapActions, mapGetters } from 'vuex';
+import Header from '@component/mine/Header.vue';
+import BaseFooter from '@component/BaseFooter.vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 
 export default {
   name: 'Mine',
@@ -127,6 +129,7 @@ export default {
     Header,
     ActionSheet,
     BaseFooter,
+    BgainBaseDialog,
   },
   data() {
     return {
@@ -139,9 +142,10 @@ export default {
       showBanner: false,
       showCurrency: false,
       options: ['BTC', 'USDT', 'ETH', 'EOS'],
+      showDialog: false,
     };
   },
-  mounted() {
+  async mounted() {
     if (this.authenticated) {
       Toast.loading({
         duration: 0,
@@ -149,14 +153,12 @@ export default {
         message: '加载中...',
       });
       try {
-        this.getUserBalanceSummary().then(() => {
-          Toast.clear();
-          this.currency = this.singleCurrency[0].currency;
-          this.options = this.singleCurrency
-            .map(item => item.currency)
-            .map(item => ({ name: item }));
-          this.getCurreny();
-        });
+        await this.getUserBalanceSummary();
+        Toast.clear();
+        this.currency = this.singleCurrency[0].currency;
+        this.options = this.currencyss
+          .map(item => ({ name: item[0].toLocaleUpperCase() }));
+        this.getCurreny();
       } catch (error) {
         Toast.clear();
         Toast(error);
@@ -165,16 +167,16 @@ export default {
   },
   computed: {
     ...mapState('auth', ['authenticated']),
-    ...mapGetters('user', ['singleCurrency']),
+    ...mapGetters('user', ['singleCurrency', 'currencyss', 'kycStatu']),
   },
   methods: {
-    ...mapActions('user', ['getUserBalanceSummary']),
+    ...mapActions('user', ['getUserBalanceSummary', 'getKycInfo']),
     getCurreny() {
-      const curreny = this.singleCurrency.filter(item => item.currency === this.currency)[0];
+      const curreny = this.currencyss.filter(item => item[0].toLocaleUpperCase() === this.currency)[0][1];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
-      this.accumulatedIncome = curreny.investment_earned_profit;
-      this.balance = curreny.balance;
+      this.accumulatedIncome = curreny.expected_profit;
+      this.balance = curreny.available_balance;
     },
     onSkip(router) {
       this.$router.push(router);
@@ -189,6 +191,30 @@ export default {
     },
     go(router) {
       this.$router.push(router);
+    },
+    // 未登录
+    async goLogin(router) {
+      if (this.authenticated) {
+        if (router === '/extract-coin') {
+          try {
+            await this.getKycInfo();
+            if (this.kycStatu === 'PASSED') {
+              this.$router.push(router);
+            } else {
+              console.log();
+            }
+          } catch (error) {
+            throw error;
+          }
+        } else {
+          this.$router.push(router);
+        }
+      } else {
+        this.$router.push('/login');
+      }
+    },
+    onAsset() {
+      this.$router.push('/asset');
     },
   },
 };
@@ -267,8 +293,8 @@ export default {
               display: flex;
               align-content: center;
               .icon-next {
-                width: 6px;
-                height: 10px;
+                width: 8px;
+                height: 12px;
               }
             }
           }
@@ -314,8 +340,8 @@ export default {
             margin-bottom: 6px;
           }
           .icon-next {
-            width: 4.7px;
-            height: 10px;
+            width: 7px;
+            height: 12px;
             margin-left: 12.7px;
           }
           .loginText {

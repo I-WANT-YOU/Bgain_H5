@@ -8,13 +8,9 @@
           maxlength="6"
           v-model="verificationCode" placeholder="请输入验证码" />
       </div>
-      <div v-if="isShowTime" class="time">
-        <span> {{preTime+countDown+nextTime}}</span>
-      </div>
-      <div v-else class="send" @click="getVerificationCode()">
-        <span>发送验证码</span>
-      </div>
+      <SendCode @onsend="getVerificationCode" ref="sendCode" />
     </div>
+    <div v-show="address" class="text">验证码已发送至 {{address}}</div>
     <div class="button">
       <Button
         :loading="buttonIsLoading"
@@ -31,6 +27,8 @@ import {
   Field, Button, Toast,
 } from 'vant';
 import { mapActions } from 'vuex';
+import SendCode from '@component/SendCode.vue';
+import { getDesensitizedUsername } from '@utils/tools';
 import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
@@ -42,6 +40,7 @@ export default {
     Footer,
     Field,
     Button,
+    SendCode,
     // eslint-disable-next-line vue/no-unused-components
     Toast,
   },
@@ -53,36 +52,35 @@ export default {
       buttonIsLoading: false, // 按钮是否加载
       countDown: 6,
       myTime: '',
-      tokenData: '',
-      preTime: '已发送（',
-      nextTime: '）',
       isShowTime: true,
+      address: '',
     };
   },
   mounted() {
-    // 倒计时
-    this.setTime();
-    if (this.$route.params.registerData) {
+    this.address = `${this.$route.params.countryCode
+      ? this.$route.params.countryCode : ''} ${getDesensitizedUsername(this.$route.params.username)}`;
+    if (this.$route.params) {
       // 获取验证码参数
       this.tokenData = {
-        username: this.$route.params.registerData.username,
-        geetestOptions: this.$route.params.registerData.geetestOptions,
+        username: this.$route.params.username,
+        geetestOptions: this.$route.params.geetestOptions,
       };
-      if (!this.$route.params.registerData.countryCode) {
+      if (!this.$route.params.countryCode) {
         this.registerData = {
-          invitationCode: this.$route.params.registerData.invitationCode,
-          password: this.$route.params.registerData.password,
-          username: this.$route.params.registerData.username,
+          invitationCode: this.$route.params.invitationCode,
+          password: this.$route.params.password,
+          username: this.$route.params.username,
         };
       } else {
         this.registerData = {
-          countryCode: this.$route.params.registerData.countryCode,
-          invitationCode: this.$route.params.registerData.invitationCode,
-          password: this.$route.params.registerData.password,
-          username: this.$route.params.registerData.username,
+          countryCode: this.$route.params.countryCode,
+          invitationCode: this.$route.params.invitationCode,
+          password: this.$route.params.password,
+          username: this.$route.params.username,
         };
       }
     }
+    this.$refs.sendCode.onClick();
   },
   methods: {
     // 触发action的方法
@@ -90,24 +88,22 @@ export default {
       'register',
       'getToken',
     ]),
-    // 设置倒计时
-    setTime() {
-      this.myTime = setInterval(
-        () => { this.countDown = this.countDown - 1; }, 1000,
-      );
-    },
     // 获取验证码
-    getVerificationCode() {
-      const tokenData = {
-        ...this.tokenData,
-      };
-      this.getToken(tokenData).then(
-        (res) => { console.log(res); },
-        (err) => {
-          console.log(err);
-          this.$toast(errorMessage[err.status]);
-        },
-      );
+    async getVerificationCode() {
+      this.$toast('验证码已发送');
+      try {
+        await this.getToken({
+          username: this.$route.params.username,
+          countryCode: this.$route.params.countryCode,
+          geetestOptions: {
+            geetest_challenge: this.$route.params.geetest_challenge,
+            geetest_seccode: this.$route.params.geetest_seccode,
+            geetest_validate: this.$route.params.geetest_validate,
+          },
+        });
+      } catch (error) {
+        this.$toast(errorMessage[error.status]);
+      }
     },
     // 点击确定
     confirm() {
@@ -181,16 +177,11 @@ export default {
           }
         }
       }
-      .send{
-        display: flex;
-        justify-content: flex-end;
-        >span{
-          color: #3C64EE;
-          text-align: right;
-        }
-      }
-
-
+    }
+    .text{
+      font-size: 15px;
+      color: #cccccc;
+      margin: 10px 0 0 23px;
     }
     .button{
       width: 100%;

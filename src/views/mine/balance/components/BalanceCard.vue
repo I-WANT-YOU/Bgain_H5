@@ -10,7 +10,6 @@ export default {
   name: 'BalanceCard',
   props: {
     balance: {
-      type: Number,
       required: true,
     },
     currency: {

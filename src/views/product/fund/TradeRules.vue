@@ -1,6 +1,6 @@
 <template>
   <span class="trade-rules">
-    <BgainNavBar title="交易规则与费率" />
+    <BgainNavBar title="交易说明" />
     <span class="trade-rules-con">
       <Tabs
         class="tabs"
@@ -123,20 +123,24 @@
           <div class="info">*实际交易费率以平台确认费率为准</div>
         </Tab>
         <Tab class="tab" title="平台管理费">
-          <div class="manage_fee_rate">平台管理费(年化) : {{manage_fee_rate}}, 按日计提</div>
+          <div class="manage_fee_rate">
+            平台管理费(年化) : {{ manage_fee_rate }}
+            <span class="no-discount">&nbsp;({{manage_fee_rate_no_discount}})&nbsp;</span> , 按日计提
+          </div>
           <div class="manage_fee_rate_text">用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费的净值。</div>
         </Tab>
         <Tab class="tab" title="业绩报酬">
           <div class="manage_fee_rate">业绩报酬分成比例 : {{carry_rate_user}}</div>
           <div class="carry_rate_user_text">业绩报酬分为用户投资收益应分配给基金管理人的部分。</div>
           <div class="eg">
+            <div>* 业绩报酬按照份额进行扣除</div>
             <div>举例 :</div>
-            <div>平台业绩报酬分成比例位30%, 用户于产品净值位1.1和0.9分别认购100、50份额的产品。则平均持仓成本为1.03。</div>
-            <div>若期末产品净值为1.05，则对(1.05-1.03)*150的投资增值部分按照比例计提业绩报酬。</div>
-            <div>
-              <div>应扣除的业绩报酬份额</div>
-              <span>= (1.05-11.03) * 150 * 30% / 1.05 = 0.86 份</span>
-            </div>
+            <div>平台业绩报酬分成比例位30%, 用户持仓市值位20000, 投资成本为18000。</div>
+            <div>若一期期末持仓收益为2000, 则对(2000-0)的收益增值部分按照比例计提业绩报酬</div>
+            <div>若二期期末持仓收益为3000, 则对(3000-2000)的收益增值部分按照比例计提业绩报酬</div>
+            <div>扣除业绩报酬当天的产品净值是1.5</div>
+            <div>则应扣除的业绩报酬金额= （3000-2000） * 30% = 300</div>
+            <div>应扣除的业绩报酬份额=300/1.5=200份</div>
           </div>
         </Tab>
       </Tabs>
@@ -160,6 +164,7 @@ export default {
     return {
       carry_rate_user: '30%',
       manage_fee_rate: '1%',
+      manage_fee_rate_no_discount: '2%',
       currency: 'BTC',
       rateBuy: [],
       rateSell: [],
@@ -167,8 +172,10 @@ export default {
   },
   mounted() {
     this.getFundTradeRules(this.$route.query.productId).then(() => {
+      console.log(this.fundTradeRules);
       this.carry_rate_user = `${this.fundTradeRules.carry_rate_user * 100}%`;
       this.manage_fee_rate = `${this.fundTradeRules.manage_fee_rate * 100}%`;
+      this.manage_fee_rate_no_discount = `${this.fundTradeRules.manage_fee_rate_no_discount * 100}%`;
       this.currency = this.fundTradeRules.currency_type;
       this.rateBuy = this.fundTradeRules.fund_fee_rate_buy;
       this.rateSell = this.fundTradeRules.fund_fee_rate_sell;
@@ -269,7 +276,7 @@ export default {
               font-size: 10px;
               transform: scaleY(0.9);
               margin-right: 4px;
-              .top{
+              .top {
                 margin-bottom: -6px;
               }
             }
@@ -298,6 +305,11 @@ export default {
           box-sizing: border-box;
           font-size: 14px;
           color: #0f3256;
+        }
+        .no-discount {
+          font-size: 11px;
+          color: #9aa2b2;
+          text-decoration: line-through;
         }
         .manage_fee_rate_text {
           margin: 0 18px;

@@ -24,7 +24,6 @@
           <div v-show="tab === 'email'" class="tab-con-form-email-wrap">
             <div class="tab-con-form-input">
               <input class="input" v-model="email" type="texts" placeholder="请输入邮箱" />
-              <i class="next icon"></i>
             </div>
           </div>
         </div>
@@ -85,7 +84,7 @@ export default {
       if (flag) {
         this.geetest.verify();
       } else {
-        Toast(this.tab === 'mobile' ? '请输入正确的手机号' : '请输入正确的邮箱号');
+        Toast(this.tab === 'mobile' ? '请输入正确的手机号' : '请输入正确的邮箱');
       }
     },
     skip() {
@@ -111,7 +110,15 @@ export default {
           geetestOptions: options,
         };
       }
-      this.$router.push({ name: 'forgetPasswordSet', params });
+      this.$router.push({
+        path: '/forgetPasswordSet',
+        query: {
+          ...params,
+          geetest_challenge: params.geetestOptions.geetest_challenge,
+          geetest_seccode: params.geetestOptions.geetest_seccode,
+          geetest_validate: params.geetestOptions.geetest_validate,
+        },
+      });
     },
     onError() { },
   },

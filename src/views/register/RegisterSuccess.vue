@@ -9,9 +9,9 @@
         <span>为了保证您在平台交易的资金安全</span>
         <span>还需完成KYC身份认证</span>
       </div>
-      <div class="continue-button"><button>继续身份验证</button></div>
+      <div class="continue-button" ><button @click="onKyc">继续身份验证</button></div>
       <div class="goToNext">
-        <a href="#">跳过次步，先去浏览平台产品</a>
+        <a @click="onHome">跳过次步，先去浏览平台产品</a>
         <img alt="." src="../../assets/images/blue_next.svg">
       </div>
       <Footer></Footer>
@@ -29,7 +29,12 @@ export default {
     Footer,
   },
   methods: {
-
+    onKyc() {
+      this.$router.push({ path: '/mine/safety/kyc', query: { fromPath: 'register' } });
+    },
+    onHome() {
+      this.$router.push('/product/fund');
+    },
   },
 };
 

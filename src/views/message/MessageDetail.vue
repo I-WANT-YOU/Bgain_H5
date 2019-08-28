@@ -33,12 +33,14 @@ export default {
     ...mapGetters(['announcementDetail']),
   },
   async mounted() {
+    console.log(this.$route.query);
     try {
       if (this.$route.params.type === 'message' && !this.option.read) {
         this.option = this.$route.query;
-        await this.setNewsRead(this.option.uuid);
+        await this.setNewsRead(this.option.id);
       } else if (this.$route.params.type === 'announcement') {
         await this.getSystemAnnouncementsDetail(this.$route.query.id);
+        console.log(this.announcementDetail);
         this.option = this.announcementDetail;
       }
     } catch (error) {

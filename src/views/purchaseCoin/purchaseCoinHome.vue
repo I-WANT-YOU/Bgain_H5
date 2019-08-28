@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       activeHeaderTab: 0, // 默认冲币 0
-      headerTabsData: ['充币', '买币'],
+      headerTabsData: ['充币'],
+      // headerTabsData: ['充币', '买币'],
     };
   },
 

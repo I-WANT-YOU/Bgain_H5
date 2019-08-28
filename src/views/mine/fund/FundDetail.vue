@@ -10,7 +10,7 @@
           <div class="text">昨日盈亏({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div class="num">-123.12345678</div>
+          <div class="num">{{fundOwnerDetail.pnl}}</div>
           <div class="text">持仓收益({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
@@ -24,15 +24,15 @@
             <div class="left">
               <div class="line">
                 <div class="text">持有金额</div>
-                <div class="num">1,123.12345678</div>
+                <div class="num">{{fundOwnerDetail.holding_market_value}}</div>
               </div>
               <div class="line">
                 <div class="text">持仓成本</div>
-                <div class="num">3.12345678</div>
+                <div class="num">{{fundOwnerDetail.principal}}</div>
               </div>
               <div class="line">
                 <div class="text">日涨幅</div>
-                <div class="num">+3.12%</div>
+                <div class="num">{{fundOwnerDetail.pnl_rate ? fundOwnerDetail.pnl_rate : '--'}}</div>
               </div>
             </div>
             <div class="right">
@@ -59,41 +59,36 @@
         <div :class="['tab', tab === '1' ? 'active' : '']" @click="onChangeTab('1')">历史收益率</div>
       </div>
       <div class="tab-cons">
-        <div v-show="tab === '0'" class="cumulative-title">
-          <div class="left">日期 {{chart_x}} 累计收益</div>
-          <div class="right">
-            <div class="item red">
-              <span class="dian" />
-              业绩报酬未扣减
-              <span>{{chart_y}}</span>
-            </div>
-            <div class="item blue">
-              <span class="dian" />
-              业绩报酬已扣减
-              <span>{{chart_y1}}</span>
+        <div v-show="tab === '0' && !isShow">
+          <div class="cumulative-title">
+            <div class="left">日期 {{chart_x}} 累计收益</div>
+            <div class="right">
+              <div class="item red">
+                <span class="dian" />
+                业绩报酬未扣减
+                <span>{{chart_y}}</span>
+              </div>
+              <div class="item blue">
+                <span class="dian" />
+                业绩报酬已扣减
+                <span>{{chart_y1}}</span>
+              </div>
             </div>
           </div>
+          <div class="my-echarts" ref="echarts" style="width: 340px;height: 212px;" />
+          <div class="cumulative-foot">
+            <span>08-03</span>
+            <span>08-08</span>
+          </div>
         </div>
-        <div v-show="tab === '1'" class="history-title">
-          <div class="left">日期 {{chart_x1}}</div>
-          <div class="right">收益率 1.15%</div>
+        <div v-show="tab === '1' && !isShow">
+          <div class="history-title">
+            <div class="left">日期 {{chart_x1}}</div>
+            <div class="right">收益率 1.15%</div>
+          </div>
+          <div class="my-echarts" ref="echarts1" style="width: 340px;height: 212px;" />
         </div>
-        <div
-          v-show="tab === '0'"
-          class="my-echarts"
-          ref="echarts"
-          style="width: 340px;height: 212px;"
-        />
-        <div
-          v-show="tab === '1'"
-          class="my-echarts"
-          ref="echarts1"
-          style="width: 340px;height: 212px;"
-        />
-        <div v-show="tab === '0'" class="cumulative-foot">
-          <span>08-03</span>
-          <span>08-08</span>
-        </div>
+        <div v-show="isShow" class="no-record">暂无数据</div>
       </div>
     </div>
     <div class="trade-record">
@@ -239,6 +234,8 @@ export default {
       chart_x1: '03-27',
       chart_y: '1.1512',
       chart_y1: '1.1512',
+      pnl_daily: [],
+      pnl_without_carry_list: [],
     };
   },
   async mounted() {
@@ -253,6 +250,8 @@ export default {
         currencyType: this.$route.query.currencyType,
       });
       console.log(this.fundOwnerDetail);
+      this.pnl_daily = this.fundOwnerDetail.pnl_daily;
+      this.pnl_without_carry_list = this.fundOwnerDetail.pnl_without_carry_list;
       this.$nextTick(() => {
         // this.setEcharts();
       });
@@ -323,6 +322,15 @@ export default {
     },
     navTime() {
       return formatDate(this.fundOwnerDetail.nav_date, 'MM-DD');
+    },
+    isShow() {
+      if (this.tab === '0' && this.pnl_daily.length) {
+        return false;
+      }
+      if (this.tab === '1' && this.pnl_without_carry_list.length) {
+        return false;
+      }
+      return true;
     },
   },
 };
@@ -474,6 +482,13 @@ export default {
         padding-left: 23px;
       }
     }
+  }
+  .no-record {
+    height: 300px;
+    line-height: 300px;
+    text-align: center;
+    font-size: 14px;
+    color: #a8aeb9;
   }
   .trade-record,
   .trade-rules {

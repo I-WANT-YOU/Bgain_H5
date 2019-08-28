@@ -10,15 +10,24 @@
         label-width="90px"
         maxlength="50"
         label="收货人姓名"
+        input-align="right"
         placeholder="请输入您的中文姓名"
       />
-      <Field v-model="tel" label-width="90px" label="+86" placeholder="请输入您的手机号码" />
+      <Field
+        v-model="tel"
+        label-width="90px"
+        label="+86"
+        input-align="right"
+        placeholder="请输入您的手机号码"
+      />
       <div class="address__area" @click="showPop">
         <Field
           v-model="addressText"
           disabled
           label-width="90px"
           label="所在地区"
+          input-align="right"
+          class="area"
           placeholder="请选择您的所在地"
         />
         <div class="address__area__icon">
@@ -85,10 +94,10 @@ export default {
       if (this.address) {
         this.addressText = `${this.address.province} ${this.address.city} ${this.address.region}`;
         if (this.address.province === '北京市'
-            || this.address.province === '上海市'
-            || this.address.province === '天津市'
-            || this.address.province === '重庆市'
-            || this.address.province === '澳门特别行政区') {
+          || this.address.province === '上海市'
+          || this.address.province === '天津市'
+          || this.address.province === '重庆市'
+          || this.address.province === '澳门特别行政区') {
           this.addressText = `${this.address.province} ${this.address.region}`;
         }
         this.username = this.address.receiver;
@@ -123,10 +132,10 @@ export default {
       let str = '';
       this.area = area;
       if (area[0].code === '110000'
-          || area[0].code === '120000'
-          || area[0].code === '310000'
-          || area[0].code === '820000'
-          || area[0].code === '500000') {
+        || area[0].code === '120000'
+        || area[0].code === '310000'
+        || area[0].code === '820000'
+        || area[0].code === '500000') {
         str = `${area[0].name} ${area[2].name}`;
       } else {
         str = `${area[0].name} ${area[1].name} ${area[2].name}`;
@@ -156,7 +165,9 @@ export default {
             receiver_address: this.textarea,
           });
           Toast('保存成功');
-          this.$router.go(-1);
+          setTimeout(() => {
+            this.$router.go(-1);
+          }, 1000);
         } catch (error) {
           Toast(error);
         }
@@ -166,45 +177,52 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  .address__container {
-    height: 100%;
-    background: #f8f8f8;
+<style lang="scss">
+.address__container {
+  height: 100%;
+  background: #f8f8f8;
 
-    .address__notice-bar {
-      background: #faf4dc;
-      padding: 5px 20px;
-      line-height: 21px;
-      font-size: 12px;
+  .address__notice-bar {
+    background: #faf4dc;
+    padding: 5px 20px;
+    line-height: 21px;
+    font-size: 12px;
 
-      span {
-        color: #f79900;
-      }
+    span {
+      color: #f79900;
     }
+  }
 
-    .address__content {
-      .address__area {
-        background: #ffffff;
-        position: relative;
-        .address__area__icon {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          top: 50%;
-          right: 30px;
-          transform: translateY(-50%);
-          z-index: 10;
-          .icon__next {
-            width: 7px;
-            height: 11px;
-          }
+  .van-field__control:disabled{
+    color: #323233;
+  }
+
+  .address__content {
+    .address__area {
+      background: #ffffff;
+      position: relative;
+      .van-cell__value{
+        padding-right: 15px;
+      }
+      .address__area__icon {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        z-index: 10;
+        .icon__next {
+          width: 7px;
+          height: 11px;
         }
       }
     }
-
-    .address__button--wrapper {
-      margin-top: 60px;
-      padding: 0 22px;
-    }
   }
+
+  .address__button--wrapper {
+    margin-top: 60px;
+    padding: 0 22px;
+  }
+}
 </style>

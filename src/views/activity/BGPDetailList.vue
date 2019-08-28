@@ -4,8 +4,8 @@
     <div class="detail-list">
       <div class="detail-item" v-for="(item,index) in detailList.operation_logs" :key="index">
         <div>
-          <span>{{item.currencyType}}</span>
-          <span>{{item.fbpType === 'INCREASE'?'+':'-'}}{{item.amount}}</span>
+          <span>{{item.currency_type}}</span>
+          <span>{{item.fbp_type === 'INCREASE'?'+':'-'}}{{item.amount}}</span>
         </div>
         <div>
           {{createOrderDate(item.createAt)}}
@@ -19,7 +19,7 @@
 import { Toast } from 'vant';
 import { mapState, mapActions } from 'vuex';
 import Vue from 'vue';
-import PublicMethods from '@utils/publicMethods';
+import { formatDate } from '@utils/tools';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import errorMessage from '../../constants/responseStatus';
 
@@ -40,7 +40,7 @@ export default {
     ]),
     // 时间格式化
     createOrderDate(date) {
-      return PublicMethods.createOrderDate(date);
+      return formatDate(date);
     },
   },
   mounted() {

@@ -1,27 +1,27 @@
 <template>
   <div class="password__container">
-    <BgainNavBar title="修改登录密码"/>
+    <BgainNavBar title="修改登录密码" />
     <div class="password__content">
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="oldPassword"
         type="password"
         label="原登录密码"
         placeholder="请输入原登录密码"
       />
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="password"
         type="password"
         label="新登录密码"
-        placeholder="密码由8-20位字母及数字组成"
+        placeholder="请输入新登录密码"
       />
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="checkPassword"
         type="password"
         label="确认新密码"
-        placeholder="请再次输入新密码"
+        placeholder="请确认新登录密码"
       />
     </div>
     <div class="password__button--wrapper">
@@ -79,8 +79,8 @@ export default {
             oldPassword: this.oldPassword,
             newPassword: this.password,
           });
+          this.$router.push({ path: '/mine/safety/password', query: { status: 'success' } });
           this.loading = false;
-          Toast('修改登录密码成功');
           this.resetFields();
         } catch (error) {
           if (error.status) {
@@ -95,5 +95,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "./style/password";
+@import "./style/password";
 </style>

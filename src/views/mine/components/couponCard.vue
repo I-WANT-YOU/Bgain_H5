@@ -9,14 +9,14 @@
       />
       <div class="num">
         <div>
-          <b>20</b>
+          <b>{{option.coupon_value * 100}}</b>
           <span>%</span>
         </div>
         <div class="num_text">{{option.coupon_type === 'ABS' ? '本金加息' : '收益加息'}}</div>
       </div>
       <div class="text">
-        <div class="title">BTC 25天优惠劵</div>
-        <div>{{formatDate(option.end_date)}}前有效</div>
+        <div class="title">{{option.coupon_name}}优惠劵</div>
+        <div>{{statusText.time}}{{statusText.text}}</div>
         <div class="text-info" @click="onShow">
           <div>
             <span>使用说明</span>
@@ -51,9 +51,6 @@ export default {
     },
   },
   methods: {
-    formatDate(num) {
-      return formatDate(num);
-    },
     onShow() {
       this.show = !this.show;
     },
@@ -62,6 +59,26 @@ export default {
     return {
       show: false,
     };
+  },
+  computed: {
+    statusText() {
+      if (this.statu === '0') {
+        return {
+          time: formatDate(this.option.end_date),
+          text: '前有效',
+        };
+      }
+      if (this.statu === '1') {
+        return {
+          time: formatDate(this.option.usage_date),
+          text: '使用',
+        };
+      }
+      return {
+        time: formatDate(this.option.end_date),
+        text: '过期',
+      };
+    },
   },
 };
 </script>

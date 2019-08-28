@@ -1,15 +1,15 @@
 <template>
   <div class="login">
-    <Header />
+    <BgainNavBar />
     <div class="con">
       <h3>欢迎来到Bgain</h3>
       <form>
         <div class="input">
-          <Field v-model.trim="username" placeholder="请输入登录账号" />
+          <Field v-model="username" placeholder="请输入登录账号" />
         </div>
         <div class="input">
           <Field
-            v-model.trim="password"
+            v-model="password"
             :type="isShowPwd ? '' : 'password'"
             placeholder="请输入登录密码"
             @click-right-icon="showPwd"
@@ -42,15 +42,16 @@
 
 <script>
 import { Field, Button, Toast } from 'vant';
-import Header from '@component/Header.vue';
+import { mapActions } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
 import Footer from '@component/Footer.vue';
 import Geetest from '@component/Geetest.vue';
-import { mapActions } from 'vuex';
+import responseStatus from '@/constants/responseStatus';
 
 export default {
   name: 'Login',
   components: {
-    Header,
+    BgainNavBar,
     Field,
     Button,
     Footer,
@@ -135,7 +136,7 @@ export default {
         this.once = false;
       } catch (error) {
         this.once = false;
-        Toast('账号或密码错误');
+        Toast(responseStatus[error.status]);
       }
     },
     onLoaded(geetest) {

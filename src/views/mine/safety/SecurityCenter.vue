@@ -1,6 +1,6 @@
 <template>
   <div class="security__container">
-    <bgain-nav-bar title="安全中心"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="()=>{this.$router.push('/mine')}" title="安全中心"></bgain-nav-bar>
     <div class="security__content">
       <cell-group :hasMargin="true">
         <cell title="平台账号">
@@ -16,17 +16,22 @@
       </cell-group>
       <cell-group :hasMargin="true">
         <cell title="身份认证">
-          <span class="field--kyc" @click="onKyc">{{kycText}}</span>
-          <svg-icon icon-class="next" class="icon-next" @click="onKyc"></svg-icon>
+          <div @click="onKyc">
+            <span class="field--kyc">{{kycText}}</span>
+            <svg-icon
+              icon-class="next"
+              :class="['icon-next', kycText === '审核中' ? 'none' : '']"
+            ></svg-icon>
+          </div>
         </cell>
-        <cell title="OTC认证">
+        <!-- <cell title="OTC认证">
           <span class="field--kyc" @click="onOtc">{{otcText}}</span>
           <svg-icon
             icon-class="next"
             :class="['icon-next', otcStatu === 'CERTIFY_FAILED' ? '' : 'none']"
             @click="onOtc"
           ></svg-icon>
-        </cell>
+        </cell>-->
       </cell-group>
       <div class="logout-button" @click="onLogoutClick">
         <span>安全退出</span>
@@ -66,6 +71,7 @@ const {
 } = createNamespacedHelpers('user');
 
 const STATUS = {
+  FAILED: '认证失败',
   UN_CERTIFIED: '未认证',
   AUDITING: '审核中',
   CERTIFY_FAILED: '认证失败',
@@ -97,7 +103,7 @@ export default {
       return `${this.countryCode} ${getDesensitizedUsername(this.username)}`;
     },
     kycText() {
-      return STATUS[this.kycStatus];
+      return STATUS[this.kycStatus.toLocaleUpperCase()];
     },
     otcText() {
       return STATUS[this.otcStatus];
@@ -145,7 +151,9 @@ export default {
       } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'UN_CERTIFIED') {
         this.$router.push('/mine/safety/kyc');
       } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFY_FAILED') {
-        this.$router.push('/mine/safety/kyc-result');
+        this.$router.push('/mine/safety/kyc');
+      } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'FAILED') {
+        this.$router.push('/mine/safety/kyc');
       }
     },
     onOtc() {

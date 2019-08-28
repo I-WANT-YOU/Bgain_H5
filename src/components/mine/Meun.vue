@@ -4,7 +4,7 @@
     v-bind="$attrs"
     v-on="$listeners"
     :overlay="false"
-    :style="{ weight: '100%' }"
+    position='right'
   >
     <div class="menu-header">
       <div @click="onClose" class="menu-close">
@@ -59,6 +59,9 @@ export default {
 .menu {
   width: 100%;
   height: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
   padding: 0 20px;
   box-sizing: border-box;
   background: #ffffff;

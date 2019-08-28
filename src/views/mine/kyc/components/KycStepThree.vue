@@ -3,7 +3,7 @@
     <cell-group :border="false">
       <kyc-field>
         <template v-slot:input>
-          <div class="kyc__field--slogan">验证码已发送至{{desensitizedUsername}}</div>
+          <div class="kyc__field--slogan">验证码已发送至 {{countryCode}} {{desensitizedUsername}}</div>
         </template>
       </kyc-field>
       <kyc-field

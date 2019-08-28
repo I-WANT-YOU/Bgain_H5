@@ -26,8 +26,8 @@
       <div class="content__description">
         <div class="content__description--title">转出说明</div>
         <div class="content__description--texts">
-          <div>1. 当日12:00前转出，当日不计算收益，预计当日23:59前可到账；</div>
-          <div>2. 当日12:00后转出，当日仍计算收益，预计T+1日23:59前到账；</div>
+          <div>1. 当日14:00前转出，当日不计算收益，预计当日23:59前可到账；</div>
+          <div>2. 当日14:00后转出，当日仍计算收益，预计T+1日23:59前到账；</div>
           <div>3. 转出暂不收取任何费用。</div>
         </div>
       </div>
@@ -63,13 +63,13 @@ export default {
   },
   watch: {
     amount(newValue, oldValue) {
-      const value = newValue.replace(/[^\d.]/g, '');
+      const value = newValue.toString().replace(/[^\d.]/g, '');
       if (newValue === '.') {
         this.amount = '0.';
       } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.' && newValue !== '') {
         this.amount = '0';
-      } else if (oldValue.indexOf('.') > 0
-        && oldValue.indexOf('.') !== newValue.lastIndexOf('.')
+      } else if (oldValue.toString().indexOf('.') > 0
+        && oldValue.toString().indexOf('.') !== newValue.lastIndexOf('.')
         && newValue.substr(newValue.length - 1) === '.') {
         Toast('只能输入一个小数点');
         this.amount = value.replace(/\.{2,}/g, '.')
@@ -79,7 +79,6 @@ export default {
       } else if (!(/^\d+\.?\d{0,8}$/.test(newValue))) {
         this.amount = value.substr(0, value.indexOf('.') + 9);
       } else if (newValue === '') {
-        console.log(123);
         this.amount = '';
       } else {
         this.amount = value;
@@ -105,11 +104,11 @@ export default {
       try {
         await Promise.all([this.getCurrentSellInfo(currency), this.getUserSummary()]);
       } catch (error) {
-        Toast(error.message);
+        // Toast(error.message);
       }
     },
     onClickAll() {
-      this.value = this.maxSellAmount;
+      this.amount = this.maxSellAmount;
     },
     onSellClick() {
       if (this.amount === '0') {

@@ -1,6 +1,6 @@
 <template>
 <div class="subscriptionResults">
-  <BgainNavBar title="认购结果"/>
+  <BgainNavBar :onArrowClick="()=>{this.$router.push('/product/fixed')}" title="认购结果"/>
   <div class="result">
     <div class="result-img">
       <svg-icon v-if="showData.result === 'success'"
@@ -17,8 +17,8 @@
     </div>
   </div>
   <div class="actions">
-    <button>查看详情</button>
-    <button>继续认购</button>
+    <!-- <button @click="onSkip('/mine/fixed')">查看详情</button> -->
+    <button class="sure" @click="onSkip('/product/fixed')">继续认购</button>
   </div>
 </div>
 </template>
@@ -47,6 +47,11 @@ export default {
     } catch (e) {
       console.log(e);
     }
+  },
+  methods: {
+    onSkip(router) {
+      this.$router.push(router);
+    },
   },
 };
 </script>
@@ -88,7 +93,7 @@ export default {
       height: 46px;
       margin: 86px 35px 0 35px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       >button{
         width: 130px;
         height: 46px;
@@ -98,11 +103,11 @@ export default {
         line-height: 37.36px;
         border-radius: 4px;
       }
-      >button:nth-child(1){
-        background: #FFFFFF;
-        border: 1px solid #EEEEEE;
-      }
-      >button:nth-child(2){
+      // >button:nth-child(1){
+      //   background: #FFFFFF;
+      //   border: 1px solid #EEEEEE;
+      // }
+      .sure{
         background: #3C64EE;
         color: #FBFCFB;
         border: none;

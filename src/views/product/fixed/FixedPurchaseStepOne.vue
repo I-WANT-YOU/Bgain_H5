@@ -13,7 +13,7 @@
         <div class="info-num">
           <span>{{expectedReturn}}</span>
         </div>
-        <div class="info-text">{{'预期收益('+tabActiveType+')'}}</div>
+        <div class="info-text">预期收益({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</div>
       </div>
     </div>
     <!--tab-->
@@ -26,11 +26,11 @@
         <div class="y-line"></div>
         <div>
           <span :class="{tabTitleActive:tabActiveFBP}"
-                @click="changeTab('FBP')">FBP购买</span>
+                @click="changeTab('FBP')">BGP购买</span>
         </div>
       </div>
       <div class="tabs-content">
-        <div class="tabs-content-title"><span>{{'认购数量('+tabActiveType+')'}}</span></div>
+        <div class="tabs-content-title"><span>认购数量({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</span></div>
         <div class="lestPurchase">
 
           <input ref='inputFile'
@@ -39,7 +39,8 @@
           />
         </div>
         <div class="availableBalance">
-         <span>可用余额</span><span>{{AllAccount+'&nbsp;'+tabActiveType}}</span>
+         <span>可用余额</span><span>{{AllAccount}}
+           {{tabActiveType === "FBP" ? 'BGP' : tabActiveType}}</span>
         </div>
       </div>
     </div>
@@ -57,6 +58,7 @@
 <script>
 import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
+import { strip } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
 import FixedPop from './components/FixedPop.vue';
@@ -105,7 +107,7 @@ export default {
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
-          this.$toast('网络故障');
+          this.$toast('请您登录');
         }
       },
     );
@@ -200,8 +202,8 @@ export default {
     expectedReturn() {
       let expected = '-';
       if (this.investmentAmount) {
-        expected = (this.investmentAmount * 100000000 * this.fixedBuyInfo.expected_return)
-          / 10000000000;
+        expected = strip((this.investmentAmount * 100000000 * this.fixedBuyInfo.expected_return)
+          / 100000000, 8);
       }
       return expected;
     },
@@ -263,8 +265,8 @@ export default {
           this.canUseCurrency = false; // BTC不可以购买
           // 判断FBP是否有足够余额
           if (localFixedBuyInfo.balance_fbp >= localFixedBuyInfo.min_inverst_amount_fbp) {
-            this.tabActiveTypeFBP = true; // tab页面为FBP
-            this.tabActive = 'FBP'; // 认购数量
+            this.tabActiveFBP = true; // tab页面为FBP
+            this.tabActiveType = 'FBP'; // 认购数量
             this.canUseFBP = true; // FBP可以购买
             this.placeHolder = localFixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = localFixedBuyInfo.balance_fbp;
@@ -293,7 +295,7 @@ export default {
           break;
         case 'FBP':
           if (this.canUseFBP === false) {
-            this.$toast('可用FBP余额不足');
+            this.$toast('可用BGP余额不足');
           } else {
             this.tabActiveCurrency = false; // 币种tab激活
             this.tabActiveFBP = true; // FBPtab激活
