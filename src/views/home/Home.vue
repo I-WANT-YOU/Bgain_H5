@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <router-link to="/winningHome">刮刮乐</router-link><br />
     <router-link to="/levelOnePop">lihui-首页弹窗</router-link><br />
     <router-link to="/totalAssets">lihui-总资产</router-link><br />
     <router-link to="/availableBalance">lihui-可用余额</router-link><br />
