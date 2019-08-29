@@ -41,17 +41,18 @@ export default {
       option: [
         {
           icon: 'community3',
-          text: 'FinBee2018',
+          text: 'Bgain2019',
         },
         {
           icon: 'community4',
-          text: 'finbeekefu',
+          text: 'Bgainkefu',
         },
       ],
     };
   },
   methods: {
     copyText(text) {
+      window.scrollTo(0, 0);
       return copyText(text);
     },
   },

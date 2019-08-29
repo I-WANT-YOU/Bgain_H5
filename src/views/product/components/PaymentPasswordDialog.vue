@@ -12,7 +12,7 @@
         type="password"
         v-model="password"
         @input="onInput"
-        placeholder="请输6位数字"
+        placeholder="请输入6位交易密码"
         :border="false"
       >
       </Field>

@@ -98,7 +98,7 @@ export default {
       await this.fetchSellInfo(this.currency);
       Toast.clear();
     } catch (error) {
-      Toast('未登录');
+      throw error;
     }
   },
   methods: {
@@ -108,7 +108,7 @@ export default {
       try {
         await Promise.all([this.getCurrentSellInfo(currency), this.getUserSummary()]);
       } catch (error) {
-        Toast('未登录');
+        throw error;
       }
     },
     onClickAll() {

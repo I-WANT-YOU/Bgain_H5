@@ -25,13 +25,13 @@
             :value="firstName"
             @input="onFirstNameInput"
             label="名"
-            placeholder="请输入真实名"
+            placeholder="请输入真实名字"
           ></kyc-field>
           <kyc-field
             :value="lastName"
             @input="onLastNameInput"
             label="姓"
-            placeholder="请输入真实姓"
+            placeholder="请输入真实姓氏"
           ></kyc-field>
         </template>
       </cell-group>

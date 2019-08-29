@@ -20,7 +20,7 @@ export const DOCUMENT_TYPE = [
     value: 'ID',
   },
   {
-    label: '驾驶证',
+    label: '驾照',
     value: 'DRIVER_LICENSE',
   },
   {

@@ -31,7 +31,7 @@
               size="large"
               title="如何进行身份认证？"
               name="14"
-            >在“我的账户”-“用户中心”中查看认证状态，未认证时直接点击进入申请认证页面，按照页面提示完成信息填写，等待审核通过即可。</van-collapse-item>
+            >在“我的账户”-“安全中心”中查看认证状态，未认证时直接点击进入申请认证页面，按照页面提示完成信息填写，等待审核通过即可。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -135,7 +135,7 @@
               size="large"
               title="如何修改密码？"
               name="31"
-            >账号登录成功后，可在“我的账户”——“用户中心”中修改登录密码和交易密码。</van-collapse-item>
+            >账号登录成功后，可在“我的账户”——“安全中心”中修改登录密码和交易密码。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -178,7 +178,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="如何购买分币计划的产品？"
+              title="如何购买定期盈的产品？"
               name="43"
             >您需要注册成为Bgain用户，登录后在产品列表中根据币产品币种和期限选择需要购买的产品。 （1）在账户可用余额充足的情况下，输入购买数量； （2）如有可用的优惠券，建议使用优惠券可增加更多收益； （3）输入正确的交易密码后，一般情况下即可购买成功。</van-collapse-item>
           </div>
@@ -186,13 +186,13 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="购买分币计划后，什么时候开始计息？"
+              title="购买定期盈后，什么时候开始计息？"
               name="44"
             >平产品购买成功后，根据界面上的提示日期开始计息，计息日也为封闭期开始时间。产品开始计息后，平台会进行相应的短信或邮件通知。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
-            <van-collapse-item size="large" title="分币计划封闭期内是否可以退出？" name="45">分币计划为固定收益类产品，封闭期内不可退出。</van-collapse-item>
+            <van-collapse-item size="large" title="定期盈封闭期内是否可以退出？" name="45">定期盈为固定收益类产品，封闭期内不可退出。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -208,23 +208,23 @@
               size="large"
               title="产品收益如何计算？"
               name="47"
-            >分币计划为固定收益类产品，封闭期内不可退出，收益计算公式如下： 预期收益= 认购数量*预期年化利率*封闭期/365。</van-collapse-item>
+            >定期盈为固定收益类产品，封闭期内不可退出，收益计算公式如下： 预期收益= 认购数量*预期年化利率*封闭期/365。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="购买分币计划产品需要签署哪协议？"
+              title="购买定期盈产品需要签署哪协议？"
               name="48"
-            >购买分币计划产品的用户需要签署的协议为《数字货币投资协议》，产品购买成功则协议生</van-collapse-item>
+            >购买定期盈产品的用户需要签署的协议为《数字货币投资协议》，产品购买成功则协议生</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="自动转入活期产品 功能介绍？"
+              title="自动转入天天赚 功能介绍？"
               name="49"
-            >购买定期盈产品时或购买后，产品未回款前，均可设置回款时是否自动转入活期产品。 回款资金自动自动转入活期产品时，根据转入时间系统自动判断起息及收益到账时间。</van-collapse-item>
+            >购买定期盈产品时或购买后，产品未回款前，均可设置回款时是否自动转入天天赚。 回款资金自动自动转入天天赚时，根据转入时间系统自动判断起息及收益到账时间。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -242,7 +242,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="天天赚产品—分币宝支持哪些数字货币？"
+              title="天天赚产品—天天赚支持哪些数字货币？"
               name="51"
             >目前支持的数字货币有 BTC、ETH、USDT、EOS，用户在账户资金充足的情况下可自由选购产品。</van-collapse-item>
           </div>
@@ -250,39 +250,39 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="如何购买分币宝产品？"
+              title="如何购买天天赚产品？"
               name="52"
-            >注册Bgain平台账号，在保证账户余额充足的情况下，根据页面提示操做“转入“即可完成购买分币宝产品。</van-collapse-item>
+            >注册Bgain平台账号，在保证账户余额充足的情况下，根据页面提示操做“转入“即可完成购买天天赚产品。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="购买分币宝后，什么时候开始计息？什么时候可以看到收益？"
+              title="购买天天赚后，什么时候开始计息？什么时候可以看到收益？"
               name="53"
-            >根据分币宝交易规则： T日18:00（GMT+8）前转入，T+ 1 日计息；T日18:00（GMT+8）后转入，T+ 2日计息。 T+ 1 日计息，则T+ 2 日可看到收益；T+ 2 日计息，则T+ 3 日可看到收益；</van-collapse-item>
+            >根据天天赚交易规则： T日18:00（GMT+8）前转入，T+ 1 日计息；T日18:00（GMT+8）后转入，T+ 2日计息。 T+ 1 日计息，则T+ 2 日可看到收益；T+ 2 日计息，则T+ 3 日可看到收益；</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="分币宝收益如何计算？"
+              title="天天赚收益如何计算？"
               name="54"
-            >分币宝是复利计息，而每日收益根据每日年化利率的不同而略有波动： 日收益=已计息的金额 * 当日年化利率 / 365 如您的已计息金额为10BTC，当日年化利率为4.2%，则当日收益为10*4.2%/365=0.00115068 BTC</van-collapse-item>
+            >天天赚是复利计息，而每日收益根据每日年化利率的不同而略有波动： 日收益=已计息的金额 * 当日年化利率 / 365 如您的已计息金额为10BTC，当日年化利率为4.2%，则当日收益为10*4.2%/365=0.00115068 BTC</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="分币宝转入转出有限额吗？"
+              title="天天赚转入转出有限额吗？"
               name="55"
-            >目前平台对分币宝转入没有数量限制，在余额充足的情况下，可随意进行转入； 转出不可超过您的可转出额度（即已开始计算收益的资金）</van-collapse-item>
+            >目前平台对天天赚转入没有数量限制，在余额充足的情况下，可随意进行转入； 转出不可超过您的可转出额度（即已开始计算收益的资金）</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="分币宝转入转出有时间限制吗？"
+              title="天天赚转入转出有时间限制吗？"
               name="56"
             >根据平台规则，非周末公休日的节假日（如元旦、清明节、劳动节、端午节、中秋节、国庆节）不可进行转入、转出操作，其他时间平台可正常处理业务。</van-collapse-item>
           </div>

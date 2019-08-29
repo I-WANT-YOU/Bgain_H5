@@ -21,18 +21,18 @@
       <bgain-button
         type="info"
         :fluid="true"
-        @click="onPrevClick"
-        :style="{marginBottom: '30px'}"
+        @click="onSubmitClick"
+        :disabled="disabled"
       >
-        上一步
+        提交
       </bgain-button>
       <bgain-button
         type="info"
         :fluid="true"
-        @click="onSubmitClick"
-        :disabled="disabled"
+        @click="onPrevClick"
+        :style="{marginTop: '30px'}"
       >
-        确认
+        上一步
       </bgain-button>
     </div>
   </div>

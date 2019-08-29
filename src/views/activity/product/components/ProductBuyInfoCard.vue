@@ -11,7 +11,7 @@
         <div class="content__info">
           <div class="content__info-text van-ellipsis">{{dataSource.integral_product_name}}</div>
           <div class="content__info-text">
-            <span class="content__info-number">x1</span>{{price}}积分
+            <span class="content__info-number">x1</span>{{price}}BGP
           </div>
         </div>
       </div>

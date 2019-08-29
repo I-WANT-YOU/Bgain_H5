@@ -15,11 +15,11 @@
       </div>
       <div class="item">
         <span class="icon"></span>
-        <CollapseItem title="中途能否提前退出？" name="3">分币宝为固定收益类产品，封闭期内中途不支持提前退出。</CollapseItem>
+        <CollapseItem title="中途能否提前退出？" name="3">天天赚为固定收益类产品，封闭期内中途不支持提前退出。</CollapseItem>
       </div>
       <div class="item">
         <span class="icon"></span>
-        <CollapseItem title="中途能否转让？" name="4">分币宝为固定收益类产品，封闭期内中途不支持转让。</CollapseItem>
+        <CollapseItem title="中途能否转让？" name="4">天天赚为固定收益类产品，封闭期内中途不支持转让。</CollapseItem>
       </div>
       <div class="item">
         <span class="icon"></span>

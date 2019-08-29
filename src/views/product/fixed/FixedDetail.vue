@@ -168,7 +168,6 @@ export default {
           }
         });
       }, () => {
-        Toast('未登录');
         sessionStorage.setItem('loginFrom', `/product/fixed/${this.$route.params.id}`);
         this.$router.push('/login');
       });

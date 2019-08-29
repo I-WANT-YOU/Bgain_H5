@@ -5,12 +5,12 @@
         {{dataSource.receiver}}
         <span class="address__phone">{{dataSource.receiver_phone_num}}</span>
       </div>
-      <div
-        class="address__address"
-      >{{dataSource.province === dataSource.city ? '' : dataSource.province}}
-      {{dataSource.city}}
-      {{dataSource.region}}
-      {{dataSource.receiver_address}}</div>
+      <div class="address__address">
+        {{dataSource.province === dataSource.city ? '' : dataSource.province}}
+        {{dataSource.city}}
+        {{dataSource.region}}
+        {{dataSource.receiver_address}}
+      </div>
     </div>
     <svg-icon icon-class="next" class="icon-next" v-if="dataSource !== null" />
     <div class="address__wrapper--null" v-if="dataSource === null">

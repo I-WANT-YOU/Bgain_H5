@@ -68,11 +68,11 @@ export default {
   height: 130px;
   background: #3e66ee;
   &.active {
-    height: 48px;
+    height: 49px;
     background: #ffffff;
   }
   .title {
-    height: 48px;
+    height: 49px;
     display: flex;
     justify-content: space-between;
     align-items: center;

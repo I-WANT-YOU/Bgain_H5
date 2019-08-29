@@ -142,7 +142,7 @@ export default {
           },
           {
             icon: 'id-person',
-            label: '本人手持证件照',
+            label: '本人手持证件照和手写注释(Bgain, 当天日期)',
           },
         ],
         PASSPORT: [
@@ -152,7 +152,7 @@ export default {
           },
           {
             icon: 'id-person',
-            label: '本人手持证件照',
+            label: '本人手持证件照和手写注释(Bgain, 当天日期)',
           },
           {
             icon: '',
@@ -166,7 +166,7 @@ export default {
           },
           {
             icon: 'id-person',
-            label: '本人手持证件照',
+            label: '本人手持证件照和手写注释(Bgain, 当天日期)',
           },
           {
             icon: '',
@@ -326,7 +326,7 @@ export default {
     padding: 0 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    // align-items: center;
 
     .photo__wrapper {
       position: relative;
@@ -397,8 +397,13 @@ export default {
       }
     }
 
+    .photo__container{
+      margin-top: 15px;
+    }
+
     .photo__label {
       margin-top: 10px;
+      width: 98px;
       font-size: 12px;
       color: #0f3256;
       line-height: 17px;

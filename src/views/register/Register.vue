@@ -112,7 +112,7 @@
                 </div>
             </div>
             <div class="toLogin">
-                <span>已有账号？</span><router-link to="/login">登录</router-link>
+                <span>已有账号？</span><router-link to="/login" class="login"><span>登录</span><svg-icon icon-class="next" class="next"/></router-link>
             </div>
         </div>
         <Footer/>
@@ -126,9 +126,9 @@ import {
   Field, Toast, Checkbox, Button,
 } from 'vant';
 import { mapActions } from 'vuex';
+import Footer from '@component/Footer.vue';
 import errorMessage from '../../constants/responseStatus';
 import Header from '../../components/Header.vue';
-import Footer from '../../components/Footer.vue';
 import Geetest from '../../components/Geetest.vue';
 import showPasswordImg from '../../assets/images/showPassword.svg';
 import hidePasswordImg from '../../assets/images/display.svg';
@@ -414,11 +414,15 @@ export default {
     .register{
         font-family: PingFangSC-Regular;
         letter-spacing: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         // 是否隐藏form表单
         .content-hide{
             display: none;
         }
         .register-content{
+          flex: 1;
             .tabs{
                 margin:18px 0 13px 31px;
                 height: 30px;
@@ -533,13 +537,19 @@ export default {
                 margin-top:30px;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 >span{
                     font-size: 14px;
                     color: #999999;
                 }
-                >a{
+                .login{
                     font-size: 14px;
                     color: blue;
+                    .next{
+                      width: 9px;
+                      height: 12px;
+                      margin-left: 5px;
+                    }
                 }
             }
         }

@@ -27,26 +27,26 @@
     <!--会员积分和签到-->
     <div class="member-account" v-if="login">
       <!--积分-->
-      <div class="member-integral">
+      <div  @click="toRecord" class="member-integral">
         <div>
           <div>
-            <span>{{basicInfo.fbp_amt}}</span><span>积分</span>
+            <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span><span>积分</span>
           </div>
           <div>
             <span>BGP明细</span>
           </div>
         </div>
-        <div @click="toRecord">
+        <div>
           <img src="../../assets/images/active/integral.svg" alt="."/>
         </div>
       </div>
       <!--签到-->
-      <div class="member-sign">
+      <div class="member-sign" @click="signIn(isSign)" >
         <div>
           <span>{{isSign?'已签到':'签到'}}</span>
           <span>每日签到</span>
         </div>
-        <div @click="signIn(isSign)" >
+        <div>
           <img :src="isSign?signIcon:unSignIcon" alt="." :class="{signInImage:isSign}"/>
         </div>
       </div>
@@ -91,6 +91,7 @@
 import Vue from 'vue';
 import { Toast } from 'vant';
 import { mapState, mapActions } from 'vuex';
+import { numberWithThousands } from '@utils/tools';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import ActivityCenterSwipe from './components/ActivityCenterSwipe.vue';
 import GoodList from './components/GoodsList.vue';
@@ -201,6 +202,9 @@ export default {
     closeSignIn() {
       this.showSignIn = false;
       this.isSign = true;
+    },
+    numberWithThousands(num) {
+      return numberWithThousands(num);
     },
     onGoMemberPage() {
       this.$router.push({
