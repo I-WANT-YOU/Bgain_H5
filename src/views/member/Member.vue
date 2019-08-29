@@ -38,10 +38,10 @@
           <div class="text">快速获取BGP会员值</div>
           <div class="button" @click="onGoFundPage">前往理财</div>
         </div>
-        <div class="get">
+        <!-- <div class="get">
           <div class="text">邀请好友赚BGP</div>
           <div class="button" @click="onShare">分享好友</div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -77,6 +77,7 @@ export default {
       this.$router.push('/more-welfare');
     },
     onGoFundPage() {
+      this.$router.push('/product/fund');
     },
     onShare() { },
   },

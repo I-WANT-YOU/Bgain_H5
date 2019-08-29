@@ -34,8 +34,8 @@
         </div>
       </div>
       <div class="poundage">
-        认购手续费率{{rate}}，预估手续费
-        <span>{{poundage}}{{currency}}</span>
+        预估手续费
+        <span>{{currency === 'BGP' ? '0' : poundage}}{{currency}}</span>
       </div>
       <Button
         :class="['button',disabled ? 'disabled' : '']"

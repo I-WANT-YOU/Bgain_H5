@@ -101,17 +101,17 @@
         </div>
       </div>
       <div class="show">
-        <div>
+        <div @click="onDialog('在选定周期内任一历史时点往后推，产品净值走到最低点时的收益率回撤幅度的最大值')">
           <svg-icon icon-class="fund-retreat" />
           <div class="percent">{{fundDetail.max_retracement_scale * 1}}%</div>
           <div class="text">最大回撤</div>
         </div>
-        <div>
+        <div @click="onDialog('用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费后的净值')">
           <svg-icon icon-class="fund-managementfee" />
           <div class="percent">{{fundDetail.manage_fee_rate * 1}}%</div>
           <div class="text">管理费(年化)</div>
         </div>
-        <div>
+        <div @click="onDialog('用户投资收益应分配给基金管理人作为业绩报酬的部分')">
           <svg-icon icon-class="fund-meritpay" />
           <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
@@ -165,6 +165,15 @@
       @submit="setPayment"
       @cancel="cancelPayment"
     />
+    <BgainBaseDialog
+      v-model="showDialog"
+      :showCancel="false"
+      :showClose="false"
+      :content="dialogText"
+      submitText="我知道了"
+      title
+      @submit="()=>{this.showDialog = false}"
+    />
   </div>
 </template>
 
@@ -197,6 +206,8 @@ export default {
       payment: false,
       sellTime: '',
       isLogin: '',
+      showDialog: false,
+      dialogText: '',
     };
   },
   async mounted() {
@@ -206,17 +217,21 @@ export default {
       forbidClick: true,
       message: '加载中...',
     });
-    await this.getFundProductDetail(this.$route.params.id);
-    const time = this.fundDetail.next_open_date - this.fundDetail.server_time;
-    const dd = parseInt(time / (60 * 60 * 24 * 1000), 0);
-    const hh = parseInt((time / (60 * 60 * 1000)) % 24, 0);
-    const mm = parseInt((time / (60 * 1000)) % 60, 0);
-    this.sellTime = `${dd}天${hh.toString().length < 2 ? `0${hh}` : hh}小时${mm.toString().length < 2 ? `0${mm}` : mm}分`;
-    this.type = formatType(this.fundDetail).fund_product_type;
-    this.risk = formatRiskText(this.fundDetail).risk_level_type;
-    this.setEcharts();
-    this.showstep = this.fundDetail.status === 'OPEN';
-    Toast.clear();
+    try {
+      await this.getFundProductDetail(this.$route.params.id);
+      const time = this.fundDetail.next_open_date - this.fundDetail.server_time;
+      const dd = parseInt(time / (60 * 60 * 24 * 1000), 0);
+      const hh = parseInt((time / (60 * 60 * 1000)) % 24, 0);
+      const mm = parseInt((time / (60 * 1000)) % 60, 0);
+      this.sellTime = `${dd}天${hh.toString().length < 2 ? `0${hh}` : hh}小时${mm.toString().length < 2 ? `0${mm}` : mm}分`;
+      this.type = formatType(this.fundDetail).fund_product_type;
+      this.risk = formatRiskText(this.fundDetail).risk_level_type;
+      this.setEcharts();
+      this.showstep = this.fundDetail.status === 'OPEN';
+      Toast.clear();
+    } catch (error) {
+      Toast.clear();
+    }
   },
   methods: {
     ...mapActions({
@@ -226,6 +241,11 @@ export default {
     }),
     formatDate(date, format) {
       return formatDate(date, format);
+    },
+    // 点击最大回撤（3个）
+    onDialog(text) {
+      this.showDialog = true;
+      this.dialogText = text;
     },
     setEcharts() {
       this.chart_x = formatDate(this.fundNavHistories[this.fundNavHistories.length - 1].get_nav_time, 'MM-DD');
@@ -253,6 +273,7 @@ export default {
       try {
         await this.getUserSummary();
       } catch (error) {
+        window.sessionStorage.setItem('loginFrom', `/product/fund/noinitial/${this.fundDetail.id}`);
         throw error;
       }
       // 开放认购
@@ -266,18 +287,21 @@ export default {
       } else {
         this.showstep = true;
         if (this.authLevel) {
-          try {
-            await this.sendRemind({});
+          this.sendRemind({ fundId: this.fundDetail.id, openDate: this.fundDetail.next_open_date }).then(() => {
             Toast('到时会以短信或邮箱的形式提醒您');
-          } catch (error) {
-            Toast(responseStatus[error.status]);
-          }
+          }, (error) => {
+            if (error && error.status) {
+              Toast(responseStatus[error.status]);
+            }
+          });
         } else {
-          this.$router.push('/login');
+          window.sessionStorage.setItem('loginFrom', `/product/fund/noinitial/${this.fundDetail.id}`);
+          this.$router.push({ path: '/login' });
         }
       }
     },
     setPayment() {
+      sessionStorage.setItem('payment', `/product/fund/noinitial/${this.fundDetail.id}`);
       this.$router.push('/mine/safety/password/payment/set');
     },
     cancelPayment() {

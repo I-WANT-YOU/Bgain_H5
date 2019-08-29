@@ -21,6 +21,20 @@ class AuthService {
     }
   }
 
+  static async isLogin() {
+    try {
+      const requestOptions = {
+        url: '/auth/is-logged-in',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   static async logout() {
     try {
       const requestOptions = {

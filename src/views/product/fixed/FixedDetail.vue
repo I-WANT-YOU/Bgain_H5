@@ -74,37 +74,45 @@
     <div class="confirm" :class="{cancelMargin:msgFormSon}">
       <button @click="purchase">立即认购</button>
     </div>
-    <footer :class="{hideFooter:msgFormSon}">
-      <DownApp  @func="getMsgFormSon"/>
-    </footer>
+    <BgainBaseDialog
+      v-model="showDialog"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="()=>{sessionStorage.setItem('payment',`/product/fixed/${this.$route.params.id}`);this.$router.push('/mine/safety/password/payment/set');}"
+      @cancel="()=>{this.showDialog=false;}"
+    />
   </div>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import FixedDetailSteps from './components/FiedDetailSteps.vue';
 import errorMessage from '../../../constants/responseStatus';
-import DownApp from '../../../components/DownApp.vue';
 
 const { mapActions, mapState } = createNamespacedHelpers('product/fixed');
+const { mapActions: authMapActions } = createNamespacedHelpers('auth');
+const { mapActions: userMapActions, mapGetters } = createNamespacedHelpers('user');
 
 // noinspection ES6ShorthandObjectProperty
 export default {
   name: 'FixedDetail',
   components: {
     FixedDetailSteps,
+    BgainBaseDialog,
     // eslint-disable-next-line
     Toast,
-    DownApp,
   },
   data() {
     return {
       countDownTimeIsShow: false,
       countDownTimer: '',
       currentStep: 0,
-      msgFormSon: false,
       toChildDate: [],
+      msgFormSon: false,
+      showDialog: false,
     };
   },
   mounted() {
@@ -135,30 +143,41 @@ export default {
     ...mapState([
       'fixed',
     ]),
+    ...mapGetters(['authLevel']),
   },
   methods: {
     // 立即认购
     purchase() {
-      const info = JSON.stringify({
-        productId: this.$route.params.id,
-        support_fbp: this.fixed.support_fbp,
-        title: this.fixed.product_name,
-        expected_payment_date: this.fixed.expected_payment_date,
+      this.isLogin().then(() => {
+        this.getUserSummary().then(() => {
+          if (this.authLevel === 2) {
+            const info = JSON.stringify({
+              productId: this.$route.params.id,
+              support_fbp: this.fixed.support_fbp,
+              title: this.fixed.product_name,
+              expected_payment_date: this.fixed.expected_payment_date,
+            });
+            this.$router.push({
+              name: 'FixedPurchaseStepOne',
+              params: {
+                info,
+              },
+            });
+          } else {
+            this.showDialog = true;
+          }
+        });
+      }, () => {
+        Toast('未登录');
+        sessionStorage.setItem('loginFrom', `/product/fixed/${this.$route.params.id}`);
+        this.$router.push('/login');
       });
-      this.$router.push({
-        name: 'FixedPurchaseStepOne',
-        params: {
-          info,
-        },
-      });
-    },
-    // 从子组件获取参数
-    getMsgFormSon(data) {
-      this.msgFormSon = data;
     },
     ...mapActions(
       ['getFixedProductById'],
     ),
+    ...authMapActions(['isLogin']),
+    ...userMapActions(['getUserSummary']),
     // 返回上一层
     back() {
       this.$router.go(-1);
@@ -197,7 +216,6 @@ export default {
     },
     //  设置倒计时
     countDown(time) {
-      console.log(time);
       if (time - Date.now() < 0) {
         this.countDownTimeIsShow = false;
         return false;
@@ -499,12 +517,6 @@ export default {
         font-size: 16px;
         color: #FBFCFB;
       }
-    }
-    >footer{
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      left: 0;
     }
   }
 </style>

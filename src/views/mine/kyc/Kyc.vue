@@ -25,6 +25,9 @@
     <kyc-step-three
       v-if="step === 3"
       @submit="onSubmit"
+      @change-step="onChangeStep"
+      @changeTime="remainingTime"
+      :remainingTimeText="remainingTimeText"
     ></kyc-step-three>
   </div>
 </template>
@@ -64,6 +67,7 @@ export default {
       documentType: 'ID',
       documentNumber: '',
       files: ['', '', ''],
+      remainingTimeText: '',
     };
   },
   computed: {
@@ -121,9 +125,9 @@ export default {
         last_name: this.lastName,
         document_number: this.documentNumber,
         document_type: this.documentType,
+        user_name: this.username,
         token,
         img_url_1: this.files[0],
-        img_url_2: '',
         img_url_3: this.files[1],
       };
     },
@@ -151,6 +155,10 @@ export default {
       } else {
         this.$router.push('/mine/safety');
       }
+    },
+    remainingTime(time) {
+      console.log(time);
+      this.remainingTimeText = time;
     },
   },
 };

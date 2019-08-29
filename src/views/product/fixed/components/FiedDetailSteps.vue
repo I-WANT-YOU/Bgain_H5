@@ -3,7 +3,7 @@
     <div class="steps">
       <div class="step" v-for="step in steps" :key="step">
         <div class="drawing" >
-          <div class="circle" :class="{activeCircle:step<fatherCurrentStep}"></div>
+          <div class="circle" :class="{activeCircle:step<fatherCurrentStep, activeCircle:step === 0}"></div>
           <div class="x-line"  :class="{activeXLine:step<fatherCurrentStep}"></div>
         </div>
       </div>

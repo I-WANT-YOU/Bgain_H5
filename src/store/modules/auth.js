@@ -28,8 +28,23 @@ const actions = {
       if (data && data.accessToken) {
         commit(types.AUTHENTICATED);
         Auth.setToken(data.accessToken);
-        router.push('/');
+        const loginFrom = window.sessionStorage.getItem('loginFrom') || window.sessionStorage.getItem('fromLogin');
+        if (loginFrom) {
+          router.push(loginFrom);
+          window.sessionStorage.removeItem('loginFrom');
+          window.sessionStorage.removeItem('fromLogin');
+        } else {
+          router.push('/');
+        }
       }
+    } catch (error) {
+      throw error;
+    }
+  },
+  async isLogin() {
+    try {
+      const response = await AuthService.isLogin();
+      return Auth.handlerSuccessResponseV2(response);
     } catch (error) {
       throw error;
     }

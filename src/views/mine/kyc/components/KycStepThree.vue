@@ -13,11 +13,19 @@
         placeholder="请输入验证码"
       >
         <template v-slot:button>
-          <SendCode :autosend="true" @onsend="onSendToken"/>
+          <SendCode :autosend="true" @remainingTime="onTime" :remainingTimeText="remainingTimeText" @onsend="onSendToken"/>
         </template>
       </kyc-field>
     </cell-group>
     <div class="kyc__button-wrap">
+      <bgain-button
+        type="info"
+        :fluid="true"
+        @click="onPrevClick"
+        :style="{marginBottom: '30px'}"
+      >
+        上一步
+      </bgain-button>
       <bgain-button
         type="info"
         :fluid="true"
@@ -49,6 +57,7 @@ export default {
     KycField,
     SendCode,
   },
+  props: ['remainingTimeText'],
   data() {
     return {
       token: '',
@@ -77,18 +86,26 @@ export default {
     },
     async onSendToken() {
       try {
-        await this.getUserSummary();
-        await this.getToken({
-          username: this.username,
-          countryCode: this.countryCode,
-        });
-        Toast('发送验证码成功');
+        if (!this.remainingTimeText) {
+          await this.getUserSummary();
+          await this.getToken({
+            username: this.username,
+            countryCode: this.countryCode,
+          });
+          Toast('发送验证码成功');
+        }
       } catch (error) {
         Toast(error.message);
       }
     },
     onSubmitClick() {
       this.$emit('submit', this.token);
+    },
+    onPrevClick() {
+      this.$emit('change-step', 2);
+    },
+    onTime(time) {
+      this.$emit('changeTime', time);
     },
   },
 };

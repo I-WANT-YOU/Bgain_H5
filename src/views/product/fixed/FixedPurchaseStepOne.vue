@@ -34,7 +34,7 @@
         <div class="lestPurchase">
 
           <input ref='inputFile'
-                 :placeholder="'起投'+placeHolder"
+                 :placeholder="'起投' + placeHolder + (tabActiveType === 'FBP' ? 'BGP' : tabActiveType)"
                   v-model="investmentAmount"
           />
         </div>
@@ -235,8 +235,7 @@ export default {
       if (info.support_fbp === false) { // 不支持FBP购买
         this.isTabsShow = false; // 设置tabTitle不可见
         // 判断BTC/FBP余额是否大于起投金额 选择初始TAB页面（本页面接口）
-        console.log(localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount);
-        if (localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount) { // 本金>最小
+        if (localFixedBuyInfo.balance * 1 >= localFixedBuyInfo.min_inverst_amount * 1) { // 本金>最小
           this.canUseCurrency = true; // 币种可以购买
           this.placeHolder = localFixedBuyInfo.min_inverst_amount;
           this.AllAccount = localFixedBuyInfo.balance; // 余额
@@ -249,14 +248,14 @@ export default {
       } else { // 支持FBP购买
         this.isTabsShow = true; // Tba可切换
         // 判断BTC/FBP余额是否大于起投金额 选择初始TAB页面（本页面接口）
-        if (localFixedBuyInfo.balance >= localFixedBuyInfo.min_inverst_amount) {
+        if (localFixedBuyInfo.balance * 1 >= localFixedBuyInfo.min_inverst_amount * 1) {
           this.tabActiveCurrency = true; // tab页面为币种
           this.canUseCurrency = true; // 币种可以购买
           this.tabActiveType = localFixedBuyInfo.currency; // 认购数量
           this.placeHolder = localFixedBuyInfo.min_inverst_amount;
           this.AllAccount = localFixedBuyInfo.balance; // 余额
           // 判断FBP是否有足够余额
-          if (localFixedBuyInfo.balance_fbp >= localFixedBuyInfo.min_inverst_amount_fbp) {
+          if (localFixedBuyInfo.balance_fbp * 1 >= localFixedBuyInfo.min_inverst_amount_fbp * 1) {
             this.canUseFBP = true; // FBP可以购买
           } else {
             this.canUseFBP = false; // FBP不可以购买
@@ -264,7 +263,7 @@ export default {
         } else {
           this.canUseCurrency = false; // BTC不可以购买
           // 判断FBP是否有足够余额
-          if (localFixedBuyInfo.balance_fbp >= localFixedBuyInfo.min_inverst_amount_fbp) {
+          if (localFixedBuyInfo.balance_fbp * 1 >= localFixedBuyInfo.min_inverst_amount_fbp * 1) {
             this.tabActiveFBP = true; // tab页面为FBP
             this.tabActiveType = 'FBP'; // 认购数量
             this.canUseFBP = true; // FBP可以购买
@@ -416,7 +415,7 @@ export default {
         display: flex;
         justify-content: center;
         >span{
-          width: 61px;
+          // width: 61px;
           padding-top: 15px;
           height: 21px;
         }

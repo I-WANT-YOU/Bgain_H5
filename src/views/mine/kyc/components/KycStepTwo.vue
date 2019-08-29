@@ -68,6 +68,14 @@
     </div>
     <div class="kyc__button-wrap">
       <bgain-button type="info" :fluid="true" @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
+      <bgain-button
+        type="info"
+        :fluid="true"
+        @click="onPrevClick"
+        :style="{marginTop: '30px'}"
+      >
+        上一步
+      </bgain-button>
     </div>
     <Popup v-model="showPicker" position="bottom">
       <Picker

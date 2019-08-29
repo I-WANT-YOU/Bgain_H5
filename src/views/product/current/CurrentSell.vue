@@ -94,8 +94,12 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
-    await this.fetchSellInfo(this.currency);
-    Toast.clear();
+    try {
+      await this.fetchSellInfo(this.currency);
+      Toast.clear();
+    } catch (error) {
+      Toast('未登录');
+    }
   },
   methods: {
     ...mapActions(['getCurrentSellInfo', 'sellCurrentProduct']),
@@ -104,7 +108,7 @@ export default {
       try {
         await Promise.all([this.getCurrentSellInfo(currency), this.getUserSummary()]);
       } catch (error) {
-        // Toast(error.message);
+        Toast('未登录');
       }
     },
     onClickAll() {

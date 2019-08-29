@@ -55,7 +55,7 @@ export default {
         await this.getHistoryProfit(currency);
         this.isLoading = false;
       } catch (error) {
-        Toast(error.message);
+        Toast('未登录');
         this.isLoading = false;
       }
     },

@@ -151,8 +151,10 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
     yAxis: {
       show: true,
       type: 'value',
-      min: strip(min - num, 3),
-      max: strip(max * 1 + num, 3),
+      // min: strip(min - num, 3),
+      // max: strip(max * 1 + num, 3),
+      min: strip(min - (max - min) * 1.2, 1),
+      max: strip(max + (max - min) * 1.2, 1),
       axisLabel: {
         show: true,
         textStyle: {
@@ -167,7 +169,10 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
         },
       },
       splitLine: {
-        show: false,
+        show: true,
+        lineStyle: {
+          color: '#eeeeee',
+        },
       },
       axisTick: {
         show: false,
@@ -183,10 +188,19 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
         color: '#4770F5',
       },
       areaStyle: {
-        origin: 'auto',
-        normal: {
-          opacity: 0.2,
-          color: '#C6D0F0',
+        origin: 'start',
+        opacity: 0.4,
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0, color: '#C6D0F0', // 0% 处的颜色
+          }, {
+            offset: 1, color: '#ffffff', // 100% 处的颜色
+          }],
         },
       },
     }],

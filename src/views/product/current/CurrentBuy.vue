@@ -114,7 +114,7 @@ export default {
       try {
         await Promise.all([this.getCurrentBuyInfo(currency), this.getUserSummary()]);
       } catch (error) {
-        Toast(error.message);
+        Toast('未登录');
       }
     },
     async onBuyClick() {

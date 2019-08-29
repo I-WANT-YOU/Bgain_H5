@@ -1,14 +1,8 @@
 <template>
-  <Popup
-    class="menu"
-    v-bind="$attrs"
-    v-on="$listeners"
-    :overlay="false"
-    position='right'
-  >
+  <Popup class="menu" v-bind="$attrs" v-on="$listeners" position="right">
     <div class="menu-header">
       <div @click="onClose" class="menu-close">
-        <svg-icon class="menu-icon" icon-class="mine-more2" />
+        <svg-icon class="menu-icon" icon-class="mine-more" />
       </div>
     </div>
     <div class="menu-con">
@@ -40,6 +34,7 @@ export default {
         { text: '我的', path: '/mine' },
         { text: '联系我们', path: '/contact-us' },
         { text: '消息中心', path: '/message/message' },
+        { text: '活动中心', path: '/activity' },
       ],
     };
   },
@@ -55,22 +50,25 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .menu {
-  width: 100%;
-  height: 100%;
   position: fixed;
-  left: 0;
-  right: 0;
-  padding: 0 20px;
+  height: 100%;
   box-sizing: border-box;
   background: #ffffff;
+  z-index: 3000;
+  width: 35%;
   .menu-header {
+    padding: 0 20px;
     height: 46px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    background-color: #3c64ee;
     .menu-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       .menu-icon {
         width: 16px;
         height: 14px;
@@ -78,13 +76,14 @@ export default {
     }
   }
   .menu-con {
+    padding: 0 20px;
     .item {
       position: relative;
       height: 41px;
       line-height: 41px;
       font-size: 15px;
       color: #002262;
-      text-align: left;
+      text-align: center;
       &::after {
         position: absolute;
         box-sizing: border-box;

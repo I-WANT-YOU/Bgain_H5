@@ -52,7 +52,7 @@
                                         >
                                         </Checkbox>
                                       <span>
-                                        我已阅读并同意<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/service')">《服务协议》</a>和<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/privacy')">《隐私政策》</a>
+                                        我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
                                       </span>
                                     </div>
                             </div>
@@ -100,7 +100,7 @@
                                   >
                                   </Checkbox>
                                   <span>
-                                    我已阅读并同意<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/service')">《服务协议》</a>和<a @click="onSkip('http://dev.xjetry.top:83/#/agreement/privacy')">《隐私政策》</a>
+                                    我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
                                   </span>
                                 </div>
                             </div>
@@ -404,8 +404,7 @@ export default {
     },
     onError() {},
     onSkip(router) {
-      console.log('1');
-      window.location.href = router;
+      this.$router.push(router);
     },
   },
 };

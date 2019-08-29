@@ -4,7 +4,7 @@
     <div class="detail-list">
       <div class="detail-item" v-for="(item,index) in detailList.operation_logs" :key="index">
         <div>
-          <span>{{item.currency_type}}</span>
+          <span>{{changeTr(item.transaction_type)}}</span>
           <span>{{item.fbp_type === 'INCREASE'?'+':'-'}}{{item.amount}}</span>
         </div>
         <div>
@@ -41,6 +41,112 @@ export default {
     // 时间格式化
     createOrderDate(date) {
       return formatDate(date);
+    },
+    changeTr(type) {
+      switch (type) {
+        case 'DEPOSIT':
+          type = '充币';
+          break;
+        case 'WITHDRAWAL':
+          type = '提币';
+          break;
+        case 'BUY':
+          type = '认购';
+          break;
+        case 'INVITATION':
+          type = '注册奖励';
+          break;
+        case 'SELL':
+          type = '投资回款';
+          break;
+        case 'COMMISSION':
+          type = '佣金奖励';
+          break;
+        case 'EXPERIENCE_PROFIT':
+          type = '体验金收益';
+          break;
+        case 'EXPERIENCE_PROFIT_RESET':
+          type = '体验金收益清零';
+          break;
+        case 'TRANSFER':
+          type = '转出';
+          break;
+        case 'RECEIVE':
+          type = '转入';
+          break;
+        case 'INTEREST':
+          type = '利息收益';
+          break;
+        case 'FBP_BONUS_REG':
+          type = '注册奖励';
+          break;
+        case 'FBP_BONUS_KYC':
+          type = '身份认证';
+          break;
+        case 'FBP_BONUS_INIT_DEPOSIT':
+          type = '首充';
+          break;
+        case 'FBP_BONUS_INIT_BUY':
+          type = '首投';
+          break;
+        case 'FBP_BONUS_BUY':
+          type = '认购';
+          break;
+        case 'CURRENT_BUY':
+          type = '天天赚转入';
+          break;
+        case 'CURRENT_SELL':
+          type = '天天赚转出';
+          break;
+        case 'FBP_PRIZEPOOL_BUY':
+          type = '活动消耗';
+          break;
+        case 'PRIZEPOOL_PROFIT':
+          type = '活动奖金';
+          break;
+        case 'FUND_BUY':
+          type = '认购基金';
+          break;
+        case 'FUND_SELL':
+          type = '赎回基金';
+          break;
+        case 'FBP_FUNDING_HOLDING':
+          type = '基金奖励';
+          break;
+        case 'FUND_BUY_CANCEL':
+          type = '认购撤单';
+          break;
+        case 'ACTIVITY_BONUS_REG':
+          type = '注册奖励';
+          break;
+        case 'ACTIVITY_BONUS_KYC':
+          type = '身份认证奖励';
+          break;
+        case 'ACTIVITY_BONUS_FIRST_DEPOSIT':
+          type = '首充奖励';
+          break;
+        case 'ACTIVITY_BONUS_BUY':
+          type = '投资奖励';
+          break;
+        case 'ACTIVITY_INVITED_BUY':
+          type = '活动奖励';
+          break;
+        case 'OTC_BUY':
+          type = '买币';
+          break;
+        case 'FBP_SUBSCRIBE':
+          type = '积分消耗';
+          break;
+        case 'FBP_MEMBERSHIP_SIGN':
+          type = '签到';
+          break;
+        case 'FBP_CONVERT':
+          type = '积分兑换';
+          break;
+        default:
+          break;
+      }
+      return type;
     },
   },
   mounted() {

@@ -24,6 +24,10 @@
             :options="noInitial"
             :key="noInitial.id"
           />
+          <div v-if="!(showotherFunds.length + showInitialFunds.length)" class="no-has">
+            <svg-icon icon-class="mine-fund-no-record" class="icon-no" />
+            <div>暂无相关产品</div>
+          </div>
         </div>
       </pull-refresh>
     </div>
@@ -188,6 +192,17 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
+      .no-has {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 14px;
+        color: #999999;
+        .icon-no {
+          width: 102px;
+          height: 78px;
+          margin-bottom: 10px;
+        }
+      }
     }
     .fund-products-list-item {
       width: 335px;
