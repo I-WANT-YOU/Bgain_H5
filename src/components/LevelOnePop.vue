@@ -8,7 +8,7 @@
     <!--y-line-->
     <div class="line-container"><div class="y-line"></div></div>
     <div class="lightBox">
-      <p class="content-title">新人礼 请查收</p>
+      <p class="content-title">BGP大礼 请查收</p>
       <div class="content-info">
           <div class="info-item">
             <div>
@@ -25,7 +25,7 @@
           <div>
             <p class="placeHolder" v-show="!showData.is_kyc"></p>
             <van-image :src="checkImage" class="check-icon" v-show="showData.is_kyc" />
-            <span>身份认证</span>
+            <span>KYC身份认证</span>
           </div>
           <div>
             <van-image :src="showData.is_kyc?coinLight:coinDark" class="coin-icon"/>
@@ -47,7 +47,7 @@
           <div>
             <p class="placeHolder" v-show="!showData.is_buy"></p>
             <van-image :src="checkImage" class="check-icon" v-show="showData.is_buy"/>
-            <span>首次投资</span>
+            <span>首次投资定期盈</span>
           </div>
           <div>
             <van-image :src="showData.is_buy?coinLight:coinDark" class="coin-icon"/>
@@ -57,7 +57,7 @@
         </div>
       <!--按钮-->
       <div class="button-container">
-        <button>去身份认证</button>
+        <button @click="onKyc">去买币/充币</button>
       </div>
       <!--text文字-->
       <div class="text-container">
@@ -72,6 +72,7 @@
 
 <script>
 import { Image } from 'vant';
+import { mapState } from 'vuex';
 import boxImage from '../assets/images/levelOnePop/box.png';
 import checkImage from '../assets/images/levelOnePop/check.png';
 import coinDark from '../assets/images/levelOnePop/coin_dark.png';
@@ -96,9 +97,22 @@ export default {
   components: {
     'van-image': Image,
   },
+  mounted() {
+    console.log(this.showData);
+  },
+  computed: {
+    ...mapState('auth', ['authenticated']),
+  },
   methods: {
     closePop() {
-      this.show = 'none';
+      this.$emit('close');
+    },
+    onKyc() {
+      if (this.authenticated) {
+        this.$router.push('/mine/safety/kyc');
+      } else {
+        this.$router.push('/login');
+      }
     },
   },
 };

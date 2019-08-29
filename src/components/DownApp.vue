@@ -1,10 +1,10 @@
 <template>
 <div class="downApp" :class="{isNotShow:isNotShow}">
-  <div class="close"    @click="close">
+  <div class="close" @click="close">
     <img src="../assets/images/downapp/close.svg"/>
   </div>
-  <div class="down" >
-    <button>下载</button>
+  <div class="downApp-down" >
+    <button @click="onSkip">下载</button>
   </div>
 </div>
 </template>
@@ -22,6 +22,9 @@ export default {
       this.isNotShow = true;
       this.$emit('func', this.isNotShow);
     },
+    onSkip() {
+      window.location.href = 'https://fir.im/ngaw';
+    },
   },
 };
 </script>
@@ -36,6 +39,9 @@ export default {
   width: 100%;
   background:url(../assets/images/downapp/background.svg) no-repeat ;
   background-size: 100% 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   .close{
     position: absolute;
     top:8.8px;
@@ -48,12 +54,11 @@ export default {
         height: 10px;
       }
   }
-  .down{
-    position: absolute;
+  .downApp-down{
     width: 68px;
     height: 28px;
-    top:5px;
-    left: 281px;
+    margin-right: 20px;
+    display: flex;
     >button{
       width: 68px;
       height: 28px;

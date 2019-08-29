@@ -11,7 +11,7 @@ const state = {
 
 const getters = {
   announcement: state => get(state.infos, 'announcement_system_index', {}),
-  banners: state => get(state.infos, 'banner_list', []),
+  banners: state => get(state.infos, 'banner_list', [1, 2]),
   funds: state => get(state.infos, 'fund_product_list', []),
   currents: state => get(state.infos, 'current_product_list', []),
   fixeds: state => get(state.infos, 'fix_product_summary_list', []),

@@ -5,7 +5,7 @@
         <svg-icon icon-class="logo" class="logo-icon" />
       </div>
       <div class="user-img">
-        <div @click="()=>{this.$router.push({name:'login'})}">
+        <div v-show="userStatus === 'login'" @click="onSafety">
           <svg-icon icon-class="user_write" class="user-icon" />
         </div>
         <div @click="onMenu">
@@ -14,7 +14,7 @@
       </div>
     </header>
     <!--all-->
-    <HomeSwipe />
+    <HomeSwipe ref="my-swiper" />
     <!--all-->
     <div class="home-tip-container">
       <HomeTip />
@@ -33,14 +33,21 @@
     </div>
     <!--信息列表-->
     <div class="list-container">
-      <HomeProductList />
+      <HomeProductList @initSwiper="()=>{
+          this.$nextTick(() => {
+            this.$refs['my-swiper'].initSwiper();
+          });
+        }" />
     </div>
     <div class="footer">
       <BaseFooter />
     </div>
     <!--一级页面强制弹窗-->
-    <LevelOnePop :showData="popInfo" :show="isPopShow" />
+    <!-- <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" /> -->
     <Menu v-model="showMenu" @close="showMenu=false"/>
+    <div class="footer-fixed">
+      <DownApp @func="getMsgFormSon" />
+    </div>
   </div>
 </template>
 
@@ -48,6 +55,7 @@
 import { mapActions, mapState } from 'vuex';
 import { Toast } from 'vant';
 import Menu from '@component/mine/Meun.vue';
+import DownApp from '@component/DownApp.vue';
 import errorMessage from '../../constants/responseStatus';
 import HomeSwipe from './components/HomeSwipe.vue';
 import HomeTip from './components/HomeTip.vue';
@@ -57,7 +65,7 @@ import HomeProductList from './components/HomeProductList.vue';
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
-import LevelOnePop from '../../components/LevelOnePop.vue';
+// import LevelOnePop from '../../components/LevelOnePop.vue';
 
 export default {
   name: 'RegisterHome',
@@ -69,18 +77,20 @@ export default {
     HomeGuide,
     HomeNotice,
     BaseFooter,
-    LevelOnePop,
+    // LevelOnePop,
     Menu,
+    DownApp,
   },
   data() {
     return {
       isPopShow: 'none', // 一级弹窗
-      userStatus: '',
+      userStatus: 'unLogin',
       kyc_status: 0, // 是否身份认证
       setPassword: 0, // 是否设置了交易密码
       record: 0, // 是否有充值记录
       guideStatus: false, // 新手引导
       showMenu: false,
+      msgFormSon: false,
     };
   },
   computed: {
@@ -93,14 +103,30 @@ export default {
     ]),
   },
   mounted() {
-    // 判断用户是否登陆
-    if (!localStorage.getItem('access_token')) { // 未登录
-      this.userStatus = 'unLogin';
-    } else {
+    // 获取页面所有信息
+    // this.getPopInfo().then(
+    //   () => {
+    //     try {
+    //       if (this.popInfo.is_popup_window === 0) {
+    //         this.isPopShow = 'none';
+    //       } else {
+    //         this.isPopShow = 'block';
+    //       }
+    //     } catch (e) {
+    //       throw new Error(e);
+    //     }
+    //   },
+    //   (err) => {
+    //     if (err.status) {
+    //       Toast(errorMessage[err.status]);
+    //     } else {
+    //       Toast('网络错误');
+    //     }
+    //   },
+    // );
+    // 用户登陆 验证用户信息 // 判断用户是否登陆
+    this.isLogin().then(() => {
       this.userStatus = 'login';
-    }
-    // 用户登陆 验证用户信息
-    if (this.userStatus === 'login') {
       Promise.all([this.getRecord(), this.getUserSummary()]).then(
         () => {
           // 是否有充值记录
@@ -110,15 +136,17 @@ export default {
             this.record = 0;
           }
           // 判断用户是否身份认证
-          if (this.basicInfo.kyc_stauts === 'UN_CERTIFIED') { // 未认证
+          if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'UN_CERTIFIED') { // 未认证
             this.kyc_status = 0;
           } else {
             this.kyc_status = 1;
           }
+          // console.log(this.basicInfo.kyc_stauts);
           // 判断用户是否设置了支付密码
-          if (this.basicInfo.authlevel === '2') { // 未认证
+          // console.log(this.basicInfo.authlevel);
+          if (this.basicInfo.authlevel * 1 === 2) {
             this.setPassword = 1;
-          } else if (this.basicInfo.authlevel === '1') {
+          } else if (this.basicInfo.authlevel * 1 === 1) { // 未认证
             this.setPassword = 0;
           }
           if (this.record && this.kyc_status && this.setPassword) {
@@ -136,41 +164,34 @@ export default {
           }
         },
       );
-    }
-
-    // 获取页面所有信息
-    this.getPopInfo().then(
-      () => {
-        try {
-          if (this.popInfo.is_popup_window === 0) {
-            this.isPopShow = false;
-          } else {
-            this.isPopShow = true;
-          }
-        } catch (e) {
-          throw new Error(e);
-        }
-      },
-      (err) => {
-        if (err.status) {
-          Toast(errorMessage[err.status]);
-        } else {
-          Toast('网络错误');
-        }
-      },
-    );
+    }, (err) => {
+      this.userStatus = 'unLogin';
+      if (err && err.status) {
+        Toast(errorMessage[err.status]);
+      }
+    });
   },
   methods: {
     // 触发action的方法 getRecord
     ...mapActions('user', [
       'getUserSummary',
     ]),
+    ...mapActions('auth', [
+      'isLogin',
+    ]),
     ...mapActions('home', [
       'getRecord',
       'getPopInfo',
     ]),
+    // 从子组件获取参数
+    getMsgFormSon(data) {
+      this.msgFormSon = data;
+    },
     onMenu() {
       this.showMenu = true;
+    },
+    onSafety() {
+      this.$router.push('/mine/safety');
     },
   },
 };
@@ -185,13 +206,14 @@ export default {
   > header {
     width: 100%;
     height: 49px;
-    line-height: 49px;
     background-color: #3c64ee;
     text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
     .logo-img {
+      display:flex;
+      align-items: center;
       padding-left: 22.5px;
       .logo-icon {
         width: 71.5px;
@@ -217,7 +239,7 @@ export default {
       }
       .more-icon {
         width: 16px;
-        height: 14px;
+        height: 15px;
       }
     }
   }
@@ -241,6 +263,13 @@ export default {
   }
   .footer {
     margin-top: 24px;
+  }
+  .footer-fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
   }
 }
 </style>

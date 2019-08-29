@@ -200,6 +200,24 @@ class FundService {
       throw new Error(error);
     }
   }
+
+  static async sendRemind(options) {
+    try {
+      const requestOptions = {
+        url: '/fund/remind',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: {
+          fund_id: options.fundId,
+          open_date: options.openDate,
+        },
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default FundService;

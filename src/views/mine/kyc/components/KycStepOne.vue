@@ -18,7 +18,7 @@
           @input="onFirstNameInput"
           label="姓名"
           placeholder="请输入真实姓名"
-          v-if="country.key === 'China'"
+          v-if="country.key === 'China' || this.country.key === 'Hongkong' || this.country.key === 'Taiwan'"
         ></kyc-field>
         <template v-else>
           <kyc-field
@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     disabled() {
-      if (this.country.key === 'China') {
+      if (this.country.key === 'China' || this.country.key === 'Hongkong' || this.country.key === 'Taiwan') {
         return isEmpty(this.firstName);
       }
       return isEmpty(this.firstName) || isEmpty(this.lastName);

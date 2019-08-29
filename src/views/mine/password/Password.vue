@@ -1,6 +1,6 @@
 <template>
   <div class="password__container">
-    <BgainNavBar title="密码设置"/>
+    <BgainNavBar :onArrowClick="()=>{this.$router.push('/mine/safety')}"  title="密码设置"/>
     <div class="password__content">
       <cell-group :hasMargin="true">
         <cell title="修改登录密码" :to="{name: 'change-login-password'}">
@@ -37,6 +37,12 @@ export default {
     ...mapGetters(['authLevel']),
   },
   async mounted() {
+    if (this.$route.query.status && this.$route.query.status === 'success') {
+      Toast({
+        message: '修改登录密码成功',
+        duration: 1000,
+      });
+    }
     try {
       await this.getUserSummary();
     } catch (error) {

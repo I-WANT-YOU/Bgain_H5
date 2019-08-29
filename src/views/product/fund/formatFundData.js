@@ -40,6 +40,29 @@ export const formatType = (data) => {
   return data;
 };
 
+export const formatType2 = (type) => {
+  switch (type) {
+    case 'SmartBeta':
+      type = '指数型';
+      break;
+    case 'Arbitrage':
+      type = '套利';
+      break;
+    case 'HighFrequency':
+      type = '高频';
+      break;
+    case 'MixedStrategies':
+      type = '混合';
+      break;
+    case 'CTA':
+      type = 'CTA';
+      break;
+    default:
+      break;
+  }
+  return type;
+};
+
 // 风险等级
 export const formatRiskText = (data) => {
   switch (data.risk_level_type) {
@@ -128,8 +151,10 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
     yAxis: {
       show: true,
       type: 'value',
-      min: strip(min - num, 3),
-      max: strip(max * 1 + num, 3),
+      // min: strip(min - num, 3),
+      // max: strip(max * 1 + num, 3),
+      min: strip(min - (max - min) * 1.2, 1),
+      max: strip(max + (max - min) * 1.2, 1),
       axisLabel: {
         show: true,
         textStyle: {
@@ -144,7 +169,10 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
         },
       },
       splitLine: {
-        show: false,
+        show: true,
+        lineStyle: {
+          color: '#eeeeee',
+        },
       },
       axisTick: {
         show: false,
@@ -160,9 +188,19 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
         color: '#4770F5',
       },
       areaStyle: {
-        normal: {
-          opacity: 0.2,
-          color: '#C6D0F0',
+        origin: 'start',
+        opacity: 0.4,
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0, color: '#C6D0F0', // 0% 处的颜色
+          }, {
+            offset: 1, color: '#ffffff', // 100% 处的颜色
+          }],
         },
       },
     }],

@@ -32,11 +32,11 @@ export const equitys = [
   },
   {
     icon: 'member-cash-withdrawal',
-    text: '提现手续费卷',
+    text: '提现手续费券',
   },
   {
     icon: 'member-conduct-financial',
-    text: '理财优惠卷',
+    text: '理财优惠券',
   },
   {
     icon: 'member-Investment',

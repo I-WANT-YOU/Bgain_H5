@@ -7,10 +7,10 @@
         v-for="record in dataSource"
         :key="record.id">
         <div class="card__wrapper--left">
-          <div class="card__label">{{getTransactionType(record.transactionType)}}</div>
+          <div class="card__label">{{getTransactionType(record.transaction_type)}}</div>
           <div class="card__date">{{getDate(record.createAt)}}</div>
         </div>
-        <div class="card__balance">{{getSymbol(record.transactionType)}}{{record.amount}}</div>
+        <div class="card__balance">{{getSymbol(record.transaction_type)}}{{record.amount}}</div>
       </div>
     </div>
     <balance-records-empty v-else title="暂无交易记录" :currency="currency"/>

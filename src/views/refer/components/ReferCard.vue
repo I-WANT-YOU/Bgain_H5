@@ -1,7 +1,7 @@
 <template>
   <div class="refer-card">
     <div v-if="tab === '1'" class="con">
-      <span>+86 {{option.username}}</span>
+      <span>{{option.username}}</span>
       <span class="time">注册时间 {{formatDate(option.invite_time)}}</span>
     </div>
     <div v-if="tab === '2'" class="con1">

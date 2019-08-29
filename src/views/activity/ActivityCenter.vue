@@ -1,8 +1,8 @@
 <template>
   <div class="activity__container" :class="{setContainer:showSignIn}">
-    <nav-bar title="活动中心" />
+    <nav-bar title="活动中心" :onArrowClick="()=>{this.$router.push('/mine')}" />
     <!--会员值 已登陆-->
-    <div class="member-num" v-if="isLogin === true" @click="onGoMemberPage">
+    <div class="member-num" v-if="login === true" @click="onGoMemberPage">
       <div class="background">
         <div class="member-info">
           <span>{{userLevel}}</span>
@@ -14,18 +14,18 @@
       </div>
     </div>
     <!--未登录-->
-    <div class="member-num-unLogin"  v-else>
+    <div class="member-num-unLogin" @click="onLogin" v-else>
       <div class="background">
         <span>领取会员权益，获得更多奖励</span>
         <div>
-          <span @click="onLogin">登录</span>
+          <span>登录</span>
           <span>/</span>
-          <span @click="onRegister">注册</span>
+          <span>注册</span>
         </div>
       </div>
     </div>
     <!--会员积分和签到-->
-    <div class="member-account" v-if="isLogin">
+    <div class="member-account" v-if="login">
       <!--积分-->
       <div class="member-integral">
         <div>
@@ -33,7 +33,7 @@
             <span>{{basicInfo.fbp_amt}}</span><span>积分</span>
           </div>
           <div>
-            <span>FBP明细</span>
+            <span>BGP明细</span>
           </div>
         </div>
         <div @click="toRecord">
@@ -72,7 +72,7 @@
         <div>
           <span>获得&nbsp;</span>
           <span>{{isSignInInfo.fbp_amount}}</span>
-          <span>&nbsp;FBP</span>
+          <span>&nbsp;BGP</span>
         </div>
         <div>
           <span>已连续签到&nbsp;</span>
@@ -111,7 +111,7 @@ export default {
   data() {
     return {
       levelImg: '',
-      isLogin: false, // 是否登陆
+      login: false, // 是否登陆
       isLoginText: '已签到',
       isSign: false, // 是否签到
       signIcon,
@@ -135,6 +135,9 @@ export default {
     ...mapActions('activity', [
       'getBgpProducts',
       'getBanner',
+    ]),
+    ...mapActions('auth', [
+      'isLogin',
     ]),
 
     // 跳往记录页面
@@ -205,8 +208,8 @@ export default {
       });
     },
     onLogin() {
-    },
-    onRegister() {
+      sessionStorage.setItem('loginFrom', '/activity');
+      this.$router.push('/login');
     },
   },
   computed: {
@@ -228,6 +231,7 @@ export default {
         }
       },
     );
+
     // 获取商品信息
     this.getBgpProducts().then(
       () => {},
@@ -238,22 +242,26 @@ export default {
       },
     );
 
-    this.getUserSummary().then(
-      () => {
-        Toast.clear();
-        this.formatUserInfo(this.basicInfo);// 获取数据
-        // 判断用户是否签到
-        this.isLogin = true;
-        this.isSign = this.basicInfo.had_membership_sign;
-      },
-      (err) => {
-        this.$toast.clear();
-        this.isLogin = false;
-        if (err.status) { this.$toast(errorMessage[err.status]); } else {
-          this.$toast('网络故障');
-        }
-      },
-    );
+    // 是否登录
+    this.isLogin().then(() => {
+      this.login = true;
+      this.getUserSummary().then(
+        () => {
+          Toast.clear();
+          this.formatUserInfo(this.basicInfo);// 获取数据
+          // 判断用户是否签到
+          this.isSign = this.basicInfo.had_membership_sign;
+        },
+        (err) => {
+          this.$toast.clear();
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('未登录');
+          }
+        },
+      );
+    }, () => {
+      this.login = false;
+    });
   },
   beforeDestroy() {
     Toast.clear();

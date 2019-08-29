@@ -1,14 +1,14 @@
 <template>
   <div class="product-list">
     <div class="tab-title">
-      <div @click="changeUnderLine(0)" :class="{underLine:activeLine===0}">
+      <div @click="changeUnderLine(0)" :class="{underLine:activeLine===0,fund:'fund'}">
         <span>基金涨幅榜</span>
       </div>
       <div @click="changeUnderLine(1)" :class="{underLine:activeLine===1}">
-        <span>活期</span>
+        <span>天天赚</span>
       </div>
       <div @click="changeUnderLine(2)" :class="{underLine:activeLine===2}">
-        <span>定期</span>
+        <span>定期盈</span>
       </div>
     </div>
     <div class="tab-content">
@@ -26,15 +26,17 @@
                 <span>{{ item.fund_product_name }}</span>
                 <div>
                   <img :src="initialSrc" v-show="item.status==='INITIAL'" />
-                  <div>{{item.fund_product_type}}</div>
+                  <svg-icon icon-class="bgp" v-show="item.is_support_fbp" class="bgp"/>
+                  <div>{{formatType2(item.fund_product_type)}}</div>
                   <div>{{item.risk_level_type.substring(0,2)}}</div>
                 </div>
               </div>
               <div class="item-two">{{ item.current_nav }}</div>
               <div class="item-three">
-                <span>
+                <span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'
+                    : item.total_ups_and_downs * 1 === 0 ? 'none' : '' ]">
                   {{item.total_ups_and_downs.substring(0,1)==='-' ?
-                  item.total_ups_and_downs: `+${item.total_ups_and_downs}` }}
+                  `${item.total_ups_and_downs}%`: item.total_ups_and_downs * 1 === 0 ? '0.00%' : `+${item.total_ups_and_downs}%` }}
                 </span>
                 <div>
                   <img alt="." src="../../../assets/images/next.svg" />
@@ -55,6 +57,7 @@
           <li v-for="(item,index) in currents" @click="goCurrent(item.currency_type)" :key="item.id">
             <div class="current-li-style">
               <div>
+                <img :src="item.icon_url" class="current-li-style-icon" alt="">
                 <span>{{ item.currency_type }}</span>
               </div>
               <div>
@@ -65,7 +68,7 @@
                 ></div>
               </div>
               <div>
-                <span>{{ item.today_annualized_interest_rate }}</span>
+                <span>{{ `${item.today_annualized_interest_rate }%`}}</span>
                 <div>
                   <img alt="." src="../../../assets/images/next.svg" />
                 </div>
@@ -85,13 +88,14 @@
           <li v-for="(item) in fixeds" :key="item.id" @click="stepToFixDetail(item.id)">
             <div class="fix-li-style">
               <div>
+                <img :src="item.icon_url" class="fix-li-style-icon" alt="">
                 <span>{{ item.currency_type }}</span>
               </div>
               <div>
                 <span>{{ item.closed_period }}天</span>
               </div>
               <div>
-                <span>{{ item.expected_annual_return }}</span>
+                <span>{{ item.expected_annual_return }}%</span>
                 <div>
                   <img alt="." src="../../../assets/images/next.svg" />
                 </div>
@@ -110,6 +114,7 @@ import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import initial from '../../../assets/images/home/initial.svg';
 import HomeMoreProducts from './HomeMoreProducts.vue';
+import { formatType2 } from '../../product/fund/formatFundData';
 
 export default {
   name: 'HomeProductList',
@@ -122,8 +127,8 @@ export default {
       activeLine: 0,
       tabTitle: [
         '基金涨幅榜',
-        '活期',
-        '定期',
+        '天天赚',
+        '定期盈',
       ],
       initialSrc: initial,
     };
@@ -150,6 +155,7 @@ export default {
   mounted() {
     this.getAllHomeInfo().then(
       () => {
+        this.$emit('initSwiper');
         // 初始化图表
         let num = 0;
         while (num < this.currents.length) {
@@ -185,6 +191,9 @@ export default {
         });
       }
     },
+    formatType2(type) {
+      return formatType2(type);
+    },
     // 去活期
     goCurrent() {
       this.$router.push({
@@ -204,6 +213,8 @@ export default {
     initChart(index) {
       const myChart = `myEchart${index}`;
       this.chart = echarts.init(this.$refs[myChart][0]);
+      const min = Math.min.apply(null, this.currents[index].rates);
+      const max = Math.max.apply(null, this.currents[index].rates);
       // 把配置和数据放这里
       const option = {
         grid: {
@@ -220,8 +231,8 @@ export default {
         yAxis: {
           show: false,
           type: 'value',
-          min: Math.min.apply(null, this.currents[index].rates) - 0.2,
-          max: Math.max.apply(null, this.currents[index].rates) + 0.2,
+          min: min - (max - min) * 0.75,
+          max: max + (max - min) * 0.7,
         },
         series: [{
           data: this.currents[index].rates,
@@ -233,14 +244,28 @@ export default {
             color: '#4770F5',
           },
           areaStyle: {
-            normal: {
-              opacity: 0.2,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#4770F5' },
-                { offset: 1, color: '#A22AFF' },
-              ]),
+            origin: 'auto',
+            opacity: 0.05,
+            x: 1,
+            x2: 0,
+            color: {
+              type: 'linear',
+              colorStops: [{
+                offset: 0, color: '#4770F5', // 0% 处的颜色
+              }, {
+                offset: 1, color: '#A22AFF', // 100% 处的颜色
+              }],
             },
           },
+          // areaStyle: {
+          //   normal: {
+          //     opacity: 0.2,
+          //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          //       { offset: 0, color: '#4770F5' },
+          //       { offset: 1, color: '#A22AFF' },
+          //     ]),
+          //   },
+          // },
         },
         ],
       };
@@ -264,17 +289,20 @@ export default {
     text-align: center;
     padding: 0 22.5px 0 43px;
     border-bottom: 0.5px solid #e5e9f6;
+    > div {
+      width: 75px;
+      height: 27px;
+    }
+    .fund{
+      width: 80px;
+    }
     .underLine {
       color: #3c64ee;
       display: block;
       border-bottom: 2px solid #3c64ee;
     }
-    > div {
-      width: 75px;
-      height: 27px;
-    }
     div:nth-child(2) {
-      margin-left: 54.5px;
+      margin-left: 50px;
       > span {
         width: 30px;
       }
@@ -350,7 +378,8 @@ export default {
             border: 0.51px solid #c3cce9;
             border-radius: 2px;
           }
-          > img {
+          > img,
+          .bgp {
             display: block;
             width: 26px;
             height: 16px;
@@ -362,6 +391,14 @@ export default {
         width: 68px;
         font-size: 15px;
         color: #0f3256;
+      }
+      .item-three{
+        .none{
+          color: #000000;
+        }
+        .up{
+          color:#00b870;
+        }
       }
       > div:nth-child(3) {
         display: flex;
@@ -421,6 +458,13 @@ export default {
       > div:nth-child(1) {
         width: 117px;
         text-align: left;
+        display: flex;
+        align-items: center;
+        .current-li-style-icon{
+          width: 24px;
+          height: 24px;
+          margin-right: 7px;
+        }
       }
       > div:nth-child(2) {
         display: flex;
@@ -485,6 +529,13 @@ export default {
       > div:nth-child(1) {
         width: 144px;
         text-align: left;
+        display: flex;
+        align-items: center;
+        .fix-li-style-icon{
+          width: 24px;
+          height: 24px;
+          margin-right: 7px;
+        }
       }
       > div:nth-child(2) {
         display: flex;

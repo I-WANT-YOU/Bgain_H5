@@ -10,6 +10,10 @@
       <div class="field--label">订单状态</div>
       <div class="field--value">{{status}}</div>
     </div>
+    <div v-if="dataSource.redeem_code" class="order-result__field">
+      <div class="field--label">兑换码</div>
+      <div class="field--value">{{dataSource.redeem_code}}</div>
+    </div>
   </div>
 </template>
 

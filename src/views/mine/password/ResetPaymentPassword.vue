@@ -3,21 +3,21 @@
     <BgainNavBar title="重置交易密码"/>
     <div class="password__content">
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="password"
         type="password"
         label="新交易密码"
-        placeholder="请设置由6位数字组成的新密码"
+        placeholder="请输入6位数字"
       />
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="checkPassword"
         type="password"
         label="确认新密码"
-        placeholder="请确认新交易密码"
+        placeholder="请重复输入"
       />
       <Field
-        label-width="90px"
+        label-width="88px"
         v-model="token"
         @input="onTokenInput"
         label="验证码"
@@ -109,6 +109,8 @@ export default {
         Toast('两次密码不一致，请重新输入');
       } else if (this.token === '') {
         Toast('请输入验证码');
+      } else if (this.token.length !== 6) {
+        Toast('请输入6位验证码');
       } else {
         try {
           this.loading = true;
@@ -130,7 +132,8 @@ export default {
       }
     },
     onTokenInput(value) {
-      const re = /^\d+$/;
+      // const re = /^\d+$/;
+      const re = /^[0-9a-zA-Z]{1,}$/;
       if (!re.test(value)) {
         this.token = value.slice(0, value.length - 1);
       }

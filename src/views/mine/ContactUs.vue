@@ -4,7 +4,7 @@
     <div class="contact-us-con">
       <div class="email">
         <span>联系邮箱</span>
-        <span class="right">dhfehog@fin-bee.com</span>
+        <span class="right">CS@bgain.com</span>
       </div>
       <div class="add-community">
         <div class="title">
@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
+import { copyText } from '@utils/tools';
 
 export default {
   name: 'ContactUs',
@@ -39,14 +39,6 @@ export default {
   data() {
     return {
       option: [
-        {
-          icon: 'community1',
-          text: 'FinBee2018',
-        },
-        {
-          icon: 'community2',
-          text: 'fin_bee2018',
-        },
         {
           icon: 'community3',
           text: 'FinBee2018',
@@ -60,14 +52,7 @@ export default {
   },
   methods: {
     copyText(text) {
-      const input = document.createElement('input');
-      input.setAttribute('id', 'copyInput');
-      input.setAttribute('value', text);
-      document.getElementsByTagName('body')[0].appendChild(input);
-      document.getElementById('copyInput').select();
-      document.execCommand('copy');
-      Toast('复制成功');
-      document.getElementById('copyInput').remove();
+      return copyText(text);
     },
   },
 };

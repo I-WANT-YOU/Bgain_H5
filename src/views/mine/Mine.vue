@@ -4,7 +4,7 @@
     <div class="mine-content">
       <div class="userInfo">
         <div class="income">
-          <div v-if="authenticated" class="login">
+          <div v-if="login" class="login">
             <div class="currency">
               <span>总资产</span>
               <span @click="onClickCurrency" class="currency-type">{{currency}}</span>
@@ -12,7 +12,7 @@
                 <svg-icon icon-class="mine-pull" class="icon-pull" />
               </span>
             </div>
-            <div class="assets">
+            <div class="assets" @click="onAsset">
               <span>{{asset}}</span>
               <span class="icon">
                 <svg-icon icon-class="next" class="icon-next" />
@@ -24,27 +24,27 @@
         <div class="incomes">
           <div>
             <div>累计收益</div>
-            <div class="num" :class="authenticated ? '' : 'loginText'">{{income}}</div>
+            <div class="num" :class="login ? '' : 'loginText'">{{income}}</div>
           </div>
           <div>
             <div>待收收益</div>
-            <div class="num" :class="authenticated ? '' : 'loginText'">{{accumulatedIncome}}</div>
+            <div class="num" :class="login ? '' : 'loginText'">{{accumulatedIncome}}</div>
           </div>
         </div>
         <div class="line"></div>
         <div class="balance">
           <div class="balance-info">
-            <div @click="$router.push({name:'balance'})" class="balance-info-text">
+            <div @click="goLogin('/mine/balance')" class="balance-info-text">
               <span>可用余额({{currency}})</span>
               <span>
                 <svg-icon icon-class="next" class="icon-next" />
               </span>
             </div>
-            <div :class="authenticated ? '' : 'loginText'">{{balance}}</div>
+            <div :class="login ? '' : 'loginText'">{{balance}}</div>
           </div>
           <div class="top-up">
-            <span class="recharge" @click="onSkip('/purchaseCoinHome/')">充币</span>
-            <span class="extract" @click="onSkip('/extract-coin')">提币</span>
+            <span class="recharge" @click="goLogin('/purchaseCoinHome')">充币</span>
+            <span class="extract" @click="goLogin('/extract-coin')">提币</span>
           </div>
         </div>
       </div>
@@ -55,11 +55,11 @@
             <svg-icon icon-class="mine-current" class="icon" />
             <span>天天赚</span>
           </div>
-          <div @click="onSkip('/mine/fixed')" class="icon-wrap">
+          <div @click="goLogin('/mine/fixed')" class="icon-wrap">
             <svg-icon icon-class="mine-fixed" class="icon" />
             <span>定期盈</span>
           </div>
-          <div @click="onSkip('/mine/fund')" class="icon-wrap">
+          <div @click="goLogin('/mine/fund')" class="icon-wrap">
             <svg-icon icon-class="mine-fund" class="icon" />
             <span>冠军基金</span>
           </div>
@@ -74,7 +74,7 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
-            <div @click="go('/asset-record')">
+            <div @click="goLogin('/asset-record')">
               <div class="title">资金记录</div>
               <div class="info">资金流水，一目了然</div>
             </div>
@@ -83,9 +83,9 @@
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
-            <div @click="go('/coupon')">
-              <div class="title">优惠卷</div>
-              <div class="info">加息卷，红包</div>
+            <div @click="goLogin('/coupon')">
+              <div class="title">优惠券</div>
+              <div class="info">加息券，红包</div>
             </div>
           </div>
           <div class="line"></div>
@@ -111,15 +111,28 @@
       </div>
     </div>
     <ActionSheet v-model="showCurrency" :actions="options" @select="onSelectCurrency" />
+    <BgainBaseDialog
+      v-model="dialogApp"
+      :showCancel="false"
+      submitText="下载App"
+      content="下载App，了解和查看更多产品详情"
+      @cancel="onCancel"
+      @submit="onSubmit"
+    />
+    <div class="footer-fixed">
+      <DownApp @func="getMsgFormSon" />
+    </div>
     <BaseFooter />
   </div>
 </template>
 
 <script>
+import { ActionSheet, Toast } from 'vant';
+import { mapActions, mapGetters } from 'vuex';
 import Header from '@component/mine/Header.vue';
 import BaseFooter from '@component/BaseFooter.vue';
-import { ActionSheet, Toast } from 'vant';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
+import DownApp from '@component/DownApp.vue';
 
 export default {
   name: 'Mine',
@@ -127,6 +140,8 @@ export default {
     Header,
     ActionSheet,
     BaseFooter,
+    BgainBaseDialog,
+    DownApp,
   },
   data() {
     return {
@@ -139,42 +154,47 @@ export default {
       showBanner: false,
       showCurrency: false,
       options: ['BTC', 'USDT', 'ETH', 'EOS'],
+      msgFormSon: false,
+      dialogApp: false,
     };
   },
   mounted() {
-    if (this.authenticated) {
-      Toast.loading({
-        duration: 0,
-        forbidClick: true,
-        message: '加载中...',
-      });
-      try {
+    try {
+      this.isLogin().then(() => {
+        this.login = true;
+        Toast.loading({
+          duration: 0,
+          forbidClick: true,
+          message: '加载中...',
+        });
         this.getUserBalanceSummary().then(() => {
           Toast.clear();
           this.currency = this.singleCurrency[0].currency;
-          this.options = this.singleCurrency
-            .map(item => item.currency)
-            .map(item => ({ name: item }));
+          this.options = this.currencyss
+            .map(item => ({ name: item[0].toLocaleUpperCase() }));
           this.getCurreny();
         });
-      } catch (error) {
+      }, () => {
+        this.login = false;
         Toast.clear();
-        Toast(error);
-      }
+      });
+    } catch (error) {
+      Toast.clear();
+      Toast(error);
     }
   },
   computed: {
-    ...mapState('auth', ['authenticated']),
-    ...mapGetters('user', ['singleCurrency']),
+    ...mapGetters('user', ['singleCurrency', 'currencyss', 'kycStatus']),
   },
   methods: {
-    ...mapActions('user', ['getUserBalanceSummary']),
+    ...mapActions('user', ['getUserBalanceSummary', 'getUserSummary']),
+    ...mapActions('auth', ['isLogin']),
     getCurreny() {
-      const curreny = this.singleCurrency.filter(item => item.currency === this.currency)[0];
+      const curreny = this.currencyss.filter(item => (item[0].toLocaleUpperCase() === this.currency))[0][1];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
-      this.accumulatedIncome = curreny.investment_earned_profit;
-      this.balance = curreny.balance;
+      this.accumulatedIncome = curreny.expected_profit;
+      this.balance = curreny.available_balance;
     },
     onSkip(router) {
       this.$router.push(router);
@@ -187,8 +207,49 @@ export default {
       this.getCurreny();
       this.showCurrency = false;
     },
+    // 从子组件获取参数
+    getMsgFormSon(data) {
+      this.msgFormSon = data;
+    },
     go(router) {
       this.$router.push(router);
+    },
+    // 未登录
+    async goLogin(router) {
+      if (this.login) {
+        // if (router === '/extract-coin') {
+        //   try {
+        //     await this.getUserSummary();
+        //     if (this.kycStatus === 'CERTIFIED') {
+        //       this.$router.push(router);
+        //     } else if (this.kycStatus === 'UN_CERTIFIED') {
+        //       Toast('身份未认证');
+        //     } else if (this.kycStatus === 'FAILED') {
+        //       Toast('身份认证失败');
+        //     } else if (this.kycStatus === 'AUDITING') {
+        //       Toast('身份认证中');
+        //     }
+        //   } catch (error) {
+        //     throw error;
+        //   }
+        // } else
+        if (router === '/mine/fixed' || router === '/mine/fund' || router === '/extract-coin') {
+          this.dialogApp = true;
+        } else {
+          this.$router.push(router);
+        }
+      } else {
+        this.$router.push('/login');
+      }
+    },
+    onAsset() {
+      this.$router.push('/asset');
+    },
+    onCancel() {
+      this.dialogApp = false;
+    },
+    onSubmit() {
+      window.location.href = 'https://fir.im/ngaw';
     },
   },
 };
@@ -267,8 +328,8 @@ export default {
               display: flex;
               align-content: center;
               .icon-next {
-                width: 6px;
-                height: 10px;
+                width: 8px;
+                height: 12px;
               }
             }
           }
@@ -314,8 +375,8 @@ export default {
             margin-bottom: 6px;
           }
           .icon-next {
-            width: 4.7px;
-            height: 10px;
+            width: 7px;
+            height: 12px;
             margin-left: 12.7px;
           }
           .loginText {
@@ -430,6 +491,13 @@ export default {
       border-bottom: 1px solid #eeeeee;
       transform: scaleY(0.5);
     }
+  }
+  .footer-fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
   }
 }
 </style>

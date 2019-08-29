@@ -1,6 +1,6 @@
 <template>
   <div class="kyc__container">
-    <bgain-nav-bar title="身份认证"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="goBack" title="身份认证"></bgain-nav-bar>
     <kyc-notice-bar/>
     <kyc-step-one
       v-if="step === 1"
@@ -25,6 +25,9 @@
     <kyc-step-three
       v-if="step === 3"
       @submit="onSubmit"
+      @change-step="onChangeStep"
+      @changeTime="remainingTime"
+      :remainingTimeText="remainingTimeText"
     ></kyc-step-three>
   </div>
 </template>
@@ -39,7 +42,7 @@ import KycStepOne from './components/KycStepOne.vue';
 import KycStepTwo from './components/KycStepTwo.vue';
 import KycStepThree from './components/KycStepThree.vue';
 
-const { mapActions } = createNamespacedHelpers('user');
+const { mapActions, mapGetters } = createNamespacedHelpers('user');
 
 export default {
   name: 'Kyc',
@@ -64,9 +67,12 @@ export default {
       documentType: 'ID',
       documentNumber: '',
       files: ['', '', ''],
+      remainingTimeText: '',
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['username']),
+  },
   mounted() {
     const { params } = this.$route;
     if (!isEmpty(params)) {
@@ -74,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['submitKyc']),
+    ...mapActions(['submitKyc', 'getUserSummary']),
     onCountryClick() {
       this.$router.push({
         name: 'country',
@@ -106,6 +112,7 @@ export default {
           last_name: this.lastName,
           document_number: this.documentNumber,
           document_type: this.documentType,
+          user_name: this.username,
           token,
           img_url_1: this.files[0],
           img_url_2: this.files[1],
@@ -118,9 +125,9 @@ export default {
         last_name: this.lastName,
         document_number: this.documentNumber,
         document_type: this.documentType,
+        user_name: this.username,
         token,
         img_url_1: this.files[0],
-        img_url_2: '',
         img_url_3: this.files[1],
       };
     },
@@ -133,6 +140,7 @@ export default {
           message: '提交审核中...',
         });
         await this.submitKyc(options);
+        Toast.clear();
         this.$router.push({
           name: 'kyc-result',
         });
@@ -140,6 +148,17 @@ export default {
         Toast.clear();
         Toast(error);
       }
+    },
+    goBack() {
+      if (this.$route.query.fromPath && this.$route.query.fromPath === 'register') {
+        this.$router.push('/');
+      } else {
+        this.$router.push('/mine/safety');
+      }
+    },
+    remainingTime(time) {
+      console.log(time);
+      this.remainingTimeText = time;
     },
   },
 };

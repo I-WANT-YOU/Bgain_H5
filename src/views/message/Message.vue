@@ -1,6 +1,6 @@
 <template>
   <div class="message-center">
-    <BgainBarNav :title="`${type === 'message' ? '消息' : '公告'}中心`">
+    <BgainBarNav :title="`${type === 'message' ? '消息中心' : '公告'}`">
       <template v-if="type === 'message'" v-slot:right>
         <span class="read-all" @click="readAll">全部已读</span>
       </template>
@@ -19,10 +19,14 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
 import BgainBarNav from '@component/BgainNavBar.vue';
+import responseStatus from '@/constants/responseStatus';
 import MessageCard from './components/MessageCard.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('message');
+const { mapActions: authMapAction } = createNamespacedHelpers('auth');
+const { mapActions: userMapAction, mapGetters: userMapGetters } = createNamespacedHelpers('user');
 
 export default {
   name: 'Message',
@@ -38,6 +42,8 @@ export default {
   },
   methods: {
     ...mapActions(['getAllNews', 'setAllNewsRead', 'getSystemAnnouncements', 'deleteNewsRead']),
+    ...userMapAction(['getUserSummary']),
+    ...authMapAction(['isLogin']),
     async readAll() {
       await this.setAllNewsRead();
       await this.getAllNews();
@@ -51,15 +57,26 @@ export default {
   },
   computed: {
     ...mapGetters(['newList', 'announcementList']),
+    ...userMapGetters(['authLevel']),
   },
   async mounted() {
     this.type = this.$route.params.type;
-    if (this.$route.params.type === 'message') {
-      await this.getAllNews();
-      this.list = this.newList;
-    } else if (this.$route.params.type === 'announcement') {
-      await this.getSystemAnnouncements();
-      this.list = this.announcementList;
+    try {
+      if (this.$route.params.type === 'announcement') {
+        await this.getSystemAnnouncements();
+        this.list = this.announcementList;
+      } else if (this.$route.params.type === 'message') {
+        try {
+          await this.isLogin();
+          await this.getAllNews();
+          this.list = this.newList;
+        } catch (error) {
+          window.sessionStorage.setItem('fromLogin', 'message');
+          this.$router.push('/login');
+        }
+      }
+    } catch (error) {
+      Toast(responseStatus[error.status]);
     }
   },
 };

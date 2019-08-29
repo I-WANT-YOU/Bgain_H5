@@ -19,7 +19,7 @@ import { isEmpty } from 'lodash';
 import { createNamespacedHelpers } from 'vuex';
 import BgainButton from '@/components/BgainButton.vue';
 
-const { mapGetters } = createNamespacedHelpers('activity');
+const { mapGetters, mapActions } = createNamespacedHelpers('activity');
 const { mapState: mapUserState, mapActions: mapUserActions } = createNamespacedHelpers('user');
 
 export default {
@@ -57,11 +57,15 @@ export default {
   async mounted() {
     try {
       await this.getUserSummary();
+      if (this.dataSource.id) {
+        await this.getBgpProductDetail(this.dataSource.id);
+      }
     } catch (error) {
       throw error;
     }
   },
   methods: {
+    ...mapActions(['getBgpProductDetail']),
     ...mapUserActions(['getUserSummary']),
     onClick() {
       if (isEmpty(this.basicInfo)) {

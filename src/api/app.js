@@ -5,7 +5,7 @@ class AppService {
   static async getUploadPolicy() {
     try {
       const requestOptions = {
-        url: 'http://dev.xjetry.top:8088',
+        url: 'http://dev.xjetry.top:8084/oss/policy',
         method: 'get',
       };
       const response = await axios(requestOptions);

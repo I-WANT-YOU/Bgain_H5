@@ -588,6 +588,12 @@ const router = new Router({
       name: 'ExchangeIllustration',
       component: () => import('../views/guaGuaLe/components/ExchangeIllustration.vue'),
     },
+    // 总资产
+    {
+      path: '/asset',
+      name: 'Asset',
+      component: () => import('../views/mine/balance/Asset.vue'),
+    },
   ],
 });
 

@@ -18,6 +18,9 @@ export default {
       default: false,
       required: false,
     },
+    remainingTimeText: {
+      required: false,
+    },
   },
   data() {
     return {
@@ -30,10 +33,14 @@ export default {
   },
   mounted() {
     this.timeText = this.sendTime;
-    this.texts = `已发送 (${this.timeText} s)`;
-    if (this.autosend) {
+    if (this.remainingTimeText) {
+      this.timeText = this.remainingTimeText;
+      this.disabled = true;
+      this.timeOut();
+    } else if (this.autosend) {
       this.onClick();
     }
+    this.texts = `已发送 (${this.timeText} s)`;
   },
   methods: {
     onClick() {
@@ -50,6 +57,7 @@ export default {
         if (this.timeText !== 0) {
           this.texts = `已发送 (${this.timeText} s)`;
           this.timeText = this.timeText - 1;
+          this.$emit('remainingTime', this.timeText);
         } else {
           clearInterval(this.timer);
           this.disabled = false;

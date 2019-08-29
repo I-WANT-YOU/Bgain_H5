@@ -2,11 +2,12 @@
   <div>
     <div class="kyc__fields">
       <cell-group :border="false">
-        <kyc-field
-          label="证件类型"
-        >
+        <kyc-field label="证件类型">
           <template v-slot:input>
-            <div class="kyc__document--type" @click="onShowPicker">{{type}}</div>
+            <div class="kyc__country" @click="onShowPicker">
+              <div class="kyc__document--type">{{type}}</div>
+              <svg-icon icon-class="next" class="icon-next"></svg-icon>
+            </div>
           </template>
         </kyc-field>
         <kyc-field
@@ -20,23 +21,23 @@
     <div class="kyc__photos">
       <div class="photos__titles">
         <div class="photos__title">证件照片</div>
-        <div class="photos__subtitle">请添加本人清晰的证件照片（不超过10M，jpg、bmp或png）</div>
+        <div class="photos__subtitle">请添加本人清晰的证件照片（不超过4M，jpg、bmp或png）</div>
       </div>
       <div class="photos__content">
         <div
           class="photo__container"
           v-visible="uploader.icon !== ''"
           v-for="(uploader, index) in uploaders[documentType]"
-          :key="uploader.icon">
-          <Uploader
-            :after-read="afterRead"
-            :name="index"
-          >
+          :key="uploader.icon"
+        >
+          <Uploader :after-read="afterRead" :name="index">
             <template v-slot:default v-if="files[index] !== 'error'">
               <div class="photo__wrapper">
-                <svg-icon :icon-class="uploader.icon" class="icon-bg-place"/>
-                <svg-icon icon-class="camera" class="icon-camera"/>
-                <div class="photo__reupload" v-if="files[index] !== ''"><span>重新添加</span></div>
+                <svg-icon :icon-class="uploader.icon" class="icon-bg-place" />
+                <svg-icon icon-class="camera" class="icon-camera" />
+                <div class="photo__reupload" v-if="files[index] !== ''">
+                  <span>重新添加</span>
+                </div>
                 <van-image
                   v-if="files[index] !== ''"
                   class="preview-image"
@@ -46,16 +47,16 @@
                   :src="files[index]"
                 >
                   <template v-slot:loading>
-                    <Loading type="spinner" size="20"/>
+                    <Loading type="spinner" size="20" />
                   </template>
                 </van-image>
               </div>
             </template>
             <template v-slot:default v-else>
               <div class="photo__wrapper">
-                <svg-icon icon-class="kyc-fail-bg" class="icon-bg-place"/>
+                <svg-icon icon-class="kyc-fail-bg" class="icon-bg-place" />
                 <div class="photo__wrapper--fail">
-                  <svg-icon icon-class="kyc-fail-icon" class="icon-kyc-fail"/>
+                  <svg-icon icon-class="kyc-fail-icon" class="icon-kyc-fail" />
                   <div class="fail__title">添加失败</div>
                 </div>
               </div>
@@ -66,21 +67,14 @@
       </div>
     </div>
     <div class="kyc__button-wrap">
+      <bgain-button type="info" :fluid="true" @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
       <bgain-button
         type="info"
         :fluid="true"
         @click="onPrevClick"
-        :style="{marginBottom: '30px'}"
+        :style="{marginTop: '30px'}"
       >
         上一步
-      </bgain-button>
-      <bgain-button
-        type="info"
-        :fluid="true"
-        @click="onNextClick"
-        :disabled="disabledNext"
-      >
-        下一步
       </bgain-button>
     </div>
     <Popup v-model="showPicker" position="bottom">
@@ -300,116 +294,116 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .kyc__document--type {
-    font-size: 15px;
-    color: #0F3256;
+.kyc__document--type {
+  font-size: 15px;
+  color: #0f3256;
+}
+
+.kyc__photos {
+  margin-top: 10px;
+  padding: 16px 0;
+  background: #fff;
+
+  .photos__titles {
+    padding-left: 30px;
+
+    .photos__title {
+      font-size: 14px;
+      color: #6a707d;
+      line-height: 20px;
+      margin-bottom: 3px;
+    }
+
+    .photos__subtitle {
+      font-size: 12px;
+      color: #a8aeb9;
+      line-height: 17px;
+    }
   }
 
-  .kyc__photos {
-    margin-top: 10px;
-    padding: 16px 0;
-    background: #fff;
+  .photos__content {
+    margin-top: 15px;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    .photos__titles {
-      padding-left: 30px;
+    .photo__wrapper {
+      position: relative;
 
-      .photos__title {
-        font-size: 14px;
-        color: #6A707D;
-        line-height: 20px;
-        margin-bottom: 3px;
+      .icon-bg-place {
+        width: 98px;
+        height: 70px;
       }
 
-      .photos__subtitle {
-        font-size: 12px;
-        color: #A8AEB9;
-        line-height: 17px;
+      .icon-camera {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 24px;
+        height: 24px;
+      }
+
+      .preview-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .photo__reupload {
+        position: absolute;
+        box-sizing: border-box;
+        top: 3px;
+        right: 3px;
+        display: flex;
+        opacity: 0.75;
+        background: #9d9d9d;
+        border-radius: 1px;
+        transform: scale(0.75);
+        padding: 2px;
+        z-index: 1001;
+
+        span {
+          display: inline-block;
+          font-size: 12px;
+          color: #ffffff;
+        }
+      }
+
+      .photo__wrapper--fail {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .icon-kyc-fail {
+          width: 16px;
+          height: 16px;
+          margin-bottom: 2.3px;
+        }
+
+        .fail__title {
+          font-size: 14px;
+          color: #ff5c5c;
+          line-height: 20px;
+        }
       }
     }
 
-    .photos__content {
-      margin-top: 15px;
-      padding: 0 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .photo__wrapper {
-        position: relative;
-
-        .icon-bg-place {
-          width: 98px;
-          height: 70px;
-        }
-
-        .icon-camera {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 24px;
-          height: 24px;
-        }
-
-        .preview-image {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .photo__reupload {
-          position: absolute;
-          box-sizing: border-box;
-          top: 3px;
-          right: 3px;
-          display: flex;
-          opacity: 0.75;
-          background: #9D9D9D;
-          border-radius: 1px;
-          transform: scale(0.75);
-          padding: 2px;
-          z-index: 1001;
-
-          span {
-            display: inline-block;
-            font-size: 12px;
-            color: #FFFFFF;
-          }
-        }
-
-        .photo__wrapper--fail {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-
-          .icon-kyc-fail {
-            width: 16px;
-            height: 16px;
-            margin-bottom: 2.3px;
-          }
-
-          .fail__title {
-            font-size: 14px;
-            color: #FF5C5C;
-            line-height: 20px;
-          }
-        }
-      }
-
-      .photo__label {
-        margin-top: 10px;
-        font-size: 12px;
-        color: #0F3256;
-        line-height: 17px;
-        text-align: center;
-      }
+    .photo__label {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #0f3256;
+      line-height: 17px;
+      text-align: center;
     }
   }
+}
 </style>

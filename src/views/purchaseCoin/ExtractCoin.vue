@@ -88,6 +88,7 @@ import BgainBaseField from '@component/BgainBaseField.vue';
 import BgainButton from '@component/BgainButton.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import PaymentPasswordDialog from '@views/product/components/PaymentPasswordDialog.vue';
+import responseStatus from '@/constants/responseStatus';
 
 export default {
   name: 'ExtractCoin',
@@ -174,10 +175,10 @@ export default {
           currency: this.currency,
           amount: this.coin,
         });
+        this.$router.push('/mine');
       } catch (error) {
-        Toast(error);
+        Toast(responseStatus[error.status]);
       }
-      this.skip();
     },
     cancelPayment() {
       this.payment = false;

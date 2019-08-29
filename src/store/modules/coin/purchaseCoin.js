@@ -8,6 +8,7 @@ const state = {
   purchaseCoinInfo: [],
   currencyData: {},
   currencyPrice: {},
+  depositRecords: {},
 };
 
 
@@ -15,6 +16,7 @@ const getters = {
   currencyType: state => state.purchaseCoinInfo.map(item => item.currency_type),
   address: state => state.purchaseCoinInfo.map(item => item.address),
   description: state => state.purchaseCoinInfo.map(item => item.description.split('；')),
+  depositRecord: state=> get(state.depositRecords, 'wallet_record_list', []),
 };
 
 const mutations = {
@@ -26,6 +28,9 @@ const mutations = {
   },
   [types.GET_CURRENCY_PRICE](state, payload) {
     state.currencyPrice = payload;
+  },
+  [types.GET_DEPOSIT_RECORD](state, payload) {
+    state.depositRecords = payload;
   },
 };
 
@@ -57,6 +62,17 @@ const actions = {
       const response = await CoinService.getCurrencyPrice(params);
       const data = await handlerSuccessResponseV2(response);
       commit(types.GET_CURRENCY_PRICE, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 充币记录
+  async getDepositRecord({ commit }, params) {
+    try {
+      const response = await CoinService.getDepositRecord(params);
+      const data = await handlerSuccessResponse(response);
+      commit(types.GET_DEPOSIT_RECORD, data);
     } catch (error) {
       throw error;
     }

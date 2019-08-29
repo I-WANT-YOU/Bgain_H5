@@ -6,25 +6,30 @@
     </div>
     <div class="myBgp">
       <div>
-        <div><span>我的BGP</span></div>
+        <div>
+          <span>我的BGP</span>
+        </div>
         <div @click="toHistory">
           <span>BGP明细</span>
-          <svg-icon icon-class="next" class="icon-style"/>
+          <svg-icon icon-class="next" class="icon-style" />
         </div>
       </div>
-      <div><span>{{basicInfo.fbp_amt}}</span></div>
+      <div>
+        <span>{{basicInfo.fbp_amt}}</span>
+      </div>
     </div>
     <!--交易记录-->
     <div class="trade-history">
-      <div class="trade-tile">
-        交易记录
-      </div>
-      <div class="trade-content">
-        <div class ="trade-item" v-for="(item,index) in recordList" :key="index"
-             @click="toDetail(item.id)"
+      <div class="trade-tile">交易记录</div>
+      <div v-if="recordList.length" class="trade-content">
+        <div
+          class="trade-item"
+          v-for="(item,index) in recordList"
+          :key="index"
+          @click="toDetail(item.id)"
         >
           <div class="image">
-            <vant-image width="86px" height="80px" :src="item.thumbnail_url"/>
+            <vant-image width="86px" height="80px" :src="item.thumbnail_url" />
           </div>
           <div>
             <div class="basicInfo">
@@ -40,6 +45,10 @@
             </div>
           </div>
         </div>
+      </div>
+      <div v-else class="no-record">
+        <svg-icon icon-class="mine-fund-no-record" class="icon"></svg-icon>
+        <div>暂无记录</div>
       </div>
     </div>
   </div>
@@ -94,7 +103,7 @@ export default {
           orderStatus = '已发放';
           break;
         case 'WAIT_SEND':
-          orderStatus = '代发货';
+          orderStatus = '待发货';
           break;
         case 'HAD_SEND':
           orderStatus = '已发货';
@@ -135,134 +144,144 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.record{
+.record {
   font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
   /*提示*/
-  .tips{
+  .tips {
     height: 30px;
     padding-left: 20px;
     display: flex;
     align-items: center;
-    background: #FAF4DC;
+    background: #faf4dc;
     font-size: 12px;
-    color: #F79900;
+    color: #f79900;
     line-height: 21px;
   }
   /*我的BGP*/
-  .myBgp{
-    padding:0 20px;
-    border-bottom: 10px solid #F8F8F8;;
-    >div:nth-child(1){
+  .myBgp {
+    padding: 0 20px;
+    border-bottom: 10px solid #f8f8f8;
+    > div:nth-child(1) {
       display: flex;
       justify-content: space-between;
-      border-bottom: 0.51px solid #EEEEEE;
-      >div:nth-child(1){
-        >span{
+      border-bottom: 0.51px solid #eeeeee;
+      > div:nth-child(1) {
+        > span {
           height: 48px;
           line-height: 48px;
           font-size: 15px;
           color: #333333;
         }
       }
-      >div:nth-child(2){
+      > div:nth-child(2) {
         display: flex;
         align-items: center;
-        >span{
+        > span {
           font-size: 12px;
           color: #999999;
           line-height: 17px;
           margin-right: 4px;
         }
-        .icon-style{
-          height:14px;
+        .icon-style {
+          height: 14px;
           width: 14px;
         }
-
       }
     }
-    >div:nth-child(2){
-      >span{
+    > div:nth-child(2) {
+      > span {
         height: 74px;
         line-height: 74px;
         font-size: 32px;
-        color: #3C64EE;
+        color: #3c64ee;
       }
     }
   }
   /*交易记录*/
-  .trade-history{
-    .trade-tile{
+  .trade-history {
+    .trade-tile {
       padding-left: 20px;
       height: 50px;
       line-height: 50px;
       font-size: 15px;
       color: #333333;
-      border-bottom: solid 0.51px #EEEEEE;
+      border-bottom: solid 0.51px #eeeeee;
     }
-    .trade-content{
-      .trade-item{
+    .trade-content {
+      .trade-item {
         height: 104px;
-        margin:0 20px;
+        margin: 0 20px;
         display: flex;
-        border-bottom: solid 0.51px #EEEEEE;
+        border-bottom: solid 0.51px #eeeeee;
         align-items: center;
-        .image{
-          flex-grow: 0;
-        }
-        >div{
+        > div {
           display: flex;
           justify-content: space-between;
           flex-grow: 1;
-          padding-left:16px ;
+          padding-left: 16px;
         }
-        .basicInfo{
+        .image {
+          flex-grow: 0;
+          padding-left: 0;
+        }
+        .basicInfo {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          >span{
+          > span {
             width: 107px;
             font-size: 13px;
             color: #333333;
             line-height: 18px;
-            overflow:hidden; /*超出宽度部分的隐藏*/
-            white-space:nowrap; /*文字不换行*/
-            text-overflow:ellipsis; /*超出则...代替*/
+            overflow: hidden; /*超出宽度部分的隐藏*/
+            white-space: nowrap; /*文字不换行*/
+            text-overflow: ellipsis; /*超出则...代替*/
           }
-          >div{
-            margin-top:5px;
+          > div {
+            margin-top: 5px;
             display: flex;
             align-items: center;
-            >span:nth-child(1){
+            > span:nth-child(1) {
               font-size: 13px;
               color: #999999;
               line-height: 18px;
               margin-right: 12px;
             }
-            >span:nth-child(2){
+            > span:nth-child(2) {
               font-size: 13px;
               color: #333333;
               line-height: 18px;
             }
           }
         }
-        .deliverInfo{
+        .deliverInfo {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: flex-end;
-          >span:nth-child(1){
+          > span:nth-child(1) {
             font-size: 13px;
-            color: #3C64EE;
+            color: #3c64ee;
             line-height: 18px;
           }
-          >span:nth-child(2){
+          > span:nth-child(2) {
             margin-top: 6px;
             font-size: 12px;
             color: #999999;
             line-height: 18px;
           }
         }
+      }
+    }
+    .no-record {
+      font-size: 14px;
+      color: #999999;
+      text-align: center;
+      margin-top: 30px;
+      .icon {
+        width: 102px;
+        height: 78px;
       }
     }
   }

@@ -32,6 +32,7 @@ export const GET_CURRENT_BUY_INFO = 'GET_CURRENT_BUY_INFO';
 export const GET_CURRENT_SELL_INFO = 'GET_CURRENT_SELL_INFO';
 export const GET_CURRENT_BUY_RESULT = 'GET_CURRENT_BUY_RESULT';
 export const GET_CURRENT_SELL_RESULT = 'GET_CURRENT_SELL_RESULT';
+export const GET_IS_LOGIN = 'GET_IS_LOGIN';
 
 /**
  * @module Fund 基金产品相关
@@ -81,6 +82,7 @@ export const GET_WALLET_INFO = 'GET_WALLET_INFO'; // 获取提币信息
 export const GET_WALLET_RECORD = 'GET_WALLET_RECORD'; // 获取提币记录
 export const GET_WALLET_RECORD_DETAIL = 'GET_WALLET_RECORD_DETAIL'; // 获取提币记录详情
 export const HAD_PAY_INFO = 'HAD_PAY_INFO'; // 用户选择已付款
+export const GET_DEPOSIT_RECORD = 'GET_DEPOSIT_RECORD'; // 充币记录
 
 /**
  * App 相关

@@ -2,9 +2,14 @@
   <div class="forget-set-password">
     <Header title="找回登录密码" :backPath="'/forgetPassword'" />
     <div class="form">
-      <div class="info">验证码已发送到{{address}}</div>
+      <div class="info">验证码已发送至 {{address}}</div>
       <div class="input">
-        <Field v-model="formData.code" placeholder="请输入验证码">
+        <Field
+          v-model="formData.code"
+          @input="changeCode"
+          placeholder="请输入验证码"
+          autocomplete="new-password"
+        >
           <sendCode @onsend="onSend" ref="sendCode" slot="button" />
         </Field>
       </div>
@@ -13,6 +18,7 @@
           :type="passwordType ? 'password' : ''"
           v-model="formData.password"
           placeholder="请设置8-20位字母及数字组成的密码"
+          autocomplete="new-password"
         />
         <span
           :class="['password-is-show',passwordType ? '' : 'show']"
@@ -39,11 +45,13 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import { Field, Button, Toast } from 'vant';
 import Header from '@component/Header.vue';
 import Footer from '@component/Footer.vue';
 import sendCode from '@component/SendCode.vue';
-import { mapActions } from 'vuex';
-import { Field, Button, Toast } from 'vant';
+import { getDesensitizedUsername } from '@utils/tools';
+import responseStatus from '@/constants/responseStatus';
 
 export default {
   name: 'ForgetPasswordSet',
@@ -55,15 +63,16 @@ export default {
     Button,
   },
   mounted() {
-    if (this.$route.params.type === 'mobile') {
-      this.address = `${this.$route.params.countryCode} ${this.$route.params.username}`;
-    } else if (this.$route.params.type === 'email') {
-      this.address = this.$route.params.username;
+    if (this.$route.query.type === 'mobile') {
+      this.address = `${this.$route.query.countryCode} ${getDesensitizedUsername(this.$route.query.username)}`;
+    } else if (this.$route.query.type === 'email') {
+      this.address = getDesensitizedUsername(this.$route.query.username);
     } else {
       console.log('参数不完整');
-      // this.$router.push('/login');
     }
     this.$refs.sendCode.onClick();
+    this.formData.code = '';
+    this.formData.password = '';
   },
   data() {
     return {
@@ -83,6 +92,11 @@ export default {
       getToken: 'auth/getToken',
       resetPassword: 'auth/resetPassword',
     }),
+    changeCode(value) {
+      if (value.length > 6) {
+        this.formData.code = value.slice(0, 6);
+      }
+    },
     showPwd(text) {
       const oldValue = this[text];
       this[text] = !oldValue;
@@ -92,7 +106,19 @@ export default {
       if (this.formData.code.length === 6) {
         if (reg.test(this.formData.password)) {
           if (this.formData.password === this.formData.confirmPassword) {
-            this.resetPassword({ username: this.$route.params.username, password: this.formData.password, token: 'sfdfdg' });
+            try {
+              this.resetPassword({
+                username: this.$route.query.username,
+                password: this.formData.password,
+                token: this.formData.code,
+              }).then(() => {
+                this.$router.push('/login');
+              }).catch((error) => {
+                Toast(responseStatus[error.status]);
+              });
+            } catch (error) {
+              Toast(responseStatus[error.status]);
+            }
           } else {
             Toast('两次输入的密码不一致');
           }
@@ -100,14 +126,22 @@ export default {
           Toast('密码格式不正确');
         }
       } else {
-        Toast('请输入验证码');
+        Toast('请输入正确的验证码');
       }
     },
     onSend() {
       // 发送验证码
-      const { params } = this.$route;
-      delete params.type;
-      this.getToken(params);
+      const querys = this.$route.query;
+      delete querys.type;
+      this.getToken({
+        username: querys.username,
+        countryCode: querys.countryCode,
+        geetestOptions: {
+          geetest_challenge: querys.geetest_challenge,
+          geetest_seccode: querys.geetest_seccode,
+          geetest_validate: querys.geetest_validate,
+        },
+      });
     },
   },
 };
@@ -119,10 +153,10 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  font-family: PingFangSC-Regular;
   .form {
     flex: 1;
     .info {
-      font-family: PingFangSC-Regular;
       font-size: 14px;
       color: #666666;
       letter-spacing: 0;
@@ -133,22 +167,22 @@ export default {
       height: 58px;
       box-sizing: border-box;
       padding-left: 8px;
-      border-bottom: 1px solid #eeeeee;
+      // border-bottom: 1px solid #eeeeee;
       position: relative;
-      font-family: PingFangSC-Regular;
       font-size: 15px;
       letter-spacing: 0;
       ::placeholder {
-        font-family: PingFangSC-Regular;
         font-size: 15px;
         color: #cccccc;
       }
       .van-cell {
         box-sizing: border-box;
         padding: 16px 0;
+        &:not(:last-child)::after {
+          border: 0;
+        }
       }
       .code {
-        font-family: PingFangSC-Regular;
         font-size: 14px;
         color: #2a55e7;
         letter-spacing: 0;
@@ -167,6 +201,18 @@ export default {
       .show {
         background: url("../../assets/images/display.svg") no-repeat;
         background-size: 100% 100%;
+      }
+      &:not(:last-child)::after {
+        position: absolute;
+        box-sizing: border-box;
+        content: " ";
+        pointer-events: none;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-bottom: 0.02667rem solid #e5e9f6;
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
       }
     }
     .button {

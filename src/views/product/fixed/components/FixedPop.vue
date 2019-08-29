@@ -10,7 +10,7 @@
     </div>
     <div class="panel-button">
       <button @click="cancel">取消</button>
-      <button @click="rushMoney">立即冲币</button>
+      <button @click="rushMoney">立即充币</button>
     </div>
   </div>
 </div>
@@ -28,8 +28,8 @@ export default {
     // 冲币
     rushMoney() {
       this.$router.push({
-        name:'PurchaseCoinHome'
-      })
+        name: 'PurchaseCoinHome',
+      });
     },
   },
 };

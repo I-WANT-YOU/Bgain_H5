@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="line">
-        <span>充币地址</span>
+        <span>提币地址</span>
         <div>{{walletRecordDeatil.src_address ? walletRecordDeatil.src_address : '--'}}</div>
       </div>
       <div class="line">
@@ -29,13 +29,13 @@
       </div>
       <div class="trade">
         <div class="line">
+          <span>交易时间</span>
+          <div>{{formatDate(walletRecordDeatil.txn_date)}}</div>
+        </div>
+        <div class="line">
           <span>手续费</span>
           <div v-if="!walletRecordDeatil.txn_fee && walletRecordDeatil.txn_fee * 1 !== 0">--</div>
           <div v-else>{{walletRecordDeatil.txn_fee}}{{walletRecordDeatil.coin}}</div>
-        </div>
-        <div class="line">
-          <span>交易时间</span>
-          <div>{{formatDate(walletRecordDeatil.txn_date)}}</div>
         </div>
       </div>
     </div>
@@ -46,7 +46,8 @@
 import { mapActions, mapState } from 'vuex';
 import { Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
-import { formatDate, numberWithThousands } from '@utils/tools';
+import { formatDate, numberWithThousands, copyText } from '@utils/tools';
+import responseStatus from '@/constants/responseStatus';
 
 export default {
   name: 'ExtractCoinRecordDetail',
@@ -58,18 +59,22 @@ export default {
       statu: '',
     };
   },
-  mounted() {
-    this.getWalletRecordDetail(this.$route.params.id);
-    if (this.walletRecordDeatil.status === 'UNAUDITED') {
-      this.statu = '待审核';
-    } else if (this.walletRecordDeatil.status === 'REJECT') {
-      this.statu = '已拒绝';
-    } else if (this.walletRecordDeatil.status === 'SUCCEED') {
-      this.statu = '提币成功';
-    } else if (this.walletRecordDeatil.status === 'FAILED') {
-      this.statu = '提币失败';
-    } else if (this.walletRecordDeatil.status === 'PROCESSING') {
-      this.statu = '处理中';
+  async mounted() {
+    try {
+      await this.getWalletRecordDetail(this.$route.params.id);
+      if (this.walletRecordDeatil.status === 'UNAUDITED') {
+        this.statu = '待审核';
+      } else if (this.walletRecordDeatil.status === 'REJECT') {
+        this.statu = '已拒绝';
+      } else if (this.walletRecordDeatil.status === 'SUCCEED') {
+        this.statu = '提币成功';
+      } else if (this.walletRecordDeatil.status === 'FAILED') {
+        this.statu = '提币失败';
+      } else if (this.walletRecordDeatil.status === 'PROCESSING') {
+        this.statu = '处理中';
+      }
+    } catch (error) {
+      Toast(responseStatus[error.status]);
     }
   },
   computed: {
@@ -84,14 +89,7 @@ export default {
       return numberWithThousands(num);
     },
     copyText(text) {
-      const input = document.createElement('input');
-      input.setAttribute('id', 'copyInput');
-      input.setAttribute('value', text);
-      document.getElementsByTagName('body')[0].appendChild(input);
-      document.getElementById('copyInput').select();
-      document.execCommand('copy');
-      Toast('复制成功');
-      document.getElementById('copyInput').remove();
+      return copyText(text);
     },
   },
 };

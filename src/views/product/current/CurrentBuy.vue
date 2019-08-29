@@ -7,6 +7,7 @@
         <Field
           v-model="amount"
           :placeholder="`起投 ${minBuyAmount} ${currency}`"
+           @paste.native.capture.prevent="()=>{return false}"
           :border="false">
         </Field>
         <divider></divider>
@@ -19,7 +20,7 @@
         <bgain-button
           type="info"
           :fluid="true"
-          :disabled="amount === ''"
+          :disabled="amount === '' || amount * 1 === 0"
           @click="onBuyClick"
         >
           转入
@@ -74,7 +75,7 @@ export default {
       const value = newValue.replace(/[^\d.]/g, '');
       if (newValue === '.') {
         this.amount = '0.';
-      } else if (oldValue === '0' && newValue.substr(newValue.length - 1) !== '.') {
+      } else if (oldValue === '0' && newValue === '00') {
         this.amount = '0';
       } else if (oldValue.indexOf('.') > 0
         && oldValue.indexOf('.') !== newValue.lastIndexOf('.')
@@ -113,17 +114,21 @@ export default {
       try {
         await Promise.all([this.getCurrentBuyInfo(currency), this.getUserSummary()]);
       } catch (error) {
-        Toast(error.message);
+        Toast('未登录');
       }
     },
     async onBuyClick() {
       try {
         if (this.authLevel !== AUTH_LEVEL.TRADE_PASSWORD) {
           this.$router.push({
-            name: 'setTradePassword',
+            name: 'set-payment-password',
           });
-        } else {
+        } else if (this.amount > this.buyBalance) {
+          this.balanceVisible = true;
+        } else if (this.amount >= this.minBuyAmount) {
           this.visible = true;
+        } else {
+          Toast('不能低于最少转入数量，请重新输入');
         }
       } catch (error) {
         Toast(error.message);

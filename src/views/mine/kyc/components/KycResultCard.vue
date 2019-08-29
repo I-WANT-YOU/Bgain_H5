@@ -4,13 +4,13 @@
       <svg-icon :icon-class="options[status].icon"/>
     </div>
     <div class="kyc-card__title">{{options[status].title}}</div>
-    <div class="kyc-card__title--sub">{{subtitle}}</div>
+    <div class="kyc-card__title--sub">{{options[status].subtitle}}</div>
     <div class="kyc-card__buttons" v-if="status === 'FAIL'">
-      <bgain-button type="info" :fluid="true">重新认证</bgain-button>
+      <bgain-button type="info" :fluid="true" @click="onSkip('/mine/safety/kyc')">重新认证</bgain-button>
     </div>
     <div class="kyc-card__buttons kyc-card__buttons--multi" v-if="status !== 'FAIL'">
-      <div class="buttons--default">浏览产品</div>
-      <div class="buttons--info">去充币</div>
+      <div class="buttons--default" @click="onSkip('/')">浏览产品</div>
+      <div class="buttons--info" @click="onSkip('/purchaseCoinHome')">去充币</div>
     </div>
   </div>
 </template>
@@ -67,6 +67,11 @@ export default {
   },
   mounted() {
     console.log(this.status);
+  },
+  methods: {
+    onSkip(router) {
+      this.$router.push(router);
+    },
   },
 };
 </script>

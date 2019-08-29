@@ -11,7 +11,7 @@
         <div class="content__info">
           <div class="content__info-text van-ellipsis">{{dataSource.integral_product_name}}</div>
           <div class="content__info-text">
-            <span class="content__info-number">x1</span>{{originPrice}}积分
+            <span class="content__info-number">x1</span>{{price}}积分
           </div>
         </div>
       </div>
@@ -42,10 +42,12 @@ export default {
   },
   computed: {
     price() {
-      return numberWithThousands(this.dataSource.fbpprice);
+      return numberWithThousands((this.dataSource.fbpprice_record
+        ? this.dataSource.fbpprice_record : this.dataSource.fbpprice));
     },
     originPrice() {
-      return numberWithThousands(this.dataSource.origin_fbpprice);
+      return numberWithThousands((this.dataSource.origin_fbpprice_record
+        ? this.dataSource.origin_fbpprice_record : this.dataSource.origin_fbpprice));
     },
   },
 };

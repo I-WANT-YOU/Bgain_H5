@@ -4,17 +4,14 @@
     <div class="content">
       <div class="purchaseNum">
         <span>认购数量</span>
-        <span>{{showData.investmentAmount+'&nbsp;'+showData.currencyType}}</span>
+        <span>{{showData.investmentAmount}}
+          {{showData.currencyType === 'FBP' ? 'BGP' : showData.currencyType}}</span>
       </div>
       <div class="coupon" v-show="showData.currencyType !== 'FBP'">
         <span>选择优惠券</span>
-        <div @click="()=>{
-        this.$router.push(
-        {path:'/fixCoupon',query:{productId:showData.productId,amount:showData.investmentAmount}}
-        )
-        }">
-          <span>可用 {{availabelCoupons.length}} 张</span>
-          <svg-icon icon-class="next" class="next-img"/>
+        <div @click="selectCoupon()">
+          <span>{{availabelCoupons.length ? `可用 ${ availabelCoupons.length} 张` : '暂无相关优惠券'}}</span>
+          <svg-icon v-if="availabelCoupons.length" icon-class="next" class="next-img"/>
         </div>
       </div>
       <!--预期收益-->
@@ -25,16 +22,25 @@
         </div>
       </div>
   </div>
-    <div class="turnToAnther">
+    <div v-if="showData.currencyType !== 'FBP'" class="turnToAnther">
       <div>
-        <span>到期转入活期产品</span>
+        <span>到期转入天天赚</span>
         <svg-icon icon-class="fixed_icon"/>
       </div>
       <div><van-switch v-model="checked" size = '27px'/></div>
     </div>
+    <div class="tip">购买即表示您已阅读并同意我们的<span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
     <div class="purchaseButton">
       <button @click="immediateBuy">立即认购</button>
     </div>
+    <BgainBaseDialog
+      v-model="payment"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="setPayment"
+      @cancel="cancelPayment"
+    />
     <PaymentPasswordDialog
       @close="maskShow=false"
       @submit="getPaymentPassword"
@@ -45,9 +51,10 @@
 
 <script>
 import { Switch, Toast } from 'vant';
-import { mapActions, mapState } from 'vuex';
-import PublicMethods from '@utils/publicMethods';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { formatDate } from '@utils/tools';
 import Vue from 'vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
@@ -64,6 +71,7 @@ export default {
       expectedReturnData: [],
       maskShow: false, // 密码弹出框
       password: '',
+      payment: false, // 没有设置交易密码弹窗
     };
   },
 
@@ -71,6 +79,7 @@ export default {
     BgainNavBar,
     'van-switch': Switch,
     PaymentPasswordDialog,
+    BgainBaseDialog,
   },
 
   computed: {
@@ -82,6 +91,9 @@ export default {
       'fixed',
       'availabelCoupons',
     ]),
+    ...mapGetters('user', [
+      'authLevel',
+    ]),
   },
 
   methods: {
@@ -91,9 +103,15 @@ export default {
       'buyFixedProduct', // 用户购买产品
     ]),
 
+    ...mapActions('user', ['getUserSummary']),
+
     // 立即认购 调用支付密码页面
     immediateBuy() {
-      this.maskShow = true;
+      if (this.authLevel === 2) {
+        this.maskShow = true;
+      } else {
+        this.payment = true;
+      }
     },
 
     // 获取支付密码
@@ -154,9 +172,24 @@ export default {
       );
     },
 
+    async isSetPassword() {
+      try {
+        await this.getUserSummary();
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    // 选择优惠券
+    selectCoupon() {
+      if (this.availabelCoupons.length) {
+        this.$router.push({ path: '/fixCoupon', query: { productId: this.showData.productId, amount: this.showData.investmentAmount } });
+      }
+    },
+
     // 格式化预计数款日的日期
     formatDate(date) {
-      return PublicMethods.createOrderDate(date);
+      return formatDate(date, 'YYYY-MM-DD');
     },
 
     // 生成展示数据
@@ -165,7 +198,7 @@ export default {
         this.expectedReturnData = [
           {
             name: '预期收益',
-            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType === 'FBP' ? 'BGP' : this.showData.currencyType}`,
             show: true,
           },
           {
@@ -253,6 +286,18 @@ export default {
         },
       );
     },
+
+    // 设置交易密码
+    setPayment() {
+      // 跳转到上设置交易密码页面
+      this.payment = false;
+      this.$router.push('/mine/safety/password/payment/set');
+    },
+
+    // 关闭设置交易密码弹窗
+    cancelPayment() {
+      this.payment = false;
+    },
   },
   mounted() {
     if (this.$route.params.stepTwoData) {
@@ -261,10 +306,12 @@ export default {
     this.showData = JSON.parse(sessionStorage.getItem('showData')); // 设置传递的数据
     console.log(this.showData);
 
+    // 判断是否设置交易密码
+    this.isSetPassword();
+
     // 获取优惠券
     this.getCoupon();
     // 判断币种还是积分查询 显示不同数据
-
 
     // 获取可用优惠券
     Toast.loading({
@@ -312,6 +359,7 @@ export default {
       .next-img{
         width: 7px;
         height: 11px;
+        margin-left: 9px;
       }
       >span{
         font-size: 15px;
@@ -322,9 +370,6 @@ export default {
         color: #878F9E;
         display: flex;
         align-items: center;
-        >span{
-          margin-right: 9px;
-        }
       }
     }
     /*预期回报*/
@@ -362,10 +407,18 @@ export default {
       height: 28px;
     }
   }
+ .tip{
+    font-size: 12px;
+    margin-top: 50px;
+    text-align: center;
+    .active{
+      color: #3c64ee;
+    }
+  }
   .purchaseButton{
     display: flex;
     justify-content: center;
-    margin-top: 70px;
+    margin-top: 20px;
     >button{
       width: 331px;
       height: 46px;

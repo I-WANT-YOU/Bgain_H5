@@ -2,45 +2,92 @@
   <div class="current-card__container">
     <div class="card-annual__title" @click="onHistoryRatesClick(dataSource.currency_type)">
       今日年化利率
-      <svg-icon icon-class="current-arrow" class="icon-arrow"/>
+      <svg-icon icon-class="current-arrow" class="icon-arrow" />
     </div>
     <div class="card__trade-records" @click="onRecordsClick">
-      <svg-icon icon-class="current-records" class="icon-records"></svg-icon>
-      交易记录
+      <svg-icon icon-class="current-records" class="icon-records"></svg-icon>交易记录
     </div>
     <div class="card-annual__rate">{{dataSource.interest_rate}}</div>
     <div class="card__total-amount">
       <span>在投总额</span>
-      <span class="number">{{dataSource.reinvest_amount}} {{dataSource.currency_type}}</span>
+      <span
+        class="number"
+      >{{isLogin ? dataSource.reinvest_amount : '-'}} {{dataSource.currency_type}}</span>
     </div>
     <div class="card-profit__panel">
       <div>
         <div class="profit__title">累计收益({{dataSource.currency_type}})</div>
-        <span>{{dataSource.total_profit}}</span>
+        <span>{{isLogin ? dataSource.total_profit : '-'}}</span>
       </div>
       <span></span>
       <div @click="onHistoryProfitClick(dataSource.currency_type)">
-        <div class="profit__title">昨日收益({{dataSource.currency_type}})</div>
-        <span>{{dataSource.yesterday_profit}}</span>
+        <div class="profit__title">
+          昨日收益({{dataSource.currency_type}})
+          <svg-icon icon-class="next" class="icon" />
+        </div>
+        <span>{{isLogin ? dataSource.yesterday_profit : '-'}}</span>
       </div>
     </div>
     <div class="buttons">
       <div class="roll-out" @click="onSellClick(dataSource.currency_type)">转出</div>
       <div class="roll-in" @click="onBuyClick(dataSource.currency_type)">转入</div>
     </div>
+    <BgainBaseDialog
+      v-model="showDialog"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="()=>{ sessionStorage.setItem('payment','/product/current') ;this.$router.push('/mine/safety/password/payment/set');}"
+      @cancel="()=>{this.showDialog = false}"
+    />
   </div>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
+
+const { mapActions, mapGetters } = createNamespacedHelpers('user');
+const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
 export default {
   name: 'CurrentCard',
+  components: {
+    BgainBaseDialog,
+  },
   props: {
     dataSource: {
       type: Object,
       required: true,
     },
+    isLogin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      login: false,
+      al: 1,
+      showDialog: false,
+    };
+  },
+  mounted() {
+    this.isloginSt().then(() => {
+      this.login = true;
+      this.getUserSummary().then(() => {
+        this.al = this.authLevel;
+      });
+    }, () => {
+      this.login = false;
+    });
+  },
+  computed: {
+    ...mapGetters(['authLevel']),
   },
   methods: {
+    ...mapAuthActions({ isloginSt: 'isLogin' }),
+    ...mapActions(['getUserSummary']),
     onRecordsClick() {
       this.$router.push({
         name: 'trade-records',
@@ -63,150 +110,182 @@ export default {
       });
     },
     onSellClick(currency) {
-      this.$router.push({
-        name: 'current-sell',
-        params: {
-          currency,
-        },
-      });
+      if (this.login) {
+        if (this.al === 2) {
+          this.$router.push({
+            name: 'current-sell',
+            params: {
+              currency,
+            },
+          });
+        } else {
+          this.showDialog = true;
+        }
+      } else {
+        Toast('未登录');
+        sessionStorage.setItem('fromLogin', '/product/current');
+        this.$router.push('/login');
+      }
     },
     onBuyClick(currency) {
-      this.$router.push({
-        name: 'current-buy',
-        params: {
-          currency,
-        },
-      });
+      if (this.login) {
+        if (this.al === 2) {
+          this.$router.push({
+            name: 'current-buy',
+            params: {
+              currency,
+            },
+          });
+        } else {
+          this.showDialog = true;
+        }
+      } else {
+        Toast('未登录');
+        sessionStorage.setItem('fromLogin', '/product/current');
+        this.$router.push('/login');
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .current-card__container {
-    position: relative;
+.current-card__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 24px;
+
+  .card-annual__title {
     display: flex;
     align-items: center;
-    flex-direction: column;
-    padding-top: 24px;
+    font-size: 13px;
+    color: #a8aeb9;
+    line-height: 18px;
 
-    .card-annual__title {
-      display: flex;
-      align-items: center;
-      font-size: 13px;
-      color: #a8aeb9;
-      line-height: 18px;
-
-      .icon-arrow {
-        width: 4.4px;
-        height: 9px;
-        margin-left: 6.6px;
-      }
+    .icon-arrow {
+      width: 4.4px;
+      height: 9px;
+      margin-left: 6.6px;
     }
+  }
 
-    .card__trade-records {
-      position: absolute;
-      top: 16px;
-      right: 0;
-      background: #FDF4F4;
-      padding: 6px 18px 6px 8px;
-      border-radius: 17px 0 0 17px;
-      font-size: 12px;
-      color: #FF5656;
-      line-height: 17px;
+  .card__trade-records {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    background: #fdf4f4;
+    padding: 6px 18px 6px 8px;
+    border-radius: 17px 0 0 17px;
+    font-size: 12px;
+    color: #ff5656;
+    line-height: 17px;
 
-      .icon-records {
-        width: 10px;
-        height: 11px;
-      }
+    .icon-records {
+      width: 10px;
+      height: 11px;
+      margin-right: 5.1px;
     }
+  }
 
-    .card-annual__rate {
-      text-align: center;
-      font-size: 42px;
-      line-height: 59px;
+  .card-annual__rate {
+    text-align: center;
+    font-size: 42px;
+    line-height: 59px;
+    color: #ff5656;
+
+    &::after {
+      content: "%";
+      display: inline;
+      font-size: 26px;
       color: #ff5656;
-
-      &::after {
-        content: '%';
-        display: inline;
-        font-size: 26px;
-        color: #ff5656;
-      }
     }
+  }
 
-    .card__total-amount {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 6px 0 19px;
-      font-size: 15px;
-      color: #a8aeb9;
-      line-height: 21px;
+  .card__total-amount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 6px 0 19px;
+    font-size: 15px;
+    color: #a8aeb9;
+    line-height: 21px;
 
-      .number {
-        margin-left: 5px;
-        color: #003259;
-      }
+    .number {
+      margin-left: 5px;
+      color: #003259;
     }
+  }
 
-    .card-profit__panel {
+  .card-profit__panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    > div {
+      padding: 0 34px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-around;
+      text-align: center;
 
-      div {
-        padding: 0 17px;
+      .profit__title {
+        padding: 0;
+        margin-bottom: 5px;
+        font-size: 13px;
+        line-height: 18px;
+        color: #a8aeb9;
         display: flex;
-        flex-direction: column;
         align-items: center;
-
-        .profit__title {
-          margin-bottom: 5px;
-          font-size: 13px;
-          line-height: 18px;
-          color: #a8aeb9;
-        }
-
-        span {
-          font-size: 16px;
-          line-height: 22px;
-          color: #0f3256;
+        justify-content: center;
+        .icon {
+          width: 11px;
+          height: 11px;
+          margin-top: 2px;
+          margin-left: 2px;
         }
       }
 
       > span {
-        height: 32px;
-        width: 1px;
-        background: #eeeeee;
+        font-size: 16px;
+        line-height: 22px;
+        color: #0f3256;
       }
     }
 
-    .buttons {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      margin-top: 19px;
+    > span {
+      height: 32px;
+      width: 1px;
+      background: #eeeeee;
+    }
+  }
 
-      > div {
-        width: 156px;
-        height: 42px;
-        line-height: 42px;
-        text-align: center;
-        border-radius: 4px;
-        font-size: 16px;
-        letter-spacing: 0;
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 19px;
 
-        &.roll-out {
-          background: #edf0fa;
-          color: #3c64ee;
-        }
+    > div {
+      width: 156px;
+      height: 42px;
+      line-height: 42px;
+      text-align: center;
+      border-radius: 4px;
+      font-size: 16px;
+      letter-spacing: 0;
 
-        &.roll-in {
-          background: #3c64ee;
-          color: #ffffff;
-        }
+      &.roll-out {
+        background: #edf0fa;
+        color: #3c64ee;
+      }
+
+      &.roll-in {
+        background: #3c64ee;
+        color: #ffffff;
       }
     }
   }
+}
 </style>
