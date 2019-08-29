@@ -5,6 +5,7 @@
             :type="typeValue"
             :value="value"
             ref="myInput"
+            v-on:blur="backToBottom()"
      />
      <img :src="passwordImg" class="eye-icon" alt="" @click="changeImg">
    </div>
@@ -43,6 +44,9 @@ export default {
     },
   },
   methods: {
+    backToBottom() {
+      window.scrollTo(0, 0);
+    },
     emitChange(value) {
       this.$emit('input', value);
     },

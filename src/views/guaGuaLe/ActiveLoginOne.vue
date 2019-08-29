@@ -21,14 +21,14 @@
         <div class="baseInputContainer bottomInputContainer">
           <BaseInput
             v-model="passWordInputValue"
-            placeHolderValue="请输入登陆密码"
+            placeHolderValue="请输入登录密码"
             maxlength="30"
             typeValue="password"/>
         </div>
         <!--切换登陆注册状态-->
         <div class="userState">
           <div @click="toRegister" >
-            <span>还没账户？</span><span>点击注册</span>
+            <span>还没账户？</span><span>点此注册</span>
           </div>
           <div @click="toForgetPassword">
             <span>忘记密码</span>
@@ -45,7 +45,7 @@
     <!--成功弹窗-->
     <ExchangeSuccess
       v-show="isShowPop"
-      showInfo="popShowInfo"
+      showInfo="codeExchangeInfo"
       v-on:hidePop="(val)=>{this.isShowPop = val}"
     />
     <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>
@@ -54,6 +54,7 @@
 
 <script>
 import { Toast } from 'vant';
+import * as Auth from '@utils/auth';
 import { mapActions, mapState } from 'vuex';
 import Footer from './components/Footer.vue';
 import BaseInput from './components/BaseInput.vue';
@@ -145,6 +146,7 @@ export default {
             if (this.codeExchangeInfo.code === 0) {
               // 兑换成功 调用弹窗
               this.isShowPop = true;
+              Auth.setToken(this.codeExchangeInfo.data.access_token);
             } else if (this.codeExchangeInfo.msg) {
               Toast(this.codeExchangeInfo.msg);
             } else {
@@ -207,7 +209,6 @@ export default {
         display: flex;
         justify-content: space-between;
         >div{
-          /*display: inline-block;*/
           display: flex;
           align-items: center;
           .back-icon{
@@ -222,9 +223,9 @@ export default {
             line-height:30px;
             height: 30px;
           }
-          /*>span:nth-child(3){*/
-            /*text-decoration: underline;*/
-          /*}*/
+          >span:nth-child(2){
+            text-decoration: underline;
+          }
         }
       }
       /*button*/

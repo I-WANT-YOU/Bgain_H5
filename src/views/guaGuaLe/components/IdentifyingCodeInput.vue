@@ -3,8 +3,11 @@
      <input :placeholder="placeHolderValue"
             type="number"
             @input="emitChange($event.target.value)"
-            v-model="newCodeInputValue"/>
-     <CountDown v-on:sendCodeAgain ="(val)=>{this.$emit('sendCodeAgain',val)}" />
+            v-model="newCodeInputValue"
+            v-on:blur="backToBottom()"/>
+     <div class="countDown">
+       <CountDown v-on:sendCodeAgain ="(val)=>{this.$emit('sendCodeAgain',val)}" />
+     </div>
    </div>
 </template>
 
@@ -39,6 +42,9 @@ export default {
     CountDown,
   },
   methods: {
+    backToBottom() {
+      window.scrollTo(0, 0);
+    },
     emitChange(value) {
       this.$emit('input', value);
     },
@@ -51,19 +57,25 @@ export default {
     font-family:PingFang SC sans-serif;
     width:257px;
     height:44px;
-    padding: 0 24px ;
+    padding: 0 24px;
     margin: auto;
     display: flex;
-    align-items: center;
+    justify-content: space-between;
     background:rgba(255,255,255,1);
     border-radius:22px;
     >input{
-      flex-grow: 1;
+      width: 160px;
       font-size:15px;
       font-weight:400;
       border: none;
       outline: none;
       line-height: normal;
+    }
+    .countDown{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
     }
   }
 </style>

@@ -569,11 +569,6 @@ const router = new Router({
       component: () => import('../views/guaGuaLe/ActiveLoginOne.vue'),
     },
     {
-      path: '/activeLoginTwo',
-      name: 'ActiveLoginTwo',
-      component: () => import('../views/guaGuaLe/ActiveLoginTwo.vue'),
-    },
-    {
       path: '/activeForgetPasswordOne',
       name: 'ActiveForgetPasswordOne',
       component: () => import('../views/guaGuaLe/ActiveForgetPasswordOne.vue'),

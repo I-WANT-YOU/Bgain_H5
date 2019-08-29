@@ -3,7 +3,9 @@
      <input :placeholder="placeHolderValue" :maxlength="maxlength"
             @input="emitChange($event.target.value)"
             :type="typeValue"
-            :value="value"/>
+            :value="value"
+            v-on:blur="backToBottom()"
+     />
    </div>
 </template>
 
@@ -31,6 +33,9 @@ export default {
   methods: {
     emitChange(value) {
       this.$emit('input', value);
+    },
+    backToBottom() {
+      window.scrollTo(0, 0);
     },
   },
 };

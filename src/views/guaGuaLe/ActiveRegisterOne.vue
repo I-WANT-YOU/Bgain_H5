@@ -41,6 +41,7 @@ import BaseInput from './components/BaseInput.vue';
 import PhoneInput from './components/PhoneInput.vue';
 import Geetest from '../../components/Geetest.vue';
 import tipPop from './components/ExchangeIllustration.vue';
+import errorMessage from '../../constants/responseStatus';
 
 export default {
   name: 'ActiveRegisterOne',
@@ -93,42 +94,44 @@ export default {
         type: 0, // 0注册
         country_calling_code: this.countryCode,
       };
-      this.postRedeemCode(redeemCodeParams).then(() => {
+      this.postRedeemCode(redeemCodeParams).then(
+        () => {
         // 1 若兑换码正确 发送验证码
         // 2 判断是否注册
-        const requestParams = {
-          target: this.phoneInputValue,
-          country_calling_code: this.countryCode,
-          ...options,
-        };
-        this.getActiveVerificationCode(requestParams).then(
-          () => {
+          const requestParams = {
+            target: this.phoneInputValue,
+            country_calling_code: this.countryCode,
+            ...options,
+          };
+          this.getActiveVerificationCode(requestParams).then(
+            () => {
             // 跳转到下一个页面
-            this.$router.push({
-              name: 'ActiveRegisterTwo',
-              query: {
-                phoneNum: this.phoneInputValue,
-                countryCode: this.countryCode,
-                exchangeCode: this.codeInputValue,
-              },
-            });
-          },
-          (err) => {
-            if (err) {
-              Toast(err);
-            } else {
-              Toast('网络错误');
-            }
-          },
-        );
-      },
-      (err) => {
-        if (err) {
-          Toast(err);
-        } else {
-          Toast('网络错误');
-        }
-      });
+              this.$router.push({
+                name: 'ActiveRegisterTwo',
+                query: {
+                  phoneNum: this.phoneInputValue,
+                  countryCode: this.countryCode,
+                  exchangeCode: this.codeInputValue,
+                },
+              });
+            },
+            (err) => {
+              if (err.status) {
+                Toast(errorMessage[err.status]);
+              } else {
+                Toast('网络错误');
+              }
+            },
+          );
+        },
+        (err) => {
+          if (err) {
+            Toast(err);
+          } else {
+            Toast('网络错误');
+          }
+        },
+      );
     },
     onError() {},
     /* 校验兑换码和手机号是否符合规则 */

@@ -1,5 +1,5 @@
 // const prod = 'https://api.fin-bee.com';
-const prod = 'http://dev.xjetry.top:8081';
+const prod = 'http://uat.xjetry.top:8091';
 const dev = 'http://dev.xjetry.top:8081';
 
 const env = process.env.NODE_ENV || 'development';
