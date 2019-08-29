@@ -1,6 +1,6 @@
 <template>
   <div class="kyc-result__container">
-    <bgain-nav-bar title="身份认证"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="()=>{this.$router.push('/mine/safety')}" title="身份认证"></bgain-nav-bar>
     <kyc-result-card :status="status" :subtitle="subtitle"/>
   </div>
 </template>

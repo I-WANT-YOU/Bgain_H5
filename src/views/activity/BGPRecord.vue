@@ -103,7 +103,7 @@ export default {
           orderStatus = '已发放';
           break;
         case 'WAIT_SEND':
-          orderStatus = '代发货';
+          orderStatus = '待发货';
           break;
         case 'HAD_SEND':
           orderStatus = '已发货';

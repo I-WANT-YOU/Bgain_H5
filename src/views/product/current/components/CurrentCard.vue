@@ -32,12 +32,29 @@
       <div class="roll-out" @click="onSellClick(dataSource.currency_type)">转出</div>
       <div class="roll-in" @click="onBuyClick(dataSource.currency_type)">转入</div>
     </div>
+    <BgainBaseDialog
+      v-model="showDialog"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="()=>{ sessionStorage.setItem('payment','/product/current') ;this.$router.push('/mine/safety/password/payment/set');}"
+      @cancel="()=>{this.showDialog = false}"
+    />
   </div>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
+
+const { mapActions, mapGetters } = createNamespacedHelpers('user');
+const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
 export default {
   name: 'CurrentCard',
+  components: {
+    BgainBaseDialog,
+  },
   props: {
     dataSource: {
       type: Object,
@@ -48,7 +65,29 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      login: false,
+      al: 1,
+      showDialog: false,
+    };
+  },
+  mounted() {
+    this.isloginSt().then(() => {
+      this.login = true;
+      this.getUserSummary().then(() => {
+        this.al = this.authLevel;
+      });
+    }, () => {
+      this.login = false;
+    });
+  },
+  computed: {
+    ...mapGetters(['authLevel']),
+  },
   methods: {
+    ...mapAuthActions({ isloginSt: 'isLogin' }),
+    ...mapActions(['getUserSummary']),
     onRecordsClick() {
       this.$router.push({
         name: 'trade-records',
@@ -71,20 +110,40 @@ export default {
       });
     },
     onSellClick(currency) {
-      this.$router.push({
-        name: 'current-sell',
-        params: {
-          currency,
-        },
-      });
+      if (this.login) {
+        if (this.al === 2) {
+          this.$router.push({
+            name: 'current-sell',
+            params: {
+              currency,
+            },
+          });
+        } else {
+          this.showDialog = true;
+        }
+      } else {
+        Toast('未登录');
+        sessionStorage.setItem('fromLogin', '/product/current');
+        this.$router.push('/login');
+      }
     },
     onBuyClick(currency) {
-      this.$router.push({
-        name: 'current-buy',
-        params: {
-          currency,
-        },
-      });
+      if (this.login) {
+        if (this.al === 2) {
+          this.$router.push({
+            name: 'current-buy',
+            params: {
+              currency,
+            },
+          });
+        } else {
+          this.showDialog = true;
+        }
+      } else {
+        Toast('未登录');
+        sessionStorage.setItem('fromLogin', '/product/current');
+        this.$router.push('/login');
+      }
     },
   },
 };

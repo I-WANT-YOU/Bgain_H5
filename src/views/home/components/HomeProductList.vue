@@ -155,6 +155,7 @@ export default {
   mounted() {
     this.getAllHomeInfo().then(
       () => {
+        this.$emit('initSwiper');
         // 初始化图表
         let num = 0;
         while (num < this.currents.length) {

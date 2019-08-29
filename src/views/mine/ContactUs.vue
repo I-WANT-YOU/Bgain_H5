@@ -4,7 +4,7 @@
     <div class="contact-us-con">
       <div class="email">
         <span>联系邮箱</span>
-        <span class="right">dhfehog@fin-bee.com</span>
+        <span class="right">CS@bgain.com</span>
       </div>
       <div class="add-community">
         <div class="title">
@@ -39,14 +39,6 @@ export default {
   data() {
     return {
       option: [
-        {
-          icon: 'community1',
-          text: 'FinBee2018',
-        },
-        {
-          icon: 'community2',
-          text: 'fin_bee2018',
-        },
         {
           icon: 'community3',
           text: 'FinBee2018',

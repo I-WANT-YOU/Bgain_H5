@@ -57,7 +57,9 @@ export default {
   async mounted() {
     try {
       await this.getUserSummary();
-      await this.getBgpProductDetail(this.dataSource.id);
+      if (this.dataSource.id) {
+        await this.getBgpProductDetail(this.dataSource.id);
+      }
     } catch (error) {
       throw error;
     }

@@ -37,7 +37,7 @@ export default {
     },
     onRechargeClick() {
       this.$router.push({
-        name: 'recharge',
+        name: 'PurchaseCoinHome',
       });
     },
   },

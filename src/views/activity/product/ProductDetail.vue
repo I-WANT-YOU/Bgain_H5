@@ -14,14 +14,13 @@
         </div>
       </swipe>
 
-      <product-info-card :data-source="product" />
-      <product-detail-card :data-source="product" :on-show-dialog="onShow"/>
+      <product-info-card :data-source="prod" />
+      <product-detail-card :data-source="prod" :on-show-dialog="onShow"/>
     </div>
     <bgain-base-dialog
       v-model="visible"
       @cancel="onCancel"
       :showCancel="false"
-      :showClose="false"
       @submit="onSubmit"
       :content="content"
     />
@@ -62,27 +61,30 @@ export default {
     return {
       current: 0,
       visible: false,
+      prod: {},
     };
   },
   computed: {
     ...mapState(['product']),
     images() {
-      return JSON.parse(get(this.product, 'detail_png_url', '[]'));
+      return JSON.parse(get(this.prod, 'detail_png_url', '[]'));
     },
     content() {
-      const { fbpprice_record: price, fbpamt_record: amount } = this.product;
+      const { fbpprice_record: price, fbpamt_record: amount } = this.prod;
       return `该商品使用 ${price}BGP 兑换兑换后，剩余 ${strip(parseInt(amount, 10) - parseInt(price, 10))}BGP确定兑换？`;
     },
   },
   async mounted() {
-    const { id } = this.$route.params;
     try {
       Toast.loading({
         duration: 0,
       });
+      const { id } = this.$route.params;
       await this.getBgpProductDetail(id);
+      this.prod = this.product;
       Toast.clear();
     } catch (error) {
+      Toast.clear();
       Toast(error);
     }
   },
@@ -98,14 +100,14 @@ export default {
       this.visible = false;
     },
     onSubmit() {
-      const { is_reach_limit_time: isReach, purchase_limit_type: limitType } = this.product;
+      const { is_reach_limit_time: isReach, purchase_limit_type: limitType } = this.prod;
       if (isReach) {
         Toast(LIMIT_ERROR[limitType]);
       } else {
         this.$router.push({
           name: 'product-buy',
           params: {
-            id: this.product.id,
+            id: this.prod.id,
           },
         });
       }

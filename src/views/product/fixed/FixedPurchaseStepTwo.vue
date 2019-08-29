@@ -9,13 +9,9 @@
       </div>
       <div class="coupon" v-show="showData.currencyType !== 'FBP'">
         <span>选择优惠券</span>
-        <div @click="()=>{
-        this.$router.push(
-        {path:'/fixCoupon',query:{productId:showData.productId,amount:showData.investmentAmount}}
-        )
-        }">
-          <span>可用 {{availabelCoupons.length}} 张</span>
-          <svg-icon icon-class="next" class="next-img"/>
+        <div @click="selectCoupon()">
+          <span>{{availabelCoupons.length ? `可用 ${ availabelCoupons.length} 张` : '暂无相关优惠券'}}</span>
+          <svg-icon v-if="availabelCoupons.length" icon-class="next" class="next-img"/>
         </div>
       </div>
       <!--预期收益-->
@@ -28,11 +24,12 @@
   </div>
     <div v-if="showData.currencyType !== 'FBP'" class="turnToAnther">
       <div>
-        <span>到期转入活期产品</span>
+        <span>到期转入天天赚</span>
         <svg-icon icon-class="fixed_icon"/>
       </div>
       <div><van-switch v-model="checked" size = '27px'/></div>
     </div>
+    <div class="tip">购买即表示您已阅读并同意我们的<span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
     <div class="purchaseButton">
       <button @click="immediateBuy">立即认购</button>
     </div>
@@ -55,7 +52,7 @@
 <script>
 import { Switch, Toast } from 'vant';
 import { mapActions, mapState, mapGetters } from 'vuex';
-import PublicMethods from '@utils/publicMethods';
+import { formatDate } from '@utils/tools';
 import Vue from 'vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
@@ -183,9 +180,16 @@ export default {
       }
     },
 
+    // 选择优惠券
+    selectCoupon() {
+      if (this.availabelCoupons.length) {
+        this.$router.push({ path: '/fixCoupon', query: { productId: this.showData.productId, amount: this.showData.investmentAmount } });
+      }
+    },
+
     // 格式化预计数款日的日期
     formatDate(date) {
-      return PublicMethods.createOrderDate(date);
+      return formatDate(date, 'YYYY-MM-DD');
     },
 
     // 生成展示数据
@@ -199,7 +203,7 @@ export default {
           },
           {
             name: '预计收款日',
-            num: this.formatDate(this.showData.expected_payment_date, 'YYYY-MM-DD'),
+            num: this.formatDate(this.showData.expected_payment_date),
             show: true,
           },
         ];
@@ -251,7 +255,7 @@ export default {
           },
           {
             name: '预计收款日',
-            num: this.formatDate(this.showData.expected_payment_date, 'YYYY_MM_DD'),
+            num: this.formatDate(this.showData.expected_payment_date),
             show: true,
           },
         ];
@@ -355,6 +359,7 @@ export default {
       .next-img{
         width: 7px;
         height: 11px;
+        margin-left: 9px;
       }
       >span{
         font-size: 15px;
@@ -365,9 +370,6 @@ export default {
         color: #878F9E;
         display: flex;
         align-items: center;
-        >span{
-          margin-right: 9px;
-        }
       }
     }
     /*预期回报*/
@@ -405,10 +407,18 @@ export default {
       height: 28px;
     }
   }
+ .tip{
+    font-size: 12px;
+    margin-top: 50px;
+    text-align: center;
+    .active{
+      color: #3c64ee;
+    }
+  }
   .purchaseButton{
     display: flex;
     justify-content: center;
-    margin-top: 70px;
+    margin-top: 20px;
     >button{
       width: 331px;
       height: 46px;

@@ -25,6 +25,7 @@ import responseStatus from '@/constants/responseStatus';
 import MessageCard from './components/MessageCard.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('message');
+const { mapActions: authMapAction } = createNamespacedHelpers('auth');
 const { mapActions: userMapAction, mapGetters: userMapGetters } = createNamespacedHelpers('user');
 
 export default {
@@ -42,6 +43,7 @@ export default {
   methods: {
     ...mapActions(['getAllNews', 'setAllNewsRead', 'getSystemAnnouncements', 'deleteNewsRead']),
     ...userMapAction(['getUserSummary']),
+    ...authMapAction(['isLogin']),
     async readAll() {
       await this.setAllNewsRead();
       await this.getAllNews();
@@ -64,11 +66,12 @@ export default {
         await this.getSystemAnnouncements();
         this.list = this.announcementList;
       } else if (this.$route.params.type === 'message') {
-        await this.getUserSummary();
-        if (this.authLevel) {
+        try {
+          await this.isLogin();
           await this.getAllNews();
           this.list = this.newList;
-        } else {
+        } catch (error) {
+          window.sessionStorage.setItem('fromLogin', 'message');
           this.$router.push('/login');
         }
       }

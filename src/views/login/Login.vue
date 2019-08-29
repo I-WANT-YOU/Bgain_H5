@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <BgainNavBar />
+    <BgainNavBar :onArrowClick="onSkip" />
     <div class="con">
       <h3>欢迎来到Bgain</h3>
       <form>
@@ -148,6 +148,18 @@ export default {
     },
     forgetPwd() { // 修改密码
       this.$router.history.push('/forgetPassword');
+    },
+    onSkip() {
+      const fromLogin = sessionStorage.getItem('fromLogin');
+      if (fromLogin === 'message') {
+        this.$router.push('/mine');
+        sessionStorage.removeItem('fromLogin');
+        sessionStorage.removeItem('loginFrom');
+      } else {
+        this.$router.go(-1);
+        sessionStorage.removeItem('fromLogin');
+        sessionStorage.removeItem('loginFrom');
+      }
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="password__container">
-    <BgainNavBar title="设置交易密码"/>
+    <BgainNavBar title="设置交易密码" />
     <div class="password__content">
       <Field
         label-width="88px"
@@ -18,14 +18,7 @@
       />
     </div>
     <div class="password__button--wrapper">
-      <Button
-        type="info"
-        :fluid="true"
-        :loading="loading"
-        @click="onClick"
-      >
-        确定
-      </Button>
+      <Button type="info" :fluid="true" :loading="loading" @click="onClick">确定</Button>
     </div>
   </div>
 </template>
@@ -99,9 +92,13 @@ export default {
           });
           this.loading = false;
           Toast('设置交易密码成功');
-          this.$router.push({
-            name: 'password',
-          });
+          const from = sessionStorage.getItem('payment');
+          if (from) {
+            this.$router.push(from);
+            sessionStorage.removeItem('payment');
+          } else {
+            this.$router.go(-1);
+          }
         } catch (error) {
           if (error.status) {
             Toast(responseStatus[error.status]);
@@ -115,5 +112,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "./style/password";
+@import "./style/password";
 </style>
