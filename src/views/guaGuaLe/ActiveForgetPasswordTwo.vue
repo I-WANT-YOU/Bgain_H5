@@ -1,5 +1,6 @@
 <template>
   <div class="winning">
+    <div class="tips" @click="()=>{this.isShowTipPop = true}">兑换说明</div>
     <div class="registerOne-container">
       <div class="registerOne">
         <!--输入验证码-->
@@ -31,6 +32,7 @@
       </div>
     </div>
     <div class="footerContainer"> <Footer/></div>
+    <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>
   </div>
 </template>
 
@@ -40,6 +42,7 @@ import { mapActions } from 'vuex';
 import Footer from './components/Footer.vue';
 import BaseImgInput from './components/BaseImgInput.vue';
 import IdentifyingCodeInput from './components/IdentifyingCodeInput.vue';
+import tipPop from './components/ExchangeIllustration.vue';
 import showPassword from '../../assets/images/guaGuaLe/eye_open.svg';
 import hidePassword from '../../assets/images/guaGuaLe/eye_close.svg';
 import errorMessage from '../../constants/responseStatus';
@@ -54,12 +57,14 @@ export default {
       repeatPasswordInputValue: '', // 二次密码
       showPassword,
       hidePassword,
+      isShowTipPop: false,
     };
   },
   components: {
     Footer,
     BaseImgInput,
     IdentifyingCodeInput,
+    tipPop,
   },
   watch: {
     /* 舰艇验证码长度 */
@@ -85,15 +90,7 @@ export default {
         country_calling_code: '+86',
       };
       this.getActiveVerificationCode(requestParams).then(
-        () => {
-          // 跳转到下一个页面
-          this.$router.push({
-            name: 'ActiveForgetPasswordTwo',
-            query: {
-              accountNum: this.accountInputValue,
-            },
-          });
-        },
+        () => { Toast('发送成功'); },
         (err) => {
           if (err) {
             Toast(err);
@@ -199,6 +196,16 @@ export default {
   overflow-y: scroll;
   background: url("../../assets/images/guaGuaLe/bg_all.jpg") no-repeat;
   background-size: 100% 100%;
+  .tips{
+    position: absolute;
+    top: 200px;
+    right: 15px;
+    font-size:14px;
+    font-weight:400;
+    text-decoration:underline;
+    color:rgba(255,255,255,1);
+    line-height:15px;
+  }
   /*注册页面1*/
   .registerOne-container{
     margin-top: 287px;

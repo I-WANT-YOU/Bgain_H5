@@ -40,7 +40,7 @@
     </div>
     <ExchangeSuccess
       v-show="isShowPop"
-      showInfo="popShowInfo"
+      showInfo="codeExchangeInfo"
       v-on:hidePop="(val)=>{this.isShowPop = val}"
     />
   </div>
@@ -48,6 +48,7 @@
 
 <script>
 import { Toast } from 'vant';
+import * as Auth from '@utils/auth';
 import { mapActions, mapState } from 'vuex';
 import Footer from './components/Footer.vue';
 import BaseInput from './components/BaseInput.vue';
@@ -163,6 +164,7 @@ export default {
               if (this.codeExchangeInfo.code === 0) {
                 // 兑换成功 调用弹窗
                 this.isShowPop = true;
+                Auth.setToken(this.codeExchangeInfo.data.access_token);
               } else if (this.codeExchangeInfo.msg) {
                 Toast(this.codeExchangeInfo.msg);
               } else {
@@ -196,8 +198,9 @@ export default {
 
 <style lang="scss" scoped>
 .winning{
+  position: relative;
   width: 100vw;
-  min-height: 100vh;
+  height: 667px;
   overflow-y: scroll;
   background: url("../../assets/images/guaGuaLe/bg_all.jpg") no-repeat;
   background-size: 100% 100%;

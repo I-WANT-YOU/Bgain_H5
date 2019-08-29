@@ -14,18 +14,20 @@ export default {
   name: 'CountDown',
   data() {
     return {
-      countDownTime: 6,
+      countDownTime: 60,
       isTimeOut: false,
     };
   },
   methods: {
     sendCode() {
       this.$emit('sendCodeAgain', true);
-      this.countDownTime = 6;
+      this.countDownTime = 60;
+      this.isTimeOut = false;
       this.countDown();
     },
     countDown() {
       this.timer = setInterval(() => {
+        console.log(this.countDownTime);
         if (this.countDownTime >= 1) {
           this.countDownTime -= 1;
         } else {
@@ -46,9 +48,11 @@ export default {
 
 <style lang="scss" scoped>
   .countDown{
+    display: block;
     >span{
-      height: 44px;
-      line-height: 44px;
+      display: inline-block;
+      height: 40px;
+      line-height: 40px;
       font-size:15px;
       font-family:PingFang SC sans-serif;
       font-weight:400;

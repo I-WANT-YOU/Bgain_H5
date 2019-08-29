@@ -7,7 +7,9 @@
      <input placeholder="请输入手机号"
             v-on:input="$emit('input', $event.target.value)"
             type="number"
-            v-model="phoneInputValueFromFather"/>
+            v-model="phoneInputValueFromFather"
+            v-on:blur="backToBottom()"
+     />
    </div>
 </template>
 
@@ -44,6 +46,9 @@ export default {
     'van-image': Image,
   },
   methods: {
+    backToBottom() {
+      window.scrollTo(0, 0);
+    },
     /* v-model实现 */
     emitChange(value) {
       this.$emit('input', value);
@@ -100,8 +105,9 @@ export default {
       flex-grow: 1;
       font-size:15px;
       font-weight:400;
-      line-height:11px;
       border: none;
+      outline: none;
+      line-height: normal;
     }
   }
 </style>
