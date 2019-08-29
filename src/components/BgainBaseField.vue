@@ -45,6 +45,12 @@ export default {
     }
   }
 }
+.van-cell__value{
+  line-height: 24px;
+}
+.van-field__control{
+  line-height: 24px;
+}
 
 .van-cell:not(:last-child)::after {
   left: 22px;

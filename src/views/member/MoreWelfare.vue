@@ -19,7 +19,7 @@
       </div>
       <div class="follow">
         您可以通过关注公众号
-        <span class="st">“ Finbee数字资管 ”</span>
+        <span class="st">“ Bgain2019 ”</span>
         来获取更多会员权益信息
       </div>
     </div>

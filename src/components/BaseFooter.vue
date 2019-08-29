@@ -7,7 +7,7 @@
       </div>
       <div class="footer__content--download">
         <svg-icon icon-class="mobile" />
-        <span class="footer__content-text">下载APP</span>
+        <span class="footer__content-text" @click="onApp">下载APP</span>
       </div>
       <div class="footer__content--language" @click="onLanguageClick">
         <span class="footer__content-text">简体中文</span>
@@ -55,6 +55,9 @@ export default {
     },
     onContact() {
       this.$router.push('/contact-us');
+    },
+    onApp() {
+      window.location.href = 'https://fir.im/ngaw';
     },
   },
 };

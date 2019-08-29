@@ -248,7 +248,7 @@ const actions = {
   async sendRemind(context, options) {
     try {
       const response = await FundService.sendRemind(options);
-      return Auth.handlerSuccessResponse(response);
+      return Auth.handlerSuccessResponseV3(response);
     } catch (error) {
       throw error;
     }

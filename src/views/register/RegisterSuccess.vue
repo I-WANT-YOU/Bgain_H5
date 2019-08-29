@@ -92,12 +92,14 @@ export default {
     .goToNext{
       height: 24px;
       margin-top:51px;
+      display:flex;
+      align-items: center;
+      justify-content: center;
       >a{
         text-decoration-line: none;
         font-size: 14px;
         color: #3C64EE;
         text-align: center;
-        line-height: 24px;
       }
       >img{
         color: #3C64EE;

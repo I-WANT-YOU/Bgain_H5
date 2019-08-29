@@ -85,7 +85,7 @@ export default {
         return '护照';
       }
       if (this.kycInfoType.toLocaleUpperCase() === 'DRIVER_LICENSE') {
-        return '驾驶证';
+        return '驾照';
       }
       if (this.kycInfoType.toLocaleUpperCase() === 'ID') {
         return '中国大陆身份证';

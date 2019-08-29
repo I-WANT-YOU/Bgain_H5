@@ -11,6 +11,7 @@
           width="335"
           height="88"
           :src="item.img_url"
+          @click="$router.push('/refer')"
         />
       </SwipeItem>
     </Swipe>

@@ -5,6 +5,11 @@
       <div class="code">
         <Field
           type="number"
+          v-if="$route.params.countryCode"
+          maxlength="6"
+          v-model="verificationCode" placeholder="请输入验证码" />
+          <Field
+          v-else
           maxlength="6"
           v-model="verificationCode" placeholder="请输入验证码" />
       </div>
@@ -107,11 +112,11 @@ export default {
     },
     // 点击确定
     confirm() {
-      const regPhone = /^[0-9]{1,15}$/;
-      if (!regPhone.test(this.verificationCode)) {
-        this.$toast('验证码格式不正确');
-        return false;
-      }
+      // const regPhone = /^[0-9]{1,15}$/;
+      // if (!regPhone.test(this.verificationCode)) {
+      //   this.$toast('验证码格式不正确');
+      //   return false;
+      // }
       this.buttonIsLoading = true;
       const registerData = {
         ...this.registerData,

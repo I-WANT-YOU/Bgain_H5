@@ -15,7 +15,7 @@
         </div>
       </div>
       <div>
-        <span>{{basicInfo.fbp_amt}}</span>
+        <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span>
       </div>
     </div>
     <!--交易记录-->
@@ -58,7 +58,7 @@
 import { Image, Toast } from 'vant';
 import { mapState, mapActions } from 'vuex';
 import Vue from 'vue';
-import PublicMethods from '@utils/publicMethods';
+import { numberWithThousands, formatDate } from '@utils/tools';
 import BgainNavBar from '@/components/BgainNavBar.vue';
 import errorMessage from '../../constants/responseStatus';
 
@@ -91,9 +91,13 @@ export default {
       });
     },
 
+    numberWithThousands(num) {
+      return numberWithThousands(num);
+    },
+
     // 时间格式化
     createOrderDate(date) {
-      return PublicMethods.createOrderDate(date);
+      return formatDate(date);
     },
     // 格式化发放状态
     deliverStatus(status) {
@@ -193,7 +197,7 @@ export default {
       > span {
         height: 74px;
         line-height: 74px;
-        font-size: 32px;
+        font-size: 28px;
         color: #3c64ee;
       }
     }

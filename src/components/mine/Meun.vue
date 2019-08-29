@@ -60,7 +60,7 @@ export default {
   width: 35%;
   .menu-header {
     padding: 0 20px;
-    height: 46px;
+    height: 49px;
     display: flex;
     align-items: center;
     justify-content: center;
