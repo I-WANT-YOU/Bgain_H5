@@ -27,7 +27,6 @@ export default {
     },
     countDown() {
       this.timer = setInterval(() => {
-        console.log(this.countDownTime);
         if (this.countDownTime >= 1) {
           this.countDownTime -= 1;
         } else {

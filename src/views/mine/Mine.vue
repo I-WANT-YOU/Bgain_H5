@@ -190,6 +190,7 @@ export default {
     ...mapActions('user', ['getUserBalanceSummary', 'getUserSummary']),
     ...mapActions('auth', ['isLogin']),
     getCurreny() {
+      // eslint-disable-next-line max-len
       const curreny = this.currencyss.filter(item => (item[0].toLocaleUpperCase() === this.currency))[0][1];
       this.asset = curreny.total_asset;
       this.income = curreny.total_earned_profit;
