@@ -79,7 +79,7 @@
       :showCancel="false"
       content="您还未设置交易密码，暂无法进行购买"
       submitText="设置交易密码"
-      @submit="()=>{sessionStorage.setItem('payment',`/product/fixed/${this.$route.params.id}`);this.$router.push('/mine/safety/password/payment/set');}"
+      @submit="onSSSS"
       @cancel="()=>{this.showDialog=false;}"
     />
   </div>
@@ -171,6 +171,10 @@ export default {
         sessionStorage.setItem('loginFrom', `/product/fixed/${this.$route.params.id}`);
         this.$router.push('/login');
       });
+    },
+    onSSSS() {
+      sessionStorage.setItem('payment', `/product/fixed/${this.$route.params.id}`);
+      this.$router.push('/mine/safety/password/payment/set');
     },
     ...mapActions(
       ['getFixedProductById'],
