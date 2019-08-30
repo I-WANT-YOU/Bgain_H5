@@ -44,8 +44,8 @@
     </div>
     <!--成功弹窗-->
     <ExchangeSuccess
-      v-show="isShowPop"
-      showInfo="codeExchangeInfo"
+      v-if="isShowPop"
+      :showInfo="codeExchangeInfo"
       v-on:hidePop="(val)=>{this.isShowPop = val}"
     />
     <tipPop v-on:close="()=>{this.isShowTipPop = false}" v-show="isShowTipPop"/>

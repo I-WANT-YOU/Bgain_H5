@@ -39,9 +39,9 @@
       <Footer/>
     </div>
     <ExchangeSuccess
-      v-show="isShowPop"
-      showInfo="codeExchangeInfo"
-      v-on:hidePop="(val)=>{this.isShowPop = val}"
+      v-if="isShowPop"
+      :showInfo="codeExchangeInfo"
+      v-on:hidePop="()=>{this.isShowPop = false}"
     />
   </div>
 </template>
@@ -163,6 +163,8 @@ export default {
             () => {
               if (this.codeExchangeInfo.code === 0) {
                 // 兑换成功 调用弹窗
+                console.log('success');
+                console.log(this.codeExchangeInfo.code)
                 this.isShowPop = true;
                 Auth.setToken(this.codeExchangeInfo.data.access_token);
               } else if (this.codeExchangeInfo.msg) {
