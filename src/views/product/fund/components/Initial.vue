@@ -38,7 +38,11 @@ export default {
       console.log('2');
     },
     skip() {
-      this.$router.push(`/product/fund/initial/${this.options.id}`);
+      if (this.options.fund_name === '冠军套利母基金') {
+        this.$router.push(`/product/fund/initial/In/${this.options.id}`);
+      } else if (this.options.fund_name === '冠军CTA母基金') {
+        this.$router.push(`/product/fund/initial/CTA/${this.options.id}`);
+      }
     },
   },
 };

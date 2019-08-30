@@ -195,6 +195,16 @@ const router = new Router({
       component: () => import('../views/product/fund/Initial.vue'),
     },
     {
+      path: '/product/fund/initial/In/:id',
+      name: 'initial',
+      component: () => import('../views/product/fund/InterestArbitrageFund.vue'),
+    },
+    {
+      path: '/product/fund/initial/CTA/:id',
+      name: 'initial',
+      component: () => import('../views/product/fund/CTAMotherFund.vue'),
+    },
+    {
       path: '/product/fund/noinitial/:id',
       name: 'noinitial',
       component: () => import('../views/product/fund/NoInitial.vue'),
