@@ -143,6 +143,20 @@ class CurrentService {
       throw new Error(error);
     }
   }
+
+  static async getHoliday() {
+    try {
+      const requestOptions = {
+        url: '/current/holiday',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 export default CurrentService;

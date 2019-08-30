@@ -15,6 +15,7 @@ const state = {
   buyResult: {},
   sellResult: {},
   isLogin: false,
+  holiday: true,
 };
 
 const getters = {
@@ -77,6 +78,9 @@ const mutations = {
   },
   [types.GET_IS_LOGIN](state, payload) {
     state.isLogin = payload;
+  },
+  [types.GET_HOLIDAY](state, payload) {
+    state.holiday = payload;
   },
 };
 
@@ -172,6 +176,17 @@ const actions = {
         transferOutTime: get(data, 'transfer_out_time', 0),
         amount,
       });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // 获取法定节假日
+  async getHoliday({ commit }) {
+    try {
+      const response = await CurrentService.getHoliday();
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_HOLIDAY, data);
     } catch (error) {
       throw error;
     }

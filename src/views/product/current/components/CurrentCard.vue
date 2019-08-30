@@ -50,6 +50,8 @@ import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('user');
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
+const { mapActions: mapCurrentActions, mapState } = createNamespacedHelpers('product/current');
+
 export default {
   name: 'CurrentCard',
   components: {
@@ -84,10 +86,12 @@ export default {
   },
   computed: {
     ...mapGetters(['authLevel']),
+    ...mapState(['holiday']),
   },
   methods: {
     ...mapAuthActions({ isloginSt: 'isLogin' }),
     ...mapActions(['getUserSummary']),
+    ...mapCurrentActions(['getHoliday']),
     onRecordsClick() {
       this.$router.push({
         name: 'trade-records',
@@ -109,15 +113,20 @@ export default {
         },
       });
     },
-    onSellClick(currency) {
+    async onSellClick(currency) {
       if (this.login) {
         if (this.al === 2) {
-          this.$router.push({
-            name: 'current-sell',
-            params: {
-              currency,
-            },
-          });
+          await this.getHoliday();
+          if (this.holiday) {
+            this.$router.push({
+              name: 'current-sell',
+              params: {
+                currency,
+              },
+            });
+          } else {
+            // this.Dialog = true;
+          }
         } else {
           this.showDialog = true;
         }
@@ -127,15 +136,20 @@ export default {
         this.$router.push('/login');
       }
     },
-    onBuyClick(currency) {
+    async onBuyClick(currency) {
       if (this.login) {
         if (this.al === 2) {
-          this.$router.push({
-            name: 'current-buy',
-            params: {
-              currency,
-            },
-          });
+          await this.getHoliday();
+          if (this.holiday) {
+            this.$router.push({
+              name: 'current-buy',
+              params: {
+                currency,
+              },
+            });
+          } else {
+            // this.Dialog = true;
+          }
         } else {
           this.showDialog = true;
         }

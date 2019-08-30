@@ -226,15 +226,6 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
-    // 获取banner
-    this.getBanner().then(
-      () => {},
-      (err) => {
-        if (err.status) { this.$toast(errorMessage[err.status]); } else {
-          this.$toast('网络故障');
-        }
-      },
-    );
 
     // 获取商品信息
     this.getBgpProducts().then(
@@ -249,6 +240,15 @@ export default {
     // 是否登录
     this.isLogin().then(() => {
       this.login = true;
+      // 获取banner
+      this.getBanner().then(
+        () => {},
+        (err) => {
+          if (err.status) { this.$toast(errorMessage[err.status]); } else {
+            this.$toast('网络故障');
+          }
+        },
+      );
       this.getUserSummary().then(
         () => {
           Toast.clear();

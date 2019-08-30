@@ -326,7 +326,8 @@ export default {
         this.$toast('请输入8-20位字母及数字组成的密码');
         return false;
       }
-      const regPassword = /^[0-9a-zA-Z]+$/;
+      // const regPassword = /^[0-9a-zA-Z]+$/;
+      const regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/;
       if (!regPassword.test(this.emailData.password)) {
         this.$toast('请输入8-20位字母及数字组成的密码');
         return false;
