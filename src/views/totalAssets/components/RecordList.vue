@@ -215,6 +215,11 @@ export default {
             item.showDate = publicMethods.createOrderDate(item.create_at);
             item.state = '-';
             break;
+          case 'ACTIVITY_REWARD_GGL':
+            item.transaction_type = '活动奖励';
+            item.showDate = publicMethods.createOrderDate(item.create_at);
+            item.state = '+';
+            break;
           default:
             break;
         }
