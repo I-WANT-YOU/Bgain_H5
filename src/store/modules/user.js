@@ -47,6 +47,7 @@ const getters = {
   })),
   bonusSummary: state => get(state.referInfo.bonus_summary, 'all', 0),
   inviteeDetailsList: state => get(state.referInfo, 'invitee_details_list', []),
+  invitationCode: state => get(state.referInfo, 'invitation_code', []),
   rewardRecordList: state => get(state.referInfo, 'reward_record_list', []),
   everyTokens: state => get(state.referInfo.bonus_summary, 'every_tokens', {}),
   assetRecords: state => get(state.assetRecord, 'operation_logs', []),
