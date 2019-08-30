@@ -226,6 +226,7 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
+
     // 获取banner
     this.getBanner().then(
       () => {},

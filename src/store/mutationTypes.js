@@ -33,6 +33,7 @@ export const GET_CURRENT_SELL_INFO = 'GET_CURRENT_SELL_INFO';
 export const GET_CURRENT_BUY_RESULT = 'GET_CURRENT_BUY_RESULT';
 export const GET_CURRENT_SELL_RESULT = 'GET_CURRENT_SELL_RESULT';
 export const GET_IS_LOGIN = 'GET_IS_LOGIN';
+export const GET_HOLIDAY = 'GET_HOLIDAY';
 
 /**
  * @module Fund 基金产品相关

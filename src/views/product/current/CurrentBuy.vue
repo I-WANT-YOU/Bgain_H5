@@ -48,6 +48,7 @@ import BgainButton from '@/components/BgainButton.vue';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 import InsufficientBalanceDialog from '../components/InsufficientBalanceDialog.vue';
 import { AUTH_LEVEL } from '@/constants/options';
+import responseStatus from '@/constants/responseStatus';
 
 const { mapGetters, mapActions } = createNamespacedHelpers('product/current');
 const { mapGetters: mapUserGetters, mapActions: mapUserActions } = createNamespacedHelpers('user');
@@ -131,7 +132,9 @@ export default {
           Toast('不能低于最少转入数量，请重新输入');
         }
       } catch (error) {
-        Toast(error.message);
+        if (error.status) {
+          Toast(responseStatus[error.status]);
+        }
       }
     },
     async onSubmitClick(password) {
@@ -145,7 +148,9 @@ export default {
           name: 'current-buy-result',
         });
       } catch (error) {
-        Toast(error.message);
+        if (error.status) {
+          Toast(responseStatus[error.status]);
+        }
       }
     },
     checkBalanceDialogVisible() {

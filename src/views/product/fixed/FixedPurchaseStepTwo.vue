@@ -121,7 +121,11 @@ export default {
         message: '加载中...',
       });
       this.password = val;
-      this.confirmBuy(); // 调用接口 确认认购
+      try {
+        this.confirmBuy(); // 调用接口 确认认购
+      } catch (error) {
+        console.log(error);
+      }
     },
     // 立即认购
     confirmBuy() {

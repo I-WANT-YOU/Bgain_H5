@@ -34,9 +34,7 @@
     <!--信息列表-->
     <div class="list-container">
       <HomeProductList @initSwiper="()=>{
-          this.$nextTick(() => {
-            this.$refs['my-swiper'].initSwiper();
-          });
+
         }" />
     </div>
     <div class="footer">
@@ -124,6 +122,10 @@ export default {
     //     }
     //   },
     // );
+
+    this.$nextTick(() => {
+      this.$refs['my-swiper'].initSwiper();
+    });
     // 用户登陆 验证用户信息 // 判断用户是否登陆
     this.isLogin().then(() => {
       this.userStatus = 'login';

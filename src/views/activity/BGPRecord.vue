@@ -131,7 +131,6 @@ export default {
     this.getBGPRecord().then(
       () => {
         Toast.clear();
-        console.log(this.recordList);
       },
       (err) => {
         this.$toast.clear();

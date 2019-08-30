@@ -143,6 +143,9 @@ export default {
         case 'FBP_CONVERT':
           type = '积分兑换';
           break;
+        case 'FBP_BONUS_INVITED_REGISTER':
+          type = '邀友奖励';
+          break;
         default:
           break;
       }

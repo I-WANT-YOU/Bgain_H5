@@ -21,6 +21,9 @@ export function formatTransactionType(option) {
     case 'EXPERIENCE_PROFIT':
       option.transaction_type = '体验金收益';
       break;
+    case 'ACTIVITY_REWARD_GGL':
+      option.transaction_type = '活动奖励';
+      break;
     case 'EXPERIENCE_PROFIT_RESET':
       option.transaction_type = '体验金收益清零';
       break;
@@ -144,6 +147,7 @@ export function formatAmount(option) {
   || option.transaction_type === 'OTC_BUY'
   || option.transaction_type === 'FBP_BONUS_INVITED_REGISTER'
   || option.transaction_type === 'FBP_MEMBERSHIP_SIGN'
+  || option.transaction_type === 'ACTIVITY_REWARD_GGL'
   ) {
     option.amount = `+${option.amount}`;
   } else {
