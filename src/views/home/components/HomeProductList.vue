@@ -20,7 +20,7 @@
             <span>当前净值</span>
             <span>成立以来</span>
           </li>
-          <li v-for="(item) in newFunds" @click="goFund(item.id,item.status)" :key="item.id">
+          <li v-for="(item) in newFunds" @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
             <div class="found-li-style">
               <div class="item-one">
                 <span>{{ item.fund_product_name }}</span>
@@ -178,12 +178,18 @@ export default {
       });
     },
     // 去基金
-    goFund(id, type) {
+    goFund(id, type, name) {
       if (type === 'INITIAL') {
-        this.$router.push({
-          name: 'initial',
-          params: { id },
-        });
+        console.log(name);
+        if (name === '冠军套利母基金') {
+          this.$router.push(`/product/fund/initial/In/${id}`);
+        } else if (name === '冠军CTA母基金') {
+          this.$router.push(`/product/fund/initial/CTA/${id}`);
+        }
+        // this.$router.push({
+        //   name: 'initial',
+        //   params: { id },
+        // });
       } else {
         this.$router.push({
           name: 'noinitial',
