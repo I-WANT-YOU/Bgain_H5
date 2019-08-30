@@ -8,7 +8,7 @@
         :key="record.id">
         <div class="card__wrapper--left">
           <div class="card__label">{{changeTr(record.transaction_type)}}</div>
-          <div class="card__date">{{getDate(record.createAt)}}</div>
+          <div class="card__date">{{getDate(record.create_at)}}</div>
         </div>
         <div class="card__balance">{{getSymbol(record.transaction_type)}}{{record.amount}}</div>
       </div>
