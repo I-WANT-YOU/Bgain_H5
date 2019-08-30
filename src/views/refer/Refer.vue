@@ -41,11 +41,13 @@
     <div class="list">
       <ReferCard v-for="(item,key) in list" :key="key" :option="item" :tab="active" />
     </div>
+    <div class="button" @click="onClick">我的邀请码 {{invitationCode}}</div>
   </div>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
+import { copyText } from '@utils/tools';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import ReferCard from './components/ReferCard.vue';
 
@@ -67,7 +69,7 @@ export default {
       }
     },
     onClick() {
-
+      copyText(this.invitationCode);
     },
     onTip() {
       this.showTip = true;
@@ -92,7 +94,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['bonusSummary', 'inviteeDetailsList', 'rewardRecordList']),
+    ...mapGetters(['bonusSummary', 'inviteeDetailsList', 'rewardRecordList', 'invitationCode']),
     ...mapState(['referInfo']),
   },
   async mounted() {
@@ -219,6 +221,19 @@ export default {
         border-color: #ffb629;
       }
     }
+  }
+  .button {
+    position: fixed;
+    text-align: center;
+    left: 22px;
+    bottom: 18px;
+    width: 331px;
+    height: 46px;
+    line-height: 46px;
+    font-size: 16px;
+    color: #ffffff;
+    background: url("../../assets/images/invitation.png");
+    background-size: 100% 100%;
   }
 }
 </style>
