@@ -56,6 +56,9 @@ export default {
         case 'SELL':
           type = '投资回款';
           break;
+        case 'ACTIVITY_REWARD_GGL':
+          type = '活动奖励';
+          break;
         case 'COMMISSION':
           type = '佣金奖励';
           break;

@@ -112,7 +112,12 @@
                 </div>
             </div>
             <div class="toLogin">
-                <span>已有账号？</span><router-link to="/login" class="login"><span>登录</span><svg-icon icon-class="next" class="next"/></router-link>
+              <div>
+                 <span>已有账号？</span>
+                 <span @click="$router.push('/login')" class="cals">登录</span>
+                 <span @click="$router.push('/login')"><svg-icon icon-class="next" class="next"/></span>
+              </div>
+
             </div>
         </div>
         <Footer/>
@@ -539,18 +544,22 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                >span{
-                    font-size: 14px;
-                    color: #999999;
-                }
-                .login{
+                font-size: 14px;
+                color: #999999;
+                >div{
+                  width: 50%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  .cals{
                     font-size: 14px;
                     color: blue;
-                    .next{
-                      width: 9px;
-                      height: 12px;
-                      margin-left: 5px;
-                    }
+                  }
+                  .next{
+                    width: 9px;
+                    height: 12px;
+                    margin-left: 5px;
+                  }
                 }
             }
         }
