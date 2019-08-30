@@ -26,9 +26,9 @@
         <!--服务协议-->
         <div class="protocol">
           <span>兑换即视为已阅读并同意</span>
-          <span class="protocol-special">服务协议</span>
+          <span class="protocol-special" @click="onSkip('/agreement/service')">服务协议</span>
           <span>和</span>
-          <span class="protocol-special">隐私政策</span>
+          <span class="protocol-special"  @click="onSkip('/agreement/privacy')">隐私政策</span>
         </div>
         <div class="buttons" >
           <button @click="exchange">立即兑换</button>
@@ -104,6 +104,10 @@ export default {
       'codeExchange',
       'getActiveVerificationCode',
     ]),
+    /* 跳转到服务协议 */
+    onSkip(router) {
+      this.$router.push(router);
+    },
     /* 重新发送验证码 */
     sendCode() {
       // 发送验证码
@@ -163,8 +167,6 @@ export default {
             () => {
               if (this.codeExchangeInfo.code === 0) {
                 // 兑换成功 调用弹窗
-                console.log('success');
-                console.log(this.codeExchangeInfo.code)
                 this.isShowPop = true;
                 Auth.setToken(this.codeExchangeInfo.data.access_token);
               } else if (this.codeExchangeInfo.msg) {
@@ -194,6 +196,11 @@ export default {
     }
   },
   beforeDestroy() {
+  },
+  // 修改列表页的meta值，false时再次进入页面会重新请求数据。
+  beforeRouteLeave(to, from, next) {
+    from.meta.keepAlive = false;
+    next();
   },
 };
 </script>

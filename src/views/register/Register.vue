@@ -276,16 +276,16 @@ export default {
         return false;
       }
       // 校验校验码
-      if (this.phoneData.invitationCode) {
-        if (this.phoneData.invitationCode.length !== 6) {
-          this.$toast('邀请码不存在，请重新输入');
-          return false;
-        }
-        if (!regPassword.test(this.phoneData.invitationCode)) {
-          this.$toast('邀请码不存在，请重新输入');
-          return false;
-        }
-      }
+      // if (this.phoneData.invitationCode) {
+      //   if (this.phoneData.invitationCode.length !== 6) {
+      //     this.$toast('邀请码不存在，请重新输入1');
+      //     return false;
+      //   }
+      //   if (!regPassword.test(this.phoneData.invitationCode)) {
+      //     this.$toast('邀请码不存在，请重新输入2');
+      //     return false;
+      //   }
+      // }
       // 是否同意协议
       if (this.phoneData.checked === false) {
         this.$toast('请点击同意协议');
