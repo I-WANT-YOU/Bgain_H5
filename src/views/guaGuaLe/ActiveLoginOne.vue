@@ -108,7 +108,6 @@ export default {
         Toast('账号不能为空');
         return false;
       }
-      console.log(password);
       if (password === '') {
         Toast('密码不能为空');
         return false;

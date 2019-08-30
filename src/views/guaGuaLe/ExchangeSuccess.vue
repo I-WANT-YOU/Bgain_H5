@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="buttons" @click="confirm">
-        <button>确认</button>
+        <button>立即查看</button>
       </div>
   </div>
 </template>
