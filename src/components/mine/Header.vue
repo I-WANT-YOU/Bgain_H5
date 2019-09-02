@@ -7,7 +7,7 @@
           <svg-icon v-show="!isFixed" icon-class="mine-logo" class="logo" />
         </span>
         <div class="right">
-          <span v-if="authenticated" @click="onMine">
+          <span v-if="isLogin" @click="onMine">
             <svg-icon v-show="isFixed" icon-class="mine-user2" class="mine" />
             <svg-icon v-show="!isFixed" icon-class="mine-user" class="mine" />
           </span>
@@ -24,7 +24,6 @@
 
 <script>
 import { Sticky } from 'vant';
-import { mapState } from 'vuex';
 import Menu from './Meun.vue';
 
 export default {
@@ -33,14 +32,18 @@ export default {
     Sticky,
     Menu,
   },
+  props: {
+    isLogin: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+  },
   data() {
     return {
       isFixed: false,
       showMenu: false,
     };
-  },
-  computed: {
-    ...mapState('auth', ['authenticated']),
   },
   methods: {
     onScroll({ isFixed }) {

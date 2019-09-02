@@ -1,6 +1,6 @@
 <template>
   <div class="mine">
-    <Header class="mine-header" />
+    <Header class="mine-header" :isLogin="login" />
     <div class="mine-content">
       <div class="userInfo">
         <div class="income">
@@ -166,6 +166,7 @@ export default {
           duration: 0,
           forbidClick: true,
           message: '加载中...',
+          color: '#1989fa',
         });
         this.getUserBalanceSummary().then(() => {
           Toast.clear();
