@@ -14,14 +14,17 @@
     <!--冲币地址-->
     <div class="purchaseAddress">
       <div>
-        <span>充币地址</span>
-      </div>
-      <div>
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
+        <div>
+          <span>充币地址</span>
+        </div>
+        <div>
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
           </textarea>
+        </div>
+        <div><button @click="copyText(address[activeContentTab])">点击复制</button></div>
       </div>
-      <div><button @click="copyText(address[activeContentTab])">点击复制</button></div>
+      <div class="x-line"></div>
       <div class="QRCode">
         <div ref="qrcode" class="qrcode-img"></div>
       </div>
@@ -147,56 +150,67 @@ export default {
     /*兑换*/
     .purchaseAddress{
       position: absolute;
-      width: 335px;
-      height:345px;
+      width: 359px;
+      height:369px;
       top:63px;
-      left: 20px;
-      right: 20px;
-      background: #FFFFFF;
+      left: 8px;
+      right: 8px;
+      background: url("../../../assets/images/pruchase/bg-purchase.png") no-repeat;
+      background-size: 359px 369px;
       >div:nth-child(1){
-        padding:20px 0 0 20px;
-        font-size: 15px;
-        color: #676C8D;
-        >span{
-          height: 21px;
+        height: 189px;
+        >div:nth-child(1){
+          padding:20px 0 0 20px;
+          font-size: 15px;
+          color: #676C8D;
+          >span{
+            height: 21px;
+          }
+        }
+        >div:nth-child(2){
+          margin-top: 19px;
+          padding:0 20px;
+          >textarea{
+            width: 273px;
+            padding: 7px 11px;
+            margin: 0;
+            line-height: 20px;
+            font-size: 14px;
+            color: #3C64EE;
+            overflow: hidden;
+            background: #EDF0FA;
+            border: none;
+            resize: none;
+          }
+        }
+        >div:nth-child(3){
+          display: flex;
+          justify-content: center;
+          margin-top: 15px;
+          >button{
+            width: 70px;
+            height:26px;
+            padding:0;
+            background: #3C64EE;
+            border-radius: 4px;;
+            border:none;
+            font-size: 12px;
+            color: #FFFFFF;
+          }
         }
       }
-      >div:nth-child(2){
-        margin-top: 19px;
-        padding:0 20px;
-        >textarea{
-          width: 273px;
-          padding: 7px 11px;
-          margin: 0;
-          line-height: 20px;
-          font-size: 14px;
-          color: #3C64EE;
-          overflow: hidden;
-          background: #EDF0FA;
-          border: none;
-          resize: none;
-        }
+      .x-line{
+        height: 0;
+        width: 314px;
+        border-bottom: 1px #3C64EE dashed;
+        margin: 0 auto;
       }
-      >div:nth-child(3){
-        display: flex;
-        justify-content: center;
-        margin-top: 15px;
-        >button{
-          width: 70px;
-          height:26px;
-          padding:0;
-          background: #3C64EE;
-          border-radius: 4px;;
-          border:none;
-          font-size: 12px;
-          color: #FFFFFF;
-        }
-      }
+
       /*二维码*/
       .QRCode{
         display: flex;
         justify-content: center;
-        margin-top: 48px;
+        margin-top: 23.5px;
         .qrcode-img{
           width: 111px;
           height: 111px;

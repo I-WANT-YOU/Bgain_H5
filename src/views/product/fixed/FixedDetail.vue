@@ -9,11 +9,11 @@
       <div class="message-detail">
         <div class="annual-interest-rate">
           <div><span>{{this.fixed.annual_rate}}</span><span>%</span></div>
-          <div><span>预期年化利率</span></div>
+          <div><span class="dark-font">预期年化利率</span></div>
         </div>
         <div class="locked-period">
           <div><span>{{this.fixed.closed_period}}</span><span>天</span></div>
-          <div><span>锁定期</span></div>
+          <div><span class="dark-font">锁定期</span></div>
         </div>
       </div>
       <div class="message-tips">
@@ -358,6 +358,9 @@ export default {
         }
         /*数据展示*/
         .annual-interest-rate{
+          .dark-font{
+            color: #ADBEFA;
+          }
           >div:nth-child(1){
             display: flex;
             align-items: baseline;
@@ -389,6 +392,9 @@ export default {
           }
         }
         .locked-period{
+          .dark-font{
+            color: #ADBEFA;
+          }
           >div:nth-child(1){
             display: flex;
             align-items: baseline;
