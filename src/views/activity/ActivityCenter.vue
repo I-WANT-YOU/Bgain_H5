@@ -442,9 +442,9 @@ export default {
   }
   /*轮播图*/
   .swipe-container{
-    padding-top: 29px;
-    display: flex;
-    justify-content: center;
+    padding: 29px 20px 0 20px;
+    /*display: flex;*/
+    /*justify-content: center;*/
   }
   .goods-container{
     padding-top: 29px;

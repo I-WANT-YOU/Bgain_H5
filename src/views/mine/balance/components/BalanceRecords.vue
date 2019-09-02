@@ -22,6 +22,7 @@ import { formatDate } from '@utils/tools';
 import BalanceRecordsEmpty from './BalanceRecordsEmpty.vue';
 import { TRANSACTION_TYPE, TRANSACTION_TYPE_PLUS } from '@/constants/options';
 
+
 export default {
   name: 'BalanceRecords',
   components: { BalanceRecordsEmpty },

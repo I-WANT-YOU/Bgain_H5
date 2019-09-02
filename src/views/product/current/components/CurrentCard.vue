@@ -37,7 +37,7 @@
       :showCancel="false"
       content="您还未设置交易密码，暂无法进行购买"
       submitText="设置交易密码"
-      @submit="()=>{ sessionStorage.setItem('payment','/product/current') ;this.$router.push('/mine/safety/password/payment/set');}"
+      @submit="onSSSS"
       @cancel="()=>{this.showDialog = false}"
     />
   </div>
@@ -135,6 +135,10 @@ export default {
         sessionStorage.setItem('fromLogin', '/product/current');
         this.$router.push('/login');
       }
+    },
+    onSSSS() {
+      sessionStorage.setItem('payment', '/product/current');
+      this.$router.push('/mine/safety/password/payment/set');
     },
     async onBuyClick(currency) {
       if (this.login) {
