@@ -13,6 +13,9 @@ module.exports = {
         modifyVars: {
           blue: '#3C64EE',
           'border-color': '#E5E9F6',
+          // '@toast-background-color': '#3C64EE',
+          // '@toast-text-color': '#3C64EE',
+          // '@loading-text-color': 'red',
         },
       },
     },
