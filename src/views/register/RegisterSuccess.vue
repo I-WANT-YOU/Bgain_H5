@@ -100,10 +100,10 @@ export default {
         border: none;
       }
     }
-    .goToNext {
-      height: 24px;
-      margin-top: 51px;
-      display: flex;
+    .goToNext{
+      /*height: 24px;  */
+      margin-top:51px;
+      display:flex;
       align-items: center;
       justify-content: center;
       > a {

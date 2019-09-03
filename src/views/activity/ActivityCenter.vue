@@ -30,7 +30,7 @@
       <div  @click="toRecord" class="member-integral">
         <div>
           <div>
-            <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span><span>积分</span>
+            <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span><span>&nbsp;BGP</span>
           </div>
           <div>
             <span>BGP明细</span>

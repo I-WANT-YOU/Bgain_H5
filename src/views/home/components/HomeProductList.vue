@@ -201,9 +201,12 @@ export default {
       return formatType2(type);
     },
     // 去活期
-    goCurrent() {
+    goCurrent(type) {
       this.$router.push({
         name: 'current',
+        query: {
+          currency: type,
+        },
       });
     },
     // 设置echart名称
