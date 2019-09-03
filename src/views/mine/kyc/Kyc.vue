@@ -157,7 +157,6 @@ export default {
       }
     },
     remainingTime(time) {
-      console.log(time);
       this.remainingTimeText = time;
     },
   },

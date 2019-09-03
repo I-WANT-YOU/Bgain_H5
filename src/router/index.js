@@ -7,11 +7,6 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/Testing.vue'),
-    },
-    {
       path: '/home',
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),

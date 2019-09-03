@@ -46,11 +46,13 @@ export const checkDrivingLicenseFormat = (license) => {
   return re.test(license);
 };
 
+// 验证kyc证件号
 export const checkDocumentNumber = (type, docNumber) => {
   const variations = {
     ID: checkIdNumberFormat,
     PASSPORT: checkPassportFormat,
-    DRIVING_LICENSE: checkDrivingLicenseFormat,
+    // DRIVING_LICENSE: checkDrivingLicenseFormat,
+    DRIVER_LICENSE: checkDrivingLicenseFormat,
   };
   return variations[type] && variations[type].call(this, docNumber);
 };
@@ -100,6 +102,8 @@ function selectText(textbox, startIndex, stopIndex) {
   }
 }
 
+
+// 复制
 export const copyText = (text) => {
   // 数字没有 .length 不能执行selectText 需要转化成字符串
   const textString = text.toString();
