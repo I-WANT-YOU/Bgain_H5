@@ -40,6 +40,14 @@
       @submit="onSSSS"
       @cancel="()=>{this.showDialog = false}"
     />
+    <BgainBaseDialog
+      v-model="Dialog"
+      :showCancel="false"
+      content="您还未设置交易密码，暂无法进行购买"
+      submitText="设置交易密码"
+      @submit="onSSSS"
+      @cancel="()=>{this.showDialog = false}"
+    />
   </div>
 </template>
 
@@ -50,7 +58,7 @@ import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('user');
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
-const { mapActions: mapCurrentActions, mapState } = createNamespacedHelpers('product/current');
+const { mapActions: mapCurrentActions, mapGetters: mapCurrentGetters } = createNamespacedHelpers('product/current');
 
 export default {
   name: 'CurrentCard',
@@ -72,6 +80,7 @@ export default {
       login: false,
       al: 1,
       showDialog: false,
+      Dialog: false,
     };
   },
   mounted() {
@@ -86,7 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters(['authLevel']),
-    ...mapState(['holiday']),
+    ...mapCurrentGetters(['holidays']),
   },
   methods: {
     ...mapAuthActions({ isloginSt: 'isLogin' }),
@@ -117,7 +126,7 @@ export default {
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidays) {
             this.$router.push({
               name: 'current-sell',
               params: {
@@ -125,7 +134,7 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;
@@ -144,7 +153,7 @@ export default {
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidays) {
             this.$router.push({
               name: 'current-buy',
               params: {
@@ -152,7 +161,7 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;

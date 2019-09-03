@@ -1,6 +1,6 @@
 <template>
   <div class="kyc-result__container">
-    <bgain-nav-bar :onArrowClick="()=>{this.$router.push('/mine/safety')}" title="身份认证"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="goSafety" title="身份认证"></bgain-nav-bar>
     <kyc-result-card :status="status" :subtitle="subtitle"/>
   </div>
 </template>
@@ -33,6 +33,11 @@ export default {
     subtitle() {
       if (this.submitKycStatus !== 'failed') return '';
       return this.submitKycMsg;
+    },
+  },
+  methods: {
+    onSafety() {
+      this.$router.push('/mine/safety');
     },
   },
 };

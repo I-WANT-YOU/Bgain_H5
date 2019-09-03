@@ -23,6 +23,7 @@ const getters = {
     .filter(({ currency_type: type }) => currency === type)
     .head()
     .value(),
+  holidays: state => get(state.holiday, 'holiday', true),
   historyProfitRateMax: ({ historyRates }) => Number(get(historyRates, 'history_profit_max', '0')),
   historyProfitRates: ({ historyRates }) => chain(historyRates)
     .get('history_profit_daily', [])

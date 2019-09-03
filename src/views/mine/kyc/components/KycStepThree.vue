@@ -45,6 +45,7 @@ import { getDesensitizedUsername } from '@utils/tools';
 import KycField from './KycField.vue';
 import SendCode from '@/components/SendCode.vue';
 import BgainButton from '@/components/BgainButton.vue';
+import responseStatus from '@/constants/responseStatus';
 
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
 const { mapActions: mapUserActions, mapGetters: mapUserGetters } = createNamespacedHelpers('user');
@@ -95,7 +96,8 @@ export default {
           Toast('发送验证码成功');
         }
       } catch (error) {
-        Toast(error.message);
+        console.log(error);
+        Toast(responseStatus[error.status]);
       }
     },
     onSubmitClick() {
