@@ -144,7 +144,7 @@ export default {
           type = '积分兑换';
           break;
         case 'FBP_BONUS_INVITED_REGISTER':
-          type = '邀友注册';
+          type = '邀友返利';
           break;
         default:
           break;

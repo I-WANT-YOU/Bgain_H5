@@ -13,7 +13,7 @@
         placeholder="请输入验证码"
       >
         <template v-slot:button>
-          <SendCode :autosend="true" @remainingTime="onTime" :remainingTimeText="remainingTimeText" @onsend="onSendToken"/>
+          <SendCode :autosend="true" @remainingTime="onTime" senddingTextColor="#3C64EE" :remainingTimeText="remainingTimeText" @onsend="onSendToken"/>
         </template>
       </kyc-field>
     </cell-group>
@@ -96,7 +96,6 @@ export default {
           Toast('发送验证码成功');
         }
       } catch (error) {
-        console.log(error);
         Toast(responseStatus[error.status]);
       }
     },

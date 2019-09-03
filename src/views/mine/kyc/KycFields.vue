@@ -7,12 +7,12 @@
           <span class="kyc-fields__value">{{kyc.nationality ? kyc.nationality : 'Singapore'}}</span>
         </template>
       </Field>
-      <Field label="姓名">
+      <Field v-show="showName" label="姓名">
         <template v-slot:input>
           <span class="kyc-fields__value">{{kyc.first_name}}{{kyc.last_name}}</span>
         </template>
       </Field>
-      <Field label="名">
+      <Field v-show="!showName" label="名">
         <template v-slot:input>
           <span class="kyc-fields__value">
             {{kyc.last_name
@@ -20,7 +20,7 @@
           </span>
         </template>
       </Field>
-      <Field label="姓">
+      <Field v-show="!showName" label="姓">
         <template v-slot:input>
           <span class="kyc-fields__value">
             {{kyc.first_name
@@ -62,6 +62,7 @@ export default {
     return {
       kycInfoType: 'PASSPORT',
       kyc: {},
+      country: [],
     };
   },
   async mounted() {
@@ -91,6 +92,17 @@ export default {
         return '中国大陆身份证';
       }
       return '中国大陆身份证';
+    },
+    showName() {
+      if (this.kyc.nationality === 'Taiwan'
+        || this.kyc.nationality === '台湾(中国)'
+        || this.kyc.nationality === 'Hongkong'
+        || this.kyc.nationality === '香港(中国)'
+        || this.kyc.nationality === 'China'
+        || this.kyc.nationality === '中国') {
+        return true;
+      }
+      return false;
     },
   },
 };

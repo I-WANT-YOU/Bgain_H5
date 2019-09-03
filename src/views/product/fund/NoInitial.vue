@@ -160,11 +160,15 @@
     <BgainBaseDialog
       v-model="payment"
       :showCancel="false"
-      content="您还未设置交易密码，暂无法进行购买"
+      content
       submitText="设置交易密码"
       @submit="setPayment"
       @cancel="cancelPayment"
-    />
+    >
+      <template v-slot:content>
+        <div class="setPay">您还未设置交易密码，暂无法进行购买</div>
+      </template>
+    </BgainBaseDialog>
     <BgainBaseDialog
       v-model="showDialog"
       :showCancel="false"
@@ -578,6 +582,14 @@ export default {
       width: 100%;
       border-radius: 0;
     }
+  }
+  .setPay {
+    padding: 0 20px;
+    font-size: 16px;
+    color: #0f3256;
+    letter-spacing: 0.15px;
+    text-align: center;
+    line-height: 24px;
   }
 }
 </style>

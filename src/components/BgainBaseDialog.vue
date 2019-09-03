@@ -5,7 +5,7 @@
     v-bind="$attrs"
     :close-on-click-overlay="false"
   >
-    <div class="bgain-dialog__container">
+    <div class="bgain-dialog__container" :style="{height:wrapHeight}">
       <svg-icon
         v-if="showClose"
         icon-class="close"
@@ -81,6 +81,10 @@ export default {
     submitColor: {
       type: String,
       default: '',
+      required: false,
+    },
+    wrapHeight: {
+      type: String,
       required: false,
     },
   },

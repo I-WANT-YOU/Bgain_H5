@@ -105,3 +105,17 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.van-field__body{
+  width: 100%;
+  .van-field__control{
+    width: 100%;
+  }
+}
+.kyc__country{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

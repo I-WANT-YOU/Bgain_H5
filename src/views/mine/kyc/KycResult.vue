@@ -27,7 +27,6 @@ export default {
   computed: {
     ...mapGetters(['submitKycStatus', 'submitKycMsg']),
     status() {
-      console.log(this.submitKycStatus);
       return STATUS[this.submitKycStatus];
     },
     subtitle() {
@@ -35,10 +34,28 @@ export default {
       return this.submitKycMsg;
     },
   },
+  mounted() {
+    if (window.history && window.history.pushState) {
+      // 向历史记录中插入了当前页
+      window.history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
+    }
+  },
   methods: {
-    onSafety() {
+    goSafety() {
       this.$router.push('/mine/safety');
     },
+    goBack() {
+      sessionStorage.clear();
+      this.$router.replace('/mine/safety');
+    },
+  },
+  destroyed() {
+    window.removeEventListener('popstate', this.goBack, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    sessionStorage.clear();
+    next();
   },
 };
 </script>
