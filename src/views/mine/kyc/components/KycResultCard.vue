@@ -65,9 +65,6 @@ export default {
       },
     };
   },
-  mounted() {
-    console.log(this.status);
-  },
   methods: {
     onSkip(router) {
       this.$router.push(router);

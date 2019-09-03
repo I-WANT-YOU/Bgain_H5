@@ -183,12 +183,12 @@ export default {
     ...userMapActions(['getUserSummary']),
     // 返回上一层
     back() {
-      this.$router.go(-1);
+      this.$router.push('/product/fixed');
     },
     // 设置购买流程
     setSteps(status) {
       // 设置申购倒计时
-      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
+      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 1000);
       this.countDownTimeIsShow = true;
       switch (status) {
         case '"PURCHASE_START':
@@ -242,7 +242,7 @@ export default {
         this.countDownTimeIsShow = false;
         clearInterval(this.timer);
       }
-      this.countDownTimer = `${day}天${hour}小时${minutes}分${seconds}秒`;
+      this.countDownTimer = `${day}天${hour}小时${minutes}分`;
       return true;
     },
     // 格式化时间

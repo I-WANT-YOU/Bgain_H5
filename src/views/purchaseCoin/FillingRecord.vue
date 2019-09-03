@@ -13,7 +13,7 @@
           <span>{{formatDate(item.create_date)}}</span>
         </div>
         <div>
-          <span>{{item.amount}}</span>
+          <span>+{{item.amount}}</span>
         </div>
       </div>
     </div>

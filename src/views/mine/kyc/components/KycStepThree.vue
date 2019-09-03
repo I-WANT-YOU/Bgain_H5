@@ -13,7 +13,7 @@
         placeholder="请输入验证码"
       >
         <template v-slot:button>
-          <SendCode :autosend="true" @remainingTime="onTime" :remainingTimeText="remainingTimeText" @onsend="onSendToken"/>
+          <SendCode :autosend="true" @remainingTime="onTime" senddingTextColor="#3C64EE" :remainingTimeText="remainingTimeText" @onsend="onSendToken"/>
         </template>
       </kyc-field>
     </cell-group>
@@ -45,6 +45,7 @@ import { getDesensitizedUsername } from '@utils/tools';
 import KycField from './KycField.vue';
 import SendCode from '@/components/SendCode.vue';
 import BgainButton from '@/components/BgainButton.vue';
+import responseStatus from '@/constants/responseStatus';
 
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
 const { mapActions: mapUserActions, mapGetters: mapUserGetters } = createNamespacedHelpers('user');
@@ -95,7 +96,7 @@ export default {
           Toast('发送验证码成功');
         }
       } catch (error) {
-        Toast(error.message);
+        Toast(responseStatus[error.status]);
       }
     },
     onSubmitClick() {

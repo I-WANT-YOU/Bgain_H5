@@ -5,6 +5,7 @@
     <Swipe
       :autoplay="3000"
       indicator-color="white"
+      :style="{width:'335px',height:'88px',}"
     >
       <SwipeItem v-for="(item,index) in bannerList" :key="index">
         <van-image
