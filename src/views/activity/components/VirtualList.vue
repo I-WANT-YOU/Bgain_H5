@@ -20,7 +20,7 @@
             <span class="textStyle">{{item.integral_product_name}}</span>
             <span
               :class="{goodsState:item.stock === 0}"
-            >{{item.stock === 0?'已售磬':item.fbpprice+'积分'}}</span>
+            >{{item.stock === 0?'已售磬':item.fbpprice+'BGP'}}</span>
           </div>
         </li>
       </ul>

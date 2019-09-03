@@ -2,6 +2,7 @@
   <currency-tab
     v-if="currencies.length !== 0"
     :currencies="currencies"
+    :selectedCurrency ='selectedCurrency'
     @currency-change="onCurrencyChange">
     <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
       <current-card :isLogin="isLogin" :data-source="product"></current-card>
@@ -33,6 +34,7 @@ export default {
       isLoading: false,
       currency: '',
       product: {},
+      selectedCurrency: '', // 首页传递的数据
     };
   },
   computed: {
@@ -45,6 +47,7 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
+    this.selectedCurrency = this.$route.query.currency;
     await this.onRefresh();
     Toast.clear();
   },

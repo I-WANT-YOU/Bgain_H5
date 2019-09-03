@@ -90,7 +90,7 @@ export default {
       }
     }
     .goToNext{
-      height: 24px;
+      /*height: 24px;  */
       margin-top:51px;
       display:flex;
       align-items: center;

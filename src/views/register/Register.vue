@@ -52,7 +52,14 @@
                                         >
                                         </Checkbox>
                                       <span>
-                                        我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
+                                        我已阅读并同意
+                                        <a @click="onSkip('/agreement/service')" class="protocol-a">
+                                          《服务协议》
+                                        </a>
+                                        和
+                                        <a @click="onSkip('/agreement/privacy')" class="protocol-a">
+                                          《隐私政策》
+                                        </a>
                                       </span>
                                     </div>
                             </div>
@@ -100,7 +107,14 @@
                                   >
                                   </Checkbox>
                                   <span>
-                                    我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
+                                    我已阅读并同意
+                                    <a @click="onSkip('/agreement/service')" class="protocol-a">
+                                      《服务协议》
+                                    </a>
+                                    和
+                                    <a @click="onSkip('/agreement/privacy')" class="protocol-a">
+                                      《隐私政策》
+                                    </a>
                                   </span>
                                 </div>
                             </div>
@@ -115,7 +129,9 @@
               <div>
                  <span>已有账号？</span>
                  <span @click="$router.push('/login')" class="cals">登录</span>
-                 <span @click="$router.push('/login')"><svg-icon icon-class="next" class="next"/></span>
+                 <span @click="$router.push('/login')">
+                   <svg-icon icon-class="next" class="next"/>
+                 </span>
               </div>
 
             </div>
@@ -417,6 +433,11 @@ export default {
 </script>
 
 <style lang='scss'>
+  /*超链接样式*/
+  .protocol-a{
+    color: #3660F7;
+    text-decoration: underline;
+  }
     .register{
         font-family: PingFangSC-Regular;
         letter-spacing: 0;

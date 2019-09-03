@@ -30,7 +30,7 @@
       <div  @click="toRecord" class="member-integral">
         <div>
           <div>
-            <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span><span>积分</span>
+            <span>{{numberWithThousands(basicInfo.fbp_amt * 1)}}</span><span>&nbsp;BGP</span>
           </div>
           <div>
             <span>BGP明细</span>
@@ -442,9 +442,10 @@ export default {
   }
   /*轮播图*/
   .swipe-container{
-    padding: 29px 20px 0 20px;
-    /*display: flex;*/
-    /*justify-content: center;*/
+    /*padding: 29px 20px 0 20px;*/
+    padding: 29px 0 0 0;
+    display: flex;
+    justify-content: center;
   }
   .goods-container{
     padding-top: 29px;
