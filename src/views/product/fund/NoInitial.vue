@@ -9,8 +9,8 @@
         <span :class="['gains' , fundDetail.up_down >= 0 ? '' : 'active']">
           <span>
             {{fundDetail.up_down >= 0
-            ? `+${fundDetail.market_change_percent}`
-            : `-${fundDetail.market_change_percent}`}}
+            ? `+${am}`
+            : `-${am}`}}
           </span>
           <span class="percent">%</span>
           <i />
@@ -160,11 +160,15 @@
     <BgainBaseDialog
       v-model="payment"
       :showCancel="false"
-      content="您还未设置交易密码，暂无法进行购买"
+      content
       submitText="设置交易密码"
       @submit="setPayment"
       @cancel="cancelPayment"
-    />
+    >
+      <template v-slot:content>
+        <div class="setPay">您还未设置交易密码，暂无法进行购买</div>
+      </template>
+    </BgainBaseDialog>
     <BgainBaseDialog
       v-model="showDialog"
       :showCancel="false"
@@ -201,13 +205,14 @@ export default {
       open: false,
       type: '',
       risk: '',
-      chart_x: '03-16',
-      chart_y: '1.0000',
+      chart_x: '03-16', // 净值走势日期
+      chart_y: '1.0000', // 净值走势单位净值
       payment: false,
       sellTime: '',
       isLogin: '',
       showDialog: false,
       dialogText: '',
+      am: 0, // 日涨跌幅
     };
   },
   async mounted() {
@@ -228,8 +233,10 @@ export default {
       this.risk = formatRiskText(this.fundDetail).risk_level_type;
       this.setEcharts();
       this.showstep = this.fundDetail.status === 'OPEN';
+      this.am = this.fundDetail.market_change_percent;
       Toast.clear();
     } catch (error) {
+      Toast('网络加载失败,请重新进入该页面');
       Toast.clear();
     }
   },
@@ -287,7 +294,10 @@ export default {
       } else {
         this.showstep = true;
         if (this.authLevel) {
-          this.sendRemind({ fundId: this.fundDetail.id, openDate: this.fundDetail.next_open_date }).then(() => {
+          this.sendRemind({
+            fundId: this.fundDetail.id,
+            openDate: this.fundDetail.next_open_date,
+          }).then(() => {
             Toast('到时会以短信或邮箱的形式提醒您');
           }, (error) => {
             if (error && error.status) {
@@ -572,6 +582,14 @@ export default {
       width: 100%;
       border-radius: 0;
     }
+  }
+  .setPay {
+    padding: 0 20px;
+    font-size: 16px;
+    color: #0f3256;
+    letter-spacing: 0.15px;
+    text-align: center;
+    line-height: 24px;
   }
 }
 </style>

@@ -63,15 +63,5 @@ module.exports = {
     host: '0.0.0.0',
     port: 8080,
     disableHostCheck: true,
-    // proxy: {
-    //   // 设置代理
-    //   "/api": {
-    //     target: "http://localhost:3000", //真实请求的目标地址
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       "^/api": ""
-    //     }
-    //   }
-    // }
   },
 };

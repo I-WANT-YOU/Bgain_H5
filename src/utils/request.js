@@ -5,7 +5,7 @@ import * as Auth from './auth';
 import baseUrl from '../config/baseUrl';
 
 const request = axios.create({
-  timeout: 5000,
+  timeout: 10000,
   baseURL: baseUrl,
 });
 

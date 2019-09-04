@@ -44,7 +44,7 @@
     <div class="fixed-info">
       <div>
         <span>产品类型</span>
-        <span>固定收益产品</span>
+        <span>{{productType}}</span>
       </div>
       <div>
         <span>收益方式</span>
@@ -52,7 +52,7 @@
       </div>
       <div>
         <span>投资去向</span>
-        <span>由Bagin平台精选量化套利投资组合</span>
+        <span>{{fixed.investment_destination}}</span>
       </div>
       <span>固定期限理财，产品结束前不可退出</span>
     </div>
@@ -144,6 +144,17 @@ export default {
       'fixed',
     ]),
     ...mapGetters(['authLevel']),
+    productType() {
+      let type = '';
+      switch (this.fixed.product_type) {
+        case 'FIX_INCOME':
+          type = '固定收益';
+          break;
+        default:
+          type = '固定收益';
+      }
+      return type;
+    },
   },
   methods: {
     // 立即认购
@@ -183,12 +194,12 @@ export default {
     ...userMapActions(['getUserSummary']),
     // 返回上一层
     back() {
-      this.$router.go(-1);
+      this.$router.push('/product/fixed');
     },
     // 设置购买流程
     setSteps(status) {
       // 设置申购倒计时
-      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
+      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 1000);
       this.countDownTimeIsShow = true;
       switch (status) {
         case '"PURCHASE_START':
@@ -242,7 +253,7 @@ export default {
         this.countDownTimeIsShow = false;
         clearInterval(this.timer);
       }
-      this.countDownTimer = `${day}天${hour}小时${minutes}分${seconds}秒`;
+      this.countDownTimer = `${day}天${hour}小时${minutes}分`;
       return true;
     },
     // 格式化时间

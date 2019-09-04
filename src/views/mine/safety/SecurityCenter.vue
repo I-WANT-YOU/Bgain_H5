@@ -110,6 +110,11 @@ export default {
     },
   },
   async mounted() {
+    if (window.history && window.history.pushState) {
+      // 向历史记录中插入了当前页
+      window.history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
+    }
     try {
       Toast.loading({
         duration: 0,
@@ -145,6 +150,10 @@ export default {
     onCancel() {
       this.visible = false;
     },
+    goBack() {
+      sessionStorage.clear();
+      window.history.go(-1);
+    },
     onKyc() {
       if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFIED') {
         this.$router.push('/mine/safety/kyc/fields');
@@ -164,6 +173,13 @@ export default {
     onOtcSubmit() {
       console.log('跳转otc认证页');
     },
+  },
+  destroyed() {
+    window.removeEventListener('popstate', this.goBack, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    sessionStorage.clear();
+    next();
   },
 };
 </script>

@@ -40,6 +40,26 @@
       @submit="onSSSS"
       @cancel="()=>{this.showDialog = false}"
     />
+    <BgainBaseDialog
+      v-model="Dialog"
+      :showCancel="false"
+      title="温馨提示"
+      content
+      submitText="知道了"
+      @submit="()=>{this.Dialog = false}"
+      @cancel="()=>{this.Dialog = false}"
+      wrapHeight="260px"
+    >
+      <template v-slot:content>
+        <div>
+          <div class="holiday">平台休假中，暂不可进行转入/转出，敬请谅解！</div>
+          <div class="holiday-rules">
+            <div>规则说明:</div>
+            <div>中国非周末公休节假日（包括元旦、春节、清明、劳动节、端午、中秋、国庆），平台在不处理天天赚转入、转出业务，节假日后即可恢复正常处理。</div>
+          </div>
+        </div>
+      </template>
+    </BgainBaseDialog>
   </div>
 </template>
 
@@ -50,7 +70,7 @@ import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('user');
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
-const { mapActions: mapCurrentActions, mapState } = createNamespacedHelpers('product/current');
+const { mapActions: mapCurrentActions, mapGetters: mapCurrentGetters } = createNamespacedHelpers('product/current');
 
 export default {
   name: 'CurrentCard',
@@ -72,6 +92,7 @@ export default {
       login: false,
       al: 1,
       showDialog: false,
+      Dialog: false,
     };
   },
   mounted() {
@@ -86,7 +107,7 @@ export default {
   },
   computed: {
     ...mapGetters(['authLevel']),
-    ...mapState(['holiday']),
+    ...mapCurrentGetters(['holidayStatus']),
   },
   methods: {
     ...mapAuthActions({ isloginSt: 'isLogin' }),
@@ -117,7 +138,7 @@ export default {
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidayStatus) {
             this.$router.push({
               name: 'current-sell',
               params: {
@@ -125,7 +146,7 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;
@@ -144,7 +165,7 @@ export default {
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidayStatus) {
             this.$router.push({
               name: 'current-buy',
               params: {
@@ -152,7 +173,7 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;
@@ -304,6 +325,22 @@ export default {
         color: #ffffff;
       }
     }
+  }
+  .holiday {
+    padding: 0 15px;
+    font-size: 16px;
+    color: #0f3256;
+    letter-spacing: 0.15px;
+    text-align: center;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
+  .holiday-rules{
+    text-align: left;
+    font-size: 12px;
+    color: #6A707D;
+    letter-spacing: 0;
+    line-height: 19px;
   }
 }
 </style>

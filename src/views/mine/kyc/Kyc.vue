@@ -157,7 +157,6 @@ export default {
       }
     },
     remainingTime(time) {
-      console.log(time);
       this.remainingTimeText = time;
     },
   },
@@ -179,6 +178,8 @@ export default {
 
     .kyc__fields {
       .van-cell {
+        display: flex;
+        align-items: center;
         padding: 16px 30px;
       }
 

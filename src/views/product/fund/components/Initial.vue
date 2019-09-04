@@ -126,7 +126,7 @@ export default {
       border-radius: 4px;
       border: 0;
       text-align: center;
-      font-weight: 100;
+      font-weight: 400;
     }
   }
 }
