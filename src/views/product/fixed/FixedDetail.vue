@@ -44,7 +44,7 @@
     <div class="fixed-info">
       <div>
         <span>产品类型</span>
-        <span>固定收益产品</span>
+        <span>{{productType}}</span>
       </div>
       <div>
         <span>收益方式</span>
@@ -52,7 +52,7 @@
       </div>
       <div>
         <span>投资去向</span>
-        <span>由Bagin平台精选量化套利投资组合</span>
+        <span>{{fixed.investment_destination}}</span>
       </div>
       <span>固定期限理财，产品结束前不可退出</span>
     </div>
@@ -144,6 +144,17 @@ export default {
       'fixed',
     ]),
     ...mapGetters(['authLevel']),
+    productType() {
+      let type = '';
+      switch (this.fixed.product_type) {
+        case 'FIX_INCOME':
+          type = '固定收益';
+          break;
+        default:
+          type = '固定收益';
+      }
+      return type;
+    },
   },
   methods: {
     // 立即认购

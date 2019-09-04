@@ -84,22 +84,8 @@ export default {
       }
     },
   },
-  computed: {
-    backEvent() {
-      return this.$store.getters.backEvent;
-    },
-  },
   mounted() {
     Toast.clear();
-    const that = this;
-    if (window.history && window.history.pushState) {
-      window.onpopstate = function () {
-        if (that.backEvent) {
-          that.backEvent();
-          that.$store.commit('backEvent', null);
-        }
-      };
-    }
   },
   methods: {
     ...mapActions({
