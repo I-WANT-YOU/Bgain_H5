@@ -19,7 +19,7 @@
       <div class="message-tips">
         <div>100%兑付</div>
         <div>账户安全保障</div>
-        <div>5EOS起诉</div>
+        <div>{{this.fixed.min_inverst_amount}}{{this.fixed.currency}}起投</div>
       </div>
     </div>
     <!--交易流程-->
@@ -188,7 +188,7 @@ export default {
     // 设置购买流程
     setSteps(status) {
       // 设置申购倒计时
-      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 1000);
+      this.timer = setInterval(() => { this.countDown(this.fixed.server_time - this.fixed.purchase_start_date); }, 1000);
       this.countDownTimeIsShow = true;
       switch (status) {
         case '"PURCHASE_START':
@@ -434,6 +434,7 @@ export default {
         color: #C9D5FF;
         >div{
           width: 80px ;
+          padding: 0 3px;
           height: 20px;
           border: 0.51px solid #99AEF6;
           border-radius: 2px;
