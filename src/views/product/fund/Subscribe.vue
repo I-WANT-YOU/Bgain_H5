@@ -85,12 +85,14 @@ export default {
     };
   },
   mounted() {
+    //
     this.getFundBuyInfo(this.$route.params.id).then(() => {
       this.changIcon();
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
-      } else if (this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.fundBuyInfo.balance_fbp * 1) {
+      } else if (this.fundBuyInfo.support_fbp
+        && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.fundBuyInfo.balance_fbp * 1) {
         this.changIconBGP();
       } else {
         this.show = true;

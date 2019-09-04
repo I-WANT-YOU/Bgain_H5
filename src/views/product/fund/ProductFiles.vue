@@ -9,7 +9,6 @@
         line-width="90"
         color="#3c64ee"
         line-height="2"
-        :swipeable="true"
         @click="switchTab"
       >
         <Tab class="tab" title="团队介绍">
