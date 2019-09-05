@@ -234,11 +234,13 @@ export default {
           } catch (error) {
             throw error;
           }
-        } else if (router === '/mine/fund') {
-          this.dialogApp = true;
         } else {
           this.$router.push(router);
         }
+        // 基金开放
+        // else if (router === '/mine/fund') {
+        //   this.dialogApp = true;
+        // }
       } else {
         this.$router.push('/login');
       }
