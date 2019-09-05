@@ -199,7 +199,9 @@ export default {
     // 设置购买流程
     setSteps(status) {
       // 设置申购倒计时
-      this.timer = setInterval(() => { this.countDown(this.fixed.server_time - this.fixed.purchase_start_date); }, 1000);
+      this.timer = setInterval(() => {
+        this.countDown(this.fixed.purchase_start_date - this.fixed.server_time);
+      }, 1000);
       this.countDownTimeIsShow = true;
       switch (status) {
         case '"PURCHASE_START':

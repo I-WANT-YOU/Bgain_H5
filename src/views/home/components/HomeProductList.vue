@@ -20,7 +20,13 @@
             <span>当前净值</span>
             <span>成立以来</span>
           </li>
-          <li v-for="(item) in newFunds" @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
+          <li v-for="(item) in newFunds"
+              @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
+          <!--<div class="found-li-title" v-if="index===0">-->
+            <!--<span>基金名称、策略类型及风险值</span>-->
+            <!--<span>当前净值</span>-->
+            <!--<span>成立以来</span>-->
+          <!--</div>-->
             <div class="found-li-style">
               <div class="item-one">
                 <span>{{ item.fund_product_name }}</span>
@@ -35,7 +41,8 @@
               <div class="item-three">
                 <span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'
                     : item.total_ups_and_downs * 1 === 0 ? 'none' : '' ]">
-                  {{item.total_ups_and_downs.substring(0,1)==='-' ?
+                  {{/* eslint-disable max-len */
+                   item.total_ups_and_downs.substring(0,1)==='-' ?
                   `${item.total_ups_and_downs}%`: item.total_ups_and_downs * 1 === 0 ? '0.00%' : `+${item.total_ups_and_downs}%` }}
                 </span>
                 <div>
@@ -54,7 +61,8 @@
             <span>利率趋势</span>
             <span>今日年化利率</span>
           </li>
-          <li v-for="(item,index) in currents" @click="goCurrent(item.currency_type)" :key="item.id">
+          <li v-for="(item,index) in currents"
+              @click="goCurrent(item.currency_type)" :key="item.id">
             <div class="current-li-style">
               <div>
                 <img :src="item.icon_url" class="current-li-style-icon" alt="">
@@ -86,21 +94,21 @@
             <span>预期年化利率</span>
           </li>
           <li v-for="(item) in fixeds" :key="item.id" @click="stepToFixDetail(item.id)">
-            <div class="fix-li-style">
+          <div class="fix-li-style">
+            <div>
+              <img :src="item.icon_url" class="fix-li-style-icon" alt="">
+              <span>{{ item.currency_type }}</span>
+            </div>
+            <div>
+              <span>{{ item.closed_period }}天</span>
+            </div>
+            <div>
+              <span>{{ item.expected_annual_return }}%</span>
               <div>
-                <img :src="item.icon_url" class="fix-li-style-icon" alt="">
-                <span>{{ item.currency_type }}</span>
-              </div>
-              <div>
-                <span>{{ item.closed_period }}天</span>
-              </div>
-              <div>
-                <span>{{ item.expected_annual_return }}%</span>
-                <div>
-                  <img alt="." src="../../../assets/images/next.svg" />
-                </div>
+                <img alt="." src="../../../assets/images/next.svg" />
               </div>
             </div>
+          </div>
           </li>
         </ul>
       </div>
@@ -383,7 +391,7 @@ export default {
             margin-right: 6px;
             line-height: 16px;
             vertical-align: center;
-            padding: 0px 3px;
+            padding: 0 3px;
             border: 0.51px solid #c3cce9;
             border-radius: 2px;
           }

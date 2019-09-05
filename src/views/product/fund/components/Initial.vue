@@ -99,8 +99,8 @@ export default {
       display: inline-block;
       box-sizing: border-box;
       width: 40px;
-      height: 20px;
-      line-height: 20px;
+      height: 22px;
+      line-height: 22px;
       border: 1px solid #ff5c5c;
       border-radius: 2px;
       font-size: 11px;

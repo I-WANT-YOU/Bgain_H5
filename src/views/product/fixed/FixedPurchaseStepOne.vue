@@ -13,7 +13,7 @@
         <div class="info-num">
           <span>{{expectedReturn}}</span>
         </div>
-        <div class="info-text">预期收益({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</div>
+        <div class="info-text">预期收益({{tabActiveType === 'BGP' ? 'BGP' : tabActiveType}})</div>
       </div>
     </div>
     <!--tab-->
@@ -30,17 +30,20 @@
         </div>
       </div>
       <div class="tabs-content">
-        <div class="tabs-content-title"><span>认购数量({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</span></div>
+        <div class="tabs-content-title">
+          <span>认购数量({{tabActiveType === 'BGP' ? 'BGP' : tabActiveType}})</span>
+        </div>
         <div class="lestPurchase">
-
+          <!--suppress HtmlFormInputWithoutLabel -->
           <input ref='inputFile'
-                 :placeholder="'起投' + placeHolder + (tabActiveType === 'FBP' ? 'BGP' : tabActiveType)"
+                 :placeholder=
+                   "'起投' + placeHolder + (tabActiveType === 'BGP' ? 'BGP' : tabActiveType)"
                   v-model="investmentAmount"
           />
         </div>
         <div class="availableBalance">
          <span>可用余额</span><span>{{AllAccount}}
-           {{tabActiveType === "FBP" ? 'BGP' : tabActiveType}}</span>
+           {{tabActiveType === "BGP" ? 'BGP' : tabActiveType}}</span>
         </div>
       </div>
     </div>
@@ -103,7 +106,6 @@ export default {
         this.purchaseProcess(info, localFixedBuyInfo);
       },
       (err) => {
-        console.log(err);
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
@@ -245,9 +247,9 @@ export default {
           // 显示弹窗 提示用户余额不足
           this.popShow = true;
         }
-      } else { // 支持FBP购买
+      } else { // 支持BGP购买
         this.isTabsShow = true; // Tba可切换
-        // 判断BTC/FBP余额是否大于起投金额 选择初始TAB页面（本页面接口）
+        // 判断BTC/BGP余额是否大于起投金额 选择初始TAB页面（本页面接口）
         if (localFixedBuyInfo.balance * 1 >= localFixedBuyInfo.min_inverst_amount * 1) {
           this.tabActiveCurrency = true; // tab页面为币种
           this.canUseCurrency = true; // 币种可以购买
@@ -265,7 +267,7 @@ export default {
           // 判断FBP是否有足够余额
           if (localFixedBuyInfo.balance_fbp * 1 >= localFixedBuyInfo.min_inverst_amount_fbp * 1) {
             this.tabActiveFBP = true; // tab页面为FBP
-            this.tabActiveType = 'FBP'; // 认购数量
+            this.tabActiveType = 'BGP'; // 认购数量
             this.canUseFBP = true; // FBP可以购买
             this.placeHolder = localFixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = localFixedBuyInfo.balance_fbp;
@@ -298,7 +300,7 @@ export default {
           } else {
             this.tabActiveCurrency = false; // 币种tab激活
             this.tabActiveFBP = true; // FBPtab激活
-            this.tabActiveType = 'FBP';
+            this.tabActiveType = 'BGP';
             this.investmentAmount = '';
             this.placeHolder = this.fixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = this.fixedBuyInfo.balance_fbp;
@@ -425,6 +427,7 @@ export default {
   .tabs-content{
     padding:26.5px 21px 0 22px;
     .tabs-content-title{
+      padding-bottom: 26px;
       height: 21px;
       line-height: 21px;
       font-size: 15px;
@@ -432,7 +435,9 @@ export default {
     }
     .lestPurchase{
       height: 25px;
-      padding:28px 0 18px 0;
+      display: flex;
+      align-items: center;
+      /*padding:20px 0 18px 0;*/
       >input {
         height: 25px;
         border: none;
@@ -453,7 +458,7 @@ export default {
     }
     .availableBalance{
       height: 21px;
-      padding:16px 0 17px 0;
+      padding:26px 0 17px 0;
       display: flex;
       justify-content: space-between;
       >span:nth-child(1){
