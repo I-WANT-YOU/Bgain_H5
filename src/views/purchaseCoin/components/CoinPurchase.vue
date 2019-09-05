@@ -168,6 +168,8 @@ export default {
           }
         }
         >div:nth-child(2){
+          display: flex;
+          justify-content: center;
           margin-top: 19px;
           padding:0 20px;
           >textarea{

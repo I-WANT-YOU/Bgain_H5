@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="actions">
-    <!-- <button @click="onSkip('/mine/fixed')">查看详情</button> -->
+    <button @click="onSkip('/mine/fixed')">查看详情</button>
     <button class="sure" @click="onSkip('/product/fixed')">继续认购</button>
   </div>
 </div>
@@ -45,7 +45,7 @@ export default {
       }
       this.showData = JSON.parse(sessionStorage.getItem('fixedBuyResult')).fixedBuyResult;
     } catch (e) {
-      console.log(e);
+      throw new Error(e);
     }
   },
   methods: {
@@ -93,7 +93,7 @@ export default {
       height: 46px;
       margin: 86px 35px 0 35px;
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       >button{
         width: 130px;
         height: 46px;
@@ -103,10 +103,10 @@ export default {
         line-height: 37.36px;
         border-radius: 4px;
       }
-      // >button:nth-child(1){
-      //   background: #FFFFFF;
-      //   border: 1px solid #EEEEEE;
-      // }
+       >button:nth-child(1){
+        background: #FFFFFF;
+        border: 1px solid #EEEEEE;
+       }
       .sure{
         background: #3C64EE;
         color: #FBFCFB;

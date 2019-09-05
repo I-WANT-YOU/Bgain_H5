@@ -29,7 +29,8 @@
       </div>
       <div><van-switch v-model="checked" size = '27px'/></div>
     </div>
-    <div class="tip">购买即表示您已阅读并同意我们的<span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
+    <div class="tip">购买即表示您已阅读并同意我们的
+      <span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
     <div class="purchaseButton">
       <button @click="immediateBuy">立即认购</button>
     </div>
@@ -124,7 +125,7 @@ export default {
       try {
         this.confirmBuy(); // 调用接口 确认认购
       } catch (error) {
-        console.log(error);
+        throw new Error(error);
       }
     },
     // 立即认购
@@ -212,8 +213,6 @@ export default {
           },
         ];
       } else if (isHadCoupon) { // 有优惠券
-        console.log(this.availabelCoupons);
-        console.log(this.$route.query);
         // eslint-disable-next-line
         const expectedAdd = (this.showData.investmentAmount * 100000000 * this.availabelCoupons[this.$route.query.index].coupon_return) / 10000000000;
         // eslint-disable-next-line
@@ -308,7 +307,6 @@ export default {
       sessionStorage.setItem('showData', this.$route.params.stepTwoData); // 保存上一页的数据
     }
     this.showData = JSON.parse(sessionStorage.getItem('showData')); // 设置传递的数据
-    console.log(this.showData);
 
     // 判断是否设置交易密码
     this.isSetPassword();

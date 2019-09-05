@@ -227,7 +227,7 @@ export default {
         width: 100%;
         height: 46px;
         border-radius: 4px;
-        overflow: hidden;
+        /*overflow: hidden;*/
         .login-btn {
           width: 100%;
           height: 100%;
