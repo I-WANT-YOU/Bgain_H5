@@ -219,23 +219,22 @@ export default {
     // 未登录
     async goLogin(router) {
       if (this.login) {
-        // if (router === '/extract-coin') {
-        //   try {
-        //     await this.getUserSummary();
-        //     if (this.kycStatus === 'CERTIFIED') {
-        //       this.$router.push(router);
-        //     } else if (this.kycStatus === 'UN_CERTIFIED') {
-        //       Toast('身份未认证');
-        //     } else if (this.kycStatus === 'FAILED') {
-        //       Toast('身份认证失败');
-        //     } else if (this.kycStatus === 'AUDITING') {
-        //       Toast('身份认证中');
-        //     }
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // } else
-        if (router === '/mine/fixed' || router === '/mine/fund' || router === '/extract-coin') {
+        if (router === '/extract-coin') {
+          try {
+            await this.getUserSummary();
+            if (this.kycStatus === 'CERTIFIED') {
+              this.$router.push(router);
+            } else if (this.kycStatus === 'UN_CERTIFIED') {
+              Toast('身份未认证');
+            } else if (this.kycStatus === 'FAILED') {
+              Toast('身份认证失败');
+            } else if (this.kycStatus === 'AUDITING') {
+              Toast('身份认证中');
+            }
+          } catch (error) {
+            throw error;
+          }
+        } else if (router === '/mine/fund') {
           this.dialogApp = true;
         } else {
           this.$router.push(router);
