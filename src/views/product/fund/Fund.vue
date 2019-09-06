@@ -148,6 +148,29 @@ export default {
         item => formatFundData(item),
       );
     },
+    // params() {
+    // this.options.forEach((item) => {
+    //   this.params[item.type] = item.active;
+    //   if (this.params[item.type] === 'all') {
+    //     delete this.params[item.type];
+    //   }
+    //   if (item.type === 'type') {
+    //     fundProductTypeList.forEach((ite) => {
+    //       if (ite.value === item.active) {
+    //         this.params[item.type] = ite.type;
+    //       }
+    //     });
+    //   }
+    //   if (item.type === 'risk') {
+    //     riskLevelTypeList.forEach((ite) => {
+    //       if (ite.value === item.active) {
+    //         this.params[item.type] = ite.type;
+    //       }
+    //     });
+    //   }
+    // });
+    //   return {};
+    // },
   },
   mounted() {
     window.scrollTo(0, 0);
@@ -156,6 +179,10 @@ export default {
       forbidClick: true,
       message: '加载中...',
     });
+    this.options = this.options.map(((item) => {
+      item.active = 'all';
+      return item;
+    }));
     try {
       this.getFundProducts(this.params).then(() => {
         Toast.clear();

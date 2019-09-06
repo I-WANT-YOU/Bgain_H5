@@ -136,12 +136,14 @@ export default {
               default:
                 break;
             }
+            this.isShowConfirm = false;
           },
           (err) => {
             this.$toast.clear();
             if (err.status) { this.$toast(errorMessage[err.status]); } else {
               this.$toast('网络故障');
             }
+            this.isShowConfirm = false;
           },
         );
       }

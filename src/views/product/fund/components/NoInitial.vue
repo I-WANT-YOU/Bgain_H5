@@ -125,19 +125,20 @@ export default {
     }
     .labels {
       display: flex;
+      align-items: center;
+      justify-content: center;
       > span {
-        height: 18px;
-        line-height: 18px;
-        margin: 0 10px 0 0;
-        display: inline-block;
-        box-sizing: border-box;
+        padding: 3px 0;
         width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px 0 0;
+        box-sizing: border-box;
         border: 1px solid #ff5c5c;
         border-radius: 2px;
         font-size: 11px;
         color: #ff5c5c;
-        letter-spacing: 0;
-        text-align: center;
       }
     }
     .time {

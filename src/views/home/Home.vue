@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <HuiTable/>
     <router-link to="/winningHome">刮刮乐</router-link><br />
     <router-link to="/levelOnePop">lihui-首页弹窗</router-link><br />
     <router-link to="/totalAssets">lihui-总资产</router-link><br />
@@ -60,12 +61,15 @@
 <script>
 import SendCode from '@component/SendCode.vue';
 import Geetest from '../../components/Geetest.vue';
+import HuiTable from '../../components/HuiTable.vue';
+
 
 export default {
   name: 'home',
   components: {
     Geetest,
     SendCode,
+    HuiTable,
   },
   data() {
     return {
