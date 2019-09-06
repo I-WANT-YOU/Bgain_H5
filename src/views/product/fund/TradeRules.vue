@@ -111,12 +111,12 @@
                     <div class="top">&gt;</div>
                     <div>=</div>
                   </span>
-                  <span>{{rateSell.length && rateSell[2].data}}天</span>
+                  <span>{{rateSell.length && rateSell[2] ? rateSell[2].data : 0}}天</span>
                 </div>
               </td>
               <td>
-                <span class="rate">{{rateSell.length && rateSell[2].rate * 100}}%</span>
-                <span class="rate old">({{rateSell.length && rateSell[2].rate1 * 100}}%)</span>
+                <span class="rate">{{rateSell.length && rateSell[2] ? rateSell[2].rate * 100 : 0}}%</span>
+                <span class="rate old">({{rateSell.length && rateSell[2] ? rateSell[2].rate1 * 100 : 0}}%)</span>
               </td>
             </tr>
           </table>
@@ -172,7 +172,6 @@ export default {
   },
   mounted() {
     this.getFundTradeRules(this.$route.query.productId).then(() => {
-      console.log(this.fundTradeRules);
       this.carry_rate_user = `${this.fundTradeRules.carry_rate_user * 100}%`;
       this.manage_fee_rate = `${this.fundTradeRules.manage_fee_rate * 100}%`;
       this.manage_fee_rate_no_discount = `${this.fundTradeRules.manage_fee_rate_no_discount * 100}%`;

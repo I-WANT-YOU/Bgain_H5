@@ -11,7 +11,7 @@
           <i></i>
           <span>{{option.title}}</span>
         </div>
-        <div class="time">{{option.create_date}}</div>
+        <div class="time">{{option.created_at}}</div>
       </template>
       <template v-if="type === 'message'" v-slot:right>
         <div class="delete" @click="deleteMessage">删除</div>
@@ -56,7 +56,7 @@ export default {
     },
     async deleteMessage() {
       try {
-        this.$emit('delete', this.option.uuid);
+        this.$emit('delete', this.option.id);
       } catch (error) {
         Toast(error);
       }

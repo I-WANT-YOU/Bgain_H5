@@ -2,7 +2,10 @@
   <div @click="onSkip" class="fixed-card">
     <div class="fixed-card-title">
       <div class="fixed-name">{{option.product_name}}</div>
-      <div :class="['fixed-status',status?'active':'']">{{status?'计息中':'已结束'}}</div>
+      <div
+        v-show="statuText !== 'null'"
+        :class="['fixed-status',status ? 'active':'']"
+      >{{statuText}}</div>
     </div>
     <div class="fixed-card-asset">
       <div class="fixed-card-item">
@@ -11,7 +14,7 @@
       </div>
       <div class="fixed-card-item">
         <div class="num">{{option.return_amount}} {{option.payment_currency}}</div>
-        <div>已得收益</div>
+        <div>{{status?'待收收益':'已得收益'}}</div>
       </div>
       <div class="fixed-card-item">
         <div class="num">{{showText}}</div>
@@ -50,12 +53,35 @@ export default {
         if (this.option.portfolio_record_status === 'INTEREST_START') {
           return this.option.product_left_days;
         }
-        if (this.option.portfolio_record_status === 'DUE' || this.option.portfolio_record_status === 'DUE_PENDDING') {
+        if (this.option.portfolio_record_status === 'DUE'
+          || this.option.portfolio_record_status === 'DUE_PENDDING') {
           return '0天';
         }
         return '--';
       }
       return this.formatDate(this.option.end_date);
+    },
+    statuText() {
+      if (this.status) {
+        if (this.option.portfolio_record_status === 'INTEREST_START') {
+          return '计息中';
+        }
+        if (this.option.portfolio_record_status === 'DUE') {
+          return '回款中';
+        }
+        if (this.option.portfolio_record_status === 'DUE_PENDING') {
+          return '待回款';
+        }
+        if (this.option.portfolio_record_status === 'INTEREST_PENDING') {
+          return '待计息';
+        }
+        if (this.option.portfolio_record_status === 'PURCHASE_START') {
+          return '募集中';
+        }
+      } else {
+        return '已结束';
+      }
+      return 'null';
     },
   },
   mounted() {

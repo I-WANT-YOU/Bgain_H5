@@ -91,16 +91,16 @@
         <div v-show="isShow" class="no-record">暂无数据</div>
       </div>
     </div>
-    <div class="trade-record">
+    <div class="fund-trade-record">
       <span>交易记录</span>
-      <span>
+      <span @click="onTradeRecord">
         <svg-icon icon-class="next" class="icon" />
       </span>
     </div>
     <div class="border"></div>
-    <div class="trade-rules">
+    <div class="fund-trade-rules">
       <span>交易规则</span>
-      <span>
+      <span @click="onTradeRules">
         <svg-icon icon-class="next" class="icon" />
       </span>
     </div>
@@ -249,7 +249,6 @@ export default {
         id: this.$route.query.id,
         currencyType: this.$route.query.currencyType,
       });
-      console.log(this.fundOwnerDetail);
       this.pnl_daily = this.fundOwnerDetail.pnl_daily;
       this.pnl_without_carry_list = this.fundOwnerDetail.pnl_without_carry_list;
       this.$nextTick(() => {
@@ -310,6 +309,21 @@ export default {
     },
     onBuy() {
       this.$router.push('/product/fund');
+    },
+    onTradeRules() {
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.query.id },
+      });
+    },
+    onTradeRecord() {
+      this.$router.push({
+        path: '/mine/fund/trade-record-history',
+        query: {
+          productId: this.$route.query.id,
+          title: '交易记录',
+        },
+      });
     },
   },
   computed: {
@@ -490,8 +504,8 @@ export default {
     font-size: 14px;
     color: #a8aeb9;
   }
-  .trade-record,
-  .trade-rules {
+  .fund-trade-record,
+  .fund-trade-rules {
     background: #ffffff;
     height: 50px;
     display: flex;
@@ -501,7 +515,6 @@ export default {
     color: #0f3256;
     box-sizing: border-box;
     padding: 0 20px;
-    font-weight: 600;
     .icon {
       width: 7px;
       height: 11px;

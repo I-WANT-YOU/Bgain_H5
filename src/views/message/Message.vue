@@ -13,6 +13,10 @@
         :key="key"
         :option="option"
       />
+      <div v-show="!list.length" class="no-record">
+        <svg-icon icon-class="mine-fund-no-record" class="no" />
+        <div>暂无记录</div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,8 +53,8 @@ export default {
       await this.getAllNews();
       this.list = this.newList;
     },
-    async onDelete(uuid) {
-      await this.deleteNewsRead(uuid);
+    async onDelete(id) {
+      await this.deleteNewsRead(id);
       await this.getAllNews();
       this.list = this.newList;
     },
@@ -92,6 +96,19 @@ export default {
   }
   .message-center-con {
     flex: 1;
+  }
+  .no-record {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    color: #999999;
+    margin-top: 139px;
+    .no {
+      width: 102px;
+      height: 78px;
+      margin-bottom: 12px;
+    }
   }
 }
 </style>
