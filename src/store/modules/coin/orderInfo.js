@@ -1,15 +1,15 @@
 import * as types from '../../mutationTypes';
 import CoinService from '@/api/coin/purchaseCoin';
-import { handlerSuccessResponseV2 ,handlerSuccessResponseV3} from '@/utils/auth';
+import { handlerSuccessResponseV2, handlerSuccessResponseV3 } from '@/utils/auth';
 
 const state = {
   orderInformation: { // 生成订单产生的信息
     payment_type: {},
   },
   orderInfoById: {}, // 根据用户id获取的信息
-  orderList: {}, // 订单列表
+  orderList: [], // 订单列表
   allPayInfo: {}, // 用户选择支付方式后 生成的数据
-  hadPayInfo:{}, // 用户已经付款接口
+  hadPayInfo: {}, // 用户已经付款接口
 };
 
 const getters = {

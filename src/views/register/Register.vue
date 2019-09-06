@@ -439,7 +439,7 @@ export default {
     text-decoration: underline;
   }
     .register{
-        font-family: PingFangSC-Regular;
+        font-family: PingFangSC-Regular sans-serif;
         letter-spacing: 0;
         display: flex;
         flex-direction: column;
