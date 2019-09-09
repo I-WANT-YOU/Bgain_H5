@@ -106,8 +106,13 @@ export default {
     // 用户登陆 验证用户信息 // 判断用户是否登陆
     this.isLogin().then(() => {
       this.userStatus = 'login';
-      Promise.all([this.getRecord(), this.getUserSummary()]).then(
+      Promise.all([this.getRecord(), this.getUserSummary(), this.getPopInfo()]).then(
         () => {
+          if (this.popInfo.is_popup_window === 1) {
+            this.isPopShow = 'block';
+          } else {
+            this.isPopShow = 'none';
+          }
           // 是否有充值记录
           if (this.recordList.wallet_record_list.length !== 0) {
             this.record = 1;
