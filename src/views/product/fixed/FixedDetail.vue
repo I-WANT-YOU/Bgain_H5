@@ -71,7 +71,7 @@
         <svg-icon icon-class="next"/>
       </span>
     </div>
-    <div class="confirm" :class="{cancelMargin:msgFormSon}">
+    <div class="confirm" :class="{cancelMargin:msgFormSon}" v-show="buyButtonState">
       <button @click="purchase">立即认购</button>
     </div>
     <BgainBaseDialog
@@ -113,12 +113,17 @@ export default {
       toChildDate: [],
       msgFormSon: false,
       showDialog: false,
+      buyButtonState: false,
     };
   },
   mounted() {
     window.scrollTo(0, 0);
     this.getFixedProductById(this.$route.params.id).then(
       () => {
+        // 若商品不可购买 隐藏按钮
+        if (this.fixed.purchase_end_date - this.fixed.server_time >= 0) {
+          this.buyButtonState = true;
+        }
         // 设置购买流程（包含倒计时）
         this.setSteps(this.fixed.product_progress_status_type);
         // 认购开始日期 起息日 到期日 预计收款日
@@ -313,8 +318,10 @@ export default {
   .fixed-detail{
     margin: 0;
     padding: 0;
-    font-family: PingFangSC-Regular;
+    font-family: PingFangSC-Regular sans-serif;
     letter-spacing: 0;
+    background: #F8F8F8;
+    min-height: 100vh;
     /*头部*/
     >header{
       position: fixed;
@@ -458,6 +465,7 @@ export default {
     }
     /*交易流程*/
     .transactionProcess{
+      background: white;
       .transactionProcess-title{
         display: flex;
         justify-content: space-between;
@@ -486,6 +494,7 @@ export default {
     .fixed-info{
       font-size: 13px;
       color: #6A707D;
+      background: #ffffff;
       >div{
         height: 38px;
         display: flex;
@@ -500,7 +509,7 @@ export default {
         }
       }
       >div:nth-child(1){
-        margin-top: 14px;
+        padding-top: 14px;
       }
       >span{
         display: block;
@@ -523,6 +532,7 @@ export default {
       font-size: 15px;
       color: #0F3256;
       padding:0 20px;
+      background: #ffffff;
     }
     .confirm{
       display: flex;
@@ -530,7 +540,7 @@ export default {
       align-items: center;
       height: 138px;
       background: #F8F8F8;
-      margin-bottom: 63px;
+      padding-bottom: 63px;
       >button{
         width: 331px;
         height: 46px;

@@ -18,7 +18,7 @@
           <table class="fundTable">
             <thead>
             <tr>
-              <th>
+              <th style="text-align: left">
                 基金名称、策略类型及风险值
               </th>
               <th style="text-align: right">
@@ -32,7 +32,7 @@
             <tbody>
             <tr  v-for="(item) in newFunds"
                  @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
-              <td>
+              <td style="text-align: left">
                 <div class="item-one">
                   <span>{{ item.fund_product_name }}</span>
                   <div>

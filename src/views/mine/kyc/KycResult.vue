@@ -35,13 +35,19 @@ export default {
     },
   },
   mounted() {
+    /* 监听浏览器回退操作 */
     if (window.history && window.history.pushState) {
       // 向历史记录中插入了当前页
-      window.history.pushState(null, null, document.URL);
-      window.addEventListener('popstate', this.goBack, false);
+      // window.history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.watchBack);
     }
   },
   methods: {
+    /* 处理回退事件 */
+    watchBack() {
+      window.removeEventListener('popstate', this.watchBack);
+      window.history.go(-1);
+    },
     goSafety() {
       this.$router.push('/mine/safety');
     },
