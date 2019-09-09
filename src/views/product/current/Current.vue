@@ -48,7 +48,7 @@ export default {
       message: '加载中...',
     });
     this.selectedCurrency = this.$route.query.currency;
-    await this.onRefresh();
+    await this.onRefresh(this.selectedCurrency);
     Toast.clear();
   },
   methods: {

@@ -100,6 +100,7 @@ export default {
     ...mapUserGetters(['authLevel']),
   },
   async mounted() {
+    window.addEventListener('window.history.forward', () => { console.log(1); });
     this.currency = this.$route.params.currency;
     Toast.loading({
       message: '加载中...',
