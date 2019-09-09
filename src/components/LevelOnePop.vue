@@ -97,9 +97,6 @@ export default {
   components: {
     'van-image': Image,
   },
-  mounted() {
-    console.log(this.showData);
-  },
   computed: {
     ...mapState('auth', ['authenticated']),
   },
