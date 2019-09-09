@@ -17,12 +17,32 @@
         <div>
           <span>充币地址</span>
         </div>
-        <div>
+        <div v-show="activeContentTab !== 3">
           <!--suppress HtmlFormInputWithoutLabel -->
           <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
           </textarea>
         </div>
-        <div><button @click="copyText(address[activeContentTab])">点击复制</button></div>
+        <div v-show="activeContentTab !== 3">
+          <button @click="copyText(address[activeContentTab])">点击复制</button>
+        </div>
+
+        <div v-show="activeContentTab === 3">
+          <div class="address">
+            <div>{{address[activeContentTab]
+              && address[activeContentTab].split('|')[0] || 'abc'}}</div>
+            <div @click="copyText(address[activeContentTab]
+            && address[activeContentTab].split('|')[0] || 'abc')">点击复制</div>
+          </div>
+          <div class="address-title">
+            <span>Memo</span>
+          </div>
+          <div class="address">
+            <div>{{address[activeContentTab]
+              && address[activeContentTab].split('|')[1] || 'abc'}}</div>
+            <div @click="copyText(address[activeContentTab]
+            && address[activeContentTab].split('|')[1] || 'abc')">点击复制</div>
+          </div>
+        </div>
       </div>
       <div class="x-line"></div>
       <div class="QRCode">
@@ -172,7 +192,7 @@ export default {
           justify-content: center;
           margin-top: 19px;
           padding:0 20px;
-          >textarea{
+          >textarea {
             width: 273px;
             padding: 7px 11px;
             margin: 0;
@@ -201,6 +221,40 @@ export default {
           }
         }
       }
+
+      .address-title{
+        padding-left:20px;
+        font-size: 15px;
+        color: #676C8D;
+      }
+
+      .address{
+        display: flex;
+        align-items: center;
+        >div:nth-child(1){
+          width: 200px;
+          padding: 7px 11px;
+          margin: 10px 10px 10px 30px;
+          line-height: 20px;
+          font-size: 14px;
+          color: #3C64EE;
+          overflow: hidden;
+          background: #EDF0FA;
+        }
+        >div:nth-child(2){
+          width: 70px;
+          height:30px;
+          line-height:30px;
+          text-align: center;
+          padding:0;
+          background: #3C64EE;
+          border-radius: 4px;;
+          border:none;
+          font-size: 12px;
+          color: #FFFFFF;
+        }
+      }
+
       .x-line{
         height: 0;
         width: 314px;

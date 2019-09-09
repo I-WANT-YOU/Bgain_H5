@@ -40,7 +40,7 @@
       <BaseFooter />
     </div>
     <!--一级页面强制弹窗-->
-    <!-- <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" /> -->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
     <Menu v-model="showMenu" @close="showMenu=false"/>
     <div class="footer-fixed">
       <DownApp @func="getMsgFormSon" />
@@ -62,7 +62,7 @@ import HomeProductList from './components/HomeProductList.vue';
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
-// import LevelOnePop from '../../components/LevelOnePop.vue';
+import LevelOnePop from '../../components/LevelOnePop.vue';
 
 export default {
   name: 'RegisterHome',
@@ -74,7 +74,7 @@ export default {
     HomeGuide,
     HomeNotice,
     BaseFooter,
-    // LevelOnePop,
+    LevelOnePop,
     Menu,
     DownApp,
   },
@@ -106,8 +106,13 @@ export default {
     // 用户登陆 验证用户信息 // 判断用户是否登陆
     this.isLogin().then(() => {
       this.userStatus = 'login';
-      Promise.all([this.getRecord(), this.getUserSummary()]).then(
+      Promise.all([this.getRecord(), this.getUserSummary(), this.getPopInfo()]).then(
         () => {
+          if (this.popInfo.is_popup_window === 1) {
+            this.isPopShow = 'block';
+          } else {
+            this.isPopShow = 'none';
+          }
           // 是否有充值记录
           if (this.recordList.wallet_record_list.length !== 0) {
             this.record = 1;

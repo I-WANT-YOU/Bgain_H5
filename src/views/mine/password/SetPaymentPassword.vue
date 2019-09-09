@@ -3,14 +3,14 @@
     <BgainNavBar title="设置交易密码" />
     <div class="password__content">
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="password"
         type="password"
         label="交易密码"
         placeholder="请设置由6位数字组成的交易密码"
       />
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="checkPassword"
         type="password"
         label="确认密码"

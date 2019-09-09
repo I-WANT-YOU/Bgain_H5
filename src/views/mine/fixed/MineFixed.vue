@@ -173,8 +173,6 @@ export default {
     }
   }
   .mine-fixed-con {
-    display: flex;
-    flex-direction: column;
     flex: 1;
     .asset-wrap {
       display: flex;

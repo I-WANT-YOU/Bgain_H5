@@ -34,7 +34,18 @@
         <Tab class="tab" title="实盘业绩">
           <div class="con">{{option.firm_performance}}</div>
           <div class="echarts">
-            <div class="my-echarts" ref="echarts" style="width: 334px;height: 160px;" />
+            <div class="echarts-title">
+              <div>日期{{formatDate(chart_x)}}</div>
+              <div>
+                单位净值
+                <span class="echarts-title-nav">{{strip(chart_y)}}</span>
+              </div>
+            </div>
+            <div class="my-echarts" ref="echarts" />
+            <div class="echarts-time">
+              <div>{{formatDate(oldDate)}}</div>
+              <div>{{formatDate(newDate)}}</div>
+            </div>
           </div>
         </Tab>
       </Tabs>
@@ -43,10 +54,12 @@
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
+import { head, last } from 'lodash';
 import { Tab, Tabs } from 'vant';
 import echarts from 'echarts';
 import { mapActions, mapState, mapGetters } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { formatDate, strip } from '@utils/tools';
 import { echartsOption } from './formatFundData';
 
 export default {
@@ -59,6 +72,10 @@ export default {
   data() {
     return {
       option: {},
+      oldDate: new Date() * 1,
+      newDate: new Date() * 1,
+      chart_y: '1',
+      chart_x: new Date() * 1,
     };
   },
   async mounted() {
@@ -78,9 +95,23 @@ export default {
       const series = data.map(item => item.nav);
       const min = Math.min.apply(null, series);
       const max = Math.max.apply(null, series);
-      const num = (max - min) * 1.2;
+      const num = (max - min) * 0.3;
+      // 底部日期
+      this.oldDate = head(X);
+      this.newDate = last(X);
+      this.chart_y = last(series);
 
-      this.chart.setOption(echartsOption(X, series, min, max, num, false));
+      this.chart.getZr().on('mousemove', this.onMouseMove);
+
+      this.chart.setOption(echartsOption(X, series, min, max, num));
+    },
+    onMouseMove(params) {
+      const pointInPixel = [params.offsetX, params.offsetY];
+      const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
+      if (this.chart.containPixel('grid', pointInPixel)) {
+        this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
+        this.chart_y = this.fundNav.filter(item => item.nav_time === this.chart_x)[0].nav;
+      }
     },
     switchTab(name, title) {
       if (title === '实盘业绩') {
@@ -88,6 +119,12 @@ export default {
           this.setEcharts(this.fundNav);
         });
       }
+    },
+    formatDate(time) {
+      return formatDate(time, 'YYYY/MM/DD');
+    },
+    strip(num) {
+      return strip(num * 1, 5);
     },
   },
 };
@@ -162,11 +199,35 @@ export default {
           line-height: 26px;
           white-space: pre-wrap;
         }
+
         .echarts {
           width: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-direction: column;
+          font-size: 12px;
+          color: #9aa2b2;
+
+          .echarts-title,
+          .echarts-time {
+            margin: 10px 0;
+            box-sizing: border-box;
+            padding: 0 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .echarts-title-nav {
+              color: #3c64ee;
+            }
+          }
+
+          .my-echarts {
+            width: 334px;
+            height: 160px;
+          }
         }
       }
     }

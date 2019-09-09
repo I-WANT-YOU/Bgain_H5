@@ -3,15 +3,15 @@ import { strip } from '@utils/tools';
 const statusList = [
   {
     status: 'PENDING',
-    text: '待确定',
+    text: '待确认',
   },
   {
     status: 'CONFIRMED',
-    text: '确定',
+    text: '已确认',
   },
   {
     status: 'COMPLETE',
-    text: '完成',
+    text: '已完成',
   },
   {
     status: 'FAILURE',
@@ -24,18 +24,18 @@ const statusList = [
 ];
 
 export function echartsOption(X, series, series2, min, max, num, tooltip = true) {
-  const seriesList = [{
-    data: series,
-    type: 'line',
-    symbol: 'none',
-    smooth: true,
-    lineStyle: {
-      width: 1,
-      color: '#4770F5',
-    },
-  }];
+  let seriesList;
   if (series2) {
-    seriesList.push({
+    seriesList = [{
+      data: series,
+      type: 'line',
+      symbol: 'none',
+      smooth: true,
+      lineStyle: {
+        width: 1,
+        color: '#4770F5',
+      },
+    }, {
       data: series2,
       type: 'line',
       symbol: 'none',
@@ -44,20 +44,39 @@ export function echartsOption(X, series, series2, min, max, num, tooltip = true)
         width: 1,
         color: '#ff5c5c',
       },
-    });
-  }
-  if (seriesList.length === 1) {
-    seriesList[0].areaStyle = {
-      normal: {
-        opacity: 0.2,
-        color: '#C6D0F0',
+    }];
+  } else {
+    seriesList = [{
+      data: series,
+      type: 'line',
+      symbol: 'none',
+      smooth: true,
+      lineStyle: {
+        width: 1,
+        color: '#4770F5',
       },
-    };
+      areaStyle: {
+        origin: 'start',
+        opacity: 0.4,
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0, color: '#C6D0F0', // 0% 处的颜色
+          }, {
+            offset: 1, color: '#ffffff', // 100% 处的颜色
+          }],
+        },
+      },
+    }];
   }
 
   return {
     grid: {
-      left: '8%',
+      left: '10%',
       right: '0%',
       bottom: '4%',
       top: '3%',
@@ -96,6 +115,7 @@ export function echartsOption(X, series, series2, min, max, num, tooltip = true)
       type: 'value',
       min: strip(min - num, 1),
       max: strip(max + num, 1),
+      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 9, 2),
       axisLabel: {
         show: true,
         textStyle: {

@@ -104,7 +104,7 @@ class FundService {
     }
   }
 
-  static async getFundOrderHistory(status) {
+  static async getFundOrderHistory({ status, productId }) {
     try {
       const requestOptions = {
         url: '/fund-product-order/history',
@@ -112,6 +112,7 @@ class FundService {
         method: 'post',
         data: {
           fund_order_status: status,
+          fund_product_id: productId,
         },
       };
       const response = await request(requestOptions);

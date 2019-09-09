@@ -176,9 +176,9 @@ const actions = {
   },
 
   // 基金历史交易记录
-  async getFundOrderHistory({ commit }, status) {
+  async getFundOrderHistory({ commit }, options) {
     try {
-      const response = await FundService.getFundOrderHistory(status);
+      const response = await FundService.getFundOrderHistory(options);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_FUNDS_ORDER_HISTORY, data);
     } catch (error) {

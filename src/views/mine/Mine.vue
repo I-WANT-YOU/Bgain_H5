@@ -170,6 +170,9 @@ export default {
         });
         this.getUserBalanceSummary().then(() => {
           Toast.clear();
+          if (this.$route.params.toast) {
+            Toast(this.$route.params.toast);
+          }
           this.currency = this.singleCurrency[0].currency;
           this.options = this.currencyss
             .map(item => ({ name: item[0].toLocaleUpperCase() }));
@@ -219,26 +222,9 @@ export default {
     // 未登录
     async goLogin(router) {
       if (this.login) {
-        if (router === '/extract-coin') {
-          try {
-            await this.getUserSummary();
-            if (this.kycStatus === 'CERTIFIED') {
-              this.$router.push(router);
-            } else if (this.kycStatus === 'UN_CERTIFIED') {
-              Toast('身份未认证');
-            } else if (this.kycStatus === 'FAILED') {
-              Toast('身份认证失败');
-            } else if (this.kycStatus === 'AUDITING') {
-              Toast('身份认证中');
-            }
-          } catch (error) {
-            throw error;
-          }
-        } else {
-          this.$router.push(router);
-        }
+        this.$router.push(router);
         // 基金开放
-        // else if (router === '/mine/fund') {
+        // if (router === '/mine/fund') {
         //   this.dialogApp = true;
         // }
       } else {
@@ -266,9 +252,9 @@ export default {
   .mine-content {
     display: flex;
     flex: 1 1 auto;
-    margin-top: -82px;
     align-items: center;
     flex-direction: column;
+    margin-top: -82px;
     .userInfo {
       box-sizing: border-box;
       width: 343px;
