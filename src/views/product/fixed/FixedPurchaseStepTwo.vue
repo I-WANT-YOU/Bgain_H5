@@ -25,9 +25,11 @@
     <div v-if="showData.currencyType !== 'FBP'" class="turnToAnther">
       <div>
         <span>到期转入天天赚</span>
-        <svg-icon icon-class="fixed_icon"/>
+        <svg-icon icon-class="fixed_tips" class="tips-icon"/>
       </div>
-      <div><van-switch v-model="checked" size = '27px'/></div>
+      <div>
+        <van-switch v-model="checked" class="switch-set" />
+      </div>
     </div>
     <div class="tip">购买即表示您已阅读并同意我们的
       <span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
@@ -398,15 +400,32 @@ export default {
     justify-content: space-between;
     background: #FFFFFF;
     >div{
+      display: flex;
+      align-items: center;
       >span{
-        height: 21px;
+        height: 25px;
         font-size: 15px;
         color: #0F3256;
+        line-height: 25px;
+      }
+      .tips-icon{
+        margin-left: 5px;
+        margin-bottom: 7px;
+        width: 12px;
+        height: 12px;
       }
     }
     >div:nth-child(2){
-      width:48px;
-      height: 28px;
+      .switch-set{
+        height: 29px;
+        width: 56px;
+        .van-switch__node{
+          width: 28px;
+          height: 28px;
+        }
+      }
+      /*width:48px;*/
+      /*height: 28px;*/
     }
   }
  .tip{

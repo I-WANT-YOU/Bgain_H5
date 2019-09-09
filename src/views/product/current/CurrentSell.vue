@@ -1,6 +1,7 @@
 <template>
   <div class="current-trade__container">
-    <bgain-nav-bar title="转出"></bgain-nav-bar>
+    <bgain-nav-bar title="转出"
+                   :onArrowClick="goBack"/>
     <div class="current-trade__content">
       <div class="content__panel">
         <div class="panel__title">转出数量({{currency}})</div>
@@ -8,6 +9,7 @@
           v-model="amount"
           :placeholder="`最多转出 ${maxSellAmount} ${currency}`"
           :border="false">
+          <!--suppress XmlUnboundNsPrefix -->
           <template v-slot:button>
             <div class="panel__all" @click="onClickAll">全部</div>
           </template>
@@ -115,7 +117,7 @@ export default {
       this.amount = this.maxSellAmount;
     },
     onSellClick() {
-      if (this.amount === '0') {
+      if (this.amount === '0' || this.amount === 0) {
         Toast('转出数量不可为 0，请重新输入');
       } else if (Number(this.amount) > this.maxSellAmount) {
         Toast(`最多转出 ${this.maxSellAmount} ${this.currency}，请重新输入`);
@@ -139,6 +141,16 @@ export default {
     },
     onClose() {
       this.visible = false;
+    },
+    /* router回退 */
+    goBack() {
+      this.$router.push({ name: 'current', query: { currency: this.currency } });
+    },
+    /* 浏览器返回 */
+    windowGoBack() {
+      // console.log("点击了浏览器的返回按钮");
+      sessionStorage.clear();
+      window.history.back();
     },
   },
 };
