@@ -109,9 +109,10 @@ export default {
       margin-right: 18px;
     }
     .more {
-      height: 16px;
+      height: 18px;
       width: 14px;
       margin-right: 10px;
+      margin-top: -2px;
     }
   }
 }

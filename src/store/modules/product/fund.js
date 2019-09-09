@@ -197,6 +197,17 @@ const actions = {
     }
   },
 
+  // 基金订单详情
+  async getSubCarryDetail({ commit }, productId) {
+    try {
+      const response = await FundService.getSubCarryDetail(productId);
+      const data = await Auth.handlerSuccessResponse(response);
+      commit(types.GET_FUNDS_ORDER_DETAIL, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // 在持基金详情
   async getFundOwnerDetail({ commit }, option) {
     try {

@@ -171,6 +171,7 @@
     </BgainBaseDialog>
     <BgainBaseDialog
       v-model="showDialog"
+      wrapHeight="190px"
       :showCancel="false"
       :showClose="false"
       :content="dialogText"

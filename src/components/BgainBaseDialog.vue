@@ -137,6 +137,8 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      letter-spacing: 0.15px;
+      line-height: 24px;
 
       span {
         font-size: 16px;
