@@ -37,14 +37,14 @@
             <div v-if="fundOrderDetail.trade_type === 'BUY'">进入开放期，基金可赎回或继续认购</div>
             <div v-else>赎回资金到账</div>
             <div>
-              {{formatDate((fundOrderDetail.next_start_date))}}
-              至 {{formatDate((fundOrderDetail.next_end_date))}}
+              {{formatDate(fundOrderDetail.next_start_date, 'YYYY-MM-DD')}}
+              至 {{formatDate(fundOrderDetail.next_end_date, 'YYYY-MM-DD')}}
             </div>
           </div>
         </div>
       </div>
       <div
-        v-if="fundOrderDetail.fund_order_status === '待确定'"
+        v-if="option.fund_order_status === '待确认'"
         @click="onCancelOrder"
         class="cancel-order"
       >
@@ -170,7 +170,7 @@ export default {
   },
   data() {
     return {
-      options: [],
+      option: [],
       showDialog: false,
       showPayment: false,
     };
@@ -188,7 +188,6 @@ export default {
         await this.getFundOrderDetail(this.$route.query.id);
       }
       this.option = format(this.fundOrderDetail);
-
       Toast.clear();
     } catch (error) {
       Toast.clear();
@@ -199,8 +198,8 @@ export default {
   },
   methods: {
     ...mapActions(['getFundOrderDetail', 'cancelOrder', 'getSubCarryDetail']),
-    formatDate(date) {
-      return formatDate(date);
+    formatDate(date, str) {
+      return formatDate(date, str);
     },
     onCancel() {
       this.showDialog = false;

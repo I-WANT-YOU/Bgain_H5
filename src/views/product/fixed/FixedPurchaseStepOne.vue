@@ -78,7 +78,7 @@ export default {
       tabActiveFBP: false, // FBPtab激活 在最大最小中判断
       title: '', // 标题
       // currency: '',
-      canUseCurrency: false, // 是否可用币种 toast提示是否可用
+      canUseCurrency: false, // 是否可用币种 弹窗提示是否可用
       canUseFBP: false, // 是否可用FBP   toast提示是否可用
       popShow: false, // 遮罩层 显示余额不足
       placeHolder: '',
@@ -284,7 +284,8 @@ export default {
       switch (text) {
         case 'currency':
           if (this.canUseCurrency === false) {
-            this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
+            this.popShow = true;
+            // this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
           } else {
             this.tabActiveCurrency = true; // 币种tab激活
             this.tabActiveFBP = false; // FBPtab激活

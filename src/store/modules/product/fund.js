@@ -39,6 +39,8 @@ const getters = {
     }),
   holdFunds: state => get(state.holdingFunds, 'fund_user_stat_summary_list', []),
   holdCurencies: state => get(state.holdingFunds, 'fund_holding_total_msg', []),
+  peddingsLength: state => get(state.holdingFunds, 'pending_order_num', 0),
+  holdTotalPnlRatio: state => get(state.holdingFunds, 'total_pnl_ratio', 0),
   orderHistory: state => map(state.fundOrderHistory, (item) => {
     item.create_date = formatDate(item.create_date);
     return item;

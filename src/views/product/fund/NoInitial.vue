@@ -101,17 +101,17 @@
         </div>
       </div>
       <div class="show">
-        <div @click="onDialog('在选定周期内任一历史时点往后推，产品净值走到最低点时的收益率回撤幅度的最大值')">
+        <div @click="onDialog('在选定周期内任一历史时点往后推，产品净值走到最低点时的收益率回撤幅度的最大值', '最大回撤')">
           <svg-icon icon-class="fund-retreat" />
           <div class="percent">{{fundDetail.max_retracement_scale * 1}}%</div>
           <div class="text">最大回撤</div>
         </div>
-        <div @click="onDialog('用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费后的净值')">
+        <div @click="onDialog('用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费后的净值', '管理费(年化)')">
           <svg-icon icon-class="fund-managementfee" />
           <div class="percent">{{fundDetail.manage_fee_rate * 1}}%</div>
           <div class="text">管理费(年化)</div>
         </div>
-        <div @click="onDialog('用户投资收益应分配给基金管理人作为业绩报酬的部分')">
+        <div @click="onDialog('用户投资收益应分配给基金管理人作为业绩报酬的部分', '业绩报酬')">
           <svg-icon icon-class="fund-meritpay" />
           <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
@@ -171,12 +171,11 @@
     </BgainBaseDialog>
     <BgainBaseDialog
       v-model="showDialog"
-      wrapHeight="190px"
       :showCancel="false"
       :showClose="false"
       :content="dialogText"
       submitText="我知道了"
-      title
+      :title="dialogTitle"
       @submit="()=>{this.showDialog = false}"
     />
   </div>
@@ -213,6 +212,7 @@ export default {
       isLogin: '',
       showDialog: false,
       dialogText: '',
+      dialogTitle: '',
       am: 0, // 日涨跌幅
     };
   },
@@ -251,9 +251,10 @@ export default {
       return formatDate(date, format);
     },
     // 点击最大回撤（3个）
-    onDialog(text) {
+    onDialog(text, title) {
       this.showDialog = true;
       this.dialogText = text;
+      this.dialogTitle = title;
     },
     setEcharts() {
       this.chart_x = formatDate(this.fundNavHistories[this.fundNavHistories.length - 1].get_nav_time, 'MM-DD');

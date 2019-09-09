@@ -1,36 +1,20 @@
 <template>
-  <Popup
-    round
-    v-on="$listeners"
-    v-bind="$attrs"
-    :close-on-click-overlay="false"
-  >
+  <Popup round v-on="$listeners" v-bind="$attrs" :close-on-click-overlay="false">
     <div class="bgain-dialog__container" :style="{height:wrapHeight}">
-      <svg-icon
-        v-if="showClose"
-        icon-class="close"
-        class="icon-close"
-        @click.native="onCancel"
-      ></svg-icon>
+      <svg-icon v-if="showClose" icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
       <div class="dialog__title">{{title}}</div>
       <div class="dialog__content">
         <span v-if="content !== ''">{{content}}</span>
         <slot name="content"></slot>
       </div>
       <div class="dialog__buttons">
-        <Button
-          class="dialog__buttons--cancel"
-          v-if="showCancel"
-          @click="onCancel">
-          {{cancelText}}
-        </Button>
+        <Button class="dialog__buttons--cancel" v-if="showCancel" @click="onCancel">{{cancelText}}</Button>
         <Button
           type="info"
           class="dialog__buttons--submit"
           @click="onSubmit"
-          :style="{background: submitColor}">
-          {{submitText}}
-        </Button>
+          :style="{background: submitColor}"
+        >{{submitText}}</Button>
       </div>
     </div>
   </Popup>
@@ -100,74 +84,76 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .van-popup--round {
-    border-radius: 4px;
+.van-popup--round {
+  border-radius: 4px;
+}
+
+.bgain-dialog__container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 305px;
+  height: 200px;
+  padding: 24px 0 20px;
+  box-sizing: border-box;
+  background: #ffffff;
+
+  .icon-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 15px;
+    height: 15px;
   }
 
-  .bgain-dialog__container {
-    position: relative;;
+  .dialog__title {
+    font-size: 18px;
+    color: #000000;
+    line-height: 17px;
+  }
+
+  .dialog__content {
+    flex: 1;
+    padding: 0 20px;
+    text-align: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    font-family:PingFang SC;
     align-items: center;
-    width: 305px;
-    height: 220px;
-    padding: 24px 0 20px;
-    box-sizing: border-box;
-    background: #ffffff;
+    letter-spacing: 0.15px;
+    line-height: 20px;
 
-    .icon-close {
-      position: absolute;
-      right: 12px;
-      top: 12px;
-      width: 15px;
-      height: 15px;
-    }
-
-    .dialog__title {
-      font-size: 15px;
-      color: #0F3256;
-      line-height: 24px;
-    }
-
-    .dialog__content {
-      flex: 1;
-      padding: 0 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      letter-spacing: 0.15px;
-      line-height: 24px;
-
-      span {
-        font-size: 16px;
-        color: #0F3256;
-      }
-    }
-
-    .dialog__buttons {
-
-      .van-button {
-        line-height: 40px;
-      }
-
-      .dialog__buttons--cancel {
-        width: 114px;
-        height: 40px;
-        font-size: 15px;
-        border-radius: 4px;
-        color: #888888;
-        margin-right: 11px;
-      }
-
-      .dialog__buttons--submit {
-        width: 140px;
-        height: 40px;
-        border-radius: 4px;
-        font-size: 15px;
-        border: 0;
-      }
+    span {
+      font-family:PingFang SC;
+      font-size: 16px;
+      line-height: 20px;
+      color: #666666;
     }
   }
+
+  .dialog__buttons {
+    .van-button {
+      line-height: 40px;
+    }
+
+    .dialog__buttons--cancel {
+      width: 114px;
+      height: 40px;
+      font-size: 15px;
+      border-radius: 4px;
+      color: #888888;
+      margin-right: 11px;
+    }
+
+    .dialog__buttons--submit {
+      width: 140px;
+      height: 40px;
+      border-radius: 4px;
+      font-size: 15px;
+      border: 0;
+    }
+  }
+}
 </style>

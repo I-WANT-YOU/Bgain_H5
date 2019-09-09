@@ -320,7 +320,8 @@ export default {
       return !this.fundOwnerDetail.yesterday_change && this.fundOwnerDetail.yesterday_change !== '0' ? '--' : '0';
     },
     status() {
-      return this.fundOwnerDetail.fund_product_status_type === 'OPEN';
+      return this.fundOwnerDetail.fund_product_status_type === 'OPEN'
+        || this.fundOwnerDetail.fund_product_status_type === 'INITIAL';
     },
     navTime() {
       return formatDate(this.fundOwnerDetail.nav_date, 'MM-DD');
@@ -409,7 +410,7 @@ export default {
     }
   }
   .echarts {
-    margin-top: 10px;
+    margin: 10px 0;
     background: #ffffff;
     padding-bottom: 21px;
     .tabs {
@@ -425,10 +426,10 @@ export default {
         font-size: 15px;
         color: #0f3256;
         box-sizing: border-box;
-        border-bottom: 1px solid transparent;
+        border-bottom: 2px solid transparent;
         &.active {
           color: #3c64ee;
-          border-bottom: 1px solid #3c64ee;
+          border-bottom: 2px solid #3c64ee;
         }
       }
     }

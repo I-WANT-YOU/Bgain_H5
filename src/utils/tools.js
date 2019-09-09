@@ -127,3 +127,28 @@ export const copyText = (text) => {
   input.blur();
   document.body.removeChild(input);
 };
+
+export const addZero = (num) => {
+  const value = num;
+  const float = value.toString().split('.');
+  if (float.length > 1 && float[1].length < 2) {
+    return `${value.toString()}0`;
+  }
+  return `${value.toString()}.00`;
+};
+export const changeFloat = (num, type) => {
+  const float = num.toString().indexOf('.');
+  if (type === 'CNY') {
+    if ((num.toString().length - float - 1) < 2) {
+      return this.addZero(num);
+    }
+    return num.toString().slice(0, (float + 3));
+  }
+  if (type === 'USDT') {
+    return num.toString().slice(0, (float + 3));
+  }
+  if (type === 'none') {
+    return num.toString().slice(0, (float + 9));
+  }
+  return num.toString().slice(0, (float + 5));
+};

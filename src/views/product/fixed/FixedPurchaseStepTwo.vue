@@ -3,11 +3,11 @@
     <BgainNavBar :title="showData.title"/>
     <div class="content">
       <div class="purchaseNum">
-        <span>认购数量</span>
+        <span>认购数量 <span v-if="showData.currencyType === 'BGP'">({{showData.currencyType}})</span></span>
         <span>{{showData.investmentAmount}}
-          {{showData.currencyType === 'FBP' ? 'BGP' : showData.currencyType}}</span>
+          {{showData.currencyType}}</span>
       </div>
-      <div class="coupon" v-show="showData.currencyType !== 'FBP'">
+      <div class="coupon" v-show="showData.currencyType !== 'BGP'">
         <span>选择优惠券</span>
         <div @click="selectCoupon()">
           <span>{{availabelCoupons.length ? `可用 ${ availabelCoupons.length} 张` : '暂无相关优惠券'}}</span>
@@ -22,10 +22,12 @@
         </div>
       </div>
   </div>
-    <div v-if="showData.currencyType !== 'FBP'" class="turnToAnther">
+    <div v-if="showData.currencyType !== 'BGP'" class="turnToAnther">
       <div>
         <span>到期转入天天赚</span>
-        <svg-icon icon-class="fixed_tips" class="tips-icon"/>
+        <span @click="onTip">
+          <svg-icon icon-class="fixed_tips" class="tips-icon"/>
+        </span>
       </div>
       <div>
         <van-switch v-model="checked" class="switch-set" />
@@ -43,6 +45,16 @@
       submitText="设置交易密码"
       @submit="setPayment"
       @cancel="cancelPayment"
+    />
+
+    <BgainBaseDialog
+      v-model="showTip"
+      content="即指产品到期回款后，授权平台将本息总额转入天天赚；开通后亦可随时关闭该项功能。"
+      submitText="确定"
+      :showCancel="false"
+      @submit="showTip = false"
+      @cancel="showTip = false"
+      title
     />
     <PaymentPasswordDialog
       @close="maskShow=false"
@@ -75,6 +87,7 @@ export default {
       maskShow: false, // 密码弹出框
       password: '',
       payment: false, // 没有设置交易密码弹窗
+      showTip: false,
     };
   },
 
@@ -187,6 +200,10 @@ export default {
       }
     },
 
+    onTip() {
+      this.showTip = true;
+    },
+
     // 选择优惠券
     selectCoupon() {
       if (this.availabelCoupons.length) {
@@ -201,11 +218,11 @@ export default {
 
     // 生成展示数据
     createShowdata(isHadCoupon) {
-      if (this.showData.currencyType === 'FBP') { // 无优惠券 无预期加息收益
+      if (this.showData.currencyType === 'BGP') { // 无优惠券 无预期加息收益
         this.expectedReturnData = [
           {
             name: '预期收益',
-            num: `${this.showData.expectedReturn} ${this.showData.currencyType === 'FBP' ? 'BGP' : this.showData.currencyType}`,
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
             show: true,
           },
           {
@@ -325,6 +342,16 @@ export default {
     });
   },
 
+  watch: {
+    checked(value) {
+      if (value) {
+        Toast('自动转入天天赚功能已开启');
+      } else {
+        Toast('自动转入天天赚功能已关闭');
+      }
+    },
+  },
+
   beforeDestroy() {
     Toast.clear();
   },
@@ -431,7 +458,8 @@ export default {
  .tip{
     font-size: 12px;
     margin-top: 50px;
-    text-align: center;
+    text-align: left;
+    padding-left: 30px;
     .active{
       color: #3c64ee;
     }
