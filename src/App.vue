@@ -9,7 +9,8 @@ export default {
   mounted() {
     // 友盟统计添加
     const script = document.createElement('script');
-    script.src = 'https://s4.cnzz.com/z_stat.php?id=1277984698&web_id=1277984698';
+    // script.src = 'https://s4.cnzz.com/z_stat.php?id=1277984698&web_id=1277984698'; // 生产
+    script.src = 'https://s4.cnzz.com/z_stat.php?id=1277986709&web_id=1277986709'; // 测试
     script.language = 'JavaScript';
     document.body.appendChild(script);
   },

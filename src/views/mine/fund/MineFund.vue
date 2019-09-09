@@ -17,21 +17,17 @@
         </div>
         <div class="amount">
           <div
-            :class="['num', holdFunds.length ? '' : 'computed']"
-          >{{holdFunds.length ? numberWithThousands(amount) : '--'}}</div>
+            :class="['num', (amount === '---') ? 'computed' : '']"
+          >{{numberWithThousands(amount)}}</div>
           <span class="text">总市值(BTC)</span>
         </div>
         <div class="assets-change">
           <div class="assets-change-con">
-            <span
-              :class="['num', holdFunds.length ? '' : 'computed']"
-            >{{holdFunds.length ? yesterday : '---'}}</span>
+            <span :class="['num',  (yesterday === '---') ? 'computed' : '']">{{yesterday}}</span>
             <span>昨日盈亏(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <span
-              :class="['num', holdFunds.length ? '' : 'computed']"
-            >{{holdFunds.length ? hold : '---'}}</span>
+            <span :class="['num', (hold === '---') ? 'computed' : '']">{{hold}}</span>
             <span>持仓收益(BTC)</span>
           </div>
           <div class="assets-change-con">
@@ -44,13 +40,13 @@
             <span>持仓收益率</span>
           </div>
         </div>
-        <div class="tradeing">
+        <div v-if="pendings" class="tradeing">
           <div>
             <span class="num">{{pendings}}</span>
             笔交易待确定中，在途资金 {{pending}}{{currency}}
           </div>
           <div @click="$router.push('/mine/fund/trade-pending-record')" class="icon-wrap">
-            <svg-icon icon-class="next" class="icon" />
+            <svg-icon icon-class="mine-fund-next" class="icon" />
           </div>
         </div>
       </div>
@@ -93,7 +89,7 @@ export default {
       yesterday: '---', // 昨日盈亏
       hold: '---', // 持仓收益
       holdRate: '', // 持仓收益率
-      amount: '--', // 资金
+      amount: '---', // 资金
       pending: '', // 在途资金
       pendings: 0, // 待交易订单数
       showSelect: false,
@@ -112,7 +108,6 @@ export default {
       this.currencyList = Object.keys(this.holdCurencies).map(item => ({
         name: item.toLocaleUpperCase(),
       }));
-      this.holdRate = this.holdingFunds.total_pnl_ratio === 0 ? 0 : `${this.holdingFunds.total_pnl_ratio}%` || '---';
       this.onChangeCurrency('BTC');
       this.pendings = this.orderHistory.filter(item => item.fund_order_status === 'PENDING').length;
       Toast.clear();
@@ -145,13 +140,13 @@ export default {
         this.hold = 0;
       } else {
         this.hold = currencys.total_pnl
-          ? currencys.total_pnl : this.hold;
+          ? this.changeFloat(currencys.total_pnl) : this.hold;
       }
       if (currencys.total_yesterday_change === 0) {
         this.yesterday = 0;
       } else {
         this.yesterday = currencys.total_yesterday_change
-          ? currencys.total_yesterday_change : this.yesterday;
+          ? this.changeFloat(currencys.total_yesterday_change) : this.yesterday;
       }
       if (currencys.pending_amount === 0) {
         this.pending = 0;
@@ -159,16 +154,44 @@ export default {
         this.pending = currencys.pending_amount
           ? currencys.pending_amount : this.pending;
       }
+      this.holdRate = this.holdingFunds.total_pnl_ratio * 1 === 0 ? 0 : `${this.holdingFunds.total_pnl_ratio}%` || '---';
+      if (currencys.total_principal === 0) {
+        this.holdRate = '0%';
+      } else {
+        this.holdRate = currencys.total_principal ? `${currencys.total_principal.toFixed(2)}%` : '---';
+      }
       if (currencys.total_holding_market_value === 0) {
         this.amount = 0;
       } else {
         this.amount = currencys.total_holding_market_value
           ? currencys.total_holding_market_value : this.amount;
       }
+      this.amount = this.changeFloat(this.amount);
     },
     onSelect(item) {
       this.onChangeCurrency(item.name);
       this.showSelect = false;
+    },
+    addZero(num) {
+      const value = num;
+      const float = value.toString().split('.');
+      if (float.length > 1 && float[1].length < 2) {
+        return `${value.toString()}0`;
+      }
+      return `${value.toString()}.00`;
+    },
+    changeFloat(num) {
+      const float = num.toString().indexOf('.');
+      if (this.currency === 'CNY') {
+        if ((num.toString().length - float - 1) < 2) {
+          return this.addZero(num);
+        }
+        return num.toString().slice(0, (float + 3));
+      }
+      if (this.currency === 'USDT') {
+        return num.toString().slice(0, (float + 3));
+      }
+      return num.toString().slice(0, (float + 5));
     },
   },
 };
@@ -257,6 +280,8 @@ export default {
           flex-direction: column;
           align-items: center;
           .num {
+            height: 16px;
+            line-height: 16px;
             font-size: 14px;
             color: #333333;
             margin-bottom: 8px;
@@ -291,8 +316,8 @@ export default {
           align-items: center;
           align-content: center;
           .icon {
-            width: 11px;
-            height: 7px;
+            width: 7px;
+            height: 11px;
           }
         }
       }
@@ -301,9 +326,12 @@ export default {
       flex: 1;
       background: #f8f8f8;
       .no-record {
+        height: calc(100% - 10px);
         display: flex;
         flex-direction: column;
         align-items: center;
+        background: #ffffff;
+        margin-top: 10px;
         font-size: 14px;
         color: #a8aeb9;
         .no-record-icon {

@@ -153,8 +153,7 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
       type: 'value',
       min: strip(min - num, 3),
       max: strip(max * 1 + num, 3),
-      // min: strip(min - (max - min) * 1.2, 1),
-      // max: strip(max + (max - min) * 1.2, 1),
+      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 4, 3),
       axisLabel: {
         show: true,
         textStyle: {

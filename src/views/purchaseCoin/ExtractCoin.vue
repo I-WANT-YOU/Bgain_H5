@@ -26,12 +26,6 @@
           required
           placeholder="请填写提币地址"
         />
-        <BgainBaseField
-          label-width="74px"
-          v-model="addressInfo"
-          label="地址备注"
-          placeholder="请填写地址备注"
-        />
         <BgainBaseField label-width="74px" label="提币数量" required>
           <template v-slot:input>
             <input
@@ -103,7 +97,6 @@ export default {
   data() {
     return {
       address: '',
-      addressInfo: '',
       coin: '',
       showDialog: false,
       dialogText: {
@@ -135,7 +128,7 @@ export default {
     ...mapActions('user', ['getUserSummary']),
     ...mapActions('coin/wallet', ['getWalletInfo', 'getWithdrawal']),
     // 判断是否显示弹窗
-    dialog() {
+    async dialog() {
       if (this.kycStatus === 'CERTIFY_FAILED') {
         this.showDialog = true;
         this.dialogText = {};
@@ -158,6 +151,10 @@ export default {
           button: '身份认证',
           path: '/mine/safety/kyc',
         };
+      } else if (this.kycStatus === 'CERTIFIED') {
+        await this.getWalletInfo();
+        this.option = this.wallets.map(item => ({ name: item.currency_type }));
+        this.changeInfo(this.wallets[0]);
       }
     },
     onSkip() {
@@ -175,7 +172,7 @@ export default {
           currency: this.currency,
           amount: this.coin,
         });
-        this.$router.push('/mine');
+        this.$router.push({ name: 'Mine', params: { toast: '提币成功' } });
       } catch (error) {
         Toast(responseStatus[error.status]);
       }
@@ -227,12 +224,13 @@ export default {
     },
   },
   async mounted() {
-    await this.getUserSummary();
-    await this.getWalletInfo();
-    this.option = this.wallets.map(item => ({ name: item.currency_type }));
-    this.changeInfo(this.wallets[0]);
-    // kyc验证弹窗
-    this.dialog(this.kycStatus);
+    try {
+      await this.getUserSummary();
+      // kyc验证弹窗
+      this.dialog(this.kycStatus);
+    } catch (error) {
+      throw error;
+    }
   },
 };
 </script>

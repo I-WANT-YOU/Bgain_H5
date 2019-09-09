@@ -169,13 +169,6 @@ export default {
         userId: this.$route.query.fund_user_stat_id,
       };
       await this.sellFundDetail(params);
-      console.log(this.fundSellDetail);
-      console.log(this.$route.query);
-      // "real_holding_shares": 0E-8,
-      //   "holding_shares": 0E-8,
-      //   "currency": "BGP",
-      //   "redemmpt_fee_rate": 0,
-      //   "nav": 0E-8,
       this.title = this.$route.query.title;
       this.holdingShares = this.fundSellDetail.holding_shares.toString();
       this.redemmptFeeRate = this.fundSellDetail.redemmpt_fee_rate;

@@ -3,25 +3,25 @@
     <BgainNavBar title="修改登录密码" />
     <div class="password__content">
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="oldPassword"
         type="password"
-        label="原登录密码"
+        label="原密码"
         placeholder="请输入原登录密码"
       />
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="password"
         type="password"
-        label="新登录密码"
-        placeholder="请输入新登录密码"
+        label="新密码"
+        placeholder="密码由8-20位数字及字母组成"
       />
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="checkPassword"
         type="password"
         label="确认新密码"
-        placeholder="请确认新登录密码"
+        placeholder="请再次输入新密码"
       />
     </div>
     <div class="password__button--wrapper">
@@ -84,7 +84,11 @@ export default {
           this.resetFields();
         } catch (error) {
           if (error.status) {
-            Toast(responseStatus[error.status]);
+            if (error.status !== 3) {
+              Toast(responseStatus[error.status]);
+            } else {
+              Toast('原登录密码错误');
+            }
           }
           this.loading = false;
         }

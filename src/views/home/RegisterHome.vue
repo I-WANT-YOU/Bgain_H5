@@ -40,7 +40,7 @@
       <BaseFooter />
     </div>
     <!--一级页面强制弹窗-->
-    <!-- <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" /> -->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
     <Menu v-model="showMenu" @close="showMenu=false"/>
     <div class="footer-fixed">
       <DownApp @func="getMsgFormSon" />
@@ -62,7 +62,7 @@ import HomeProductList from './components/HomeProductList.vue';
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
-// import LevelOnePop from '../../components/LevelOnePop.vue';
+import LevelOnePop from '../../components/LevelOnePop.vue';
 
 export default {
   name: 'RegisterHome',
@@ -74,7 +74,7 @@ export default {
     HomeGuide,
     HomeNotice,
     BaseFooter,
-    // LevelOnePop,
+    LevelOnePop,
     Menu,
     DownApp,
   },
