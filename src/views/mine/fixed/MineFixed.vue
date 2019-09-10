@@ -134,10 +134,7 @@ export default {
 
 <style lang='scss' scoped>
 .mine-fixed {
-  height: 100%;
   background: #f8f8f8;
-  display: flex;
-  flex-direction: column;
   .tab-wrap {
     height: 100%;
     display: flex;
@@ -172,9 +169,6 @@ export default {
     }
   }
   .mine-fixed-con {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     .asset-wrap {
       display: flex;
       flex-direction: column;
@@ -245,7 +239,6 @@ export default {
       }
     }
     .list {
-      flex: 1;
       background: #ffffff;
       padding-top: 12.5px;
       .no {

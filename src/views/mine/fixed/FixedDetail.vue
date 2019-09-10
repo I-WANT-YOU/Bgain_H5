@@ -5,10 +5,10 @@
       <div class="text">
         <div class="come">{{statu ? '待收' : '已得'}}收益</div>
         <div class="prev">产品原始收益</div>
-        <div v-if="option.coupon_profit * 1" class="prev">使用加息卷获得</div>
+        <div v-if="option.coupon_profit * 1" class="prev">使用加息券获得</div>
       </div>
       <div class="num">
-        <div class="come">{{option.return_amount}} {{option.payment_currency}}</div>
+        <div class="come">{{option.profit}} {{option.payment_currency}}</div>
         <div class="prev">{{option.product_profit}} {{option.payment_currency}}</div>
         <div
           v-if="option.coupon_profit * 1"
@@ -23,10 +23,10 @@
     <div class="line">
       <div class="text">预期年化利率</div>
       <div class="num">
-        {{option.product_annual_return * 100}}%
+        {{option.product_expected_annual_return}}
         <span v-if="option.coupon_profit * 1">
           +
-          {{option.coupon_annual_return * 100}}%
+          {{option.coupon_annual_return}}
         </span>
       </div>
     </div>
@@ -51,22 +51,40 @@
       <div class="num">{{formatDate(option.product_payment_date)}}</div>
     </div>
     <div class="line roll-in">
-      <div class="text">自动转入天天赚</div>
+      <div class="text">
+        自动转入天天赚
+        <span class="tip-class-wrap" @click="onTip">
+          <svg-icon icon-class="tips-mine-fixed" class="tip-class" />
+        </span>
+      </div>
       <on-off :disabled="statu === 'false' ? true : false" v-model="checked" @change="onAuto" />
     </div>
-    <div class="line roll-in">
+    <div class="line roll-in" @click="onAgreement">
       <div class="text">
         查看
-        <span class="agreement" @click="onAgreement">《投资服务协议》</span>
+        <span class="agreement">《投资服务协议》</span>
+      </div>
+      <div class="next-wrap">
+        <svg-icon icon-class="next" class="next" />
       </div>
     </div>
+    <BgainBaseDialog
+      v-model="showTip"
+      content="即指产品到期回款后，授权平台将本息总额转入天天赚；开通后亦可随时关闭该项功能。"
+      submitText="确定"
+      :showCancel="false"
+      @submit="showTip = false"
+      @cancel="showTip = false"
+      title
+    />
   </div>
 </template>
 
 <script>
-import { Switch } from 'vant';
+import { Switch, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@component/BgainNavBar.vue';
+import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import { formatDate } from '@utils/tools';
 
 const { mapActions } = createNamespacedHelpers('product/fixed');
@@ -75,11 +93,13 @@ export default {
   name: 'FixedDetail',
   components: {
     BgainNavBar,
+    BgainBaseDialog,
     onOff: Switch,
   },
   data() {
     return {
       checked: false,
+      showTip: false,
       option: {},
       statu: '',
     };
@@ -95,6 +115,11 @@ export default {
       return formatDate(num * 1, 'YYYY-MM-DD');
     },
     onAuto(checked) {
+      if (checked) {
+        Toast('自动转入天天赚功能已开启');
+      } else {
+        Toast('自动转入天天赚功能已关闭');
+      }
       this.setAutoPortfolio({
         status: checked,
         id: this.option.id,
@@ -102,6 +127,9 @@ export default {
     },
     onAgreement() {
       this.$router.push('/agreement/investment');
+    },
+    onTip() {
+      this.showTip = true;
     },
   },
 };
@@ -142,6 +170,9 @@ export default {
       color: #ff5c5c;
     }
     .num {
+      .come {
+        text-align: right;
+      }
       .prev {
         text-align: right;
       }
@@ -151,9 +182,28 @@ export default {
     margin-top: 10px;
     .text {
       color: #0f3256;
+      position: relative;
+      .tip-class-wrap {
+        position: absolute;
+        right: -20px;
+        top: -7px;
+        .tip-class {
+          width: 14px;
+          height: 14px;
+        }
+      }
       .agreement {
         color: #3c64ee;
         letter-spacing: 0;
+      }
+    }
+    .next-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .next {
+        width: 7px;
+        height: 11px;
       }
     }
   }

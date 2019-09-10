@@ -1,7 +1,7 @@
 <template>
   <div class="kyc__container">
     <bgain-nav-bar :onArrowClick="goBack" title="身份认证"></bgain-nav-bar>
-    <kyc-notice-bar/>
+    <kyc-notice-bar />
     <kyc-step-one
       v-if="step === 1"
       :country="country"
@@ -10,8 +10,7 @@
       @change-step="onChangeStep"
       :first-name="firstName"
       :last-name="lastName"
-    >
-    </kyc-step-one>
+    ></kyc-step-one>
     <kyc-step-two
       v-if="step === 2"
       :files.sync="files"
@@ -20,8 +19,7 @@
       :document-type="documentType"
       :document-number="documentNumber"
       @change-step="onChangeStep"
-    >
-    </kyc-step-two>
+    ></kyc-step-two>
     <kyc-step-three
       v-if="step === 3"
       @submit="onSubmit"
@@ -164,57 +162,57 @@ export default {
 </script>
 
 <style lang="scss">
-  .kyc__container {
-    height: 100%;
-    background: #F8F8F8;
+.kyc__container {
+  height: 100%;
+  background: #f8f8f8;
 
-    .kyc__notice {
-      background: #FAF4DC;
-      font-size: 12px;
-      color: #6A707D;
-      line-height: 21px;
-      padding: 5px 0 5px 20px;
+  .kyc__notice {
+    background: #faf4dc;
+    font-size: 12px;
+    color: #6a707d;
+    line-height: 21px;
+    padding: 5px 0 5px 20px;
+  }
+
+  .kyc__fields {
+    .van-cell {
+      display: flex;
+      align-items: center;
+      padding: 16px 30px;
     }
 
-    .kyc__fields {
-      .van-cell {
-        display: flex;
-        align-items: center;
-        padding: 16px 30px;
-      }
+    .van-cell:not(:last-child)::after {
+      left: 22px;
+      right: 22px;
+    }
 
-      .van-cell:not(:last-child)::after {
-        left: 22px;
-        right: 22px;
-      }
-
-      .kyc__field-override {
-        span {
-          font-size: 15px;
-          color: #6A707D;
-        }
-      }
-
-      .kyc__country {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        span {
-          font-size: 15px;
-          color: #0F3256;
-        }
-
-        .icon-next {
-          width: 7px;
-          height: 11px;
-        }
+    .kyc__field-override {
+      span {
+        font-size: 15px;
+        color: #6a707d;
       }
     }
 
-    .kyc__button-wrap {
-      margin-top: 60px;
-      padding: 0 22px;
+    .kyc__country {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      span {
+        font-size: 15px;
+        color: #0f3256;
+      }
+
+      .icon-next {
+        width: 7px;
+        height: 11px;
+      }
     }
   }
+
+  .kyc__button-wrap {
+    margin-top: 60px;
+    padding: 0 22px;
+  }
+}
 </style>

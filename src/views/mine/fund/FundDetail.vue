@@ -9,15 +9,15 @@
       <div class="amount-text">当前市值({{fundOwnerDetail.currency_type}})</div>
       <div class="income">
         <div>
-          <div class="num">{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
+          <div :class="['num', yesterday > 0 ? 'profit' : 'loss', yesterday ? '' : 'computed']">{{yesterday && yesterday > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
           <div class="text">昨日盈亏({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div class="num">{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.pnl)}}</div>
+          <div :class="['num', fundOwnerDetail.pnl > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl ? '' : 'computed']">{{fundOwnerDetail.pnl && fundOwnerDetail.pnl > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.pnl)}}</div>
           <div class="text">持仓收益({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div class="num">{{fundOwnerDetail.pnl && fundOwnerDetail.pnl.toFixed(2)}}%</div>
+          <div :class="['num', fundOwnerDetail.pnl_ratio > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl_ratio ? '' : 'computed']">{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio > 0 ? '+' :'-'}}{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio.toFixed(2)}}%</div>
           <div class="text">持仓收益率</div>
         </div>
       </div>
@@ -317,6 +317,9 @@ export default {
   computed: {
     ...mapState(['fundOwnerDetail']),
     yesterday() {
+      if (this.fundOwnerDetail.yesterday_change) {
+        return this.fundOwnerDetail.yesterday_change;
+      }
       return !this.fundOwnerDetail.yesterday_change && this.fundOwnerDetail.yesterday_change !== '0' ? '--' : '0';
     },
     status() {
@@ -367,6 +370,16 @@ export default {
       text-align: center;
       .num {
         margin-bottom: 8px;
+        &.profit {
+          color: #00b870;
+        }
+        &.loss {
+          color: #ff5c5c;
+        }
+        &.computed {
+          font-size: 12px;
+          color: #dee0e4;
+        }
       }
       .text {
         font-size: 12px;

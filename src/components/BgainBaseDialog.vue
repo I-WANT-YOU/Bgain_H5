@@ -115,18 +115,18 @@ export default {
 
   .dialog__content {
     flex: 1;
-    padding: 0 20px;
+    padding: 20px 20px 0;
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    font-family:PingFang SC;
+    font-family: PingFang SC;
+    font-weight: 400;
     align-items: center;
     letter-spacing: 0.15px;
     line-height: 20px;
 
     span {
-      font-family:PingFang SC;
+      font-family: PingFang SC;
       font-size: 16px;
       line-height: 20px;
       color: #666666;
@@ -135,13 +135,14 @@ export default {
 
   .dialog__buttons {
     .van-button {
-      line-height: 40px;
+      line-height: 44px;
+      text-align: center;
     }
 
     .dialog__buttons--cancel {
       width: 114px;
-      height: 40px;
-      font-size: 15px;
+      height: 44px;
+      font-size: 16px;
       border-radius: 4px;
       color: #888888;
       margin-right: 11px;
@@ -149,9 +150,9 @@ export default {
 
     .dialog__buttons--submit {
       width: 140px;
-      height: 40px;
+      height: 44px;
       border-radius: 4px;
-      font-size: 15px;
+      font-size: 16px;
       border: 0;
     }
   }

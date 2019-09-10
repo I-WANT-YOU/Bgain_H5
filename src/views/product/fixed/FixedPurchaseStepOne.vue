@@ -48,10 +48,10 @@
       </div>
     </div>
     <div class="button-container">
-      <button
-        :class="{'activeStyle':activeButton}"
+      <Button
+        type="info"
         :disabled="!activeButton"
-        @click="toStepTwo">下一步</button>
+        @click="toStepTwo">下一步</Button>
     </div>
     <!--当前余额不足的弹窗-->
     <div class="pop-container" v-show="popShow"><FixedPop/></div>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast, Button } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import { strip } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
@@ -118,6 +118,7 @@ export default {
   components: {
     BgainNavBar,
     FixedPop,
+    Button,
     // eslint-disable-next-line vue/no-unused-components
     Toast,
   },
@@ -480,7 +481,6 @@ export default {
     >button{
       width: 331px;
       height: 46px;
-      background: #D2D8EB;
       border-radius: 4px;
       font-size: 16px;
       color: #FFFFFF;

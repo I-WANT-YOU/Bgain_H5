@@ -162,7 +162,7 @@ export default {
       } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFY_FAILED') {
         this.$router.push('/mine/safety/kyc');
       } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'FAILED') {
-        this.$router.push('/mine/safety/kyc');
+        this.$router.push('/mine/safety/kyc-result');
       }
     },
     onOtc() {

@@ -88,7 +88,6 @@
             </tr>
 
             <tr v-for="(rate,key) in (rateSell)" :key="key">
-
               <td v-if="key===0" :rowspan="(rateSell.length + 1)">赎回</td>
               <td v-if="key===0">0~{{rateSell[0].data}}天(不含)</td>
               <td v-if="key===0">
@@ -96,23 +95,27 @@
                 <span class="rate old">({{rateSell[0].rate1 * 100}}%)</span>
               </td>
 
-              <td v-if="key!==0">{{ rateSell[key-1].data}}~{{rateSell[key].data}}天(不含)</td>
-              <td v-if="key!==0">
+              <td
+                v-if="key!==0 && key!==rateSell.length-1"
+              >{{rateSell[key-1].data}}~{{rateSell[key].data}}天(不含)</td>
+              <td v-if="key!==0 && key!==rateSell.length-1">
                 <span class="rate">{{rateSell[key].rate * 100}}%</span>
                 <span class="rate old">({{rateSell[key].rate1 * 100}}%)</span>
               </td>
-            </tr>
-            <tr>
-              <td>
+
+              <td v-if="key === rateSell.length-1">
                 <div class="gts">
                   <span class="gt">
                     <div class="top">&gt;</div>
                     <div>=</div>
                   </span>
-                  <span>{{rateSell.length && rateSell[rateSell.length-1] ? rateSell[rateSell.length-1].data : 0}}天</span>
+                  <span>
+                    {{rateSell.length && rateSell[rateSell.length-1]
+                    ? rateSell[rateSell.length-1].data : 0}}天
+                  </span>
                 </div>
               </td>
-              <td>
+              <td v-if="key === rateSell.length-1">
                 <span class="rate">
                   {{rateSell.length && rateSell[rateSell.length-1]
                   ? rateSell[rateSell.length-1].rate * 100 : 0}}%

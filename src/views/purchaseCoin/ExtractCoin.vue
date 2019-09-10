@@ -129,7 +129,8 @@ export default {
     ...mapActions('coin/wallet', ['getWalletInfo', 'getWithdrawal']),
     // 判断是否显示弹窗
     async dialog() {
-      if (this.kycStatus === 'CERTIFY_FAILED') {
+      console.log(this.kycStatus);
+      if (this.kycStatus === 'CERTIFY_FAILED' || this.kycStatus === 'FAILED') {
         this.showDialog = true;
         this.dialogText = {};
         this.dialogText = {
@@ -172,7 +173,7 @@ export default {
           currency: this.currency,
           amount: this.coin,
         });
-        this.$router.push({ name: 'Mine', params: { toast: '提币成功' } });
+        this.$router.push({ name: 'Mine', params: { toast: '提币申请提交成功' } });
       } catch (error) {
         Toast(responseStatus[error.status]);
       }

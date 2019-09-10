@@ -9,33 +9,30 @@
       </div>
       <div class="line">
         <span>TXID</span>
-        <div>
-          {{walletRecordDeatil.txn_id ? walletRecordDeatil.txn_id : '--'}}
-          <span
-            @click="copyText(walletRecordDeatil.txn_id)"
-            v-if="walletRecordDeatil.txn_id"
-          >
+        <div class="line-text">
+          <span>{{walletRecordDeatil.txn_id ? walletRecordDeatil.txn_id : '--'}}</span>
+          <span class="line-text-icon" @click="copyText(walletRecordDeatil.txn_id)" v-if="walletRecordDeatil.txn_id">
             <svg-icon icon-class="copy_light" />
           </span>
         </div>
       </div>
       <div class="line">
+        <span>转入地址</span>
+        <div>{{walletRecordDeatil.dest_address ? walletRecordDeatil.dest_address : '--'}}</div>
+      </div>
+      <div class="line">
         <span>提币地址</span>
         <div>{{walletRecordDeatil.src_address ? walletRecordDeatil.src_address : '--'}}</div>
       </div>
-      <div class="line">
-        <span>转出地址</span>
-        <div>{{walletRecordDeatil.dest_address ? walletRecordDeatil.dest_address : '--'}}</div>
-      </div>
       <div class="trade">
-        <div class="line">
-          <span>交易时间</span>
-          <div>{{formatDate(walletRecordDeatil.txn_date)}}</div>
-        </div>
         <div class="line">
           <span>手续费</span>
           <div v-if="!walletRecordDeatil.txn_fee && walletRecordDeatil.txn_fee * 1 !== 0">--</div>
           <div v-else>{{walletRecordDeatil.txn_fee}}{{walletRecordDeatil.coin}}</div>
+        </div>
+        <div class="line">
+          <span>交易时间</span>
+          <div>{{formatDate(walletRecordDeatil.txn_date)}}</div>
         </div>
       </div>
     </div>
@@ -83,7 +80,7 @@ export default {
   methods: {
     ...mapActions('coin/wallet', ['getWalletRecordDetail']),
     formatDate(num) {
-      return formatDate(num, 'YYYY-MM-DD hh:mm:ss');
+      return formatDate(num, 'YYYY-MM-DD HH:mm:ss');
     },
     numberWithThousands(num) {
       return numberWithThousands(num);
@@ -135,6 +132,13 @@ export default {
         color: #0f3256;
         text-align: right;
         word-break: break-all;
+      }
+      .line-text{
+        flex: 1;
+        display: flex;
+        .line-text-icon{
+          margin-left: 5px;
+        }
       }
     }
     .trade {
