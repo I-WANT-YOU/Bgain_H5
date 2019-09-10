@@ -94,7 +94,7 @@ export default {
         type: 0, // 0注册
         country_calling_code: this.countryCode,
       };
-      this.postRedeemCode(redeemCodeParams).then(
+      this.postRedeemCode(redeemCodeParams).then( // 注册码接口
         () => {
         // 1 若兑换码正确 发送验证码
         // 2 判断是否注册
@@ -103,7 +103,7 @@ export default {
             country_calling_code: this.countryCode,
             ...options,
           };
-          this.getActiveVerificationCode(requestParams).then(
+          this.getActiveVerificationCode(requestParams).then( // 判断是否注册就扣
             () => {
             // 跳转到下一个页面
               this.$router.push({
@@ -126,6 +126,32 @@ export default {
         },
         (err) => {
           if (err) {
+            const redeemCodeParams1 = {
+              ticket_code: this.codeInputValue,
+              phone_number: this.phoneInputValue,
+              type: 0, // 0注册
+              country_calling_code: this.countryCode,
+            };
+            this.getActiveVerificationCode(redeemCodeParams1).then( // 判断是否注册就扣
+              () => {
+                // 跳转到下一个页面
+                // this.$router.push({
+                //   name: 'ActiveRegisterTwo',
+                //   query: {
+                //     phoneNum: this.phoneInputValue,
+                //     countryCode: this.countryCode,
+                //     exchangeCode: this.codeInputValue,
+                //   },
+                // });
+              },
+              (err1) => {
+                if (err1.status) {
+                  Toast(errorMessage[err1.status]);
+                } else {
+                  Toast('网络错误');
+                }
+              },
+            );
             Toast(err);
           } else {
             Toast('网络错误');
