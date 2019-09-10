@@ -2,7 +2,10 @@
   <div class="container">
     <BgainNavBar title="冠军套利母基金"/>
     <van-image class="image-banner" :src="InterestArbitrageFund"/>
-    <div class="buttonContainer" @click="onSkip"><van-image class="image-button" :src="CTAButton"/></div>
+    <div class="buttonContainer"
+         @click="onSkip">
+      <van-image class="image-button" :src="CTAButton"/>
+    </div>
         <BgainBaseDialog
       v-model="payment"
       :showCancel="false"
@@ -15,6 +18,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Image } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -46,6 +51,7 @@ export default {
       getUserSummary: 'user/getUserSummary',
     }),
     async onSkip() {
+      window._czc.push(['_trackEvent', 'click', '冠军套利母基金-0.01起投']);
       try {
         await this.getUserSummary();
       } catch (error) {

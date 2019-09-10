@@ -162,6 +162,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import initial from '../../../assets/images/home/initial.svg';
@@ -224,6 +226,7 @@ export default {
     ]),
     // 跳转到定期详情页面
     stepToFixDetail(id) {
+      window._czc.push(['_trackEvent', 'click', '首页-定期详情']);
       this.$router.push({
         name: 'FixedDetail',
         params: { id },
@@ -231,6 +234,7 @@ export default {
     },
     // 去基金
     goFund(id, type, name) {
+      window._czc.push(['_trackEvent', 'click', '首页-基金详情']);
       if (type === 'INITIAL') {
         if (name === '冠军套利母基金') {
           this.$router.push(`/product/fund/initial/In/${id}`);
@@ -253,6 +257,7 @@ export default {
     },
     // 去活期
     goCurrent(type) {
+      window._czc.push(['_trackEvent', 'click', '首页-活期详情']);
       this.$router.push({
         name: 'current',
         query: {
@@ -267,6 +272,19 @@ export default {
     },
     // tab添加下划线
     changeUnderLine(index) {
+      switch (index) {
+        case 0:
+          window._czc.push(['_trackEvent', 'click', '首页-基金Tab']);
+          break;
+        case 1:
+          window._czc.push(['_trackEvent', 'click', '首页-天天赚Tab']);
+          break;
+        case 2:
+          window._czc.push(['_trackEvent', 'click', '首页-定期盈Tab']);
+          break;
+        default:
+          break;
+      }
       this.activeLine = index;
     },
     // 初始化echarts

@@ -126,14 +126,13 @@
                 </div>
             </div>
             <div class="toLogin">
-              <div>
+              <div @click="goToLogin">
                  <span>已有账号？</span>
-                 <span @click="$router.push('/login')" class="cals">登录</span>
-                 <span @click="$router.push('/login')">
+                 <span class="cals">登录</span>
+                 <span>
                    <svg-icon icon-class="next" class="next"/>
                  </span>
               </div>
-
             </div>
         </div>
         <Footer/>
@@ -143,6 +142,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Field, Toast, Checkbox, Button,
 } from 'vant';
@@ -227,6 +228,11 @@ export default {
       'getToken',
       'validateUsername',
     ]),
+    /* 登陆页面 */
+    goToLogin() {
+      window._czc.push(['_trackEvent', 'click', '注册跳转登录']);
+      this.$router.push({ name: 'login' });
+    },
     isShowPhoneContent() {
       this.phoneActive = true;
       this.emailActive = false;
@@ -321,6 +327,7 @@ export default {
       this.buttonIsLoading = true;
       this.validateUsername(validateData).then(
         () => {
+          window._czc.push(['_trackEvent', 'click', '注册-手机-下一步']);
           this.buttonIsLoading = false;
           this.geetest.verify();
         },
@@ -383,6 +390,7 @@ export default {
       this.buttonIsLoading = true;
       this.validateUsername(validateData).then(
         () => {
+          window._czc.push(['_trackEvent', 'click', '注册-邮箱-下一步']);
           this.buttonIsLoading = false;
           this.geetest.verify();
         },

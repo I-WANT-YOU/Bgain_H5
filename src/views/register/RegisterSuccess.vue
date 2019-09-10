@@ -25,6 +25,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import Footer from '../../components/Footer.vue';
 import Header from '../../components/Header.vue';
 
@@ -36,9 +38,11 @@ export default {
   },
   methods: {
     onKyc() {
+      window._czc.push(['_trackEvent', 'click', '注册成功-继续身份验证']);
       this.$router.push({ path: '/mine/safety/kyc', query: { fromPath: 'register' } });
     },
     onHome() {
+      window._czc.push(['_trackEvent', 'click', '注册成功-前往首页']);
       this.$router.push('/product/fund');
     },
   },
@@ -57,7 +61,7 @@ export default {
       width: 100%;
       display: flex;
       justify-content: center;
-      font-family: PingFangSC-Semibold;
+      font-family: PingFangSC-Semibold sans-serif;
       letter-spacing: 0;
     }
     .imageStyle {

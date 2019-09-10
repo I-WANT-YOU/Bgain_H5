@@ -50,10 +50,7 @@
     <div class="tradeshow">
       <div class="title">
         <span>交易说明</span>
-        <div
-          @click="$router.push({path:
-          '/product/fund/trade-rules',
-          query:{productId: $route.params.id}})"
+        <div @click="goToTradeDescription"
           class="skip"
         >
           交易规则、常见问题等
@@ -121,10 +118,7 @@
     <div class="fundarchives">
       <div class="title">
         <span>基金档案</span>
-        <div
-          @click="$router.push({
-          path: '/product/fund/product-files',
-          query:{productId: $route.params.id}})"
+        <div @click="goToFundFile"
           class="skip"
         >
           基金团队、策略说明、实盘业绩等
@@ -182,6 +176,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import BgainNavBar from '@component/BgainNavBar.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import { formatDate } from '@utils/tools';
@@ -246,6 +242,24 @@ export default {
       sendRemind: 'product/fund/sendRemind',
       getUserSummary: 'user/getUserSummary',
     }),
+    /* 跳转交易说明 */
+    goToTradeDescription() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-交易说明']);
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.params.id },
+      });
+    },
+    /* 跳转基金档案 */
+    goToFundFile() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-基金档案']);
+      this.$router.push({
+        path: '/product/fund/product-files',
+        query: { productId: this.$route.params.id },
+      });
+    },
+    /* 跳转风险说明 */
+    goToRiskDescription() {},
     formatDate(date, format) {
       return formatDate(date, format);
     },
@@ -277,6 +291,7 @@ export default {
       }
     },
     async onSubmit() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-到时提醒']);
       try {
         await this.getUserSummary();
       } catch (error) {
@@ -318,6 +333,7 @@ export default {
       this.payment = false;
     },
     go(path) {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-风险说明']);
       this.$router.push(path);
     },
   },

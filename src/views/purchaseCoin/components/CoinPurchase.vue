@@ -43,6 +43,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Toast } from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
@@ -96,6 +98,7 @@ export default {
       'getPurchaseCoinAddress',
     ]),
     copyText(text) {
+      window._czc.push(['_trackEvent', 'click', '买币充币-点击复制']);
       return copyText(text);
     },
     changeContentTab(index) {

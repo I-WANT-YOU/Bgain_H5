@@ -32,6 +32,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { mapState, mapGetters } from 'vuex';
 
 export default {
@@ -39,9 +41,11 @@ export default {
   props: ['currency'],
   methods: {
     onContinue() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-购买结果-继续浏览']);
       this.$router.push('/product/fund');
     },
     showDetail() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-购买结果-查看详情']);
       this.$router.push('/mine/fund');
     },
   },

@@ -64,6 +64,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
@@ -114,6 +116,7 @@ export default {
     ...mapActions(['getUserSummary']),
     ...mapCurrentActions(['getHoliday']),
     onRecordsClick() {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-交易记录']);
       this.$router.push({
         name: 'trade-records',
       });
@@ -135,6 +138,7 @@ export default {
       });
     },
     async onSellClick(currency) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-转出']);
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
@@ -162,6 +166,7 @@ export default {
       this.$router.push('/mine/safety/password/payment/set');
     },
     async onBuyClick(currency) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-转入']);
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
