@@ -28,6 +28,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 
 import { ActionSheet } from 'vant';
 import { languages } from '@/constants/options';
@@ -48,15 +50,18 @@ export default {
       this.show = false;
     },
     onLanguageClick() {
+      window._czc.push(['_trackEvent', 'click', 'footer-切换语言']);
       this.show = true;
     },
     onCancel() {
       this.show = false;
     },
     onContact() {
+      window._czc.push(['_trackEvent', 'click', 'footer-联系我们']);
       this.$router.push('/contact-us');
     },
     onApp() {
+      window._czc.push(['_trackEvent', 'click', 'footer-下载']);
       window.location.href = 'https://fir.im/ngaw';
     },
   },

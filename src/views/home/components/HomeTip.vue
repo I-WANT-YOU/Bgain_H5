@@ -2,7 +2,7 @@
   <div class="home-tip" v-show="!!announcement">
     <img src="../../../assets/images/home_tip.svg" alt="." />
     <span
-      @click="$router.push(`/message-detail/announcement?id=${announcement.id}`)"
+      @click="goToNotice"
     >{{announcement.title}}</span>
     <img
       @click="$router.push('/message/announcement')"
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { mapGetters } from 'vuex';
 
 export default {
@@ -21,6 +23,12 @@ export default {
     ...mapGetters('home', [
       'announcement',
     ]),
+  },
+  methods: {
+    goToNotice() {
+      window._czc.push(['_trackEvent', 'click', '首页-公告列表']);
+      this.$router.push(`/message-detail/announcement?id=${this.announcement.id}`);
+    },
   },
 };
 </script>

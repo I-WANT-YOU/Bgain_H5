@@ -4,6 +4,8 @@
   </div>
 </template>
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'App',
   mounted() {

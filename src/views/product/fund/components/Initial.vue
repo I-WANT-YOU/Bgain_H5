@@ -26,6 +26,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'Initial',
   props: {
@@ -35,12 +37,13 @@ export default {
   },
   methods: {
     submit() {
-      console.log('2');
     },
     skip() {
       if (this.options.fund_name === '冠军套利母基金') {
+        window._czc.push(['_trackEvent', 'click', '基金-冠军套利母基金']);
         this.$router.push(`/product/fund/initial/In/${this.options.id}`);
       } else if (this.options.fund_name === '冠军CTA母基金') {
+        window._czc.push(['_trackEvent', 'click', '基金-冠军CTA母基金']);
         this.$router.push(`/product/fund/initial/CTA/${this.options.id}`);
       }
     },

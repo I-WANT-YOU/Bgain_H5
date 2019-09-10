@@ -30,6 +30,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Toast } from 'vant';
 import Vue from 'vue';
 import CoinPurchase from './components/CoinPurchase.vue';
@@ -54,10 +56,18 @@ export default {
 
   methods: {
     changeHeaderTab(index) {
+      if (index === 0) {
+        window._czc.push(['_trackEvent', 'click', '买币充币-充币Tab']);
+      }
+      if (index === 1) {
+        window._czc.push(['_trackEvent', 'click', '买币充币-买币Tab']);
+      }
+
       this.activeHeaderTab = index;
     },
     // 跳转到提示
     toTips() {
+      window._czc.push(['_trackEvent', 'click', '买币充币-买币提示']);
       this.$router.push({
         name: 'BuyingIllustration',
       });
@@ -65,10 +75,13 @@ export default {
     // 跳转到历史记录
     toRecords() {
       if (this.activeHeaderTab === 0) { // 冲币历史记录
+        window._czc.push(['_trackEvent', 'click', '买币充币-充币' +
+        '记录']);
         this.$router.push({
           name: 'FillingRecord',
         });
       } else if (this.activeHeaderTab === 1) { // 买币记录
+        window._czc.push(['_trackEvent', 'click', '买币充币-买币记录']);
         this.$router.push({
           name: 'BuyingRecord',
         });

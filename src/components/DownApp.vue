@@ -10,6 +10,7 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
 export default {
   name: 'DownApp',
   data() {
@@ -23,6 +24,7 @@ export default {
       this.$emit('func', this.isNotShow);
     },
     onSkip() {
+      window._czc.push(['_trackEvent', 'click', 'footer浮窗-下载APP']);
       window.location.href = 'https://fir.im/ngaw';
     },
   },

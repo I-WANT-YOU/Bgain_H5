@@ -7,7 +7,9 @@
     <div class="data">
       <div class="top">
         <div :class="['setup', options.ups_and_downs_week > 0 ? '' : 'active']">
-          <span>{{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}</span>
+          <span>
+            {{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}
+          </span>
           <span class="unit">%</span>
         </div>
         <div class="networth">{{options.nav}}</div>
@@ -35,6 +37,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'NoInitial',
   props: {
@@ -44,6 +48,7 @@ export default {
   },
   methods: {
     onClick() {
+      window._czc.push(['_trackEvent', 'click', '基金-非首发基金']);
       this.$router.push(`/product/fund/noinitial/${this.options.id}`);
     },
   },

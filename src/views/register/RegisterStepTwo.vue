@@ -30,6 +30,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Field, Button, Toast,
 } from 'vant';
@@ -97,6 +99,7 @@ export default {
     ]),
     // 获取验证码
     async getVerificationCode() {
+      window._czc.push(['_trackEvent', 'click', '注册-验证码-重新发送']);
       this.$toast('验证码已发送');
       try {
         await this.getToken({
@@ -119,6 +122,7 @@ export default {
       //   this.$toast('验证码格式不正确');
       //   return false;
       // }
+      window._czc.push(['_trackEvent', 'click', '注册-验证码']);
       this.buttonIsLoading = true;
       const registerData = {
         ...this.registerData,

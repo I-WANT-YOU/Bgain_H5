@@ -46,6 +46,7 @@ export default {
   },
   methods:{
     onSkip(router){
+      window._czc.push(["_trackEvent",'click','首页-交易比赛']);
       if(router){
         window.location.href = router;
       }
