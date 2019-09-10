@@ -9,26 +9,32 @@
     </div>
     <div class="assets-change">
       <div class="con">
-        <div class="num">{{option.holding_market_value.toFixed(4)}}</div>
+        <div class="num">{{numberWithThousands(changeFloat(option.holding_market_value))}}</div>
         <div>持仓市值</div>
       </div>
       <div class="con">
-        <div class="num">
+        <div
+          :class="['num', option.yesterday_change
+        && (option.yesterday_change * 1) > 0 ? 'loss' : 'profit',
+        option.yesterday_change && option.yesterday_change === 0 ? 'computed' : '',
+        option.yesterday_change ? '' : 'computed']"
+        >
           {{!option.yesterday_change
           ? 0 : option.yesterday_change > 0
-          ? `+${option.yesterday_change.toFixed(4)}`
-          : option.yesterday_change.toFixed(4)}}
+          ? `+${numberWithThousands(changeFloat(option.yesterday_change))}`
+          : numberWithThousands(changeFloat(option.yesterday_change))}}
         </div>
         <div>昨日盈亏</div>
       </div>
       <div class="con">
         <div
           :class="['num', option.holding_profit
-        && (option.holding_profit * 1) > 0 ? 'loss' : 'profit']"
+        && (option.holding_profit * 1) > 0 ? 'loss' : 'profit',
+        option.holding_profit === 0 ? 'computed' : '']"
         >
           {{option.holding_profit > 0
-          ? `+${option.holding_profit.toFixed(4)}`
-          : option.holding_profit.toFixed(4)}}
+          ? `+${changeFloat(option.holding_profit)}`
+          : changeFloat(option.holding_profit)}}
         </div>
         <div>持仓收益</div>
       </div>
@@ -37,6 +43,8 @@
 </template>
 
 <script>
+import { numberWithThousands } from '@utils/tools';
+
 export default {
   name: 'FundCard',
   props: ['option'],
@@ -55,6 +63,13 @@ export default {
           currencyType: this.option.currency_type,
         },
       });
+    },
+    changeFloat(num) {
+      const float = num.toString().indexOf('.');
+      return num.toString().slice(0, (float + 5));
+    },
+    numberWithThousands(num) {
+      return numberWithThousands(num * 1);
     },
   },
 };
@@ -102,6 +117,9 @@ export default {
         }
         &.loss {
           color: #ff5c5c;
+        }
+        &.computed {
+          color: #dee0e4;
         }
       }
     }

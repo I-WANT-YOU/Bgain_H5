@@ -23,26 +23,32 @@
         </div>
         <div class="assets-change">
           <div class="assets-change-con">
-            <span :class="['num',  (yesterday === '---') ? 'computed' : '']">{{yesterday}}</span>
+            <span
+              :class="['num', yesterday * 1 > 0 ? 'loss' : 'profit',
+               (yesterday === '---' || yesterday === 0) ? 'computed' : '']"
+            >{{numberWithThousands(yesterday)}}</span>
             <span>昨日盈亏(BTC)</span>
           </div>
           <div class="assets-change-con">
-            <span :class="['num', (hold === '---') ? 'computed' : '']">{{hold}}</span>
+            <span
+              :class="['num', hold * 1 > 0 ? 'loss' : 'profit',
+               (hold === '---' || hold === 0) ? 'computed' : '']"
+            >{{numberWithThousands(hold)}}</span>
             <span>持仓收益(BTC)</span>
           </div>
           <div class="assets-change-con">
             <span
               :class="['num',
-              holdingFunds.total_pnl_ratio ? 'profit' : '',
-              (holdRate === '---') ? 'computed' : ''
+              holdTotalPnlRatio ? 'loss' : 'profit',
+              (holdRate === '---' || holdTotalPnlRatio === 0) ? 'computed' : ''
               ]"
             >{{holdRate}}</span>
             <span>持仓收益率</span>
           </div>
         </div>
-        <div v-if="pendings" class="tradeing">
+        <div v-if="peddingsLength" class="tradeing">
           <div>
-            <span class="num">{{pendings}}</span>
+            <span class="num">{{peddingsLength}}</span>
             笔交易待确定中，在途资金 {{pending}}{{currency}}
           </div>
           <div @click="$router.push('/mine/fund/trade-pending-record')" class="icon-wrap">
@@ -91,7 +97,6 @@ export default {
       holdRate: '', // 持仓收益率
       amount: '---', // 资金
       pending: '', // 在途资金
-      pendings: 0, // 待交易订单数
       showSelect: false,
       currencyList: [],
     };
@@ -109,7 +114,6 @@ export default {
         name: item.toLocaleUpperCase(),
       }));
       this.onChangeCurrency('BTC');
-      this.pendings = this.orderHistory.filter(item => item.fund_order_status === 'PENDING').length;
       Toast.clear();
     } catch (error) {
       Toast.clear();
@@ -117,7 +121,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['holdFunds', 'holdCurencies', 'orderHistory']),
+    ...mapGetters(['holdFunds', 'holdCurencies', 'orderHistory', 'peddingsLength', 'holdTotalPnlRatio']),
     ...mapState(['holdingFunds']),
   },
   methods: {
@@ -151,14 +155,14 @@ export default {
       if (currencys.pending_amount === 0) {
         this.pending = 0;
       } else {
-        this.pending = currencys.pending_amount
-          ? currencys.pending_amount : this.pending;
+        this.pending = this.changeFloat(currencys.pending_amount)
+          ? this.changeFloat(currencys.pending_amount) : this.pending;
       }
       this.holdRate = this.holdingFunds.total_pnl_ratio * 1 === 0 ? 0 : `${this.holdingFunds.total_pnl_ratio}%` || '---';
-      if (currencys.total_principal === 0) {
+      if (this.holdTotalPnlRatio === 0) {
         this.holdRate = '0%';
       } else {
-        this.holdRate = currencys.total_principal ? `${currencys.total_principal.toFixed(2)}%` : '---';
+        this.holdRate = this.holdTotalPnlRatio ? `${this.holdTotalPnlRatio.toFixed(2)}%` : '---';
       }
       if (currencys.total_holding_market_value === 0) {
         this.amount = 0;

@@ -2,6 +2,7 @@
   <div class="couponList">
    <header class="couponLIst-header">
      <div @click="()=>{this.$router.go(-1)}"><svg-icon icon-class="back" class="back-icon"/> </div>
+     <div>优惠券</div>
      <span  @click="backToStepTwo">确定</span>
    </header>
     <div class="coupons">
@@ -120,14 +121,19 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    >div{
-      padding:0 15px;
+    >div:nth-child(1){
+      padding:0 35px 0 15px;
       display: flex;
       align-items: center;
       .back-icon{
         width: 9.5px;
         height: 18px;
       }
+    }
+    >div:nth-child(2){
+      font-size: 18px;
+      color: #000000;
+      line-height: 17px;
     }
     >span{
       padding: 0 15px;

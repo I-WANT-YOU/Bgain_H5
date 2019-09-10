@@ -48,10 +48,10 @@
       </div>
     </div>
     <div class="button-container">
-      <button
-        :class="{'activeStyle':activeButton}"
+      <Button
+        type="info"
         :disabled="!activeButton"
-        @click="toStepTwo">下一步</button>
+        @click="toStepTwo">下一步</Button>
     </div>
     <!--当前余额不足的弹窗-->
     <div class="pop-container" v-show="popShow"><FixedPop/></div>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast, Button } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import { strip } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
@@ -78,7 +78,7 @@ export default {
       tabActiveFBP: false, // FBPtab激活 在最大最小中判断
       title: '', // 标题
       // currency: '',
-      canUseCurrency: false, // 是否可用币种 toast提示是否可用
+      canUseCurrency: false, // 是否可用币种 弹窗提示是否可用
       canUseFBP: false, // 是否可用FBP   toast提示是否可用
       popShow: false, // 遮罩层 显示余额不足
       placeHolder: '',
@@ -118,6 +118,7 @@ export default {
   components: {
     BgainNavBar,
     FixedPop,
+    Button,
     // eslint-disable-next-line vue/no-unused-components
     Toast,
   },
@@ -284,7 +285,8 @@ export default {
       switch (text) {
         case 'currency':
           if (this.canUseCurrency === false) {
-            this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
+            this.popShow = true;
+            // this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
           } else {
             this.tabActiveCurrency = true; // 币种tab激活
             this.tabActiveFBP = false; // FBPtab激活
@@ -479,7 +481,6 @@ export default {
     >button{
       width: 331px;
       height: 46px;
-      background: #D2D8EB;
       border-radius: 4px;
       font-size: 16px;
       color: #FFFFFF;

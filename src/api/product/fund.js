@@ -136,6 +136,21 @@ class FundService {
     }
   }
 
+  static async getSubCarryDetail(productId) {
+    try {
+      const requestOptions = {
+        url: `/fund-product-order/get-sub-carry-detail/${productId}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+
   static async getFundOwnerDetail(option) {
     try {
       const requestOptions = {

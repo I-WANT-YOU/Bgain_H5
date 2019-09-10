@@ -37,7 +37,7 @@
         <span>{{currency === 'BGP' ? '0' : poundage}}{{currency}}</span>
       </div>
       <Button
-        :class="['button',disabled ? 'disabled' : '']"
+        class="button"
         :disabled="disabled"
         @click="onClick"
       >立即认购</Button>

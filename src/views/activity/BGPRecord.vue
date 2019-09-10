@@ -20,7 +20,7 @@
     </div>
     <!--交易记录-->
     <div class="trade-history">
-      <div class="trade-tile">交易记录</div>
+      <div class="trade-tile">兑换记录</div>
       <div v-if="recordList.length" class="trade-content">
         <div
           class="trade-item"

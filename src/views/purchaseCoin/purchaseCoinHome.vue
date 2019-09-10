@@ -75,8 +75,8 @@ export default {
     // 跳转到历史记录
     toRecords() {
       if (this.activeHeaderTab === 0) { // 冲币历史记录
-        window._czc.push(['_trackEvent', 'click', '买币充币-充币' +
-        '记录']);
+        window._czc.push(['_trackEvent', 'click', '买币充币-充币'
+        + '记录']);
         this.$router.push({
           name: 'FillingRecord',
         });
@@ -89,6 +89,10 @@ export default {
     },
     // 回退到上一页
     back() {
+      if (this.$route.params.from === 'kyc-result') {
+        this.$router.push({ path: '/mine/safety' });
+        return false;
+      }
       if (window.history.length <= 1) {
         this.$router.push({ path: '/' });
         return false;
