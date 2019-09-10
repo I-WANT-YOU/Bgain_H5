@@ -17,6 +17,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'HomeGuide',
   props: [
@@ -61,6 +63,19 @@ export default {
   methods: {
     onSkip(step) {
       if (step.status === 0 && step.text !== '注册') {
+        switch (step.text) {
+          case '设置交易密码':
+            window._czc.push(['_trackEvent', 'click', '首页-新手引导-设置交易密码']);
+            break;
+          case '身份认证':
+            window._czc.push(['_trackEvent', 'click', '首页-新手引导-身份认证']);
+            break;
+          case '充币':
+            window._czc.push(['_trackEvent', 'click', '首页-新手引导-充币']);
+            break;
+          default:
+            break;
+        }
         this.$router.push(step.path);
       }
     },

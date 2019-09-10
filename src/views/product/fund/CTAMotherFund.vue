@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
     <BgainNavBar :onArrowClick="onArrowClick" title="冠军CTA母基金" />
@@ -17,6 +18,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Image } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -48,6 +51,7 @@ export default {
       getUserSummary: 'user/getUserSummary',
     }),
     async onSkip() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-冠军CTA母基金-0.01起投']);
       try {
         await this.getUserSummary();
       } catch (error) {
@@ -57,6 +61,7 @@ export default {
       // 开放认购
       this.showstep = false;
       if (this.authLevel === 2) { // 1新用户 2设置交易密码
+        window._czc.push(['_trackEvent', 'click', '冠军基金-冠军CTA母基金-设置交易密码']);
         this.$router.push(`/product/fund/subscribe/${this.$route.params.id}`);
       } else {
         this.payment = true;

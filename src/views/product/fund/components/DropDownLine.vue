@@ -16,6 +16,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Cell } from 'vant';
 
 export default {
@@ -24,9 +26,11 @@ export default {
   props: ['options', 'reset', 'active', 'type'],
   methods: {
     onClickItem(text) {
+      window._czc.push(['_trackEvent', 'click', `冠军基金-筛选-${text}`]);
       this.$emit('changeItem', this.type, text);
     },
     onReset() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-筛选-重置']);
       this.reset();
     },
   },

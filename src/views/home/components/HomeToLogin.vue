@@ -1,19 +1,29 @@
 <template>
   <div class="homeToLogin">
     <div class="register">
-      <router-link to="/register">
-        <button>注册</button>
-      </router-link>
+        <button @click="goToRegister">注册</button>
     </div>
-    <div class="login">
-    <router-link to="/login">已有账号？<span class="loginText">登录</span></router-link>
+    <div class="login" @click="goToLogin">
+      <span> 已有账号？</span><span class="loginText">登录</span>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'HomeToLogin',
+  methods: {
+    goToLogin() {
+      window._czc.push(['_trackEvent', 'click', '首页-登录']);
+      this.$router.push({ name: 'login' });
+    },
+    goToRegister() {
+      window._czc.push(['_trackEvent', 'click', '首页-注册']);
+      this.$router.push({ name: 'register' });
+    },
+  },
 };
 </script>
 
@@ -38,18 +48,12 @@ export default {
     margin-top: 16px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: row;
     width: 100%;
-    height: 38px;
-    margin-top: 16px;
-    > a {
-      font-size: 15px;
-      color: #3C64EE;
-      line-height: 37.36px;
-      text-decoration-line: none;
-      .loginText{
-        font-weight: 600;
-      }
+    font-size: 15px;
+    color: #3C64EE;
+    .loginText{
+      font-weight: 600;
     }
   }
 }

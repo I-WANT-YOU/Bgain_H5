@@ -10,13 +10,13 @@
              :key="index">
           <div class="coupon-back">
             <div class="coupon-num">
-              <span>20%</span>
+              <span>{{item.coupon_value}}%</span>
               <span>收益加息</span>
             </div>
             <div class="couponInfo">
-              <span>{{item.min_usage_limit}}{{item.currency_type}}起投</span>
+              <span>{{item.min_usage_limit}}&nbsp;{{item.currency_type}}&nbsp;起投</span>
               <span>
-                最高限额{{item.min_usage_limit}}{{item.currency_type}}
+                最高限额{{item.max_usage_limit}}&nbsp;{{item.currency_type}}
               </span>
               <span>{{createDate(item.end_date)}}前有效</span>
             </div>
