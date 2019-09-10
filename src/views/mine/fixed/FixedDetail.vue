@@ -51,13 +51,13 @@
       <div class="num">{{formatDate(option.product_payment_date)}}</div>
     </div>
     <div class="line roll-in">
-      <div class="text">自动转入分币宝</div>
+      <div class="text">自动转入天天赚</div>
       <on-off :disabled="statu === 'false' ? true : false" v-model="checked" @change="onAuto" />
     </div>
     <div class="line roll-in">
       <div class="text">
         查看
-        <span class="agreement">《投资服务协议》</span>
+        <span class="agreement" @click="onAgreement">《投资服务协议》</span>
       </div>
     </div>
   </div>
@@ -99,6 +99,9 @@ export default {
         status: checked,
         id: this.option.id,
       });
+    },
+    onAgreement() {
+      this.$router.push('/agreement/investment');
     },
   },
 };

@@ -9,23 +9,26 @@
     </div>
     <div class="assets-change">
       <div class="con">
-        <div class="num">{{option.holding_market_value}}</div>
+        <div class="num">{{option.holding_market_value.toFixed(4)}}</div>
         <div>持仓市值</div>
       </div>
       <div class="con">
         <div class="num">
           {{!option.yesterday_change
           ? 0 : option.yesterday_change > 0
-          ? `+${option.yesterday_change}`
-          : option.yesterday_change}}
+          ? `+${option.yesterday_change.toFixed(4)}`
+          : option.yesterday_change.toFixed(4)}}
         </div>
         <div>昨日盈亏</div>
       </div>
       <div class="con">
-        <div :class="['num', option.holding_profit > 0 ? '' : 'loss']">
+        <div
+          :class="['num', option.holding_profit
+        && (option.holding_profit * 1) > 0 ? 'loss' : 'profit']"
+        >
           {{option.holding_profit > 0
-          ? `+${option.holding_profit}`
-          : option.holding_profit}}
+          ? `+${option.holding_profit.toFixed(4)}`
+          : option.holding_profit.toFixed(4)}}
         </div>
         <div>持仓收益</div>
       </div>

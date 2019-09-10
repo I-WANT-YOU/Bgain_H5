@@ -26,8 +26,11 @@
         <span>{{options.risk_level_type}}</span>
       </div>
       <div class="time">
-        <svg-icon icon-class="start" class="icon" />
-        <span>{{options.closing_date}}</span>
+        <svg-icon
+          :icon-class="options.status.toLocaleUpperCase() === 'OPEN' ? 'start' : 'end'"
+          class="icon"
+        />
+        <span>{{options.status.toLocaleUpperCase() === 'OPEN' ? options.closing_date : options.next_open_date}}</span>
       </div>
     </div>
   </div>
@@ -148,12 +151,14 @@ export default {
     }
     .time {
       box-sizing: border-box;
+      display: flex;
+      align-items: center;
       padding-left: 10px;
       font-size: 12px;
       color: #676c8d;
       letter-spacing: 0;
       .icon {
-        width: 14px;
+        width: 16px;
         height: 14px;
         margin-right: 8px;
       }

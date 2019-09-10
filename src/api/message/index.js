@@ -17,13 +17,13 @@ class MessageService {
   }
 
   // 设置消息已读状态
-  static async setNewsRead(uuid) {
+  static async setNewsRead(id) {
     try {
       const requestOptions = {
         url: '/announcement/set-announcement-read',
         method: 'post',
         data: {
-          announcement_id: uuid,
+          announcement_id: id,
           read: true,
         },
       };
@@ -56,6 +56,9 @@ class MessageService {
       const requestOptions = {
         url: '/announcement/set-all-announcement-read',
         method: 'post',
+        data: {
+          announcement_type: 'user_msg',
+        },
       };
       const response = await request(requestOptions);
       return handlerResponse(response);

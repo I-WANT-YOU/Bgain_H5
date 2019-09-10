@@ -12,7 +12,7 @@ const state = {
 const getters = {
   newList: state => get(state.news, 'announcement_record_list', [])
     .map((item) => {
-      item.create_date = formatDate(item.create_date);
+      item.created_at = formatDate(item.created_at);
       return item;
     }),
   announcementList: state => map(state.news, (item) => {
@@ -45,9 +45,9 @@ const actions = {
     }
   },
 
-  async setNewsRead(context, uuid) {
+  async setNewsRead(context, id) {
     try {
-      const response = await MessageService.setNewsRead(uuid);
+      const response = await MessageService.setNewsRead(id);
       return await handlerSuccessResponse(response);
     } catch (error) {
       throw error;
@@ -63,9 +63,9 @@ const actions = {
     }
   },
 
-  async deleteNewsRead(context, uuid) {
+  async deleteNewsRead(context, id) {
     try {
-      const response = await MessageService.deleteNewsRead(uuid);
+      const response = await MessageService.deleteNewsRead(id);
       return await handlerSuccessResponse(response);
     } catch (error) {
       throw error;

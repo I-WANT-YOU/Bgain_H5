@@ -22,7 +22,7 @@
         <div class="button">
           <Button
             tag="div"
-            :class="['login-btn', disabled ? 'button-disabled':'']"
+            :class="['login-btn']"
             :disabled="disabled"
             type="info"
             @click="submit"
@@ -246,9 +246,6 @@ export default {
           text-align: center;
           line-height: 46px;
           background: #3c64ee;
-        }
-        .button-disabled {
-          background: #d2d8eb;
         }
       }
     }

@@ -20,7 +20,7 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
-import { PullRefresh, Toast } from 'vant';
+import { PullRefresh } from 'vant';
 import BgainEmpty from '@/components/BgainEmpty.vue';
 import ProgressCard from './components/ProgressCard.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
@@ -55,7 +55,6 @@ export default {
         await this.getHistoryProfit(currency);
         this.isLoading = false;
       } catch (error) {
-        Toast('未登录');
         this.isLoading = false;
       }
     },

@@ -153,8 +153,7 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
       type: 'value',
       min: strip(min - num, 3),
       max: strip(max * 1 + num, 3),
-      // min: strip(min - (max - min) * 1.2, 1),
-      // max: strip(max + (max - min) * 1.2, 1),
+      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 4, 3),
       axisLabel: {
         show: true,
         textStyle: {
@@ -211,7 +210,8 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
 export default (data) => {
   formatType(data);
   formatRisk(data);
-  data.closing_date = dayjs(data.closing_date).format('YYYY-MM-DD hh:mm');
+  data.closing_date = dayjs(data.closing_date).format('YYYY-MM-DD HH:mm');
+  data.next_open_date = dayjs(data.next_open_date).format('YYYY-MM-DD HH:mm');
   // 净值 nav_date
   data.nav_date = dayjs(data.nav_date).format('MM-DD');
   // 成立以来 ups_and_downs_week

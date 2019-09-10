@@ -1,7 +1,7 @@
 
 <template>
   <div class="container">
-    <BgainNavBar title="冠军CTA母基金" />
+    <BgainNavBar :onArrowClick="onArrowClick" title="冠军CTA母基金" />
     <van-image class="image-banner" :src="CTAMotherFund" />
     <div class="buttonContainer" @click="onSkip">
       <van-image class="image-button" :src="CTAButton" />
@@ -55,7 +55,7 @@ export default {
       try {
         await this.getUserSummary();
       } catch (error) {
-        window.sessionStorage.setItem('loginFrom', `/product/fund/noinitial/${this.$route.params.id}`);
+        window.sessionStorage.setItem('loginFrom', `/product/fund/initial/In/${this.$route.params.id}`);
         throw error;
       }
       // 开放认购
@@ -73,6 +73,9 @@ export default {
     },
     cancelPayment() {
       this.payment = false;
+    },
+    onArrowClick() {
+      this.$router.push('/product/fund');
     },
   },
 };

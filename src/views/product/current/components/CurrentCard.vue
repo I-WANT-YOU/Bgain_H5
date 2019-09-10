@@ -156,7 +156,6 @@ export default {
           this.showDialog = true;
         }
       } else {
-        Toast('未登录');
         sessionStorage.setItem('fromLogin', '/product/current');
         this.$router.push('/login');
       }
@@ -184,7 +183,6 @@ export default {
           this.showDialog = true;
         }
       } else {
-        Toast('未登录');
         sessionStorage.setItem('fromLogin', '/product/current');
         this.$router.push('/login');
       }
