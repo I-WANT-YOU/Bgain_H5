@@ -65,7 +65,7 @@ export default {
           align-items: center;
           width: 96px;
           height: 14px;
-          z-index: 100;
+          z-index: 1;
           .activeCircle{
             border: 2px solid  #3C64EE!important;
           }

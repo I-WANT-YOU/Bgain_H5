@@ -86,6 +86,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
@@ -136,7 +138,7 @@ export default {
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
-          this.$toast('服务器错误');
+          this.$toast('网络错误');
         }
       },
     );
@@ -164,6 +166,7 @@ export default {
   methods: {
     // 立即认购
     purchase() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-立即认购']);
       this.isLogin().then(() => {
         this.getUserSummary().then(() => {
           if (this.authLevel === 2) {
@@ -199,7 +202,7 @@ export default {
     ...userMapActions(['getUserSummary']),
     // 返回上一层
     back() {
-      this.$router.push('/product/fixed');
+      this.$router.push({ name: 'Fixed', query: { currentType: this.fixed.currency } });
     },
     // 设置购买流程
     setSteps(status) {
@@ -305,6 +308,12 @@ export default {
       });
     },
     goPage(path) {
+      if (path === '/fixed-safety-security') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-安全保障']);
+      }
+      if (path === '/fixed-questions') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-常见问题']);
+      }
       this.$router.push(path);
     },
   },
@@ -337,6 +346,7 @@ export default {
       padding-right: 37px;
       background: #6F9DF8 url("../../../assets/images/fixedDetail/back_small.png");
       background-size: 100% 52px ;
+      z-index: 101;
       >div{
         height: 24px;
         display: flex;
@@ -368,7 +378,7 @@ export default {
     /*头部信息*/
     .fixed-message{
       margin-top: 52px;
-      padding-bottom: 21px;
+      padding-bottom: 41px;
       color: #FFFFFF;
       background: #6F9DF8 url("../../../assets/images/fixedDetail/back_big.png");
       background-size: 100% 100% ;
@@ -468,6 +478,8 @@ export default {
     }
     /*交易流程*/
     .transactionProcess{
+      border-radius: 20px 0 0 0;
+      margin-top: -20px;
       background: white;
       .transactionProcess-title{
         display: flex;
@@ -517,7 +529,8 @@ export default {
       >span{
         display: block;
         height: 16px;
-        margin:11px 0 21px 21px;
+        margin:11px 0 0 21px;
+        padding-bottom: 21px;
         font-size: 11px;
         color: #9AA2B2;
       }

@@ -24,6 +24,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 
 export default {
@@ -50,6 +52,12 @@ export default {
   },
   methods: {
     onSkip(router) {
+      if (router === '/product/fixed') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-购买结果-继续浏览']);
+      }
+      if (router === '/mine/fixed') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-购买结果-查看详情']);
+      }
       this.$router.push(router);
     },
   },

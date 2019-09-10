@@ -27,6 +27,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'FixedCard',
   props: {
@@ -37,6 +39,7 @@ export default {
   },
   methods: {
     onCardClick() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-详情']);
       this.$router.push({
         path: `/product/fixed/${this.dataSource.product_id}`,
       });
