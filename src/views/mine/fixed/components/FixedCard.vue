@@ -13,7 +13,7 @@
         <div>认购数量</div>
       </div>
       <div class="fixed-card-item">
-        <div class="num">{{option.return_amount}} {{option.payment_currency}}</div>
+        <div class="num">{{option.profit}} {{option.payment_currency}}</div>
         <div>{{status?'待收收益':'已得收益'}}</div>
       </div>
       <div class="fixed-card-item">
@@ -66,11 +66,9 @@ export default {
         if (this.option.portfolio_record_status === 'INTEREST_START') {
           return '计息中';
         }
-        if (this.option.portfolio_record_status === 'DUE') {
+        if (this.option.portfolio_record_status === 'DUE'
+          || this.option.portfolio_record_status === 'DUE_PENDING') {
           return '回款中';
-        }
-        if (this.option.portfolio_record_status === 'DUE_PENDING') {
-          return '待回款';
         }
         if (this.option.portfolio_record_status === 'INTEREST_PENDING') {
           return '待计息';

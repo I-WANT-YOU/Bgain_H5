@@ -71,6 +71,7 @@ export default {
         path: '/mine/fund/transaction-details',
         query: {
           id: fund.id,
+          type: fund.trade_type,
         },
       });
     },

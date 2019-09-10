@@ -37,9 +37,12 @@ const getters = {
     }
     return status.toUpperCase();
   },
-  submitKycStatus: state => get(state.submitKycResult, 'kyc_status', 'auditing'),
-  submitKycMsg: state => get(state.submitKycResult, 'kyc_msg', ''),
-  singleCurrency: state => get(state.userBalance, 'single_currency', {}),
+  submitKycStatus: state => get(state.kycInfo.data, 'kyc_record_status', 'auditing'),
+  submitKycMsg: state => get(state.kycInfo.data, 'certified_message', ''),
+  singleCurrency: state => (state.userBalance
+    ? [{ currency: 'BTC', ...state.userBalance.btc },
+      { currency: 'CNY', ...state.userBalance.cny },
+      { currency: 'USDT', ...state.userBalance.usdt }] : []),
   currencyss: state => Object.entries(state.userBalance).filter(item => item[0] !== 'single_currency' && item[0] !== 'activity'),
   balances: state => get(state.userBalance, 'single_currency', []).map(({ currency, balance }) => ({
     currency,

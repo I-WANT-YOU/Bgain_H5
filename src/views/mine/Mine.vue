@@ -70,7 +70,7 @@
       </div>
       <div class="option">
         <div class="wrap">
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
@@ -79,7 +79,7 @@
               <div class="info">资金流水，一目了然</div>
             </div>
           </div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
@@ -89,7 +89,7 @@
             </div>
           </div>
           <div class="line"></div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-question" class="icon" />
             </div>
@@ -98,7 +98,7 @@
               <div class="info">投资、充提币、产品介绍</div>
             </div>
           </div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-activity" class="icon" />
             </div>
@@ -123,6 +123,8 @@
       <DownApp @func="getMsgFormSon" />
     </div>
     <BaseFooter />
+    <!--一级页面强制弹窗-->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
   </div>
 </template>
 
@@ -130,11 +132,12 @@
 /* eslint-disable no-underscore-dangle */
 
 import { ActionSheet, Toast } from 'vant';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Header from '@component/mine/Header.vue';
 import BaseFooter from '@component/BaseFooter.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import DownApp from '@component/DownApp.vue';
+import LevelOnePop from '@component/LevelOnePop.vue';
 
 export default {
   name: 'Mine',
@@ -144,9 +147,11 @@ export default {
     BaseFooter,
     BgainBaseDialog,
     DownApp,
+    LevelOnePop,
   },
   data() {
     return {
+      isPopShow: 'none', // 一级弹窗
       login: false,
       income: '--',
       accumulatedIncome: '--',
@@ -170,7 +175,12 @@ export default {
           message: '加载中...',
           color: '#1989fa',
         });
-        this.getUserBalanceSummary().then(() => {
+        Promise.all([this.getUserBalanceSummary(), this.getPopInfo()]).then(() => {
+          if (this.popInfo.is_popup_window === 1) {
+            this.isPopShow = 'block';
+          } else {
+            this.isPopShow = 'none';
+          }
           Toast.clear();
           if (this.$route.params.toast) {
             Toast(this.$route.params.toast);
@@ -191,10 +201,12 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['singleCurrency', 'currencyss', 'kycStatus']),
+    ...mapState('home', ['popInfo']),
   },
   methods: {
     ...mapActions('user', ['getUserBalanceSummary', 'getUserSummary']),
     ...mapActions('auth', ['isLogin']),
+    ...mapActions('home', ['getPopInfo']),
     getCurreny() {
       // eslint-disable-next-line max-len
       const curreny = this.currencyss.filter(item => (item[0].toLocaleUpperCase() === this.currency))[0][1];
@@ -472,7 +484,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        .item {
+        .mine-item {
           display: flex;
           box-sizing: border-box;
           padding: 19px 0 19px 12px;

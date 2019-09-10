@@ -15,11 +15,11 @@
       <div class="equity">
         <div class="title">会员权益</div>
         <img class="member-level" src="../../assets/images/member/member-equity-table.png" alt />
-        <div class="text">首次获得初级会员及更高级称谓，均可以获得对应的升级大礼包(红包、优惠卷等)奖励，升级礼包每个会员等级仅限领一次。</div>
+        <div class="text">首次获得初级会员及更高级称谓，均可以获得对应的升级大礼包(红包、优惠券等)奖励，升级礼包每个会员等级仅限领一次。</div>
       </div>
       <div class="follow">
         您可以通过关注公众号
-        <span class="st">“ Bgain2019 ”</span>
+        <span class="st">“ Bgain数字资管 ”</span>
         来获取更多会员权益信息
       </div>
     </div>

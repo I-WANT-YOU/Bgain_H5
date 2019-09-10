@@ -48,20 +48,20 @@
       </div>
     </div>
     <div class="button-container">
-      <button
-        :class="{'activeStyle':activeButton}"
+      <Button
+        type="info"
         :disabled="!activeButton"
-        @click="toStepTwo">下一步</button>
+        @click="toStepTwo">下一步</Button>
     </div>
     <!--当前余额不足的弹窗-->
-    <div class="pop-container" v-show="popShow"><FixedPop/></div>
+    <div class="pop-container" v-show="popShow"><FixedPop :type="typePopShow"/></div>
   </div>
 </template>
 
 <script>
 /* eslint-disable no-underscore-dangle */
 
-import { Toast } from 'vant';
+import { Toast, Button } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import { testNum } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
@@ -80,7 +80,7 @@ export default {
       tabActiveFBP: false, // FBPtab激活 在最大最小中判断
       title: '', // 标题
       // currency: '',
-      canUseCurrency: false, // 是否可用币种 toast提示是否可用
+      canUseCurrency: false, // 是否可用币种 弹窗提示是否可用
       canUseFBP: false, // 是否可用FBP   toast提示是否可用
       popShow: false, // 遮罩层 显示余额不足
       placeHolder: '',
@@ -120,6 +120,7 @@ export default {
   components: {
     BgainNavBar,
     FixedPop,
+    Button,
     // eslint-disable-next-line vue/no-unused-components
     Toast,
   },
@@ -185,8 +186,6 @@ export default {
         this.investmentAmount = val.substring(0, val.length - 1);
         return false;
       }
-
-
       // 判断小数点后只有8位
       if (this.investmentAmount.indexOf('.') > -1) { // 有小数点
         if ((this.investmentAmount.length - this.investmentAmount.indexOf('.') - 1) > 8) {
@@ -216,6 +215,14 @@ export default {
     ...mapActions(
       ['getFixedBuyInfo'],
     ),
+    /* 判断弹窗类型 */
+    typePopShow() {
+      if (this.fixedBuyInfo.balance_fbp * 1 >= this.fixedBuyInfo.min_inverst_amount_fbp * 1) {
+        this.popShow = false;
+      } else {
+        this.$router.go(-1);
+      }
+    },
     toStepTwo() {
       window._czc.push(['_trackEvent', 'click', '定期盈-下一步']);
       const routeData = {
@@ -288,7 +295,8 @@ export default {
       switch (text) {
         case 'currency':
           if (this.canUseCurrency === false) {
-            this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
+            this.popShow = true;
+            // this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
           } else {
             this.tabActiveCurrency = true; // 币种tab激活
             this.tabActiveFBP = false; // FBPtab激活
@@ -483,7 +491,6 @@ export default {
     >button{
       width: 331px;
       height: 46px;
-      background: #D2D8EB;
       border-radius: 4px;
       font-size: 16px;
       color: #FFFFFF;

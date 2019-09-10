@@ -73,6 +73,7 @@ export default {
   font-size: 17px;
   font-weight: normal;
   color: #0f3256;
+  max-width: 75%;
 }
 
 .icon-go-back {

@@ -9,6 +9,8 @@
 export default {
   name: 'App',
   mounted() {
+    // 底部下载app组件显示
+    sessionStorage.setItem('downApp', true);
     // 友盟统计添加
     const script = document.createElement('script');
     // script.src = 'https://s4.cnzz.com/z_stat.php?id=1277984698&web_id=1277984698'; // 生产

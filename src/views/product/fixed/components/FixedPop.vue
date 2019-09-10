@@ -20,13 +20,21 @@
 <script>
 /* eslint-disable no-underscore-dangle */
 
+import { isFunction } from 'lodash';
+
 export default {
   name: 'FixedPop',
+  props: ['type'],
   methods: {
     // 取消
     cancel() {
       window._czc.push(['_trackEvent', 'click', '定期盈-余额不足-取消']);
-      this.$router.go(-1);
+      console.log(this.type);
+      if (isFunction(this.type)) {
+        this.type();
+      } else {
+        this.$router.go(-1);
+      }
     },
     // 冲币
     rushMoney() {

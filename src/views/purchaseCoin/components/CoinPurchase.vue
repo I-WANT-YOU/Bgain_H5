@@ -174,8 +174,8 @@ export default {
     .purchaseAddress{
       position: absolute;
       width: 359px;
-      height:369px;
-      top:63px;
+      height: 369px;
+      top: 48px;
       left: 8px;
       right: 8px;
       background: url("../../../assets/images/pruchase/bg-purchase.png") no-repeat;
@@ -183,7 +183,7 @@ export default {
       >div:nth-child(1){
         height: 189px;
         >div:nth-child(1){
-          padding:20px 0 0 20px;
+          padding:30px 0 0 31px;
           font-size: 15px;
           color: #676C8D;
           >span{
@@ -206,6 +206,7 @@ export default {
             background: #EDF0FA;
             border: none;
             resize: none;
+            border-radius: 5px;
           }
         }
         >div:nth-child(3){
@@ -226,7 +227,7 @@ export default {
       }
 
       .address-title{
-        padding-left:20px;
+        padding-left: 31px;
         font-size: 15px;
         color: #676C8D;
       }
@@ -243,6 +244,7 @@ export default {
           color: #3C64EE;
           overflow: hidden;
           background: #EDF0FA;
+          border-radius: 5px;
         }
         >div:nth-child(2){
           width: 70px;
