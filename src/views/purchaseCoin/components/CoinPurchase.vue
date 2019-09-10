@@ -14,14 +14,37 @@
     <!--冲币地址-->
     <div class="purchaseAddress">
       <div>
-        <span>充币地址</span>
-      </div>
-      <div>
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
+        <div>
+          <span>充币地址</span>
+        </div>
+        <div v-show="activeContentTab !== 3">
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <textarea readonly ref="myCopy" v-model="address[activeContentTab]">
           </textarea>
+        </div>
+        <div v-show="activeContentTab !== 3">
+          <button @click="copyText(address[activeContentTab])">点击复制</button>
+        </div>
+
+        <div v-show="activeContentTab === 3">
+          <div class="address">
+            <div>{{address[activeContentTab]
+              && address[activeContentTab].split('|')[0] || 'abc'}}</div>
+            <div @click="copyText(address[activeContentTab]
+            && address[activeContentTab].split('|')[0] || 'abc')">点击复制</div>
+          </div>
+          <div class="address-title">
+            <span>Memo</span>
+          </div>
+          <div class="address">
+            <div>{{address[activeContentTab]
+              && address[activeContentTab].split('|')[1] || 'abc'}}</div>
+            <div @click="copyText(address[activeContentTab]
+            && address[activeContentTab].split('|')[1] || 'abc')">点击复制</div>
+          </div>
+        </div>
       </div>
-      <div><button @click="copyText(address[activeContentTab])">点击复制</button></div>
+      <div class="x-line"></div>
       <div class="QRCode">
         <div ref="qrcode" class="qrcode-img"></div>
       </div>
@@ -40,6 +63,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Toast } from 'vant';
 import Vue from 'vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
@@ -93,6 +118,7 @@ export default {
       'getPurchaseCoinAddress',
     ]),
     copyText(text) {
+      window._czc.push(['_trackEvent', 'click', '买币充币-点击复制']);
       return copyText(text);
     },
     changeContentTab(index) {
@@ -147,43 +173,84 @@ export default {
     /*兑换*/
     .purchaseAddress{
       position: absolute;
-      width: 335px;
-      height:345px;
-      top:63px;
-      left: 20px;
-      right: 20px;
-      background: #FFFFFF;
+      width: 359px;
+      height: 369px;
+      top: 48px;
+      left: 8px;
+      right: 8px;
+      background: url("../../../assets/images/pruchase/bg-purchase.png") no-repeat;
+      background-size: 359px 369px;
       >div:nth-child(1){
-        padding:20px 0 0 20px;
-        font-size: 15px;
-        color: #676C8D;
-        >span{
-          height: 21px;
+        height: 189px;
+        >div:nth-child(1){
+          padding:30px 0 0 31px;
+          font-size: 15px;
+          color: #676C8D;
+          >span{
+            height: 21px;
+          }
+        }
+        >div:nth-child(2){
+          display: flex;
+          justify-content: center;
+          margin-top: 19px;
+          padding:0 20px;
+          >textarea {
+            width: 273px;
+            padding: 7px 11px;
+            margin: 0;
+            line-height: 20px;
+            font-size: 14px;
+            color: #3C64EE;
+            overflow: hidden;
+            background: #EDF0FA;
+            border: none;
+            resize: none;
+            border-radius: 5px;
+          }
+        }
+        >div:nth-child(3){
+          display: flex;
+          justify-content: center;
+          margin-top: 15px;
+          >button{
+            width: 70px;
+            height:26px;
+            padding:0;
+            background: #3C64EE;
+            border-radius: 4px;;
+            border:none;
+            font-size: 12px;
+            color: #FFFFFF;
+          }
         }
       }
-      >div:nth-child(2){
-        margin-top: 19px;
-        padding:0 20px;
-        >textarea{
-          width: 273px;
+
+      .address-title{
+        padding-left: 31px;
+        font-size: 15px;
+        color: #676C8D;
+      }
+
+      .address{
+        display: flex;
+        align-items: center;
+        >div:nth-child(1){
+          width: 200px;
           padding: 7px 11px;
-          margin: 0;
+          margin: 10px 10px 10px 30px;
           line-height: 20px;
           font-size: 14px;
           color: #3C64EE;
           overflow: hidden;
           background: #EDF0FA;
-          border: none;
-          resize: none;
+          border-radius: 5px;
         }
-      }
-      >div:nth-child(3){
-        display: flex;
-        justify-content: center;
-        margin-top: 15px;
-        >button{
+        >div:nth-child(2){
           width: 70px;
-          height:26px;
+          height:30px;
+          line-height:30px;
+          text-align: center;
           padding:0;
           background: #3C64EE;
           border-radius: 4px;;
@@ -192,11 +259,19 @@ export default {
           color: #FFFFFF;
         }
       }
+
+      .x-line{
+        height: 0;
+        width: 314px;
+        border-bottom: 1px #3C64EE dashed;
+        margin: 0 auto;
+      }
+
       /*二维码*/
       .QRCode{
         display: flex;
         justify-content: center;
-        margin-top: 48px;
+        margin-top: 23.5px;
         .qrcode-img{
           width: 111px;
           height: 111px;

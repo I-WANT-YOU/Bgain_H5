@@ -1,47 +1,51 @@
 <template>
   <div class="register-two">
-    <Header></Header>
-    <div class="verification-code">
-      <div class="code">
-        <Field
-          type="number"
-          v-if="$route.params.countryCode"
-          maxlength="6"
-          v-model="verificationCode" placeholder="请输入验证码" />
+    <BgainNavBar title="注册Bgain" />
+    <div class="register-two-con">
+      <div class="verification-code">
+        <div class="code">
           <Field
-          v-else
-          maxlength="6"
-          v-model="verificationCode" placeholder="请输入验证码" />
+            type="number"
+            v-if="$route.params.countryCode"
+            maxlength="6"
+            v-model="verificationCode" placeholder="请输入验证码" />
+            <Field
+            v-else
+            maxlength="6"
+            v-model="verificationCode" placeholder="请输入验证码" />
+        </div>
+        <SendCode @onsend="getVerificationCode" ref="sendCode" />
       </div>
-      <SendCode @onsend="getVerificationCode" ref="sendCode" />
-    </div>
-    <div v-show="address" class="text">验证码已发送至 {{address}}</div>
-    <div class="button">
-      <Button
-        :loading="buttonIsLoading"
-        :disabled='activeButton'
-        @click="confirm()">确定
-      </Button >
+      <div v-show="address" class="text">验证码已发送至 {{address}}</div>
+      <div class="button">
+        <Button
+          :loading="buttonIsLoading"
+          :disabled='activeButton'
+          @click="confirm()">确定
+        </Button >
+      </div>
     </div>
     <Footer></Footer>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Field, Button, Toast,
 } from 'vant';
 import { mapActions } from 'vuex';
 import SendCode from '@component/SendCode.vue';
+import BgainNavBar from '@component/BgainNavBar.vue';
 import { getDesensitizedUsername } from '@utils/tools';
 import errorMessage from '../../constants/responseStatus';
-import Header from '../../components/Header.vue';
 import Footer from '../../components/Footer.vue';
 
 export default {
   name: 'RegisterStepTwo',
   components: {
-    Header,
+    BgainNavBar,
     Footer,
     Field,
     Button,
@@ -95,6 +99,7 @@ export default {
     ]),
     // 获取验证码
     async getVerificationCode() {
+      window._czc.push(['_trackEvent', 'click', '注册-验证码-重新发送']);
       this.$toast('验证码已发送');
       try {
         await this.getToken({
@@ -117,6 +122,7 @@ export default {
       //   this.$toast('验证码格式不正确');
       //   return false;
       // }
+      window._czc.push(['_trackEvent', 'click', '注册-验证码']);
       this.buttonIsLoading = true;
       const registerData = {
         ...this.registerData,
@@ -161,48 +167,54 @@ export default {
 
 <style lang='scss' scoped>
   .register-two{
-    .verification-code{
-      height: 55px;
-      margin:36px 23px 0px 23px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #EEEEEE;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      color: #CCCCCC;
-      letter-spacing: 0;
-      .code{
-        width: 180px;
-        margin-left: 8px;
-        >div{
-          padding: 0;
-          input:{
-            border: none;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .register-two-con{
+      flex: 1;
+      .verification-code{
+        height: 55px;
+        margin:36px 23px 0px 23px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #EEEEEE;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #CCCCCC;
+        letter-spacing: 0;
+        .code{
+          width: 180px;
+          margin-left: 8px;
+          >div{
+            padding: 0;
+            input:{
+              border: none;
+            }
           }
         }
       }
-    }
-    .text{
-      font-size: 15px;
-      color: #cccccc;
-      margin: 10px 0 0 23px;
-    }
-    .button{
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 62px;
-      >button{
-        width: 331px;
-        height: 46px;
-        border: none;
-        background: #3C64EE;
-        border-radius: 4px;
-        color: #ffffff;
-        font-size: 16px;
+      .text{
+        font-size: 15px;
+        color: #cccccc;
+        margin: 10px 0 0 23px;
       }
+      .button{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 62px;
+        >button{
+          width: 331px;
+          height: 46px;
+          border: none;
+          background: #3C64EE;
+          border-radius: 4px;
+          color: #ffffff;
+          font-size: 16px;
+        }
 
+      }
     }
   }
 </style>

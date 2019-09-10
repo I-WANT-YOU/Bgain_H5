@@ -13,7 +13,7 @@
         <div class="info-num">
           <span>{{expectedReturn}}</span>
         </div>
-        <div class="info-text">预期收益({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</div>
+        <div class="info-text">预期收益({{tabActiveType === 'BGP' ? 'BGP' : tabActiveType}})</div>
       </div>
     </div>
     <!--tab-->
@@ -30,35 +30,40 @@
         </div>
       </div>
       <div class="tabs-content">
-        <div class="tabs-content-title"><span>认购数量({{tabActiveType === 'FBP' ? 'BGP' : tabActiveType}})</span></div>
+        <div class="tabs-content-title">
+          <span>认购数量({{tabActiveType === 'BGP' ? 'BGP' : tabActiveType}})</span>
+        </div>
         <div class="lestPurchase">
-
+          <!--suppress HtmlFormInputWithoutLabel -->
           <input ref='inputFile'
-                 :placeholder="'起投' + placeHolder + (tabActiveType === 'FBP' ? 'BGP' : tabActiveType)"
+                 :placeholder=
+                   "'起投' + placeHolder + (tabActiveType === 'BGP' ? 'BGP' : tabActiveType)"
                   v-model="investmentAmount"
           />
         </div>
         <div class="availableBalance">
          <span>可用余额</span><span>{{AllAccount}}
-           {{tabActiveType === "FBP" ? 'BGP' : tabActiveType}}</span>
+           {{tabActiveType === "BGP" ? 'BGP' : tabActiveType}}</span>
         </div>
       </div>
     </div>
     <div class="button-container">
-      <button
-        :class="{'activeStyle':activeButton}"
+      <Button
+        type="info"
         :disabled="!activeButton"
-        @click="toStepTwo">下一步</button>
+        @click="toStepTwo">下一步</Button>
     </div>
     <!--当前余额不足的弹窗-->
-    <div class="pop-container" v-show="popShow"><FixedPop/></div>
+    <div class="pop-container" v-show="popShow"><FixedPop :type="typePopShow"/></div>
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant';
+/* eslint-disable no-underscore-dangle */
+
+import { Toast, Button } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
-import { strip } from '@utils/tools';
+import { testNum } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
 import FixedPop from './components/FixedPop.vue';
@@ -75,7 +80,7 @@ export default {
       tabActiveFBP: false, // FBPtab激活 在最大最小中判断
       title: '', // 标题
       // currency: '',
-      canUseCurrency: false, // 是否可用币种 toast提示是否可用
+      canUseCurrency: false, // 是否可用币种 弹窗提示是否可用
       canUseFBP: false, // 是否可用FBP   toast提示是否可用
       popShow: false, // 遮罩层 显示余额不足
       placeHolder: '',
@@ -103,7 +108,6 @@ export default {
         this.purchaseProcess(info, localFixedBuyInfo);
       },
       (err) => {
-        console.log(err);
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
@@ -116,6 +120,7 @@ export default {
   components: {
     BgainNavBar,
     FixedPop,
+    Button,
     // eslint-disable-next-line vue/no-unused-components
     Toast,
   },
@@ -181,8 +186,6 @@ export default {
         this.investmentAmount = val.substring(0, val.length - 1);
         return false;
       }
-
-
       // 判断小数点后只有8位
       if (this.investmentAmount.indexOf('.') > -1) { // 有小数点
         if ((this.investmentAmount.length - this.investmentAmount.indexOf('.') - 1) > 8) {
@@ -202,8 +205,8 @@ export default {
     expectedReturn() {
       let expected = '-';
       if (this.investmentAmount) {
-        expected = strip((this.investmentAmount * 100000000 * this.fixedBuyInfo.expected_return)
-          / 100000000, 8);
+        const initData = this.investmentAmount * this.fixedBuyInfo.expected_return;
+        expected = testNum(initData);
       }
       return expected;
     },
@@ -212,7 +215,16 @@ export default {
     ...mapActions(
       ['getFixedBuyInfo'],
     ),
+    /* 判断弹窗类型 */
+    typePopShow() {
+      if (this.fixedBuyInfo.balance_fbp * 1 >= this.fixedBuyInfo.min_inverst_amount_fbp * 1) {
+        this.popShow = false;
+      } else {
+        this.$router.go(-1);
+      }
+    },
     toStepTwo() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-下一步']);
       const routeData = {
         investmentAmount: this.investmentAmount,
         expectedReturn: this.expectedReturn,
@@ -245,9 +257,9 @@ export default {
           // 显示弹窗 提示用户余额不足
           this.popShow = true;
         }
-      } else { // 支持FBP购买
+      } else { // 支持BGP购买
         this.isTabsShow = true; // Tba可切换
-        // 判断BTC/FBP余额是否大于起投金额 选择初始TAB页面（本页面接口）
+        // 判断BTC/BGP余额是否大于起投金额 选择初始TAB页面（本页面接口）
         if (localFixedBuyInfo.balance * 1 >= localFixedBuyInfo.min_inverst_amount * 1) {
           this.tabActiveCurrency = true; // tab页面为币种
           this.canUseCurrency = true; // 币种可以购买
@@ -265,7 +277,7 @@ export default {
           // 判断FBP是否有足够余额
           if (localFixedBuyInfo.balance_fbp * 1 >= localFixedBuyInfo.min_inverst_amount_fbp * 1) {
             this.tabActiveFBP = true; // tab页面为FBP
-            this.tabActiveType = 'FBP'; // 认购数量
+            this.tabActiveType = 'BGP'; // 认购数量
             this.canUseFBP = true; // FBP可以购买
             this.placeHolder = localFixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = localFixedBuyInfo.balance_fbp;
@@ -278,11 +290,13 @@ export default {
     },
     // 改变Tabs
     changeTab(text) {
+      window._czc.push(['_trackEvent', 'click', `定期盈-购买Tab-${text}`]);
       this.activeButton = false;
       switch (text) {
         case 'currency':
           if (this.canUseCurrency === false) {
-            this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
+            this.popShow = true;
+            // this.$toast(`可用${this.fixedBuyInfo.currency}余额不足`);
           } else {
             this.tabActiveCurrency = true; // 币种tab激活
             this.tabActiveFBP = false; // FBPtab激活
@@ -298,7 +312,7 @@ export default {
           } else {
             this.tabActiveCurrency = false; // 币种tab激活
             this.tabActiveFBP = true; // FBPtab激活
-            this.tabActiveType = 'FBP';
+            this.tabActiveType = 'BGP';
             this.investmentAmount = '';
             this.placeHolder = this.fixedBuyInfo.min_inverst_amount_fbp;
             this.AllAccount = this.fixedBuyInfo.balance_fbp;
@@ -425,6 +439,7 @@ export default {
   .tabs-content{
     padding:26.5px 21px 0 22px;
     .tabs-content-title{
+      padding-bottom: 26px;
       height: 21px;
       line-height: 21px;
       font-size: 15px;
@@ -432,7 +447,9 @@ export default {
     }
     .lestPurchase{
       height: 25px;
-      padding:28px 0 18px 0;
+      display: flex;
+      align-items: center;
+      /*padding:20px 0 18px 0;*/
       >input {
         height: 25px;
         border: none;
@@ -453,7 +470,7 @@ export default {
     }
     .availableBalance{
       height: 21px;
-      padding:16px 0 17px 0;
+      padding:26px 0 17px 0;
       display: flex;
       justify-content: space-between;
       >span:nth-child(1){
@@ -474,7 +491,6 @@ export default {
     >button{
       width: 331px;
       height: 46px;
-      background: #D2D8EB;
       border-radius: 4px;
       font-size: 16px;
       color: #FFFFFF;

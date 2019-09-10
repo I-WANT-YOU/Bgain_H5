@@ -5,7 +5,7 @@ import * as Auth from './auth';
 import baseUrl from '../config/baseUrl';
 
 const request = axios.create({
-  timeout: 5000,
+  // timeout: 10000,
   baseURL: baseUrl,
 });
 
@@ -19,7 +19,7 @@ request.interceptors.request.use(
     }
 
     // if (process.env.NODE_ENV === 'development') {
-    //   requestConfig.headers.Authorization = 'Bearer 6';
+    //   requestConfig.headers.Authorization = 'Bearer 10';
     // }
 
     requestConfig.headers.language = 'ZH_CN';

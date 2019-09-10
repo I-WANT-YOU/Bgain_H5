@@ -1,12 +1,12 @@
 <template>
   <div class="current-trade__container">
-    <bgain-nav-bar title="转入"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="onArrowClick" title="转入"></bgain-nav-bar>
     <div class="current-trade__content">
       <div class="content__panel">
         <div class="panel__title">转入数量({{currency}})</div>
         <Field
           v-model="amount"
-          :placeholder="`起投 ${minBuyAmount} ${currency}`"
+          :placeholder="`最少转入 ${minBuyAmount} ${currency}`"
            @paste.native.capture.prevent="()=>{return false}"
           :border="false">
         </Field>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Field, Divider, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@/components/BgainNavBar.vue';
@@ -100,6 +102,7 @@ export default {
     ...mapUserGetters(['authLevel']),
   },
   async mounted() {
+    window.addEventListener('window.history.forward', () => { console.log(1); });
     this.currency = this.$route.params.currency;
     Toast.loading({
       message: '加载中...',
@@ -138,6 +141,7 @@ export default {
       }
     },
     async onSubmitClick(password) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-交易密码-确定']);
       try {
         await this.buyCurrentProduct({
           amount: this.amount,
@@ -161,10 +165,21 @@ export default {
     onBalanceCancel() {
       this.$router.push({
         name: 'current',
+        query: {
+          currency: this.currency,
+        },
       });
     },
     onClose() {
       this.visible = false;
+    },
+    onArrowClick() {
+      this.$router.push({
+        name: 'current',
+        query: {
+          currency: this.currency,
+        },
+      });
     },
   },
 };

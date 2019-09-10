@@ -1,7 +1,7 @@
 <template>
   <div class="send-code-wrap">
     <span v-if="!disabled" class="send-code" @click="onClick">{{text}}</span>
-    <span v-else class="send-code disabled">{{texts}}</span>
+    <span v-else class="send-code disabled" :style="{color:senddingTextColor}">{{texts}}</span>
   </div>
 </template>
 
@@ -19,6 +19,11 @@ export default {
       required: false,
     },
     remainingTimeText: {
+      required: false,
+    },
+    senddingTextColor: {
+      type: String,
+      default: '#cccccc',
       required: false,
     },
   },
@@ -40,7 +45,7 @@ export default {
     } else if (this.autosend) {
       this.onClick();
     }
-    this.texts = `已发送 (${this.timeText} s)`;
+    this.texts = `已发送 (${this.timeText}s)`;
   },
   methods: {
     onClick() {
@@ -48,14 +53,14 @@ export default {
       if (!this.disabled) {
         this.timeOut();
         this.disabled = true;
-        this.texts = `已发送 (${this.timeText} s)`;
+        this.texts = `已发送 (${this.timeText}s)`;
         this.$emit('onsend');
       }
     },
     timeOut() {
       this.timer = setInterval(() => {
         if (this.timeText !== 0) {
-          this.texts = `已发送 (${this.timeText} s)`;
+          this.texts = `已发送 (${this.timeText}s)`;
           this.timeText = this.timeText - 1;
           this.$emit('remainingTime', this.timeText);
         } else {

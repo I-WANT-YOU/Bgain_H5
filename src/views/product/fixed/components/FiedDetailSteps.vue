@@ -3,7 +3,9 @@
     <div class="steps">
       <div class="step" v-for="step in steps" :key="step">
         <div class="drawing" >
-          <div class="circle" :class="{activeCircle:step<fatherCurrentStep, activeCircle:step === 0}"></div>
+          <div class="circle"
+               :class="{activeCircle:step<fatherCurrentStep, activeCircle:step === 0}">
+          </div>
           <div class="x-line"  :class="{activeXLine:step<fatherCurrentStep}"></div>
         </div>
       </div>
@@ -45,10 +47,11 @@ export default {
     width: 100%;
     height: 122px;
     overflow: hidden;
-    font-family: PingFangSC-Regular;
+    font-family: PingFangSC-Regular sans-serif;
     letter-spacing: 0;
     text-align: center;
     border-bottom: 0.51px solid #E5E9F6;
+    /*background: #FFFFFF;*/
     .steps {
       display: flex;
       flex-direction: row;
@@ -62,7 +65,7 @@ export default {
           align-items: center;
           width: 96px;
           height: 14px;
-          z-index: -1;
+          z-index: 1;
           .activeCircle{
             border: 2px solid  #3C64EE!important;
           }

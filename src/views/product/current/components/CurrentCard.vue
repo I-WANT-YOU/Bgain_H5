@@ -38,19 +38,42 @@
       content="您还未设置交易密码，暂无法进行购买"
       submitText="设置交易密码"
       @submit="onSSSS"
-      @cancel="()=>{this.showDialog = false}"
+      @cancel="()=>{this.showDialog = false;
+       window._czc.push(['_trackEvent', 'click', '天天赚-交易密码-取消']);}"
     />
+    <BgainBaseDialog
+      v-model="Dialog"
+      :showCancel="false"
+      title="温馨提示"
+      content
+      submitText="知道了"
+      @submit="()=>{this.Dialog = false}"
+      @cancel="()=>{this.Dialog = false}"
+      wrapHeight="260px"
+    >
+      <template v-slot:content>
+        <div>
+          <div class="holiday">平台休假中，暂不可进行转入/转出，敬请谅解！</div>
+          <div class="holiday-rules">
+            <div>规则说明:</div>
+            <div>中国非周末公休节假日（包括元旦、春节、清明、劳动节、端午、中秋、国庆），平台在不处理天天赚转入、转出业务，节假日后即可恢复正常处理。</div>
+          </div>
+        </div>
+      </template>
+    </BgainBaseDialog>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('user');
 const { mapActions: mapAuthActions } = createNamespacedHelpers('auth');
-const { mapActions: mapCurrentActions, mapState } = createNamespacedHelpers('product/current');
+const { mapActions: mapCurrentActions, mapGetters: mapCurrentGetters } = createNamespacedHelpers('product/current');
 
 export default {
   name: 'CurrentCard',
@@ -72,6 +95,7 @@ export default {
       login: false,
       al: 1,
       showDialog: false,
+      Dialog: false,
     };
   },
   mounted() {
@@ -86,13 +110,14 @@ export default {
   },
   computed: {
     ...mapGetters(['authLevel']),
-    ...mapState(['holiday']),
+    ...mapCurrentGetters(['holidayStatus']),
   },
   methods: {
     ...mapAuthActions({ isloginSt: 'isLogin' }),
     ...mapActions(['getUserSummary']),
     ...mapCurrentActions(['getHoliday']),
     onRecordsClick() {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-交易记录']);
       this.$router.push({
         name: 'trade-records',
       });
@@ -114,10 +139,11 @@ export default {
       });
     },
     async onSellClick(currency) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-转出']);
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidayStatus) {
             this.$router.push({
               name: 'current-sell',
               params: {
@@ -125,26 +151,27 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;
         }
       } else {
-        Toast('未登录');
         sessionStorage.setItem('fromLogin', '/product/current');
         this.$router.push('/login');
       }
     },
     onSSSS() {
+      window._czc.push(['_trackEvent', 'click', '天天赚-设置交易密码-确定']);
       sessionStorage.setItem('payment', '/product/current');
       this.$router.push('/mine/safety/password/payment/set');
     },
     async onBuyClick(currency) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-活期-转入']);
       if (this.login) {
         if (this.al === 2) {
           await this.getHoliday();
-          if (this.holiday) {
+          if (this.holidayStatus) {
             this.$router.push({
               name: 'current-buy',
               params: {
@@ -152,13 +179,12 @@ export default {
               },
             });
           } else {
-            // this.Dialog = true;
+            this.Dialog = true;
           }
         } else {
           this.showDialog = true;
         }
       } else {
-        Toast('未登录');
         sessionStorage.setItem('fromLogin', '/product/current');
         this.$router.push('/login');
       }
@@ -304,6 +330,22 @@ export default {
         color: #ffffff;
       }
     }
+  }
+  .holiday {
+    padding: 0 15px;
+    font-size: 16px;
+    color: #0f3256;
+    letter-spacing: 0.15px;
+    text-align: center;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
+  .holiday-rules{
+    text-align: left;
+    font-size: 12px;
+    color: #6A707D;
+    letter-spacing: 0;
+    line-height: 19px;
   }
 }
 </style>

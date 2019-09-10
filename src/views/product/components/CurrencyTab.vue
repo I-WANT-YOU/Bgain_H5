@@ -2,12 +2,13 @@
   <div class="currency__tabs">
     <tabs
         sticky
-        v-model="currency"
+        v-model="initCurrency"
         @click="onCurrencyChange">
       <tab v-for="currency in currencies"
           :key="currency"
           :title="currency"
-          :name="currency">
+          :name="currency"
+      >
         <slot></slot>
       </tab>
     </tabs>
@@ -15,7 +16,7 @@
 </template>
 
 <script>
-import { head } from 'lodash';
+// import { head } from 'lodash';
 import { Tab, Tabs } from 'vant';
 
 export default {
@@ -29,11 +30,30 @@ export default {
       type: Array,
       required: true,
     },
+    selectedCurrency: {
+      type: String,
+    },
+    latestCurrency: {
+      type: String,
+    },
   },
   data() {
     return {
-      currency: head(this.currencies),
+      currency: 'BTC',
     };
+  },
+  computed: {
+    initCurrency: {
+      get() {
+        if (this.selectedCurrency) {
+          return this.selectedCurrency;
+        }
+        return this.latestCurrency;
+      },
+      set() {
+
+      },
+    },
   },
   methods: {
     onCurrencyChange(currency) {

@@ -60,7 +60,7 @@
 import { createNamespacedHelpers } from 'vuex';
 import { ActionSheet, Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
-import { numberWithThousands } from '@utils/tools';
+import { numberWithThousands, changeFloat } from '@utils/tools';
 import FixedCard from './components/FixedCard.vue';
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('product/fixed');
@@ -98,20 +98,23 @@ export default {
       if (this.active === '1') {
         await this.getUserPortfolio();
         await this.getUsetFixedHoldingDetail(0);
-        this.balanceList = this.userHoldFixedSummary;
+        this.amount = changeFloat(this.userHoldFixedAsset.BTC, 'none');
+        this.actions = Object.entries(this.userHoldFixedAsset)
+          .filter(item => (item[0] === 'USDT' || item[0] === 'BTC' || item[0] === 'CNY'))
+          .map(item => ({ name: item[0] }));
         Toast.clear();
       } else {
         await this.getUserPortfolioHistory();
         await this.getUsetFixedHoldingDetail(1);
-        this.balanceList = this.userHoldFixedSummary;
         Toast.clear();
       }
+      this.balanceList = this.userHoldFixedSummary;
     },
     onSelect(currency) {
       const select = Object.entries(this.userHoldFixedAsset)
         .filter(item => item[0] === currency.name)[0][1];
       this.currency = currency.name;
-      this.amount = select;
+      this.amount = changeFloat(select, currency.name !== 'CNY' ? 'none' : currency.name);
       this.showMune = false;
     },
     numberWithThousands(num) {
@@ -122,23 +125,16 @@ export default {
     ...mapState(['userPortfolio']),
     ...mapGetters(['userHoldFixedAsset', 'userHoldFixedSummary']),
   },
-  async mounted() {
+  mounted() {
     this.onChangeList();
-    await this.getUsetFixedHoldingDetail(0);
-    this.balanceList = this.userHoldFixedSummary;
     this.currency = 'BTC';
-    this.amount = this.userHoldFixedAsset.BTC;
-    this.actions = Object.entries(this.userHoldFixedAsset).map(item => ({ name: item[0] }));
   },
 };
 </script>
 
 <style lang='scss' scoped>
 .mine-fixed {
-  height: 100%;
   background: #f8f8f8;
-  display: flex;
-  flex-direction: column;
   .tab-wrap {
     height: 100%;
     display: flex;
@@ -173,9 +169,6 @@ export default {
     }
   }
   .mine-fixed-con {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
     .asset-wrap {
       display: flex;
       flex-direction: column;
@@ -246,7 +239,6 @@ export default {
       }
     }
     .list {
-      flex: 1;
       background: #ffffff;
       padding-top: 12.5px;
       .no {

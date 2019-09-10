@@ -24,6 +24,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Popup, Field, Divider, Toast,
 } from 'vant';
@@ -46,11 +48,13 @@ export default {
       this.$emit('close');
     },
     onForgotClick() {
+      window._czc.push(['_trackEvent', 'click', '交易密码-忘记密码']);
       this.$router.push({
         path: '/mine/safety/password/payment/reset',
       });
     },
     onSubmit() {
+      window._czc.push(['_trackEvent', 'click', '交易密码-确认']);
       if (this.validValue()) {
         this.$emit('submit', this.password);
       }

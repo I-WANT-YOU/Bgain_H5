@@ -1,7 +1,7 @@
 <template>
   <!--常见问题-->
   <div class="commonProblem">
-    <BgainNavBar title="常见问题"/>
+    <BgainNavBar title="常见问题" />
     <van-tabs v-model="active" class="change-tabs">
       <van-tab title="登录注册" class="tab-item">
         <van-collapse v-model="activeNames">
@@ -23,7 +23,7 @@
               size="large"
               title="为什么要进行身份认证？"
               name="13"
-            >平台暂不提供账号修改的功能，注册时请务必保证手机号或邮箱可长期正常使用。</van-collapse-item>
+            >为保证平台注册用户的资金及信息安全，平台要求用户在进行相关资金交易前完成身份认证。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -148,10 +148,10 @@
           <div class="item">
             <span class="icon"></span>
             <van-collapse-item size="large" title="如何提高密码安全性？" name="33">
-              （1）请使用较长、复杂的字母数字组合以提高密码强度，不要用生日等容易被别人猜中的密码。
-              （2）如果使用了密码找回功能，请您及时删除我们发送给您的载有验证码的信息。
-              （3）请记住不要与任何人共享您的密码。如果您已经与他人共享了密码，我们强烈建议您尽快更改。
-              （4）建议不定期的更改用户密码，以提高密码安全性。
+              <div>（1）请使用较长、复杂的字母数字组合以提高密码强度，不要用生日等容易被别人猜中的密码。</div>
+              <div>（2）如果使用了密码找回功能，请您及时删除我们发送给您的载有验证码的信息。</div>
+              <div>（3）请记住不要与任何人共享您的密码。如果您已经与他人共享了密码，我们强烈建议您尽快更改。</div>
+              <div>（4）建议不定期的更改用户密码，以提高密码安全性。</div>
             </van-collapse-item>
           </div>
         </van-collapse>
@@ -216,7 +216,7 @@
               size="large"
               title="购买定期盈产品需要签署哪协议？"
               name="48"
-            >购买定期盈产品的用户需要签署的协议为《数字货币投资协议》，产品购买成功则协议生</van-collapse-item>
+            >购买定期盈产品的用户需要签署的协议为《数字货币投资协议》，产品购买成功则协议生效。</van-collapse-item>
           </div>
           <div class="item">
             <span class="icon"></span>
@@ -236,7 +236,7 @@
           </div>
         </van-collapse>
       </van-tab>
-      <van-tab title="天天赚产品" class="tab-item">
+      <van-tab title="天天赚" class="tab-item">
         <van-collapse v-model="activeNames">
           <div class="item">
             <span class="icon"></span>

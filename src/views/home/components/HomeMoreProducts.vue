@@ -8,6 +8,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'HomeMoreProducts',
   props: {
@@ -19,10 +21,13 @@ export default {
   methods: {
     go() {
       if (this.statu === 0) {
+        window._czc.push(['_trackEvent', 'click', '首页-基金More']);
         this.$router.push('/product/fund');
       } else if (this.statu === 1) {
+        window._czc.push(['_trackEvent', 'click', '首页-基金More']);
         this.$router.push('/product/current');
       } else if (this.statu === 2) {
+        window._czc.push(['_trackEvent', 'click', '首页-基金More']);
         this.$router.push('/product/fixed');
       }
     },
@@ -32,7 +37,7 @@ export default {
 
 <style lang="scss" scoped>
 .more-products {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
   display: flex;
   height: 20px;

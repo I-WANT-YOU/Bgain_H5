@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BgainNavBar title="投资协议" />
+    <BgainNavBar title="投资服务协议" />
     <div class="agm__container">
       <div class="agm__section">本协议由以下各方订立：</div>
       <div class="agm__section">委托方：</div>

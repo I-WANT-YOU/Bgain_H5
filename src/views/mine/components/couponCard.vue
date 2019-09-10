@@ -9,7 +9,7 @@
       />
       <div class="num">
         <div>
-          <b>{{option.coupon_value * 100}}</b>
+          <b>{{value}}</b>
           <span>%</span>
         </div>
         <div class="num_text">{{option.coupon_type === 'ABS' ? '本金加息' : '收益加息'}}</div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { formatDate } from '@utils/tools';
+import { formatDate, strip } from '@utils/tools';
 
 export default {
   name: 'Coupon',
@@ -78,6 +78,9 @@ export default {
         time: formatDate(this.option.end_date),
         text: '过期',
       };
+    },
+    value() {
+      return strip(this.option.coupon_value * 100);
     },
   },
 };

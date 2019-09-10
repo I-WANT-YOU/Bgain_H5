@@ -16,7 +16,7 @@
             <span class="textStyle">{{item.integral_product_name}}</span>
             <span
               :class="{goodsState:item.stock === 0}"
-            >{{item.stock === 0?'已售磬':item.fbpprice+'积分'}}</span>
+            >{{item.stock === 0?'已售磬':numberWithThousands(item.fbpprice)+'BGP'}}</span>
           </div>
         </li>
       </ul>
@@ -27,6 +27,7 @@
 <script>
 import { mapState } from 'vuex';
 import { Image } from 'vant';
+import { numberWithThousands } from '@utils/tools';
 
 export default {
   name: 'CouponList',
@@ -47,6 +48,9 @@ export default {
           params: { id },
         },
       );
+    },
+    numberWithThousands(num) {
+      return numberWithThousands(num);
     },
   },
 };

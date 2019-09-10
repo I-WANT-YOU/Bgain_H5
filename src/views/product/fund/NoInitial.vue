@@ -9,8 +9,8 @@
         <span :class="['gains' , fundDetail.up_down >= 0 ? '' : 'active']">
           <span>
             {{fundDetail.up_down >= 0
-            ? `+${fundDetail.market_change_percent}`
-            : `-${fundDetail.market_change_percent}`}}
+            ? `+${am}`
+            : `-${am}`}}
           </span>
           <span class="percent">%</span>
           <i />
@@ -50,10 +50,7 @@
     <div class="tradeshow">
       <div class="title">
         <span>交易说明</span>
-        <div
-          @click="$router.push({path:
-          '/product/fund/trade-rules',
-          query:{productId: $route.params.id}})"
+        <div @click="goToTradeDescription"
           class="skip"
         >
           交易规则、常见问题等
@@ -101,17 +98,17 @@
         </div>
       </div>
       <div class="show">
-        <div @click="onDialog('在选定周期内任一历史时点往后推，产品净值走到最低点时的收益率回撤幅度的最大值')">
+        <div @click="onDialog('在选定周期内任一历史时点往后推，产品净值走到最低点时的收益率回撤幅度的最大值', '最大回撤')">
           <svg-icon icon-class="fund-retreat" />
           <div class="percent">{{fundDetail.max_retracement_scale * 1}}%</div>
           <div class="text">最大回撤</div>
         </div>
-        <div @click="onDialog('用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费后的净值')">
+        <div @click="onDialog('用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费后的净值', '管理费(年化)')">
           <svg-icon icon-class="fund-managementfee" />
           <div class="percent">{{fundDetail.manage_fee_rate * 1}}%</div>
           <div class="text">管理费(年化)</div>
         </div>
-        <div @click="onDialog('用户投资收益应分配给基金管理人作为业绩报酬的部分')">
+        <div @click="onDialog('用户投资收益应分配给基金管理人作为业绩报酬的部分', '业绩报酬')">
           <svg-icon icon-class="fund-meritpay" />
           <div class="percent">{{fundDetail.carry_rate_user}}%</div>
           <div class="text">业绩报酬</div>
@@ -121,10 +118,7 @@
     <div class="fundarchives">
       <div class="title">
         <span>基金档案</span>
-        <div
-          @click="$router.push({
-          path: '/product/fund/product-files',
-          query:{productId: $route.params.id}})"
+        <div @click="goToFundFile"
           class="skip"
         >
           基金团队、策略说明、实盘业绩等
@@ -160,24 +154,30 @@
     <BgainBaseDialog
       v-model="payment"
       :showCancel="false"
-      content="您还未设置交易密码，暂无法进行购买"
+      content
       submitText="设置交易密码"
       @submit="setPayment"
       @cancel="cancelPayment"
-    />
+    >
+      <template v-slot:content>
+        <div class="setPay">您还未设置交易密码，暂无法进行购买</div>
+      </template>
+    </BgainBaseDialog>
     <BgainBaseDialog
       v-model="showDialog"
       :showCancel="false"
       :showClose="false"
       :content="dialogText"
       submitText="我知道了"
-      title
+      :title="dialogTitle"
       @submit="()=>{this.showDialog = false}"
     />
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import BgainNavBar from '@component/BgainNavBar.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import { formatDate } from '@utils/tools';
@@ -201,13 +201,15 @@ export default {
       open: false,
       type: '',
       risk: '',
-      chart_x: '03-16',
-      chart_y: '1.0000',
+      chart_x: '03-16', // 净值走势日期
+      chart_y: '1.0000', // 净值走势单位净值
       payment: false,
       sellTime: '',
       isLogin: '',
       showDialog: false,
       dialogText: '',
+      dialogTitle: '',
+      am: 0, // 日涨跌幅
     };
   },
   async mounted() {
@@ -228,8 +230,10 @@ export default {
       this.risk = formatRiskText(this.fundDetail).risk_level_type;
       this.setEcharts();
       this.showstep = this.fundDetail.status === 'OPEN';
+      this.am = this.fundDetail.market_change_percent;
       Toast.clear();
     } catch (error) {
+      Toast('网络加载失败,请重新进入该页面');
       Toast.clear();
     }
   },
@@ -239,13 +243,32 @@ export default {
       sendRemind: 'product/fund/sendRemind',
       getUserSummary: 'user/getUserSummary',
     }),
+    /* 跳转交易说明 */
+    goToTradeDescription() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-交易说明']);
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.params.id },
+      });
+    },
+    /* 跳转基金档案 */
+    goToFundFile() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-基金档案']);
+      this.$router.push({
+        path: '/product/fund/product-files',
+        query: { productId: this.$route.params.id },
+      });
+    },
+    /* 跳转风险说明 */
+    goToRiskDescription() {},
     formatDate(date, format) {
       return formatDate(date, format);
     },
     // 点击最大回撤（3个）
-    onDialog(text) {
+    onDialog(text, title) {
       this.showDialog = true;
       this.dialogText = text;
+      this.dialogTitle = title;
     },
     setEcharts() {
       this.chart_x = formatDate(this.fundNavHistories[this.fundNavHistories.length - 1].get_nav_time, 'MM-DD');
@@ -270,6 +293,7 @@ export default {
       }
     },
     async onSubmit() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-到时提醒']);
       try {
         await this.getUserSummary();
       } catch (error) {
@@ -287,7 +311,10 @@ export default {
       } else {
         this.showstep = true;
         if (this.authLevel) {
-          this.sendRemind({ fundId: this.fundDetail.id, openDate: this.fundDetail.next_open_date }).then(() => {
+          this.sendRemind({
+            fundId: this.fundDetail.id,
+            openDate: this.fundDetail.next_open_date,
+          }).then(() => {
             Toast('到时会以短信或邮箱的形式提醒您');
           }, (error) => {
             if (error && error.status) {
@@ -308,6 +335,7 @@ export default {
       this.payment = false;
     },
     go(path) {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-风险说明']);
       this.$router.push(path);
     },
   },
@@ -572,6 +600,14 @@ export default {
       width: 100%;
       border-radius: 0;
     }
+  }
+  .setPay {
+    padding: 0 20px;
+    font-size: 16px;
+    color: #0f3256;
+    letter-spacing: 0.15px;
+    text-align: center;
+    line-height: 24px;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="couponList">
    <header class="couponLIst-header">
-     <div @click="()=>{this.$router.go(-1)}"><svg-icon icon-class="back" class="back-icon"/> </div>
-     <span  @click="backToStepTwo">确定</span>
+     <div @click="backToStepTwoWithoutParams"><svg-icon icon-class="back" class="back-icon"/> </div>
+     <span  @click="backToStepTwoWithParams">确定</span>
    </header>
     <div class="coupons">
       <van-check-group v-model="result" :max="1">
@@ -10,18 +10,19 @@
              :key="index">
           <div class="coupon-back">
             <div class="coupon-num">
-              <span>20%</span>
+              <span>{{item.coupon_value}}%</span>
               <span>收益加息</span>
             </div>
             <div class="couponInfo">
-              <span>{{item.min_usage_limit}}{{item.currency_type}}起投</span>
+              <span>{{item.min_usage_limit}}&nbsp;{{item.currency_type}}&nbsp;起投</span>
               <span>
-                最高限额{{item.min_usage_limit}}{{item.currency_type}}
+                最高限额{{item.max_usage_limit}}&nbsp;{{item.currency_type}}
               </span>
               <span>{{createDate(item.end_date)}}前有效</span>
             </div>
           </div>
-          <van-check :name="index" class="radio-style" @click="changeCheckResult(index,item.id)"/>
+          <van-check  :key="index"
+                      :name="index" class="radio-style" @click="changeCheckResult(index,item.id)"/>
         </div>
       </van-check-group>
     </div>
@@ -29,11 +30,13 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Checkbox, CheckboxGroup, Toast } from 'vant';
 import Vue from 'vue';
-import { mapActions, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import PublicMethods from '@utils/publicMethods';
-import errorMessage from '../../constants/responseStatus';
+// import errorMessage from '../../constants/responseStatus';
 
 Vue.use(Toast);
 export default {
@@ -54,16 +57,21 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions('product/fixed', [
-      'getAvailableCoupons',
-    ]),
 
     // 选择优惠券返回上一页
-    backToStepTwo() {
+    backToStepTwoWithoutParams() {
       if (this.result[0] === -1) {
-        this.$router.go(-1);
+        this.$emit('couponData', 'cancel');
       } else {
-        this.$router.push({ path: '/fixedPurchaseStepTwo', query: { index: this.result[0], couponId: this.couponId } });
+        this.$emit('couponData', 'none');
+      }
+    },
+    backToStepTwoWithParams() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-优惠券-确定']);
+      if (this.result[0] === -1) {
+        Toast('请选择优惠券');
+      } else {
+        this.$emit('couponData', this.result[0]);
       }
     },
 
@@ -84,27 +92,8 @@ export default {
     },
   },
   mounted() {
-    Toast.loading({
-      mask: true,
-      duration: 0,
-      message: '加载中...',
-    });
-    if (this.$route.query) {
-      const params = {
-        id: this.$route.query.productId,
-        amount: this.$route.query.amount,
-      };
-      this.getAvailableCoupons(params).then(
-        () => {
-          Toast.clear();
-        },
-        (err) => {
-          Toast.clear();
-          if (err.status) { this.$toast(errorMessage[err.status]); } else {
-            this.$toast('网络故障');
-          }
-        },
-      );
+    if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') {
+      this.$set(this.result, 0, parseInt(sessionStorage.getItem('couponData'), 10));
     }
   },
   beforeDestroy() {
@@ -115,19 +104,30 @@ export default {
 
 <style lang="scss" >
 .couponList{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  min-height:100vh ;
+  background: white;
+  z-index: 100;
   .couponLIst-header{
     height: 44px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    >div{
-      padding:0 15px;
+    >div:nth-child(1){
+      padding:0 35px 0 15px;
       display: flex;
       align-items: center;
       .back-icon{
         width: 9.5px;
         height: 18px;
       }
+    }
+    >div:nth-child(2){
+      font-size: 18px;
+      color: #000000;
+      line-height: 17px;
     }
     >span{
       padding: 0 15px;

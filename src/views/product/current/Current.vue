@@ -2,6 +2,7 @@
   <currency-tab
     v-if="currencies.length !== 0"
     :currencies="currencies"
+    :selectedCurrency ='selectedCurrency'
     @currency-change="onCurrencyChange">
     <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
       <current-card :isLogin="isLogin" :data-source="product"></current-card>
@@ -11,6 +12,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { head, isEmpty } from 'lodash';
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
@@ -33,6 +36,7 @@ export default {
       isLoading: false,
       currency: '',
       product: {},
+      selectedCurrency: '', // 首页传递的数据
     };
   },
   computed: {
@@ -45,12 +49,14 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
-    await this.onRefresh();
+    this.selectedCurrency = this.$route.query.currency;
+    await this.onRefresh(this.selectedCurrency);
     Toast.clear();
   },
   methods: {
     ...mapActions(['getAllCurrentProduct']),
     onCurrencyChange(currency) {
+      window._czc.push(['_trackEvent', 'click', `天天赚-币种Tab-${currency}`]);
       this.currency = currency;
       this.product = this.getProduct(currency);
     },

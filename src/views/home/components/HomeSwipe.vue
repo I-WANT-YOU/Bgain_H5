@@ -1,9 +1,12 @@
 <template>
   <div class="bannerBox">
+    <!--{{banners[1].img_url}}-->
     <div class="swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="(item,index) in banners" @click="onSkip(item.url)" :key="index">
-          <img :src="item.img_url" alt=""/>
+        <div class="swiper-slide"
+             v-for="(item,index) in banners" @click="onSkip(item.url)" :key="index">
+         <img :src="item.img_url" alt="">
+         <!--<van-image :src="item.img_url"/>-->
         </div>
       </div>
     </div>
@@ -13,7 +16,7 @@
 import 'swiper/dist/css/swiper.min.css';
 import { mapGetters } from 'vuex';
 import Swiper from 'swiper';
-import { Image } from 'vant';
+// import { Image } from 'vant';
 
 export default {
   name: 'HomeSwipe',
@@ -27,7 +30,7 @@ export default {
     ]),
   },
   components: {
-    'van-image': Image,
+    // 'van-image': Image,
   },
   mounted() {
     /* eslint-disable */
@@ -43,6 +46,7 @@ export default {
   },
   methods:{
     onSkip(router){
+      window._czc.push(["_trackEvent",'click','首页-交易比赛']);
       if(router){
         window.location.href = router;
       }

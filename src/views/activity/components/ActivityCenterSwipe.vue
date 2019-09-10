@@ -1,15 +1,14 @@
 <template>
+  <!--:width = 335-->
+  <!--:height= 88-->
   <div class="swipe">
     <Swipe
       :autoplay="3000"
       indicator-color="white"
-      :width = 335
-      :height= 88
+      :style="{width:'335px',height:'88px',}"
     >
       <SwipeItem v-for="(item,index) in bannerList" :key="index">
         <van-image
-          width="335"
-          height="88"
           :src="item.img_url"
           @click="$router.push('/refer')"
         />

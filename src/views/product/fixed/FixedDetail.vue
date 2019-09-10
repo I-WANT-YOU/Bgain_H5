@@ -9,17 +9,17 @@
       <div class="message-detail">
         <div class="annual-interest-rate">
           <div><span>{{this.fixed.annual_rate}}</span><span>%</span></div>
-          <div><span>预期年化利率</span></div>
+          <div><span class="dark-font">预期年化利率</span></div>
         </div>
         <div class="locked-period">
           <div><span>{{this.fixed.closed_period}}</span><span>天</span></div>
-          <div><span>锁定期</span></div>
+          <div><span class="dark-font">锁定期</span></div>
         </div>
       </div>
       <div class="message-tips">
         <div>100%兑付</div>
         <div>账户安全保障</div>
-        <div>5EOS起诉</div>
+        <div>{{this.fixed.min_inverst_amount}}{{this.fixed.currency}}起投</div>
       </div>
     </div>
     <!--交易流程-->
@@ -44,7 +44,7 @@
     <div class="fixed-info">
       <div>
         <span>产品类型</span>
-        <span>固定收益产品</span>
+        <span>{{productType}}</span>
       </div>
       <div>
         <span>收益方式</span>
@@ -52,7 +52,7 @@
       </div>
       <div>
         <span>投资去向</span>
-        <span>由Bagin平台精选量化套利投资组合</span>
+        <span>{{fixed.investment_destination}}</span>
       </div>
       <span>固定期限理财，产品结束前不可退出</span>
     </div>
@@ -71,7 +71,7 @@
         <svg-icon icon-class="next"/>
       </span>
     </div>
-    <div class="confirm" :class="{cancelMargin:msgFormSon}">
+    <div class="confirm" :class="{cancelMargin:msgFormSon}" v-show="buyButtonState">
       <button @click="purchase">立即认购</button>
     </div>
     <BgainBaseDialog
@@ -86,6 +86,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { createNamespacedHelpers } from 'vuex';
 import { Toast } from 'vant';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
@@ -113,12 +115,17 @@ export default {
       toChildDate: [],
       msgFormSon: false,
       showDialog: false,
+      buyButtonState: false,
     };
   },
   mounted() {
     window.scrollTo(0, 0);
     this.getFixedProductById(this.$route.params.id).then(
       () => {
+        // 若商品不可购买 隐藏按钮
+        if (this.fixed.purchase_end_date - this.fixed.server_time >= 0) {
+          this.buyButtonState = true;
+        }
         // 设置购买流程（包含倒计时）
         this.setSteps(this.fixed.product_progress_status_type);
         // 认购开始日期 起息日 到期日 预计收款日
@@ -131,7 +138,7 @@ export default {
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
-          this.$toast('服务器错误');
+          this.$toast('网络错误');
         }
       },
     );
@@ -144,10 +151,22 @@ export default {
       'fixed',
     ]),
     ...mapGetters(['authLevel']),
+    productType() {
+      let type = '';
+      switch (this.fixed.product_type) {
+        case 'FIX_INCOME':
+          type = '固定收益';
+          break;
+        default:
+          type = '固定收益';
+      }
+      return type;
+    },
   },
   methods: {
     // 立即认购
     purchase() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-立即认购']);
       this.isLogin().then(() => {
         this.getUserSummary().then(() => {
           if (this.authLevel === 2) {
@@ -183,13 +202,18 @@ export default {
     ...userMapActions(['getUserSummary']),
     // 返回上一层
     back() {
-      this.$router.go(-1);
+      this.$router.push({ name: 'Fixed', query: { currentType: this.fixed.currency } });
     },
     // 设置购买流程
     setSteps(status) {
       // 设置申购倒计时
-      this.timer = setInterval(() => { this.countDown(this.fixed.due_date); }, 60000);
       this.countDownTimeIsShow = true;
+      if (((this.fixed.purchase_start_date - this.fixed.server_time) - Date.now()) < 0) {
+        this.countDownTimeIsShow = false;
+      }
+      this.timer = setInterval(() => {
+        this.countDown(this.fixed.purchase_start_date - this.fixed.server_time);
+      }, 1000);
       switch (status) {
         case '"PURCHASE_START':
           // 设置申购倒计时
@@ -242,7 +266,7 @@ export default {
         this.countDownTimeIsShow = false;
         clearInterval(this.timer);
       }
-      this.countDownTimer = `${day}天${hour}小时${minutes}分${seconds}秒`;
+      this.countDownTimer = `${day}天${hour}小时${minutes}分`;
       return true;
     },
     // 格式化时间
@@ -284,6 +308,12 @@ export default {
       });
     },
     goPage(path) {
+      if (path === '/fixed-safety-security') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-安全保障']);
+      }
+      if (path === '/fixed-questions') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-常见问题']);
+      }
       this.$router.push(path);
     },
   },
@@ -300,8 +330,10 @@ export default {
   .fixed-detail{
     margin: 0;
     padding: 0;
-    font-family: PingFangSC-Regular;
+    font-family: PingFangSC-Regular sans-serif;
     letter-spacing: 0;
+    background: #F8F8F8;
+    min-height: 100vh;
     /*头部*/
     >header{
       position: fixed;
@@ -314,6 +346,7 @@ export default {
       padding-right: 37px;
       background: #6F9DF8 url("../../../assets/images/fixedDetail/back_small.png");
       background-size: 100% 52px ;
+      z-index: 101;
       >div{
         height: 24px;
         display: flex;
@@ -345,7 +378,7 @@ export default {
     /*头部信息*/
     .fixed-message{
       margin-top: 52px;
-      padding-bottom: 21px;
+      padding-bottom: 41px;
       color: #FFFFFF;
       background: #6F9DF8 url("../../../assets/images/fixedDetail/back_big.png");
       background-size: 100% 100% ;
@@ -358,6 +391,9 @@ export default {
         }
         /*数据展示*/
         .annual-interest-rate{
+          .dark-font{
+            color: #ADBEFA;
+          }
           >div:nth-child(1){
             display: flex;
             align-items: baseline;
@@ -389,6 +425,9 @@ export default {
           }
         }
         .locked-period{
+          .dark-font{
+            color: #ADBEFA;
+          }
           >div:nth-child(1){
             display: flex;
             align-items: baseline;
@@ -428,6 +467,7 @@ export default {
         color: #C9D5FF;
         >div{
           width: 80px ;
+          padding: 0 3px;
           height: 20px;
           border: 0.51px solid #99AEF6;
           border-radius: 2px;
@@ -438,6 +478,9 @@ export default {
     }
     /*交易流程*/
     .transactionProcess{
+      border-radius: 20px 0 0 0;
+      margin-top: -20px;
+      background: white;
       .transactionProcess-title{
         display: flex;
         justify-content: space-between;
@@ -466,6 +509,7 @@ export default {
     .fixed-info{
       font-size: 13px;
       color: #6A707D;
+      background: #ffffff;
       >div{
         height: 38px;
         display: flex;
@@ -480,12 +524,13 @@ export default {
         }
       }
       >div:nth-child(1){
-        margin-top: 14px;
+        padding-top: 14px;
       }
       >span{
         display: block;
         height: 16px;
-        margin:11px 0 21px 21px;
+        margin:11px 0 0 21px;
+        padding-bottom: 21px;
         font-size: 11px;
         color: #9AA2B2;
       }
@@ -503,6 +548,7 @@ export default {
       font-size: 15px;
       color: #0F3256;
       padding:0 20px;
+      background: #ffffff;
     }
     .confirm{
       display: flex;
@@ -510,7 +556,7 @@ export default {
       align-items: center;
       height: 138px;
       background: #F8F8F8;
-      margin-bottom: 63px;
+      padding-bottom: 63px;
       >button{
         width: 331px;
         height: 46px;

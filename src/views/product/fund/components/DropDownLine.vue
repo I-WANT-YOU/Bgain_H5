@@ -1,12 +1,12 @@
 <template>
-  <Cell class="drop-down-menu">
+  <Cell class="fund-drop-down-menu">
     <span
-      :class="['drop-down-menu-item',active === 'all' ? 'active' : '']"
+      :class="['fund-drop-down-menu-item',active === 'all' ? 'active' : '']"
       @click="onClickItem('all')"
     >全部</span>
-    <div class="others">
+    <div class="fund-others">
       <span
-        :class="['drop-down-menu-item',active === item ? 'active' : '']"
+        :class="['fund-drop-down-menu-item',active === item ? 'active' : '']"
         v-for="(item,key) in options"
         :key="key"
         @click="onClickItem(item)"
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Cell } from 'vant';
 
 export default {
@@ -24,9 +26,11 @@ export default {
   props: ['options', 'reset', 'active', 'type'],
   methods: {
     onClickItem(text) {
+      window._czc.push(['_trackEvent', 'click', `冠军基金-筛选-${text}`]);
       this.$emit('changeItem', this.type, text);
     },
     onReset() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-筛选-重置']);
       this.reset();
     },
   },
@@ -34,10 +38,20 @@ export default {
 </script>
 
 <style lang='scss'>
-.drop-down-menu {
+.fund-drop-down-menu {
   padding: 0 15px;
 
-  .drop-down-menu-item {
+  .van-cell__value{
+    display: flex;
+  }
+
+  .fund-others{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .fund-drop-down-menu-item {
     display: inline-block;
     text-align: center;
     font-size: 12px;

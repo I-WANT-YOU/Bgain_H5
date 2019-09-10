@@ -5,7 +5,7 @@
       <div class="icon-wrap">
         <svg-icon
           class="buy"
-          v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'"
+          v-if="$route.query.type !== 'SUB_CARRY'"
           :icon-class="fundOrderDetail.trade_type === 'BUY'?'mine-record-buy':'mine-record-sell'"
         />
         <svg-icon class="carry" v-else icon-class="mine-record-carry" />
@@ -13,10 +13,11 @@
       <div class="fund-name">{{fundOrderDetail.fund_product_name}}</div>
       <div class="fund-amount">{{fundOrderDetail.amount}}</div>
       <diV class="fund-currency">
-        {{ fundOrderDetail.trade_type !== 'SUB_CARRY' ? '认购金额' : '扣除金额'}}
-        ({{fundOrderDetail.payment_currency}})
+        {{ $route.query.type !== 'SUB_CARRY' ? '认购金额' : '扣除金额'}}
+        ({{fundOrderDetail.payment_currency || fundOrderDetail.currency_type}})
       </diV>
-      <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="steps">
+      <div :class="['type-change', $route.query.type !== 'SUB_CARRY' ? 'nor' : '']"></div>
+      <div v-if="$route.query.type !== 'SUB_CARRY'" class="steps">
         <div class="step">
           <svg-icon class="step-icon" icon-class="step" />
           <!-- <svg-icon class="step-icon" icon-class="steps"/> -->
@@ -36,14 +37,14 @@
             <div v-if="fundOrderDetail.trade_type === 'BUY'">进入开放期，基金可赎回或继续认购</div>
             <div v-else>赎回资金到账</div>
             <div>
-              {{formatDate((fundOrderDetail.next_start_date))}}
-              至 {{formatDate((fundOrderDetail.next_end_date))}}
+              {{formatDate(fundOrderDetail.next_start_date, 'YYYY-MM-DD')}}
+              至 {{formatDate(fundOrderDetail.next_end_date, 'YYYY-MM-DD')}}
             </div>
           </div>
         </div>
       </div>
       <div
-        v-if="fundOrderDetail.fund_order_status === '待确定'"
+        v-if="option.fund_order_status === '待确认'"
         @click="onCancelOrder"
         class="cancel-order"
       >
@@ -51,7 +52,7 @@
         <svg-icon icon-class="next" class="cancel-order-icon" />
       </div>
     </div>
-    <div v-if="fundOrderDetail.trade_type !== 'SUB_CARRY'" class="trade-info">
+    <div v-if="$route.query.type !== 'SUB_CARRY'" class="trade-info">
       <div class="title">交易信息</div>
       <div class="show">
         <div class="text">
@@ -111,30 +112,30 @@
         </div>
       </div>
     </div>
-    <div v-if="fundOrderDetail.trade_type === 'SUB_CARRY'" class="deduction-info">
+    <div v-if="$route.query.type === 'SUB_CARRY'" class="deduction-info">
       <div class="title">扣除信息</div>
       <div class="show">
         <div class="text">
           <span class="left">扣除份额</span>
-          <span>{{fundOrderDetail.confirmed_shares}}</span>
+          <span>{{fundOrderDetail.shares}}</span>
         </div>
       </div>
       <div class="show">
         <div class="text">
           <span class="left">产品净值</span>
-          <span>{{fundOrderDetail.confirmed_nav}}</span>
+          <span>{{fundOrderDetail.nav}}</span>
         </div>
       </div>
       <div class="show">
         <div class="text">
           <span class="left">扣除金额</span>
-          <span>{{fundOrderDetail.fee_amt}}{{fundOrderDetail.currency_type}}</span>
+          <span>{{fundOrderDetail.amount}} {{fundOrderDetail.currency_type}}</span>
         </div>
       </div>
       <div class="show">
         <div class="text">
           <span class="left">扣除时间</span>
-          <span>{{formatDate(fundOrderDetail.confirmed_date)}}</span>
+          <span>{{formatDate(fundOrderDetail.sub_date)}}</span>
         </div>
       </div>
     </div>
@@ -144,17 +145,18 @@
       @cancel="onCancel"
       @submit="showPaymentDialog"
     />
-    <PaymentPasswordDialog v-model="showPayment" @submit="onSurePayment" @close="onClosePayment"/>
+    <PaymentPasswordDialog v-model="showPayment" @submit="onSurePayment" @close="onClosePayment" />
   </div>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+import { Toast } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import PaymentPasswordDialog from '@views/product/components/PaymentPasswordDialog.vue';
-import { createNamespacedHelpers } from 'vuex';
-import { Toast } from 'vant';
 import { formatDate } from '@utils/tools';
+import responseStatus from '@/constants/responseStatus';
 import format from './js/format';
 
 const { mapActions, mapState } = createNamespacedHelpers('product/fund');
@@ -168,26 +170,36 @@ export default {
   },
   data() {
     return {
-      options: [],
+      option: [],
       showDialog: false,
       showPayment: false,
     };
   },
-  mounted() {
+  async mounted() {
     Toast.loading({
       duration: 0,
       forbidClick: true,
       message: '加载中...',
     });
-    this.getFundOrderDetail(this.$route.query.id).then(() => {
+    try {
+      if (this.$route.query.type === 'SUB_CARRY') {
+        await this.getSubCarryDetail(this.$route.query.id);
+      } else {
+        await this.getFundOrderDetail(this.$route.query.id);
+      }
       this.option = format(this.fundOrderDetail);
       Toast.clear();
-    });
+    } catch (error) {
+      Toast.clear();
+      if (error && error.status) {
+        Toast(responseStatus[error.status]);
+      }
+    }
   },
   methods: {
-    ...mapActions(['getFundOrderDetail', 'cancelOrder']),
-    formatDate(date) {
-      return formatDate(date);
+    ...mapActions(['getFundOrderDetail', 'cancelOrder', 'getSubCarryDetail']),
+    formatDate(date, str) {
+      return formatDate(date, str);
     },
     onCancel() {
       this.showDialog = false;
@@ -252,15 +264,22 @@ export default {
       font-size: 12px;
       color: #a8aeb9;
       text-align: center;
-      &::after {
-        display: block;
-        height: 20px;
-        content: "";
-        width: 100%;
-        border-bottom: 1px dashed #dddddd;
-        transform: scaleY(0.5);
+      padding-bottom: 14px;
+    }
+
+    .type-change {
+      width: 100%;
+      &.nor {
+        &::after {
+          display: block;
+          content: "";
+          width: 100%;
+          border-bottom: 1px dashed #dddddd;
+          transform: scaleY(0.5);
+        }
       }
     }
+
     .steps {
       display: flex;
       .step {

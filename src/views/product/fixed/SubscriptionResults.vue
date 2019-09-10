@@ -17,13 +17,15 @@
     </div>
   </div>
   <div class="actions">
-    <!-- <button @click="onSkip('/mine/fixed')">查看详情</button> -->
+    <button @click="onSkip('/mine/fixed')">查看详情</button>
     <button class="sure" @click="onSkip('/product/fixed')">继续认购</button>
   </div>
 </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 
 export default {
@@ -45,11 +47,17 @@ export default {
       }
       this.showData = JSON.parse(sessionStorage.getItem('fixedBuyResult')).fixedBuyResult;
     } catch (e) {
-      console.log(e);
+      throw new Error(e);
     }
   },
   methods: {
     onSkip(router) {
+      if (router === '/product/fixed') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-购买结果-继续浏览']);
+      }
+      if (router === '/mine/fixed') {
+        window._czc.push(['_trackEvent', 'click', '定期盈-购买结果-查看详情']);
+      }
       this.$router.push(router);
     },
   },
@@ -93,7 +101,7 @@ export default {
       height: 46px;
       margin: 86px 35px 0 35px;
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       >button{
         width: 130px;
         height: 46px;
@@ -103,10 +111,10 @@ export default {
         line-height: 37.36px;
         border-radius: 4px;
       }
-      // >button:nth-child(1){
-      //   background: #FFFFFF;
-      //   border: 1px solid #EEEEEE;
-      // }
+       >button:nth-child(1){
+        background: #FFFFFF;
+        border: 1px solid #EEEEEE;
+       }
       .sure{
         background: #3C64EE;
         color: #FBFCFB;

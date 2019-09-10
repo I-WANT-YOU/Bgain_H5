@@ -4,6 +4,27 @@ import { Toast } from 'vant';
 
 // 处理数字精度
 export const strip = (num, precision = 12) => +parseFloat(num.toPrecision(precision));
+// 处理数字精度-李辉
+export const testNum = (value, num) => {
+  let newValue = '';
+  if (Math.round(value) === value) { // 整数
+    newValue = `${value.toString()}.`;
+    for (let i = 0; i < num; i += 1) {
+      newValue += '0';
+    }
+    return newValue;
+  } if (value > 0) {
+    newValue = parseFloat(value.toString().match(/^\d+(?:\.\d{0,8})?/)).toString();
+    const startIndex = newValue.indexOf('.');
+    if (newValue.substring(startIndex + 1).length < 8) {
+      const lastLength = 8 - newValue.substring(startIndex + 1).length;
+      for (let i = 0; i < lastLength; i += 1) {
+        newValue += '0';
+      }
+    }
+  }
+  return newValue;
+};
 
 // 获取 URL 的 query
 export const getQueryParam = (name, url) => {
@@ -46,11 +67,13 @@ export const checkDrivingLicenseFormat = (license) => {
   return re.test(license);
 };
 
+// 验证kyc证件号
 export const checkDocumentNumber = (type, docNumber) => {
   const variations = {
     ID: checkIdNumberFormat,
     PASSPORT: checkPassportFormat,
-    DRIVING_LICENSE: checkDrivingLicenseFormat,
+    // DRIVING_LICENSE: checkDrivingLicenseFormat,
+    DRIVER_LICENSE: checkDrivingLicenseFormat,
   };
   return variations[type] && variations[type].call(this, docNumber);
 };
@@ -100,6 +123,8 @@ function selectText(textbox, startIndex, stopIndex) {
   }
 }
 
+
+// 复制
 export const copyText = (text) => {
   // 数字没有 .length 不能执行selectText 需要转化成字符串
   const textString = text.toString();
@@ -122,4 +147,29 @@ export const copyText = (text) => {
   }
   input.blur();
   document.body.removeChild(input);
+};
+
+export const addZero = (num) => {
+  const value = num;
+  const float = value.toString().split('.');
+  if (float.length > 1 && float[1].length < 2) {
+    return `${value.toString()}0`;
+  }
+  return `${value.toString()}.00`;
+};
+export const changeFloat = (num, type) => {
+  const float = num.toString().indexOf('.');
+  if (type === 'CNY') {
+    if ((num.toString().length - float - 1) < 2) {
+      return this.addZero(num);
+    }
+    return num.toString().slice(0, (float + 3));
+  }
+  if (type === 'USDT') {
+    return num.toString().slice(0, (float + 3));
+  }
+  if (type === 'none') {
+    return num.toString().slice(0, (float + 9));
+  }
+  return num.toString().slice(0, (float + 5));
 };

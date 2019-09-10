@@ -3,21 +3,21 @@
     <BgainNavBar title="重置交易密码"/>
     <div class="password__content">
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="password"
         type="password"
         label="新交易密码"
         placeholder="请输入6位数字"
       />
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="checkPassword"
         type="password"
         label="确认新密码"
         placeholder="请重复输入"
       />
       <Field
-        label-width="88px"
+        label-width="110px"
         v-model="token"
         @input="onTokenInput"
         label="验证码"

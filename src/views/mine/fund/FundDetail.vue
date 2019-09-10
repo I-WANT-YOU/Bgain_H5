@@ -2,47 +2,63 @@
   <div class="fund-detail">
     <BgainNavBar :title="fundOwnerDetail.fund_product_name" />
     <div class="amount-info">
-      <div class="amount">{{fundOwnerDetail.holding_market_value}}</div>
+      <div class="amount">
+        {{changeAm(fundOwnerDetail.currency_type,
+        fundOwnerDetail.holding_market_value)}}
+      </div>
       <div class="amount-text">当前市值({{fundOwnerDetail.currency_type}})</div>
       <div class="income">
         <div>
-          <div class="num">{{yesterday}}</div>
+          <div :class="['num', yesterday > 0 ? 'profit' : 'loss', yesterday ? '' : 'computed']">{{yesterday && yesterday > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
           <div class="text">昨日盈亏({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div class="num">{{fundOwnerDetail.pnl}}</div>
+          <div :class="['num', fundOwnerDetail.pnl > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl ? '' : 'computed']">{{fundOwnerDetail.pnl && fundOwnerDetail.pnl > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.pnl)}}</div>
           <div class="text">持仓收益({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div class="num">{{fundOwnerDetail.pnl}}%</div>
+          <div :class="['num', fundOwnerDetail.pnl_ratio > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl_ratio ? '' : 'computed']">{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio > 0 ? '+' :'-'}}{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio.toFixed(2)}}%</div>
           <div class="text">持仓收益率</div>
         </div>
       </div>
-      <Collapse class="mune" v-model="mune">
-        <CollapseItem name="1">
+      <Collapse class="mune" v-model="mune" :border="false">
+        <CollapseItem name="1" :border="false">
           <div class="mune-con">
             <div class="left">
               <div class="line">
                 <div class="text">持有金额</div>
-                <div class="num">{{fundOwnerDetail.holding_market_value}}</div>
+                <div class="num">
+                  {{changeAm(fundOwnerDetail.currency_type,
+                  fundOwnerDetail.holding_market_value)}}
+                </div>
               </div>
               <div class="line">
                 <div class="text">持仓成本</div>
-                <div class="num">{{fundOwnerDetail.principal}}</div>
+                <div
+                  class="num"
+                >{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.principal)}}</div>
               </div>
               <div class="line">
                 <div class="text">日涨幅</div>
-                <div class="num">{{fundOwnerDetail.pnl_rate ? fundOwnerDetail.pnl_rate : '--'}}</div>
+                <div class="num">
+                  {{fundOwnerDetail.pnl_rate
+                  ? fundOwnerDetail.pnl_rate.toFixed(2) : '--'}}
+                </div>
               </div>
             </div>
             <div class="right">
               <div class="line">
                 <div class="text">待确定金额</div>
-                <div class="num">{{fundOwnerDetail.pending_amt}}</div>
+                <div
+                  class="num"
+                >{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.pending_amt)}}</div>
               </div>
               <div class="line">
                 <div class="text">持有份额</div>
-                <div class="num">{{fundOwnerDetail.holding_shares}}份</div>
+                <div class="num">
+                  {{fundOwnerDetail.holding_shares
+                  && fundOwnerDetail.holding_shares.toFixed(2)}}份
+                </div>
               </div>
               <div class="line">
                 <div class="text">最新净值</div>
@@ -61,44 +77,44 @@
       <div class="tab-cons">
         <div v-show="tab === '0' && !isShow">
           <div class="cumulative-title">
-            <div class="left">日期 {{chart_x}} 累计收益</div>
+            <div class="left">日期 {{chartX}} 累计收益</div>
             <div class="right">
               <div class="item red">
                 <span class="dian" />
                 业绩报酬未扣减
-                <span>{{chart_y}}</span>
+                <span>{{chartY}} {{fundOwnerDetail.currency_type}}</span>
               </div>
               <div class="item blue">
                 <span class="dian" />
                 业绩报酬已扣减
-                <span>{{chart_y1}}</span>
+                <span>{{chartY1}} {{fundOwnerDetail.currency_type}}</span>
               </div>
             </div>
           </div>
           <div class="my-echarts" ref="echarts" style="width: 340px;height: 212px;" />
           <div class="cumulative-foot">
-            <span>08-03</span>
-            <span>08-08</span>
+            <span>{{firstDate}}</span>
+            <span>{{lastDate}}</span>
           </div>
         </div>
         <div v-show="tab === '1' && !isShow">
           <div class="history-title">
-            <div class="left">日期 {{chart_x1}}</div>
-            <div class="right">收益率 1.15%</div>
+            <div class="left">日期 {{chartDailyX}}</div>
+            <div class="right">收益率 {{chartDailyY ? chartDailyY : '0'}}%</div>
           </div>
           <div class="my-echarts" ref="echarts1" style="width: 340px;height: 212px;" />
         </div>
         <div v-show="isShow" class="no-record">暂无数据</div>
       </div>
     </div>
-    <div class="trade-record">
+    <div class="fund-trade-record" @click="onTradeRecord">
       <span>交易记录</span>
       <span>
         <svg-icon icon-class="next" class="icon" />
       </span>
     </div>
     <div class="border"></div>
-    <div class="trade-rules">
+    <div class="fund-trade-rules" @click="onTradeRules">
       <span>交易规则</span>
       <span>
         <svg-icon icon-class="next" class="icon" />
@@ -121,8 +137,7 @@
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
-import { formatDate } from '@utils/tools';
+import { head, last } from 'lodash';
 import {
   Collapse,
   CollapseItem,
@@ -131,91 +146,16 @@ import {
 } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import echarts from 'echarts';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { formatDate } from '@utils/tools';
 import { echartsOption } from './js/format';
 
 const { mapActions, mapState } = createNamespacedHelpers('product/fund');
 
-const seriesTest = [
-  '1.0000',
-  '1.0023',
-  '0.9967',
-  '1.0375',
-  '1.0443',
-  '1.0633',
-  '1.0745',
-  '1.0464',
-  '1.0394',
-  '1.0430',
-  '1.0409',
-  '1.0492',
-  '1.0429',
-  '1.0513',
-  '1.0519',
-  '1.0515',
-  '1.0400',
-  '0.0000',
-];
+// 业绩报酬未扣减 pnl_daily
+// 收益率 pnl_ratio_daily
+// 业绩报酬已扣减 pnl_without_carry_list
 
-const seriesTest2 = [
-  '1.0200',
-  '1.2323',
-  '0.9967',
-  '1.3375',
-  '1.1443',
-  '1.1633',
-  '1.1745',
-  '1.1464',
-  '1.1394',
-  '1.1430',
-  '1.1409',
-  '1.1492',
-  '1.1429',
-  '1.1513',
-  '1.1519',
-  '1.1515',
-  '1.1400',
-  '0.1000',
-];
-
-const time = [
-  1562860800000,
-  1562947200000,
-  1563033600000,
-  1563120000000,
-  1563206400000,
-  1563292800000,
-  1563379200000,
-  1563465600000,
-  1563552000000,
-  1563638400000,
-  1563724800000,
-  1563811200000,
-  1563897600000,
-  1563984000000,
-  1564070400000,
-  1564156800000,
-  1564243200000,
-  1565193600000,
-];
-
-// currency_type: "btc"
-// dates: Array(0)
-// fund_product_id: 2
-// fund_product_name: "ABC多策略整合CTA"
-// fund_product_status_type: "CLOSE"
-// holding_market_value: 0
-// holding_shares: 0
-// nav: 1.05
-// nav_date: 1565193600000
-// pending_amt: 107.01
-// pnl: 0
-// pnl_daily: Array(0)
-// pnl_rate: null
-// pnl_ratio: null
-// pnl_ratio_daily: Array(0)
-// pnl_without_carry_list: Array(0)
-// principal: 0
-// yesterday_change: null
 
 export default {
   name: 'FundDetail',
@@ -230,12 +170,17 @@ export default {
       option: {},
       mune: [],
       tab: '0',
-      chart_x: '03-27',
-      chart_x1: '03-27',
-      chart_y: '1.1512',
-      chart_y1: '1.1512',
+      chartX: '03-27',
+      chartDailyX: '03-27',
+      chartY: '1.1512',
+      chartY1: '1.1512',
+      chartDailyY: '0',
       pnl_daily: [],
       pnl_without_carry_list: [],
+      pnl_ratio_daily: [],
+      dates: [],
+      firstDate: '01-01',
+      lastDate: '01-01',
     };
   },
   async mounted() {
@@ -249,11 +194,22 @@ export default {
         id: this.$route.query.id,
         currencyType: this.$route.query.currencyType,
       });
-      console.log(this.fundOwnerDetail);
       this.pnl_daily = this.fundOwnerDetail.pnl_daily;
       this.pnl_without_carry_list = this.fundOwnerDetail.pnl_without_carry_list;
+      this.pnl_ratio_daily = this.fundOwnerDetail.pnl_ratio_daily;
+      this.dates = this.fundOwnerDetail.dates;
+      this.firstDate = this.formatDate(head(this.dates));
+      this.lastDate = this.formatDate(last(this.dates));
+      // 初始化日期和业绩报酬
+      this.chartX = this.formatDate(last(this.dates));
+      this.chartY = (last(this.pnl_daily) * 1).toFixed(6);
+      this.chartY1 = (last(this.pnl_without_carry_list) * 1).toFixed(6);
+      // 初始化历史收益率日期和收益率
+      this.chartDailyX = this.formatDate(last(this.dates));
+      this.chartDailyY = (last(this.pnl_ratio_daily) * 100).toFixed(2);
       this.$nextTick(() => {
-        // this.setEcharts();
+        this.pnlRatioEcharts();
+        this.pnlRatioDailyEcharts();
       });
       Toast.clear();
     } catch (error) {
@@ -263,40 +219,71 @@ export default {
   },
   methods: {
     ...mapActions(['getFundOwnerDetail']),
-    setEcharts() {
-      // seriesTest seriesTest2 time 数据
-      let option;
-      if (this.tab === '0') {
-        const min = Math.min.apply(null, seriesTest.concat(seriesTest2));
-        const max = Math.max.apply(null, seriesTest.concat(seriesTest2));
-        const num = (max - min) * 1.2;
-        this.chart = echarts.init(this.$refs.echarts);
-        option = echartsOption(time, seriesTest, seriesTest2, min, max, num);
-      } else {
-        const min = Math.min.apply(null, seriesTest);
-        const max = Math.max.apply(null, seriesTest);
-        const num = (max - min) * 1.2;
-        this.chart = echarts.init(this.$refs.echarts1);
-        option = echartsOption(time, seriesTest, '', min, max, num);
-      }
-      // 触发事件
-      this.chart.getZr().on('mousemove', this.onMouseMove);
-      // this.chart.setOption(echartsOption(X, series, min, max, num));
-      this.chart.setOption(option);
+    formatDate(time) {
+      return formatDate(time, 'MM-DD');
     },
-    onMouseMove(params) {
+    changeAm(text = 'BTC', num = 0) {
+      if (num === '--') {
+        return '--';
+      }
+      if (text === 'USDT') {
+        return this.slice(num, 3);
+      }
+      if (text === 'CNY') {
+        return num.toFixed(2);
+      }
+      return this.slice(num, 5);
+    },
+    // 累计盈亏
+    pnlRatioEcharts() {
+      const all = this.pnl_without_carry_list.concat(this.pnl_daily);
+      const min = Math.min.apply(null, all);
+      const max = Math.max.apply(null, all);
+      const num = (max - min) * 0.4;
+      this.chart = echarts.init(this.$refs.echarts);
+      this.chart.setOption(echartsOption(this.dates,
+        this.pnl_without_carry_list,
+        this.pnl_daily, min, max, num));
+      //  触发事件
+      this.chart.getZr().on('mousemove', this.onPnlRatioEchartsMouseMove);
+    },
+    onPnlRatioEchartsMouseMove(params) {
       const pointInPixel = [params.offsetX, params.offsetY];
       const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
       if (this.chart.containPixel('grid', pointInPixel)) {
-        this.chart_x = formatDate(this.chart.getOption().xAxis[0].data[pointInGrid[0]], 'MM-DD');
-        this.chart_x1 = formatDate(this.chart.getOption().xAxis[0].data[pointInGrid[0]], 'MM-DD');
-        // this.chart_y = seriesTest.filter(item => item === this.chart_x);
-        // this.chart_y1 = seriesTest2.filter(item => item === this.chart_x);
+        const x = this.chart1.getOption().xAxis[0].data[pointInGrid[0]];
+        this.chartX = formatDate(this.chart.getOption().xAxis[0].data[pointInGrid[0]], 'MM-DD');
+        this.chartY = (this.pnl_daily[this.dates
+          .findIndex(item => item === x)] * 1).toFixed(6);
+        this.chartY1 = (this.pnl_without_carry_list[this.dates
+          .findIndex(item => item === x)] * 1).toFixed(6);
       }
+    },
+    // 历史收益率
+    pnlRatioDailyEcharts() {
+      const min1 = Math.min.apply(null, this.pnl_ratio_daily);
+      const max1 = Math.max.apply(null, this.pnl_ratio_daily);
+      const num1 = (max1 - min1) * 0.3;
+      this.chart1 = echarts.init(this.$refs.echarts1);
+      this.chart1.setOption(echartsOption(this.dates,
+        this.pnl_ratio_daily, '', min1, max1, num1));
+      this.chart1.getZr().on('mousemove', this.onPnlRatioDailyEchartsMouseMove);
+    },
+    onPnlRatioDailyEchartsMouseMove(params) {
+      const pointInPixel = [params.offsetX, params.offsetY];
+      const pointInGrid = this.chart.convertFromPixel('grid', pointInPixel);
+      if (this.chart.containPixel('grid', pointInPixel)) {
+        const x = this.chart1.getOption().xAxis[0].data[pointInGrid[0]];
+        this.chartDailyX = formatDate(x, 'MM-DD');
+        this.chartDailyY = (this.pnl_ratio_daily[this.dates
+          .findIndex(item => item === x)] * 100).toFixed(2);
+      }
+    },
+    slice(num, length = 3) {
+      return num.toString().substring(0, num.toString().indexOf('.') + length);
     },
     onChangeTab(text) {
       this.tab = text;
-      // this.setEcharts();
     },
     onSell() {
       this.$router.push({
@@ -311,23 +298,42 @@ export default {
     onBuy() {
       this.$router.push('/product/fund');
     },
+    onTradeRules() {
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.query.id },
+      });
+    },
+    onTradeRecord() {
+      this.$router.push({
+        path: '/mine/fund/trade-record-history',
+        query: {
+          productId: this.$route.query.id,
+          title: '交易记录',
+        },
+      });
+    },
   },
   computed: {
     ...mapState(['fundOwnerDetail']),
     yesterday() {
+      if (this.fundOwnerDetail.yesterday_change) {
+        return this.fundOwnerDetail.yesterday_change;
+      }
       return !this.fundOwnerDetail.yesterday_change && this.fundOwnerDetail.yesterday_change !== '0' ? '--' : '0';
     },
     status() {
-      return this.fundOwnerDetail.fund_product_status_type === 'OPEN';
+      return this.fundOwnerDetail.fund_product_status_type === 'OPEN'
+        || this.fundOwnerDetail.fund_product_status_type === 'INITIAL';
     },
     navTime() {
       return formatDate(this.fundOwnerDetail.nav_date, 'MM-DD');
     },
     isShow() {
-      if (this.tab === '0' && this.pnl_daily.length) {
+      if (this.tab === '0' && this.pnl_daily.length && this.pnl_without_carry_list.length) {
         return false;
       }
-      if (this.tab === '1' && this.pnl_without_carry_list.length) {
+      if (this.tab === '1' && this.pnl_ratio_daily.length) {
         return false;
       }
       return true;
@@ -364,6 +370,16 @@ export default {
       text-align: center;
       .num {
         margin-bottom: 8px;
+        &.profit {
+          color: #00b870;
+        }
+        &.loss {
+          color: #ff5c5c;
+        }
+        &.computed {
+          font-size: 12px;
+          color: #dee0e4;
+        }
       }
       .text {
         font-size: 12px;
@@ -407,7 +423,7 @@ export default {
     }
   }
   .echarts {
-    margin-top: 10px;
+    margin: 10px 0;
     background: #ffffff;
     padding-bottom: 21px;
     .tabs {
@@ -423,10 +439,10 @@ export default {
         font-size: 15px;
         color: #0f3256;
         box-sizing: border-box;
-        border-bottom: 1px solid transparent;
+        border-bottom: 2px solid transparent;
         &.active {
           color: #3c64ee;
-          border-bottom: 1px solid #3c64ee;
+          border-bottom: 2px solid #3c64ee;
         }
       }
     }
@@ -490,8 +506,8 @@ export default {
     font-size: 14px;
     color: #a8aeb9;
   }
-  .trade-record,
-  .trade-rules {
+  .fund-trade-record,
+  .fund-trade-rules {
     background: #ffffff;
     height: 50px;
     display: flex;
@@ -501,7 +517,6 @@ export default {
     color: #0f3256;
     box-sizing: border-box;
     padding: 0 20px;
-    font-weight: 600;
     .icon {
       width: 7px;
       height: 11px;

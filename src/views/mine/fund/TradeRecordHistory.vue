@@ -1,6 +1,6 @@
 <template>
   <div class="trade-record-history">
-    <BgainNavBar title="历史交易记录" />
+    <BgainNavBar :title="$route.query.title ? $route.query.title : '历史交易记录'" />
     <div class="trade-record-history-con">
       <div v-if="options.length" class="record-show">
         <div @click="onSk(fund)" v-for="fund in options" :key="fund.id" class="trade-record-card">
@@ -56,7 +56,7 @@ export default {
       message: '加载中...',
     });
     try {
-      await this.getFundOrderHistory();
+      await this.getFundOrderHistory({ productId: this.$route.query.productId });
       this.options = this.orderHistory.map(item => format(item));
       Toast.clear();
     } catch (error) {
@@ -71,6 +71,7 @@ export default {
         path: '/mine/fund/transaction-details',
         query: {
           id: fund.id,
+          type: fund.trade_type,
         },
       });
     },

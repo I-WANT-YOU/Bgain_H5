@@ -104,7 +104,7 @@ class FundService {
     }
   }
 
-  static async getFundOrderHistory(status) {
+  static async getFundOrderHistory({ status, productId }) {
     try {
       const requestOptions = {
         url: '/fund-product-order/history',
@@ -112,6 +112,7 @@ class FundService {
         method: 'post',
         data: {
           fund_order_status: status,
+          fund_product_id: productId,
         },
       };
       const response = await request(requestOptions);
@@ -134,6 +135,21 @@ class FundService {
       throw new Error(error);
     }
   }
+
+  static async getSubCarryDetail(productId) {
+    try {
+      const requestOptions = {
+        url: `/fund-product-order/get-sub-carry-detail/${productId}`,
+        headers: { 'Content-Type': 'application/json' },
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
 
   static async getFundOwnerDetail(option) {
     try {

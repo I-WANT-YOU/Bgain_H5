@@ -26,6 +26,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'Initial',
   props: {
@@ -35,12 +37,13 @@ export default {
   },
   methods: {
     submit() {
-      console.log('2');
     },
     skip() {
       if (this.options.fund_name === '冠军套利母基金') {
+        window._czc.push(['_trackEvent', 'click', '基金-冠军套利母基金']);
         this.$router.push(`/product/fund/initial/In/${this.options.id}`);
       } else if (this.options.fund_name === '冠军CTA母基金') {
+        window._czc.push(['_trackEvent', 'click', '基金-冠军CTA母基金']);
         this.$router.push(`/product/fund/initial/CTA/${this.options.id}`);
       }
     },
@@ -99,8 +102,8 @@ export default {
       display: inline-block;
       box-sizing: border-box;
       width: 40px;
-      height: 20px;
-      line-height: 20px;
+      height: 22px;
+      line-height: 22px;
       border: 1px solid #ff5c5c;
       border-radius: 2px;
       font-size: 11px;
@@ -126,7 +129,7 @@ export default {
       border-radius: 4px;
       border: 0;
       text-align: center;
-      font-weight: 100;
+      font-weight: 400;
     }
   }
 }

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { PullRefresh, Toast } from 'vant';
+import { PullRefresh } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainEmpty from '@/components/BgainEmpty.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
@@ -51,7 +51,6 @@ export default {
         await this.getCurrentTradeRecords();
         this.isLoading = false;
       } catch (error) {
-        Toast('未登录');
         this.isLoading = false;
       }
     },

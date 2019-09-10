@@ -25,6 +25,7 @@
     </div>
     <!--注册后信息不全有-->
     <div class="guide-container" v-show="guideStatus">
+    <!-- <div class="guide-container" > -->
       <HomeGuide :kyc_status="kyc_status" :setPassword="setPassword" :record="record" />
     </div>
     <!--未登录有-->
@@ -33,15 +34,13 @@
     </div>
     <!--信息列表-->
     <div class="list-container">
-      <HomeProductList @initSwiper="()=>{
-
-        }" />
+      <HomeProductList />
     </div>
     <div class="footer">
       <BaseFooter />
     </div>
     <!--一级页面强制弹窗-->
-    <!-- <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" /> -->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
     <Menu v-model="showMenu" @close="showMenu=false"/>
     <div class="footer-fixed">
       <DownApp @func="getMsgFormSon" />
@@ -63,7 +62,7 @@ import HomeProductList from './components/HomeProductList.vue';
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
-// import LevelOnePop from '../../components/LevelOnePop.vue';
+import LevelOnePop from '../../components/LevelOnePop.vue';
 
 export default {
   name: 'RegisterHome',
@@ -75,7 +74,7 @@ export default {
     HomeGuide,
     HomeNotice,
     BaseFooter,
-    // LevelOnePop,
+    LevelOnePop,
     Menu,
     DownApp,
   },
@@ -101,36 +100,19 @@ export default {
     ]),
   },
   mounted() {
-    // 获取页面所有信息
-    // this.getPopInfo().then(
-    //   () => {
-    //     try {
-    //       if (this.popInfo.is_popup_window === 0) {
-    //         this.isPopShow = 'none';
-    //       } else {
-    //         this.isPopShow = 'block';
-    //       }
-    //     } catch (e) {
-    //       throw new Error(e);
-    //     }
-    //   },
-    //   (err) => {
-    //     if (err.status) {
-    //       Toast(errorMessage[err.status]);
-    //     } else {
-    //       Toast('网络错误');
-    //     }
-    //   },
-    // );
-
     this.$nextTick(() => {
       this.$refs['my-swiper'].initSwiper();
     });
     // 用户登陆 验证用户信息 // 判断用户是否登陆
     this.isLogin().then(() => {
       this.userStatus = 'login';
-      Promise.all([this.getRecord(), this.getUserSummary()]).then(
+      Promise.all([this.getRecord(), this.getUserSummary(), this.getPopInfo()]).then(
         () => {
+          if (this.popInfo.is_popup_window === 1) {
+            this.isPopShow = 'block';
+          } else {
+            this.isPopShow = 'none';
+          }
           // 是否有充值记录
           if (this.recordList.wallet_record_list.length !== 0) {
             this.record = 1;
@@ -138,9 +120,11 @@ export default {
             this.record = 0;
           }
           // 判断用户是否身份认证
-          if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'UN_CERTIFIED') { // 未认证
+          if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'AUDITING') { // 审核中
+            this.kyc_status = 1;
+          } else if (this.basicInfo.kyc_stauts.toLocaleUpperCase() !== 'CERTIFIED') { // 未认证 || 认证失败
             this.kyc_status = 0;
-          } else {
+          } else { // 认证成功
             this.kyc_status = 1;
           }
           // console.log(this.basicInfo.kyc_stauts);
@@ -151,7 +135,7 @@ export default {
           } else if (this.basicInfo.authlevel * 1 === 1) { // 未认证
             this.setPassword = 0;
           }
-          if (this.record && this.kyc_status && this.setPassword) {
+          if (this.record && this.kyc_status && this.basicInfo.kyc_stauts.toLocaleUpperCase() !== 'AUDITING' && this.setPassword) {
             this.guideStatus = false;
           } else {
             this.guideStatus = true;

@@ -7,7 +7,9 @@
     <div class="data">
       <div class="top">
         <div :class="['setup', options.ups_and_downs_week > 0 ? '' : 'active']">
-          <span>{{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}</span>
+          <span>
+            {{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}
+          </span>
           <span class="unit">%</span>
         </div>
         <div class="networth">{{options.nav}}</div>
@@ -24,14 +26,19 @@
         <span>{{options.risk_level_type}}</span>
       </div>
       <div class="time">
-        <svg-icon icon-class="start" class="icon" />
-        <span>{{options.closing_date}}</span>
+        <svg-icon
+          :icon-class="options.status.toLocaleUpperCase() === 'OPEN' ? 'start' : 'end'"
+          class="icon"
+        />
+        <span>{{options.status.toLocaleUpperCase() === 'OPEN' ? options.closing_date : options.next_open_date}}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'NoInitial',
   props: {
@@ -41,6 +48,7 @@ export default {
   },
   methods: {
     onClick() {
+      window._czc.push(['_trackEvent', 'click', '基金-非首发基金']);
       this.$router.push(`/product/fund/noinitial/${this.options.id}`);
     },
   },
@@ -125,29 +133,32 @@ export default {
     }
     .labels {
       display: flex;
+      align-items: center;
+      justify-content: center;
       > span {
-        height: 18px;
-        line-height: 18px;
-        margin: 0 10px 0 0;
-        display: inline-block;
-        box-sizing: border-box;
+        padding: 3px 0;
         width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px 0 0;
+        box-sizing: border-box;
         border: 1px solid #ff5c5c;
         border-radius: 2px;
         font-size: 11px;
         color: #ff5c5c;
-        letter-spacing: 0;
-        text-align: center;
       }
     }
     .time {
       box-sizing: border-box;
+      display: flex;
+      align-items: center;
       padding-left: 10px;
       font-size: 12px;
       color: #676c8d;
       letter-spacing: 0;
       .icon {
-        width: 14px;
+        width: 16px;
         height: 14px;
         margin-right: 8px;
       }

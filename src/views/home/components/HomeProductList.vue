@@ -14,37 +14,88 @@
     <div class="tab-content">
       <!--基金涨幅榜-->
       <div v-show="activeLine===0">
-        <ul>
-          <li class="found-li-title">
-            <span>基金名称、策略类型及风险值</span>
-            <span>当前净值</span>
-            <span>成立以来</span>
-          </li>
-          <li v-for="(item) in newFunds" @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
-            <div class="found-li-style">
-              <div class="item-one">
-                <span>{{ item.fund_product_name }}</span>
-                <div>
-                  <img :src="initialSrc" v-show="item.status==='INITIAL'" />
-                  <svg-icon icon-class="bgp" v-show="item.is_support_fbp" class="bgp"/>
-                  <div>{{formatType2(item.fund_product_type)}}</div>
-                  <div>{{item.risk_level_type.substring(0,2)}}</div>
+        <div class="tableContainer">
+          <table class="fundTable">
+            <thead>
+            <tr>
+              <th style="text-align: left">
+                基金名称、策略类型及风险值
+              </th>
+              <th style="text-align: right">
+                当前净值
+              </th>
+              <th style="text-align: right">
+                <span> 成立以来</span>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  v-for="(item) in newFunds"
+                 @click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">
+              <td style="text-align: left">
+                <div class="item-one">
+                  <span>{{ item.fund_product_name }}</span>
+                  <div>
+                    <img :src="initialSrc" v-show="item.status==='INITIAL'" />
+                    <svg-icon icon-class="bgp" v-show="item.is_support_fbp" class="bgp"/>
+                    <div>{{formatType2(item.fund_product_type)}}</div>
+                    <div>{{item.risk_level_type.substring(0,2)}}</div>
+                  </div>
                 </div>
-              </div>
-              <div class="item-two">{{ item.current_nav }}</div>
-              <div class="item-three">
-                <span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'
+              </td>
+              <td style="text-align: right">
+                <div class="item-two">{{ item.current_nav }}</div>
+              </td>
+              <td style="text-align: right">
+                <div class="item-three">
+                  <div>
+                    <span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'
                     : item.total_ups_and_downs * 1 === 0 ? 'none' : '' ]">
-                  {{item.total_ups_and_downs.substring(0,1)==='-' ?
+                  {{/* eslint-disable max-len */
+                   item.total_ups_and_downs.substring(0,1)==='-' ?
                   `${item.total_ups_and_downs}%`: item.total_ups_and_downs * 1 === 0 ? '0.00%' : `+${item.total_ups_and_downs}%` }}
                 </span>
-                <div>
-                  <img alt="." src="../../../assets/images/next.svg" />
+                  </div>
+
                 </div>
-              </div>
-            </div>
-          </li>
-        </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--<ul>-->
+          <!--<li class="found-li-title">-->
+            <!--<span>基金名称、策略类型及风险值</span>-->
+            <!--<span>当前净值</span>-->
+            <!--<span>成立以来</span>-->
+          <!--</li>-->
+          <!--<li v-for="(item) in newFunds"-->
+              <!--@click="goFund(item.id,item.status,item.fund_product_name)" :key="item.id">-->
+            <!--<div class="found-li-style">-->
+              <!--<div class="item-one">-->
+                <!--<span>{{ item.fund_product_name }}</span>-->
+                <!--<div>-->
+                  <!--<img :src="initialSrc" v-show="item.status==='INITIAL'" />-->
+                  <!--<svg-icon icon-class="bgp" v-show="item.is_support_fbp" class="bgp"/>-->
+                  <!--<div>{{formatType2(item.fund_product_type)}}</div>-->
+                  <!--<div>{{item.risk_level_type.substring(0,2)}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="item-two">{{ item.current_nav }}</div>-->
+              <!--<div class="item-three">-->
+                <!--<span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'-->
+                    <!--: item.total_ups_and_downs * 1 === 0 ? 'none' : '' ]">-->
+                  <!--{{/* eslint-disable max-len */-->
+                   <!--item.total_ups_and_downs.substring(0,1)==='-' ?-->
+                  <!--`${item.total_ups_and_downs}%`: item.total_ups_and_downs * 1 === 0 ? '0.00%' : `+${item.total_ups_and_downs}%` }}-->
+                <!--</span>-->
+                <!--<div>-->
+                  <!--<img alt="." src="../../../assets/images/next.svg" />-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</li>-->
+        <!--</ul>-->
       </div>
       <!--活期-->
       <div v-show="activeLine===1">
@@ -54,7 +105,8 @@
             <span>利率趋势</span>
             <span>今日年化利率</span>
           </li>
-          <li v-for="(item,index) in currents" @click="goCurrent(item.currency_type)" :key="item.id">
+          <li v-for="(item,index) in currents"
+              @click="goCurrent(item.currency_type)" :key="item.id">
             <div class="current-li-style">
               <div>
                 <img :src="item.icon_url" class="current-li-style-icon" alt="">
@@ -86,21 +138,21 @@
             <span>预期年化利率</span>
           </li>
           <li v-for="(item) in fixeds" :key="item.id" @click="stepToFixDetail(item.id)">
-            <div class="fix-li-style">
+          <div class="fix-li-style">
+            <div>
+              <img :src="item.icon_url" class="fix-li-style-icon" alt="">
+              <span>{{ item.currency_type }}</span>
+            </div>
+            <div>
+              <span>{{ item.closed_period }}天</span>
+            </div>
+            <div>
+              <span>{{ item.expected_annual_return }}%</span>
               <div>
-                <img :src="item.icon_url" class="fix-li-style-icon" alt="">
-                <span>{{ item.currency_type }}</span>
-              </div>
-              <div>
-                <span>{{ item.closed_period }}天</span>
-              </div>
-              <div>
-                <span>{{ item.expected_annual_return }}%</span>
-                <div>
-                  <img alt="." src="../../../assets/images/next.svg" />
-                </div>
+                <img alt="." src="../../../assets/images/next.svg" />
               </div>
             </div>
+          </div>
           </li>
         </ul>
       </div>
@@ -110,6 +162,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { mapActions, mapGetters } from 'vuex';
 import echarts from 'echarts';
 import initial from '../../../assets/images/home/initial.svg';
@@ -172,6 +226,7 @@ export default {
     ]),
     // 跳转到定期详情页面
     stepToFixDetail(id) {
+      window._czc.push(['_trackEvent', 'click', '首页-定期详情']);
       this.$router.push({
         name: 'FixedDetail',
         params: { id },
@@ -179,8 +234,8 @@ export default {
     },
     // 去基金
     goFund(id, type, name) {
+      window._czc.push(['_trackEvent', 'click', '首页-基金详情']);
       if (type === 'INITIAL') {
-        console.log(name);
         if (name === '冠军套利母基金') {
           this.$router.push(`/product/fund/initial/In/${id}`);
         } else if (name === '冠军CTA母基金') {
@@ -201,9 +256,13 @@ export default {
       return formatType2(type);
     },
     // 去活期
-    goCurrent() {
+    goCurrent(type) {
+      window._czc.push(['_trackEvent', 'click', '首页-活期详情']);
       this.$router.push({
         name: 'current',
+        query: {
+          currency: type,
+        },
       });
     },
     // 设置echart名称
@@ -213,6 +272,19 @@ export default {
     },
     // tab添加下划线
     changeUnderLine(index) {
+      switch (index) {
+        case 0:
+          window._czc.push(['_trackEvent', 'click', '首页-基金Tab']);
+          break;
+        case 1:
+          window._czc.push(['_trackEvent', 'click', '首页-天天赚Tab']);
+          break;
+        case 2:
+          window._czc.push(['_trackEvent', 'click', '首页-定期盈Tab']);
+          break;
+        default:
+          break;
+      }
       this.activeLine = index;
     },
     // 初始化echarts
@@ -321,6 +393,106 @@ export default {
     }
   }
   .tab-content {
+    .tableContainer{
+      margin: 10px 24px 4px 24px;
+      .fundTable{
+        width: 100%;
+        border-collapse: collapse;
+        >thead{
+          >tr{
+            th{
+              font-size: 11px;
+              color: #a8aeb9;
+              font-weight: normal;
+            }
+            >th:nth-child(3){
+              >span{
+                display: inline-block;
+                padding-right: 10px;
+              }
+            }
+          }
+        }
+        >tbody{
+          >tr{
+            border-bottom: 0.5px solid #e5e9f6;
+          >td{
+            >div{
+              padding: 14px 0;
+            }
+          }
+          }
+        }
+        .item-one {
+          display: flex;
+          flex-grow: 1;
+          flex-direction: column;
+          align-items: flex-start;
+          > span:nth-child(1) {
+            height: 21px;
+            line-height: 21px;
+            font-size: 15px;
+            color: #0f3256;
+          }
+          > div:nth-child(2) {
+            display: flex;
+            flex-direction: row;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #a8aeb9;
+            > div {
+              display: inline-block;
+              height: 16px;
+              margin-right: 6px;
+              line-height: 16px;
+              vertical-align: center;
+              padding: 0 3px;
+              border: 0.51px solid #c3cce9;
+              border-radius: 2px;
+            }
+            > img,
+            .bgp {
+              display: block;
+              width: 26px;
+              height: 16px;
+              margin-right: 6px;
+            }
+          }
+        }
+        .item-two {
+          font-size: 15px;
+          color: #0f3256;
+        }
+        .item-three{
+          font-size: 15px;
+          >div{
+            position: relative;
+            >span {
+              height: 20px;
+              padding-right: 10px;
+              &:after{
+                content: '';
+                position: absolute;
+                top: 3px;
+                right: -5px;
+                display: block;
+                width: 7px;
+                height: 11px;
+                background: url("../../../assets/images/next.svg");
+                background-size: 7px 11px;
+              }
+            }
+            .none{
+              color: #000000;
+            }
+            .up{
+              color:#00b870;
+            }
+          }
+
+        }
+      }
+    }
     > div {
       > ul {
         margin: 0;
@@ -380,7 +552,7 @@ export default {
             margin-right: 6px;
             line-height: 16px;
             vertical-align: center;
-            padding: 0px 3px;
+            padding: 0 3px;
             border: 0.51px solid #c3cce9;
             border-radius: 2px;
           }

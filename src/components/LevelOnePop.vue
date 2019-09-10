@@ -57,7 +57,7 @@
         </div>
       <!--按钮-->
       <div class="button-container">
-        <button @click="onKyc">去买币/充币</button>
+        <button @click="onSkip(submit.path)">{{submit.text}}</button>
       </div>
       <!--text文字-->
       <div class="text-container">
@@ -97,19 +97,46 @@ export default {
   components: {
     'van-image': Image,
   },
-  mounted() {
-    console.log(this.showData);
-  },
   computed: {
     ...mapState('auth', ['authenticated']),
+    submit() {
+      if (this.showData.is_kyc && !this.showData.is_recharge) {
+        return {
+          text: '去买币/充币',
+          path: '/purchaseCoinHome',
+        };
+      }
+      if (this.showData.is_kyc && this.showData.is_recharge) {
+        return {
+          text: '去赚钱',
+          path: '/',
+        };
+      }
+      if (!this.showData.is_kyc && this.showData.is_recharge && !this.showData.is_buy) {
+        return {
+          text: '去赚钱',
+          path: '/product/fund',
+        };
+      }
+      if (!this.showData.is_kyc && this.showData.is_recharge && this.showData.is_buy) {
+        return {
+          text: '去认证',
+          path: '/mine/safety/kyc',
+        };
+      }
+      return {
+        text: '去认证',
+        path: '/mine/safety/kyc',
+      };
+    },
   },
   methods: {
     closePop() {
       this.$emit('close');
     },
-    onKyc() {
+    onSkip(router) {
       if (this.authenticated) {
-        this.$router.push('/mine/safety/kyc');
+        this.$router.push(router);
       } else {
         this.$router.push('/login');
       }
@@ -140,14 +167,17 @@ export default {
   .close-container{
     height: 25px;
     padding-top: 39px;
+    display: flex;
+    align-items: center;
     .close-icon{
-      margin:0 0 0 263px;
+      margin:0 0 0 280.5px;
       width: 25px;
       height: 25px;
     }
   }
   /*line*/
   .line-container{
+    overflow: hidden;
     .y-line{
       margin-left:293px;
       height: 72px;

@@ -20,7 +20,7 @@
     </div>
     <!--交易记录-->
     <div class="trade-history">
-      <div class="trade-tile">交易记录</div>
+      <div class="trade-tile">兑换记录</div>
       <div v-if="recordList.length" class="trade-content">
         <div
           class="trade-item"
@@ -81,6 +81,9 @@ export default {
     ...mapActions('activity', [
       'getBGPRecord',
     ]),
+    ...mapActions('user', [
+      'getUserSummary',
+    ]),
     // 跳往详情页面
     toDetail(id) {
       this.$router.push({
@@ -129,6 +132,17 @@ export default {
       message: '加载中...',
     });
     this.getBGPRecord().then(
+      () => {
+        Toast.clear();
+      },
+      (err) => {
+        this.$toast.clear();
+        if (err.status) { this.$toast(errorMessage[err.status]); } else {
+          this.$toast('网络故障');
+        }
+      },
+    );
+    this.getUserSummary().then(
       () => {
         Toast.clear();
       },

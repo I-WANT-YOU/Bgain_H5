@@ -1,6 +1,6 @@
 <template>
   <div class="mine">
-    <Header class="mine-header" />
+    <Header class="mine-header" :isLogin="login" />
     <div class="mine-content">
       <div class="userInfo">
         <div class="income">
@@ -70,7 +70,7 @@
       </div>
       <div class="option">
         <div class="wrap">
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-record" class="icon" />
             </div>
@@ -79,7 +79,7 @@
               <div class="info">资金流水，一目了然</div>
             </div>
           </div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-coupons" class="icon" />
             </div>
@@ -89,7 +89,7 @@
             </div>
           </div>
           <div class="line"></div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-question" class="icon" />
             </div>
@@ -98,7 +98,7 @@
               <div class="info">投资、充提币、产品介绍</div>
             </div>
           </div>
-          <div class="item">
+          <div class="mine-item">
             <div class="icon-wrap">
               <svg-icon icon-class="mine-activity" class="icon" />
             </div>
@@ -123,16 +123,21 @@
       <DownApp @func="getMsgFormSon" />
     </div>
     <BaseFooter />
+    <!--一级页面强制弹窗-->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { ActionSheet, Toast } from 'vant';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Header from '@component/mine/Header.vue';
 import BaseFooter from '@component/BaseFooter.vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import DownApp from '@component/DownApp.vue';
+import LevelOnePop from '@component/LevelOnePop.vue';
 
 export default {
   name: 'Mine',
@@ -142,9 +147,11 @@ export default {
     BaseFooter,
     BgainBaseDialog,
     DownApp,
+    LevelOnePop,
   },
   data() {
     return {
+      isPopShow: 'none', // 一级弹窗
       login: false,
       income: '--',
       accumulatedIncome: '--',
@@ -166,9 +173,18 @@ export default {
           duration: 0,
           forbidClick: true,
           message: '加载中...',
+          color: '#1989fa',
         });
-        this.getUserBalanceSummary().then(() => {
+        Promise.all([this.getUserBalanceSummary(), this.getPopInfo()]).then(() => {
+          if (this.popInfo.is_popup_window === 1) {
+            this.isPopShow = 'block';
+          } else {
+            this.isPopShow = 'none';
+          }
           Toast.clear();
+          if (this.$route.params.toast) {
+            Toast(this.$route.params.toast);
+          }
           this.currency = this.singleCurrency[0].currency;
           this.options = this.currencyss
             .map(item => ({ name: item[0].toLocaleUpperCase() }));
@@ -185,10 +201,12 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['singleCurrency', 'currencyss', 'kycStatus']),
+    ...mapState('home', ['popInfo']),
   },
   methods: {
     ...mapActions('user', ['getUserBalanceSummary', 'getUserSummary']),
     ...mapActions('auth', ['isLogin']),
+    ...mapActions('home', ['getPopInfo']),
     getCurreny() {
       // eslint-disable-next-line max-len
       const curreny = this.currencyss.filter(item => (item[0].toLocaleUpperCase() === this.currency))[0][1];
@@ -201,9 +219,11 @@ export default {
       this.$router.push(router);
     },
     onClickCurrency() {
+      window._czc.push(['_trackEvent', 'click', '我的-总资产']);
       this.showCurrency = true;
     },
     onSelectCurrency(item) {
+      window._czc.push(['_trackEvent', 'click', `我的-总资产-${item.name}`]);
       this.currency = item.name;
       this.getCurreny();
       this.showCurrency = false;
@@ -217,28 +237,44 @@ export default {
     },
     // 未登录
     async goLogin(router) {
+      switch (router) {
+        case '/asset-record':
+          window._czc.push(['_trackEvent', 'click', '我的-资金记录']);
+          break;
+        case '/coupon':
+          window._czc.push(['_trackEvent', 'click', '我的-优惠券']);
+          break;
+        case '/commonProblem':
+          window._czc.push(['_trackEvent', 'click', '我的-常见问题']);
+          break;
+        case '/purchaseCoinHome':
+          window._czc.push(['_trackEvent', 'click', '我的-充币']);
+          break;
+        case '/extract-coin':
+          window._czc.push(['_trackEvent', 'click', '我的-提币']);
+          break;
+        case '/product/current':
+          window._czc.push(['_trackEvent', 'click', '我的-天天赚']);
+          break;
+        case '/mine/fixed':
+          window._czc.push(['_trackEvent', 'click', '我的-定期盈']);
+          break;
+        case '/mine/fund':
+          window._czc.push(['_trackEvent', 'click', '我的-冠军基金']);
+          break;
+        case '/mine/balance':
+          window._czc.push(['_trackEvent', 'click', '我的-可用余额']);
+          break;
+        default:
+          break;
+      }
+
       if (this.login) {
-        // if (router === '/extract-coin') {
-        //   try {
-        //     await this.getUserSummary();
-        //     if (this.kycStatus === 'CERTIFIED') {
-        //       this.$router.push(router);
-        //     } else if (this.kycStatus === 'UN_CERTIFIED') {
-        //       Toast('身份未认证');
-        //     } else if (this.kycStatus === 'FAILED') {
-        //       Toast('身份认证失败');
-        //     } else if (this.kycStatus === 'AUDITING') {
-        //       Toast('身份认证中');
-        //     }
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // } else
-        if (router === '/mine/fixed' || router === '/mine/fund' || router === '/extract-coin') {
-          this.dialogApp = true;
-        } else {
-          this.$router.push(router);
-        }
+        this.$router.push(router);
+        // 基金开放
+        // if (router === '/mine/fund') {
+        //   this.dialogApp = true;
+        // }
       } else {
         this.$router.push('/login');
       }
@@ -264,9 +300,9 @@ export default {
   .mine-content {
     display: flex;
     flex: 1 1 auto;
-    margin-top: -82px;
     align-items: center;
     flex-direction: column;
+    margin-top: -82px;
     .userInfo {
       box-sizing: border-box;
       width: 343px;
@@ -448,7 +484,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        .item {
+        .mine-item {
           display: flex;
           box-sizing: border-box;
           padding: 19px 0 19px 12px;

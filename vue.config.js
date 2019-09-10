@@ -13,6 +13,9 @@ module.exports = {
         modifyVars: {
           blue: '#3C64EE',
           'border-color': '#E5E9F6',
+          // '@toast-background-color': '#3C64EE',
+          // '@toast-text-color': '#3C64EE',
+          // '@loading-text-color': 'red',
         },
       },
     },
@@ -59,15 +62,6 @@ module.exports = {
   devServer: {
     host: '0.0.0.0',
     port: 8080,
-    // proxy: {
-    //   // 设置代理
-    //   "/api": {
-    //     target: "http://localhost:3000", //真实请求的目标地址
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       "^/api": ""
-    //     }
-    //   }
-    // }
+    disableHostCheck: true,
   },
 };

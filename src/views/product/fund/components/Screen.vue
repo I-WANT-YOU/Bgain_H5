@@ -35,6 +35,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import SvgIcon from '@component/SvgIcon.vue';
 import { DropdownMenu, DropdownItem } from 'vant';
 import DorpDownLine from './DropDownLine.vue';
@@ -59,11 +61,13 @@ export default {
   },
   methods: {
     onConfirm() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-筛选-确认']);
       this.cloneOptions = this.options;
       this.$refs.item.toggle();
       this.$emit('onChange');
     },
     onClick() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-筛选']);
       this.$refs.item.toggle();
     },
     onReset() {

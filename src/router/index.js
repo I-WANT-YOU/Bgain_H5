@@ -7,11 +7,6 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/Testing.vue'),
-    },
-    {
       path: '/home',
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ '../views/home/Home.vue'),
@@ -165,6 +160,7 @@ const router = new Router({
         },
         {
           path: 'fixed',
+          name: 'Fixed',
           component: () => import('../views/product/fixed/Fixed.vue'),
           meta: {
             title: '定期盈',
@@ -196,12 +192,12 @@ const router = new Router({
     },
     {
       path: '/product/fund/initial/In/:id',
-      name: 'initial',
+      name: 'initialIn',
       component: () => import('../views/product/fund/InterestArbitrageFund.vue'),
     },
     {
       path: '/product/fund/initial/CTA/:id',
-      name: 'initial',
+      name: 'initialCTA',
       component: () => import('../views/product/fund/CTAMotherFund.vue'),
     },
     {

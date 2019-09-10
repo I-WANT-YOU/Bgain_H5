@@ -86,37 +86,44 @@
               <td>持仓周期</td>
               <td>手续费率</td>
             </tr>
-            <tr>
-              <td rowspan="3">赎回</td>
-              <td>0~{{rateSell.length && rateSell[0].data}}天(不含)</td>
-              <td>
-                <span class="rate">{{rateSell.length && rateSell[0].rate * 100}}%</span>
-                <span class="rate old">({{rateSell.length && rateSell[0].rate1 * 100}}%)</span>
+
+            <tr v-for="(rate,key) in (rateSell)" :key="key">
+              <td v-if="key===0" :rowspan="(rateSell.length + 1)">赎回</td>
+              <td v-if="key===0">0~{{rateSell[0].data}}天(不含)</td>
+              <td v-if="key===0">
+                <span class="rate">{{rateSell[0].rate * 100}}%</span>
+                <span class="rate old">({{rateSell[0].rate1 * 100}}%)</span>
               </td>
-            </tr>
-            <tr>
-              <td>
-                {{rateSell.length &&
-                rateSell[0].data}}~{{rateSell.length && rateSell[1].data}}天(不含)
+
+              <td
+                v-if="key!==0 && key!==rateSell.length-1"
+              >{{rateSell[key-1].data}}~{{rateSell[key].data}}天(不含)</td>
+              <td v-if="key!==0 && key!==rateSell.length-1">
+                <span class="rate">{{rateSell[key].rate * 100}}%</span>
+                <span class="rate old">({{rateSell[key].rate1 * 100}}%)</span>
               </td>
-              <td>
-                <span class="rate">{{rateSell.length && rateSell[1].rate * 100}}%</span>
-                <span class="rate old">({{rateSell.length && rateSell[1].rate1 * 100}}%)</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
+
+              <td v-if="key === rateSell.length-1">
                 <div class="gts">
                   <span class="gt">
                     <div class="top">&gt;</div>
                     <div>=</div>
                   </span>
-                  <span>{{rateSell.length && rateSell[2].data}}天</span>
+                  <span>
+                    {{rateSell.length && rateSell[rateSell.length-1]
+                    ? rateSell[rateSell.length-1].data : 0}}天
+                  </span>
                 </div>
               </td>
-              <td>
-                <span class="rate">{{rateSell.length && rateSell[2].rate * 100}}%</span>
-                <span class="rate old">({{rateSell.length && rateSell[2].rate1 * 100}}%)</span>
+              <td v-if="key === rateSell.length-1">
+                <span class="rate">
+                  {{rateSell.length && rateSell[rateSell.length-1]
+                  ? rateSell[rateSell.length-1].rate * 100 : 0}}%
+                </span>
+                <span class="rate old">
+                  ({{rateSell.length && rateSell[rateSell.length-1]
+                  ? rateSell[rateSell.length-1].rate1 * 100 : 0}}%)
+                </span>
               </td>
             </tr>
           </table>
@@ -125,7 +132,9 @@
         <Tab class="tab" title="平台管理费">
           <div class="manage_fee_rate">
             平台管理费(年化) : {{ manage_fee_rate }}
-            <span class="no-discount">&nbsp;({{manage_fee_rate_no_discount}})&nbsp;</span> , 按日计提
+            <span
+              class="no-discount"
+            >&nbsp;({{manage_fee_rate_no_discount}})&nbsp;</span> , 按日计提
           </div>
           <div class="manage_fee_rate_text">用户需支付的基金管理费，每日按固定比例从基金资产中扣取，每日公布的基金净值为扣除管理费的净值。</div>
         </Tab>
@@ -172,7 +181,6 @@ export default {
   },
   mounted() {
     this.getFundTradeRules(this.$route.query.productId).then(() => {
-      console.log(this.fundTradeRules);
       this.carry_rate_user = `${this.fundTradeRules.carry_rate_user * 100}%`;
       this.manage_fee_rate = `${this.fundTradeRules.manage_fee_rate * 100}%`;
       this.manage_fee_rate_no_discount = `${this.fundTradeRules.manage_fee_rate_no_discount * 100}%`;

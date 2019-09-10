@@ -21,6 +21,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Popup, Button,
 } from 'vant';
@@ -36,6 +38,7 @@ export default {
       this.$emit('cancel');
     },
     onRechargeClick() {
+      window._czc.push(['_trackEvent', 'click', '立即充币']);
       this.$router.push({
         name: 'PurchaseCoinHome',
       });

@@ -1,6 +1,6 @@
 <template>
   <div class="trade-pending">
-    <BgainNavBar title="待确定中" />
+    <BgainNavBar title="待确认中" />
     <div class="trade-pending-con">
       <div v-if="list.length" class="record-show">
         <div v-for="fund in list" @click="onClick(fund.id)" :key="fund.id" class="trade-card">
@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import BgainNavBar from '@component/BgainNavBar.vue';
 import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('product/fund');
 
@@ -83,7 +83,7 @@ export default {
       forbidClick: true,
       message: '加载中...',
     });
-    this.getFundOrderHistory('pending').then(() => {
+    this.getFundOrderHistory({ status: 'pending' }).then(() => {
       this.list = this.orderHistory.map((item) => {
         item.trade_type = tradeTypeList.filter(ite => ite.type === item.trade_type)[0].text;
         /* eslint-disable */

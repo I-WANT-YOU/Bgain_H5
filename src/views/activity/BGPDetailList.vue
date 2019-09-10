@@ -8,7 +8,7 @@
           <span>{{item.fbp_type === 'INCREASE'?'+':'-'}}{{item.amount}}</span>
         </div>
         <div>
-          {{createOrderDate(item.createAt)}}
+          {{createOrderDate(item.create_at)}}
         </div>
       </div>
     </div>
@@ -159,7 +159,6 @@ export default {
     this.getBGPDetailList().then(
       () => {
         Toast.clear();
-        console.log(this.detailList);
       },
       (err) => {
         this.$toast.clear();

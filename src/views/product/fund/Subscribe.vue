@@ -14,8 +14,7 @@
         <div class="info">
           <span>认购数量({{currency}})</span>
           <span
-            @click="$router.push(`/product/fund/trade-rules?productId=${fundBuyInfo.fund_product_id}`)"
-          >
+            @click= "goToTradingRules">
             交易规则
             <svg-icon icon-class="next" class="next" />
           </span>
@@ -38,7 +37,7 @@
         <span>{{currency === 'BGP' ? '0' : poundage}}{{currency}}</span>
       </div>
       <Button
-        :class="['button',disabled ? 'disabled' : '']"
+        class="button"
         :disabled="disabled"
         @click="onClick"
       >立即认购</Button>
@@ -53,6 +52,8 @@
   </div>
 </template>
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { strip } from '@utils/tools';
 import { Field, Button, Toast } from 'vant';
@@ -85,12 +86,14 @@ export default {
     };
   },
   mounted() {
+    //
     this.getFundBuyInfo(this.$route.params.id).then(() => {
       this.changIcon();
       this.changeRate();
       if (this.fundBuyInfo.min_invest_amt * 1 <= this.balance * 1) {
         this.changIcon();
-      } else if (this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.fundBuyInfo.balance_fbp * 1) {
+      } else if (this.fundBuyInfo.support_fbp
+        && this.fundBuyInfo.min_inverst_amount_fbp * 1 <= this.fundBuyInfo.balance_fbp * 1) {
         this.changIconBGP();
       } else {
         this.show = true;
@@ -200,6 +203,7 @@ export default {
       }
     },
     onClick() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-基金详情-立即认购']);
       if (this.num.length && this.num < this.mininvest) {
         Toast(`起投金额${this.mininvest}${this.currency}`);
       }
@@ -211,6 +215,7 @@ export default {
       }
     },
     onCancel() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-基金详情-取消充币']);
       // 余额 this.fundBuyInfo.balance
       if (this.fundBuyInfo.min_invest_amt * 1 > this.balance * 1
         || this.fundBuyInfo.min_inverst_amount_fbp > this.balance_fbp) {
@@ -223,6 +228,7 @@ export default {
       this.$router.push('/');
     },
     getPaymentPassword(paymentPassword) {
+      window._czc.push(['_trackEvent', 'click', `冠军基金-${this.fundBuyInfo.currency_type}-购买`]);
       this.buyFund({
         product_id: this.fundBuyInfo.fund_product_id,
         currency_type: this.fundBuyInfo.currency_type,
@@ -234,6 +240,11 @@ export default {
       }).catch(() => {
         this.$router.push({ path: '/product/fund/result', query: { status: 'fail' } });
       });
+    },
+    /* 跳转交易规则 */
+    goToTradingRules() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-基金详情-交易规则']);
+      this.$router.push(`/product/fund/trade-rules?productId=${this.fundBuyInfo.fund_product_id}`);
     },
   },
   computed: {

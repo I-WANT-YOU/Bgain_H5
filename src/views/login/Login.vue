@@ -22,7 +22,7 @@
         <div class="button">
           <Button
             tag="div"
-            :class="['login-btn', disabled ? 'button-disabled':'']"
+            :class="['login-btn']"
             :disabled="disabled"
             type="info"
             @click="submit"
@@ -31,7 +31,7 @@
       </form>
       <p class="to-register">
         <span>没有账号，</span>
-        <router-link class="to-register-btn" to="/register">立即注册</router-link>
+        <span class="to-register-btn" @click="goToRegister">立即注册</span>
         <i></i>
       </p>
     </div>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Field, Button, Toast } from 'vant';
 import { mapActions } from 'vuex';
 import BgainNavBar from '@component/BgainNavBar.vue';
@@ -91,6 +93,10 @@ export default {
     ...mapActions({
       login: 'auth/login',
     }),
+    /* 跳转注册页面 */
+    goToRegister() {
+      this.$router.push({ name: 'register' });
+    },
     showPwd() {
       this.isShowPwd = !this.isShowPwd;
     },
@@ -143,10 +149,12 @@ export default {
       this.geetest = geetest;
     },
     onSuccess(options) {
+      window._czc.push(['_trackEvent', 'click', '登录-下一步']);
       this.options = options;
       this.onLogin();
     },
     forgetPwd() { // 修改密码
+      window._czc.push(['_trackEvent', 'click', '登录-修改密码']);
       this.$router.history.push('/forgetPassword');
     },
     onSkip() {
@@ -227,7 +235,7 @@ export default {
         width: 100%;
         height: 46px;
         border-radius: 4px;
-        overflow: hidden;
+        /*overflow: hidden;*/
         .login-btn {
           width: 100%;
           height: 100%;
@@ -238,9 +246,6 @@ export default {
           text-align: center;
           line-height: 46px;
           background: #3c64ee;
-        }
-        .button-disabled {
-          background: #d2d8eb;
         }
       }
     }

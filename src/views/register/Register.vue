@@ -52,7 +52,14 @@
                                         >
                                         </Checkbox>
                                       <span>
-                                        我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
+                                        我已阅读并同意
+                                        <a @click="onSkip('/agreement/service')" class="protocol-a">
+                                          《服务协议》
+                                        </a>
+                                        和
+                                        <a @click="onSkip('/agreement/privacy')" class="protocol-a">
+                                          《隐私政策》
+                                        </a>
                                       </span>
                                     </div>
                             </div>
@@ -100,7 +107,14 @@
                                   >
                                   </Checkbox>
                                   <span>
-                                    我已阅读并同意<a @click="onSkip('/agreement/service')">《服务协议》</a>和<a @click="onSkip('/agreement/privacy')">《隐私政策》</a>
+                                    我已阅读并同意
+                                    <a @click="onSkip('/agreement/service')" class="protocol-a">
+                                      《服务协议》
+                                    </a>
+                                    和
+                                    <a @click="onSkip('/agreement/privacy')" class="protocol-a">
+                                      《隐私政策》
+                                    </a>
                                   </span>
                                 </div>
                             </div>
@@ -112,12 +126,13 @@
                 </div>
             </div>
             <div class="toLogin">
-              <div>
+              <div @click="goToLogin">
                  <span>已有账号？</span>
-                 <span @click="$router.push('/login')" class="cals">登录</span>
-                 <span @click="$router.push('/login')"><svg-icon icon-class="next" class="next"/></span>
+                 <span class="cals">登录</span>
+                 <span>
+                   <svg-icon icon-class="next" class="next"/>
+                 </span>
               </div>
-
             </div>
         </div>
         <Footer/>
@@ -127,6 +142,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import {
   Field, Toast, Checkbox, Button,
 } from 'vant';
@@ -211,6 +228,11 @@ export default {
       'getToken',
       'validateUsername',
     ]),
+    /* 登陆页面 */
+    goToLogin() {
+      window._czc.push(['_trackEvent', 'click', '注册跳转登录']);
+      this.$router.push({ name: 'login' });
+    },
     isShowPhoneContent() {
       this.phoneActive = true;
       this.emailActive = false;
@@ -305,6 +327,7 @@ export default {
       this.buttonIsLoading = true;
       this.validateUsername(validateData).then(
         () => {
+          window._czc.push(['_trackEvent', 'click', '注册-手机-下一步']);
           this.buttonIsLoading = false;
           this.geetest.verify();
         },
@@ -367,6 +390,7 @@ export default {
       this.buttonIsLoading = true;
       this.validateUsername(validateData).then(
         () => {
+          window._czc.push(['_trackEvent', 'click', '注册-邮箱-下一步']);
           this.buttonIsLoading = false;
           this.geetest.verify();
         },
@@ -417,8 +441,13 @@ export default {
 </script>
 
 <style lang='scss'>
+  /*超链接样式*/
+  .protocol-a{
+    color: #3660F7;
+    text-decoration: underline;
+  }
     .register{
-        font-family: PingFangSC-Regular;
+        font-family: PingFangSC-Regular sans-serif;
         letter-spacing: 0;
         display: flex;
         flex-direction: column;

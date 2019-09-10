@@ -62,11 +62,11 @@ export default {
         content: this.walletRecordDeatil.txn_id ? this.walletRecordDeatil.txn_id : '--',
       },
       {
-        title: '充币地址',
+        title: '转入地址',
         content: this.walletRecordDeatil.dest_address ? this.walletRecordDeatil.dest_address : '--',
       },
       {
-        title: '转出地址',
+        title: '提币地址',
         content: this.walletRecordDeatil.src_address ? this.walletRecordDeatil.src_address : '--',
       }];
       this.infoTwo = [{

@@ -1,6 +1,7 @@
+
 <template>
   <div class="container">
-    <BgainNavBar title="冠军CTA母基金" />
+    <BgainNavBar :onArrowClick="onArrowClick" title="冠军CTA母基金" />
     <van-image class="image-banner" :src="CTAMotherFund" />
     <div class="buttonContainer" @click="onSkip">
       <van-image class="image-button" :src="CTAButton" />
@@ -17,6 +18,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Image } from 'vant';
 import BgainNavBar from '@component/BgainNavBar.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -48,15 +51,17 @@ export default {
       getUserSummary: 'user/getUserSummary',
     }),
     async onSkip() {
+      window._czc.push(['_trackEvent', 'click', '冠军基金-冠军CTA母基金-0.01起投']);
       try {
         await this.getUserSummary();
       } catch (error) {
-        window.sessionStorage.setItem('loginFrom', `/product/fund/noinitial/${this.$route.params.id}`);
+        window.sessionStorage.setItem('loginFrom', `/product/fund/initial/In/${this.$route.params.id}`);
         throw error;
       }
       // 开放认购
       this.showstep = false;
       if (this.authLevel === 2) { // 1新用户 2设置交易密码
+        window._czc.push(['_trackEvent', 'click', '冠军基金-冠军CTA母基金-设置交易密码']);
         this.$router.push(`/product/fund/subscribe/${this.$route.params.id}`);
       } else {
         this.payment = true;
@@ -68,6 +73,9 @@ export default {
     },
     cancelPayment() {
       this.payment = false;
+    },
+    onArrowClick() {
+      this.$router.push('/product/fund');
     },
   },
 };
