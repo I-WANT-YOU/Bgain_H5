@@ -12,6 +12,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { head, isEmpty } from 'lodash';
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
@@ -54,6 +56,7 @@ export default {
   methods: {
     ...mapActions(['getAllCurrentProduct']),
     onCurrencyChange(currency) {
+      window._czc.push(['_trackEvent', 'click', `天天赚-币种Tab-${currency}`]);
       this.currency = currency;
       this.product = this.getProduct(currency);
     },

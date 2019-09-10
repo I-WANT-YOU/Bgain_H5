@@ -2,6 +2,7 @@
   <currency-tab
     v-if="currencies.length !== 0"
     :currencies="currencies"
+    :latestCurrency="latestCurrency"
     @currency-change="onCurrencyChange"
   >
     <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)" success-text="加载成功">
@@ -16,6 +17,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { head, isEmpty } from 'lodash';
 import { PullRefresh, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
@@ -36,6 +39,7 @@ export default {
       isLoading: false,
       currency: '',
       products: [],
+      latestCurrency: '',
     };
   },
   computed: {
@@ -48,6 +52,9 @@ export default {
     Toast.loading({
       message: '加载中...',
     });
+    if (this.$route.query.currentType) { // 从详情页面返回
+      this.latestCurrency = this.$route.query.currentType;
+    }
     await this.onRefresh();
     Toast.clear();
   },
@@ -56,13 +63,18 @@ export default {
       'getAllFixedProduct',
     ]),
     onCurrencyChange(currency) {
+      window._czc.push(['_trackEvent', 'click', `定期盈-币种Tab-${currency}`]);
       this.currency = currency;
       this.products = this.getProducts(currency);
     },
     async onRefresh(currency) {
       try {
         await this.getAllFixedProduct();
-        if (!isEmpty(currency)) {
+        if (this.$route.query.currentType) {
+          const initCurrency = this.$route.query.currentType;
+          this.currency = initCurrency;
+          this.products = this.getProducts(initCurrency);
+        } else if (!isEmpty(currency)) {
           this.products = this.getProducts(currency);
         } else {
           const initCurrency = head(this.currencies);

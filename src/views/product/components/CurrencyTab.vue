@@ -33,6 +33,9 @@ export default {
     selectedCurrency: {
       type: String,
     },
+    latestCurrency: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -45,7 +48,7 @@ export default {
         if (this.selectedCurrency) {
           return this.selectedCurrency;
         }
-        return 'BTC';
+        return this.latestCurrency;
       },
       set() {
 

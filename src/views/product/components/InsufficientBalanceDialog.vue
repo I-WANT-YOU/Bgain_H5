@@ -38,7 +38,7 @@ export default {
       this.$emit('cancel');
     },
     onRechargeClick() {
-      window._czc.push(['_trackEvent', 'click', '冠军基金-立即充币']);
+      window._czc.push(['_trackEvent', 'click', '立即充币']);
       this.$router.push({
         name: 'PurchaseCoinHome',
       });
