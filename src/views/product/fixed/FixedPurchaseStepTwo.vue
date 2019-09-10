@@ -10,7 +10,7 @@
       <div class="coupon" v-show="showData.currencyType !== 'FBP'">
         <span>选择优惠券</span>
         <div @click="selectCoupon()">
-          <span>{{availabelCoupons.length ? `可用 ${ availabelCoupons.length} 张` : '暂无相关优惠券'}}</span>
+          <span>{{showCouponInfo}}</span>
           <svg-icon v-if="availabelCoupons.length" icon-class="next" class="next-img"/>
         </div>
       </div>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="tip">购买即表示您已阅读并同意我们的
-      <span class="active" @click="$router.push('/agreement/investment')">《投资服务协议》</span></div>
+      <span class="active" @click="goToServiceProtocal">《投资服务协议》</span></div>
     <div class="purchaseButton">
       <button @click="immediateBuy">立即认购</button>
     </div>
@@ -49,16 +49,21 @@
       @submit="getPaymentPassword"
       v-model="maskShow"
     />
+    <!--优惠券列表-->
+    <FixCoupon v-show="isShowCoupon" @couponData="computeCouponData"/>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Switch, Toast } from 'vant';
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { formatDate } from '@utils/tools';
+import { formatDate, testNum } from '@utils/tools';
 import Vue from 'vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
+import FixCoupon from '../../coupon/FixCoupon.vue';
 import errorMessage from '../../../constants/responseStatus';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 
@@ -75,6 +80,8 @@ export default {
       maskShow: false, // 密码弹出框
       password: '',
       payment: false, // 没有设置交易密码弹窗
+      isShowCoupon: false, // 是否显示优惠券页面
+      showCouponInfo: '', // 优惠券信息展示
     };
   },
 
@@ -83,16 +90,14 @@ export default {
     'van-switch': Switch,
     PaymentPasswordDialog,
     BgainBaseDialog,
+    FixCoupon,
   },
 
   computed: {
     ...mapState('product/fixed', [
       'availabelCoupons', // 获取优惠券
       'userPortfolio', // 获取预期收益
-    ]),
-    ...mapState('product/fixed', [
       'fixed',
-      'availabelCoupons',
     ]),
     ...mapGetters('user', [
       'authLevel',
@@ -101,24 +106,45 @@ export default {
 
   methods: {
     ...mapActions('product/fixed', [
-      'getAvailableCoupons', // 获取优惠券
+      'getAvailableCoupons', // 获取可用优惠券
       'getUserPortfolio', // 获取预期收益
       'buyFixedProduct', // 用户购买产品
     ]),
-
     ...mapActions('user', ['getUserSummary']),
 
-    // 立即认购 调用支付密码页面
+    /* 投资协议 */
+    goToServiceProtocal() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-投资服务协议']);
+      this.$router.push('/agreement/investment');
+    },
+    /* 接受优惠券参数 */
+    computeCouponData(couponData) {
+      if (couponData === 'none') {
+        this.isShowCoupon = false;
+      } else if (couponData === 'cancel') {
+        sessionStorage.removeItem('couponData');
+        this.isShowCoupon = false;
+        this.createShowData(false);
+        this.showCouponInfo = `可用 ${this.availabelCoupons.length} 张`;
+      } else {
+        this.isShowCoupon = false;
+        this.createShowData(true, couponData);
+        this.showCouponInfo = `可加息 ${this.availabelCoupons[couponData].coupon_value}%`;
+        sessionStorage.setItem('couponData', couponData);
+      }
+    },
+    /* 立即认购 调用支付密码页面 */
     immediateBuy() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-立即认购']);
       if (this.authLevel === 2) {
         this.maskShow = true;
       } else {
         this.payment = true;
       }
     },
-
-    // 获取支付密码
+    /* 获取支付密码 */
     getPaymentPassword(val) {
+      window._czc.push(['_trackEvent', 'click', '定期盈-输入交易密码-确认']);
       Toast.loading({
         mask: false,
         message: '加载中...',
@@ -130,15 +156,23 @@ export default {
         throw new Error(error);
       }
     },
-    // 立即认购
+    /* 立即认购 */
     confirmBuy() {
+      if (this.checked) {
+        window._czc.push(['_trackEvent', 'click', '定期盈-到期转入天天赚']);
+      }
+      let couponId = '';
+      if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') {
+        const couPonIndex = parseInt(sessionStorage.getItem('couponData'), 10);
+        couponId = this.availabelCoupons[couPonIndex].id;
+      }
       const params = {
         product_id: this.showData.productId,
         amount: this.showData.investmentAmount,
         amount_currency: this.showData.currencyType,
         payment_currency: this.showData.currencyType,
         payment_password: this.password,
-        user_coupon_id: this.$route.query.couponId || '',
+        user_coupon_id: couponId,
         product_type: 'fix_income',
         auto_transfer_in: this.checked,
       };
@@ -189,8 +223,9 @@ export default {
 
     // 选择优惠券
     selectCoupon() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-选择优惠券']);
       if (this.availabelCoupons.length) {
-        this.$router.push({ path: '/fixCoupon', query: { productId: this.showData.productId, amount: this.showData.investmentAmount } });
+        this.isShowCoupon = true;
       }
     },
 
@@ -198,27 +233,28 @@ export default {
     formatDate(date) {
       return formatDate(date, 'YYYY-MM-DD');
     },
+    createShowDataWithoutCoupon() { // 无优惠券
+      this.expectedReturnData = [
+        {
+          name: '预期收益',
+          num: `${this.showData.expectedReturn} ${this.showData.currencyType === 'FBP' ? 'BGP' : this.showData.currencyType}`,
+          show: true,
+        },
+        {
+          name: '预计收款日',
+          num: this.formatDate(this.showData.expected_payment_date),
+          show: true,
+        },
+      ];
+    },
 
     // 生成展示数据
-    createShowdata(isHadCoupon) {
-      if (this.showData.currencyType === 'FBP') { // 无优惠券 无预期加息收益
-        this.expectedReturnData = [
-          {
-            name: '预期收益',
-            num: `${this.showData.expectedReturn} ${this.showData.currencyType === 'FBP' ? 'BGP' : this.showData.currencyType}`,
-            show: true,
-          },
-          {
-            name: '预计收款日',
-            num: this.formatDate(this.showData.expected_payment_date),
-            show: true,
-          },
-        ];
-      } else if (isHadCoupon) { // 有优惠券
+    createShowData(isHadCoupon, index) {
+      if (isHadCoupon) { // 有优惠券
         // eslint-disable-next-line
-        const expectedAdd = (this.showData.investmentAmount * 100000000 * this.availabelCoupons[this.$route.query.index].coupon_return) / 10000000000;
+        const expectedAdd = testNum(this.showData.investmentAmount *  this.availabelCoupons[index].coupon_return);
         // eslint-disable-next-line
-        const expectedAll = Math.floor((expectedAdd + this.showData.expectedReturn) * 10000000000) / 10000000000;
+        const expectedAll = testNum((parseFloat(expectedAdd*100000000) + parseFloat(this.showData.expectedReturn*100000000))/100000000);
         this.expectedReturnData = [
           {
             name: '预期收益',
@@ -241,7 +277,9 @@ export default {
             show: true,
           },
         ];
-      } else {
+        return false;
+      }
+      if (!isHadCoupon) {
         this.expectedReturnData = [
           {
             name: '预期收益',
@@ -250,12 +288,12 @@ export default {
           },
           {
             name: '预期加息收益',
-            num: '--',
+            num: `0 ${this.showData.currencyType}`,
             show: true,
           },
           {
             name: '预期总收益',
-            num: '--',
+            num: `0 ${this.showData.currencyType}`,
             show: true,
           },
           {
@@ -265,10 +303,17 @@ export default {
           },
         ];
       }
+      return false;
     },
 
     // 获取优惠券
-    getCoupon() {
+    getCoupon(isGetIndexFromCoupon, index) {
+      // 获取可用优惠券
+      Toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...',
+      });
       const params = {
         id: this.showData.productId,
         amount: this.showData.investmentAmount,
@@ -276,11 +321,16 @@ export default {
       this.getAvailableCoupons(params).then(
         () => {
           Toast.clear();
-          // 判断是否带着优惠券页面返回
-          if (JSON.stringify(this.$route.query) === '{}') {
-            this.createShowdata(false); // 无
+          if (isGetIndexFromCoupon) { // 选择了优惠券 然后返回
+            this.createShowData(true, index);
+            this.showCouponInfo = `可加息 ${this.availabelCoupons[index].coupon_value}%`;
           } else {
-            this.createShowdata(true); // 有优惠券
+            this.createShowData(false); // 初始化页面 无预取收益 无优惠券数据
+            if (this.availabelCoupons.length) {
+              this.showCouponInfo = `可用 ${this.availabelCoupons.length} 张`;
+            } else {
+              this.showCouponInfo = '暂无相关优惠券';
+            }
           }
         },
         (err) => {
@@ -309,23 +359,23 @@ export default {
       sessionStorage.setItem('showData', this.$route.params.stepTwoData); // 保存上一页的数据
     }
     this.showData = JSON.parse(sessionStorage.getItem('showData')); // 设置传递的数据
-
     // 判断是否设置交易密码
     this.isSetPassword();
-
-    // 获取优惠券
-    this.getCoupon();
-    // 判断币种还是积分查询 显示不同数据
-
-    // 获取可用优惠券
-    Toast.loading({
-      mask: true,
-      duration: 0,
-      message: '加载中...',
-    });
+    if (this.showData.currencyType === 'BGP') {
+      this.createShowDataWithoutCoupon();
+    } else if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') { // 刷新本页面
+      // 获取可用优惠券
+      this.getCoupon(true, sessionStorage.getItem('couponData'));
+    } else {
+      // 获取可用优惠券
+      this.getCoupon(false);
+    }
   },
 
   beforeDestroy() {
+    if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') {
+      sessionStorage.removeItem('couponData');
+    }
     Toast.clear();
   },
 };

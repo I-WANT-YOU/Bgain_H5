@@ -160,6 +160,7 @@ const router = new Router({
         },
         {
           path: 'fixed',
+          name: 'Fixed',
           component: () => import('../views/product/fixed/Fixed.vue'),
           meta: {
             title: '定期盈',

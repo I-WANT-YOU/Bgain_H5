@@ -41,6 +41,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Field, Divider, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainNavBar from '@/components/BgainNavBar.vue';
@@ -139,6 +141,7 @@ export default {
       }
     },
     async onSubmitClick(password) {
+      window._czc.push(['_trackEvent', 'click', '天天赚-交易密码-确定']);
       try {
         await this.buyCurrentProduct({
           amount: this.amount,

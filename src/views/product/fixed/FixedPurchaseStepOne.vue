@@ -59,9 +59,11 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
-import { strip } from '@utils/tools';
+import { testNum } from '@utils/tools';
 import BgainNavBar from '../../../components/BgainNavBar.vue';
 import errorMessage from '../../../constants/responseStatus';
 import FixedPop from './components/FixedPop.vue';
@@ -204,8 +206,8 @@ export default {
     expectedReturn() {
       let expected = '-';
       if (this.investmentAmount) {
-        expected = strip((this.investmentAmount * 100000000 * this.fixedBuyInfo.expected_return)
-          / 100000000, 8);
+        const initData = this.investmentAmount * this.fixedBuyInfo.expected_return;
+        expected = testNum(initData);
       }
       return expected;
     },
@@ -215,6 +217,7 @@ export default {
       ['getFixedBuyInfo'],
     ),
     toStepTwo() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-下一步']);
       const routeData = {
         investmentAmount: this.investmentAmount,
         expectedReturn: this.expectedReturn,
@@ -280,6 +283,7 @@ export default {
     },
     // 改变Tabs
     changeTab(text) {
+      window._czc.push(['_trackEvent', 'click', `定期盈-购买Tab-${text}`]);
       this.activeButton = false;
       switch (text) {
         case 'currency':

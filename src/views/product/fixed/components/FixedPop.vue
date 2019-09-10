@@ -18,15 +18,19 @@
 
 <!--suppress JSUnusedGlobalSymbols -->
 <script>
+/* eslint-disable no-underscore-dangle */
+
 export default {
   name: 'FixedPop',
   methods: {
     // 取消
     cancel() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-余额不足-取消']);
       this.$router.go(-1);
     },
     // 冲币
     rushMoney() {
+      window._czc.push(['_trackEvent', 'click', '定期盈-余额不足-充币']);
       this.$router.push({
         name: 'PurchaseCoinHome',
       });

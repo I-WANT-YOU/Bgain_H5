@@ -38,7 +38,8 @@
       content="您还未设置交易密码，暂无法进行购买"
       submitText="设置交易密码"
       @submit="onSSSS"
-      @cancel="()=>{this.showDialog = false}"
+      @cancel="()=>{this.showDialog = false;
+       window._czc.push(['_trackEvent', 'click', '天天赚-交易密码-取消']);}"
     />
     <BgainBaseDialog
       v-model="Dialog"
@@ -161,6 +162,7 @@ export default {
       }
     },
     onSSSS() {
+      window._czc.push(['_trackEvent', 'click', '天天赚-设置交易密码-确定']);
       sessionStorage.setItem('payment', '/product/current');
       this.$router.push('/mine/safety/password/payment/set');
     },

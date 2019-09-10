@@ -127,6 +127,8 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
+
 import { ActionSheet, Toast } from 'vant';
 import { mapActions, mapGetters } from 'vuex';
 import Header from '@component/mine/Header.vue';
@@ -205,9 +207,11 @@ export default {
       this.$router.push(router);
     },
     onClickCurrency() {
+      window._czc.push(['_trackEvent', 'click', '我的-总资产']);
       this.showCurrency = true;
     },
     onSelectCurrency(item) {
+      window._czc.push(['_trackEvent', 'click', `我的-总资产-${item.name}`]);
       this.currency = item.name;
       this.getCurreny();
       this.showCurrency = false;
@@ -221,6 +225,38 @@ export default {
     },
     // 未登录
     async goLogin(router) {
+      switch (router) {
+        case '/asset-record':
+          window._czc.push(['_trackEvent', 'click', '我的-资金记录']);
+          break;
+        case '/coupon':
+          window._czc.push(['_trackEvent', 'click', '我的-优惠券']);
+          break;
+        case '/commonProblem':
+          window._czc.push(['_trackEvent', 'click', '我的-常见问题']);
+          break;
+        case '/purchaseCoinHome':
+          window._czc.push(['_trackEvent', 'click', '我的-充币']);
+          break;
+        case '/extract-coin':
+          window._czc.push(['_trackEvent', 'click', '我的-提币']);
+          break;
+        case '/product/current':
+          window._czc.push(['_trackEvent', 'click', '我的-天天赚']);
+          break;
+        case '/mine/fixed':
+          window._czc.push(['_trackEvent', 'click', '我的-定期盈']);
+          break;
+        case '/mine/fund':
+          window._czc.push(['_trackEvent', 'click', '我的-冠军基金']);
+          break;
+        case '/mine/balance':
+          window._czc.push(['_trackEvent', 'click', '我的-可用余额']);
+          break;
+        default:
+          break;
+      }
+
       if (this.login) {
         this.$router.push(router);
         // 基金开放

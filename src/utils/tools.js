@@ -4,6 +4,27 @@ import { Toast } from 'vant';
 
 // 处理数字精度
 export const strip = (num, precision = 12) => +parseFloat(num.toPrecision(precision));
+// 处理数字精度-李辉
+export const testNum = (value, num) => {
+  let newValue = '';
+  if (Math.round(value) === value) { // 整数
+    newValue = `${value.toString()}.`;
+    for (let i = 0; i < num; i += 1) {
+      newValue += '0';
+    }
+    return newValue;
+  } if (value > 0) {
+    newValue = parseFloat(value.toString().match(/^\d+(?:\.\d{0,8})?/)).toString();
+    const startIndex = newValue.indexOf('.');
+    if (newValue.substring(startIndex + 1).length < 8) {
+      const lastLength = 8 - newValue.substring(startIndex + 1).length;
+      for (let i = 0; i < lastLength; i += 1) {
+        newValue += '0';
+      }
+    }
+  }
+  return newValue;
+};
 
 // 获取 URL 的 query
 export const getQueryParam = (name, url) => {
