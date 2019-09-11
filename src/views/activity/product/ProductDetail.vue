@@ -71,7 +71,7 @@ export default {
     },
     content() {
       const { fbpprice_record: price, fbpamt_record: amount } = this.prod;
-      return `该商品使用 ${price}BGP 兑换兑换后，剩余 ${strip(parseInt(amount, 10) - parseInt(price, 10))}BGP确定兑换？`;
+      return `该商品使用 ${price}BGP 兑换兑换后，剩余 ${strip(parseInt(amount, 10) - parseInt(price && price.replace(/,/g, ''), 10))}BGP确定兑换？`;
     },
   },
   async mounted() {

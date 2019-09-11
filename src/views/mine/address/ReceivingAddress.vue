@@ -150,8 +150,12 @@ export default {
       const regu = /^[a-zA-Z\u4e00-\u9fa5]+$/;
       if (!regu.test(this.username)) {
         Toast('收货人只能输入中英文');
+      } else if (this.tel === '') {
+        Toast('请输入手机号');
       } else if (!telReg.test(this.tel)) {
         Toast('手机号有误，请重新输入');
+      } else if (this.addressText === '') {
+        Toast('请选择您的所在地');
       } else if (this.textarea.length < 5) {
         Toast('详情地址不少于5个字');
       } else {
