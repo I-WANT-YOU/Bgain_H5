@@ -156,7 +156,6 @@ const { mapActions, mapState } = createNamespacedHelpers('product/fund');
 // 收益率 pnl_ratio_daily
 // 业绩报酬已扣减 pnl_without_carry_list
 
-
 export default {
   name: 'FundDetail',
   components: {

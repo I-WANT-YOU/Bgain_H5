@@ -41,18 +41,16 @@
       </div>
       <div class="echarts">
         <div class="echarts-info">
-          <span>日期 {{formatDate(chart_x, 'MM-DD')}}</span>
+          <span>日期 {{chart_x}}</span>
           <span class="echarts-info-num">单位净值 {{chart_y}}</span>
         </div>
-        <div class="my-echarts" ref="echarts" style="width: 345px;height: 136px;"></div>
+        <div class="my-echarts" ref="echarts"></div>
       </div>
     </div>
     <div class="tradeshow">
       <div class="title">
         <span>交易说明</span>
-        <div @click="goToTradeDescription"
-          class="skip"
-        >
+        <div @click="goToTradeDescription" class="skip">
           交易规则、常见问题等
           <svg-icon icon-class="next" class="next" />
         </div>
@@ -118,9 +116,7 @@
     <div class="fundarchives">
       <div class="title">
         <span>基金档案</span>
-        <div @click="goToFundFile"
-          class="skip"
-        >
+        <div @click="goToFundFile" class="skip">
           基金团队、策略说明、实盘业绩等
           <svg-icon icon-class="next" class="next" />
         </div>
@@ -260,7 +256,7 @@ export default {
       });
     },
     /* 跳转风险说明 */
-    goToRiskDescription() {},
+    goToRiskDescription() { },
     formatDate(date, format) {
       return formatDate(date, format);
     },
@@ -290,6 +286,7 @@ export default {
         this.chart_x = this.chart.getOption().xAxis[0].data[pointInGrid[0]];
         this.chart_y = this.fundNavHistories.filter(item => item.get_nav_time === this.chart_x);
         this.chart_y = this.chart_y[0].nav;
+        this.chart_x = formatDate(this.chart.getOption().xAxis[0].data[pointInGrid[0]], 'MM-DD');
       }
     },
     async onSubmit() {
@@ -483,6 +480,10 @@ export default {
           width: 90px;
           text-align: left;
         }
+      }
+      .my-echarts {
+        width: 345px;
+        height: 136px;
       }
     }
   }

@@ -92,13 +92,13 @@ export default {
     try {
       await this.getAddressDetail();
       if (this.address) {
-        this.addressText = `${this.address.province} ${this.address.city} ${this.address.region}`;
+        this.addressText = `${this.address.city}`;
         if (this.address.province === '北京市'
           || this.address.province === '上海市'
           || this.address.province === '天津市'
           || this.address.province === '重庆市'
           || this.address.province === '澳门特别行政区') {
-          this.addressText = `${this.address.province} ${this.address.region}`;
+          this.addressText = `${this.address.city}`;
         }
         this.username = this.address.receiver;
         this.tel = this.address.receiver_phone_num;
