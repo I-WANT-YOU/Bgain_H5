@@ -217,7 +217,9 @@ export default {
     ),
     /* 判断弹窗类型 */
     typePopShow() {
-      if (this.fixedBuyInfo.balance_fbp * 1 >= this.fixedBuyInfo.min_inverst_amount_fbp * 1) {
+      const info = JSON.parse(sessionStorage.getItem('info'));
+      if (this.fixedBuyInfo.balance_fbp * 1 >= this.fixedBuyInfo.min_inverst_amount_fbp * 1
+        && info.support_fbp === true) {
         this.popShow = false;
       } else {
         this.$router.go(-1);
