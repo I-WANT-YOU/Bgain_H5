@@ -1,14 +1,8 @@
 <template>
   <div class="couponList">
    <header class="couponLIst-header">
-<<<<<<< HEAD
      <div @click="backToStepTwoWithoutParams"><svg-icon icon-class="back" class="back-icon"/> </div>
      <span  @click="backToStepTwoWithParams">确定</span>
-=======
-     <div @click="()=>{this.$router.go(-1)}"><svg-icon icon-class="back" class="back-icon"/> </div>
-     <div>优惠券</div>
-     <span  @click="backToStepTwo">确定</span>
->>>>>>> a922b8073d790ddb1cd6a56b44469abff9957802
    </header>
     <div class="coupons">
       <van-check-group v-model="result" :max="1">
@@ -17,7 +11,7 @@
           <div class="coupon-back">
             <div class="coupon-num">
               <span>{{item.coupon_value}}%</span>
-              <span>收益加息</span>
+              <span>{{item.coupon_type.toUpperCase() === 'RATIO'?'收息加益':'本金加息'}}</span>
             </div>
             <div class="couponInfo">
               <span>{{item.min_usage_limit}}&nbsp;{{item.currency_type}}&nbsp;起投</span>
