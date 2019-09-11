@@ -42,7 +42,7 @@
                                       </div>
                                     </div>
                                     <div class="phone">
-                                        <Field v-model="phoneData.invitationCode"
+                                        <Field v-model="phoneData.invitationCode" maxlength = '6'
                                                placeholder="请输入邀请码（非必填）" />
                                     </div>
                                     <div class="agreement">
@@ -97,7 +97,7 @@
                                 </div>
                               </div>
                                 <div class="phone">
-                                    <Field v-model="emailData.invitationCode"
+                                    <Field v-model="emailData.invitationCode" maxlength = '6'
                                            placeholder="请输入邀请码（非必填）" />
                                 </div>
                                 <div class="agreement">
@@ -293,21 +293,22 @@ export default {
         return false;
       }
       const regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/;
+      const regInvitationCode = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6}$/;
       if (!regPassword.test(this.phoneData.password)) {
         this.$toast('请输入8-20位字母及数字组成的密码');
         return false;
       }
       // 校验校验码
-      // if (this.phoneData.invitationCode) {
-      //   if (this.phoneData.invitationCode.length !== 6) {
-      //     this.$toast('邀请码不存在，请重新输入1');
-      //     return false;
-      //   }
-      //   if (!regPassword.test(this.phoneData.invitationCode)) {
-      //     this.$toast('邀请码不存在，请重新输入2');
-      //     return false;
-      //   }
-      // }
+      if (this.phoneData.invitationCode) {
+        if (this.phoneData.invitationCode.length !== 6) {
+          this.$toast('邀请码不存在，请重新输入');
+          return false;
+        }
+        if (!regInvitationCode.test(this.phoneData.invitationCode)) {
+          this.$toast('邀请码不存在，请重新输入');
+          return false;
+        }
+      }
       // 是否同意协议
       if (this.phoneData.checked === false) {
         this.$toast('请点击同意协议');
@@ -356,6 +357,7 @@ export default {
       }
       // const regPassword = /^[0-9a-zA-Z]+$/;
       const regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/;
+      const regInvitationCode = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6}$/;
       if (!regPassword.test(this.emailData.password)) {
         this.$toast('请输入8-20位字母及数字组成的密码');
         return false;
@@ -366,7 +368,7 @@ export default {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
-        if (!regPassword.test(this.emailData.invitationCode)) {
+        if (!regInvitationCode.test(this.emailData.invitationCode)) {
           this.$toast('邀请码不存在，请重新输入');
           return false;
         }
@@ -399,7 +401,6 @@ export default {
           this.$toast(errorMessage[err.status]);
         },
       );
-      this.geetest.verify();
       return false;
     },
     // 选择国家

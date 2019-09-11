@@ -1,5 +1,5 @@
 import { get, chain } from 'lodash';
-import { handlerSuccessResponse, handlerSuccessResponseV2 } from '@utils/auth';
+import { handlerSuccessResponse, handlerSuccessResponseV2, handlerSuccessResponseV3 } from '@utils/auth';
 import * as types from '@/store/mutationTypes';
 import { FixedService } from '@/api/product';
 
@@ -10,6 +10,7 @@ const state = {
   availabelCoupons: [],
   userPortfolio: [],
   userholdingDetail: {},
+  buyFixedProductResult: {},
 };
 
 const getters = {
@@ -42,6 +43,9 @@ const mutations = {
   },
   [types.GET_USER_HOLDING_DETAIL](state, payload) {
     state.userholdingDetail = payload;
+  },
+  [types.BUY_FIXED_PRODUCT_RESULT](state, payload) {
+    state.buyFixedProductResult = payload;
   },
 };
 
@@ -95,10 +99,11 @@ const actions = {
    * }
    * @returns {Promise<Promise<never> | Promise<unknown>>}
    */
-  async buyFixedProduct(context, params) {
+  async buyFixedProduct({ commit }, params) {
     try {
       const response = await FixedService.buyFixedProduct(params);
-      return handlerSuccessResponse(response);
+      const data = await handlerSuccessResponseV3(response);
+      commit(types.BUY_FIXED_PRODUCT_RESULT, data);
     } catch (error) {
       throw error;
     }
