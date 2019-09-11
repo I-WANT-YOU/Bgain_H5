@@ -267,7 +267,7 @@ export default {
     },
 
     // 生成展示数据
-    createShowdata(isHadCoupon) {
+    createShowData(isHadCoupon, index) {
       if (this.showData.currencyType === 'BGP') { // 无优惠券 无预期加息收益
         this.expectedReturnData = [
           {
