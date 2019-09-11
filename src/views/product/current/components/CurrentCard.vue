@@ -12,7 +12,7 @@
       <span>在投总额</span>
       <span
         class="number"
-      >{{isLogin ? dataSource.reinvest_amount : '-'}} {{dataSource.currency_type}}</span>
+      >{{isLogin ? dataSource.reinvest_amount : '-'}} {{isLogin ? dataSource.currency_type : ''}}</span>
     </div>
     <div class="card-profit__panel">
       <div>
