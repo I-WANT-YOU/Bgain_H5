@@ -326,7 +326,7 @@ export default {
           },
           {
             name: '预期总收益',
-            num: `0 ${this.showData.currencyType}`,
+            num: `${this.showData.expectedReturn} ${this.showData.currencyType}`,
             show: true,
           },
           {
