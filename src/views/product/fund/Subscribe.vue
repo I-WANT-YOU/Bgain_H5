@@ -54,10 +54,11 @@
 <script>
 /* eslint-disable no-underscore-dangle */
 
-import BgainNavBar from '@component/BgainNavBar.vue';
-import { strip } from '@utils/tools';
 import { Field, Button, Toast } from 'vant';
 import { mapActions, mapState } from 'vuex';
+import BgainNavBar from '@component/BgainNavBar.vue';
+import { strip } from '@utils/tools';
+import responseStatus from '@/constants/responseStatus';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 import InsufficientBalanceDialog from '../components/InsufficientBalanceDialog.vue';
 
@@ -237,8 +238,9 @@ export default {
         payment_currency: this.currency === 'BGP' ? 'FBP' : this.currency,
       }).then(() => {
         this.$router.push({ path: '/product/fund/result', query: { status: 'success', currency: this.currency } });
-      }).catch(() => {
-        this.$router.push({ path: '/product/fund/result', query: { status: 'fail' } });
+      }).catch((error) => {
+        Toast(error.status && responseStatus[error.status]);
+        // this.$router.push({ path: '/product/fund/result', query: { status: 'fail' } });
       });
     },
     /* 跳转交易规则 */
