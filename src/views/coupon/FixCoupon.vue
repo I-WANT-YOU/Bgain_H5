@@ -2,6 +2,7 @@
   <div class="couponList">
    <header class="couponLIst-header">
      <div @click="backToStepTwoWithoutParams"><svg-icon icon-class="back" class="back-icon"/> </div>
+     <span>优惠券</span>
      <span  @click="backToStepTwoWithParams">确定</span>
    </header>
     <div class="coupons">

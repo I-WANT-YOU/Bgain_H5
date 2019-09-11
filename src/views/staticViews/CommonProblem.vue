@@ -342,7 +342,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="什么时候可以认购、赎回基金产品？"
+              title="认购基金后多久可以赎回？"
               name="67"
             >由于平台基金在特定周期才可进行交易，所以认购基金后需等到下个交易开放期可进行赎回。 具体交易开放期可在相应产品详情页面进行查看。</van-collapse-item>
           </div>
@@ -350,7 +350,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="认购、赎回时的手续费怎么计算？"
+              title="基金赎回后还有收益吗？"
               name="68"
             >用户操作基金赎回后，平台未确认订单前，每日仍计算基金盈亏，平台确认赎回份额后，则不再有盈亏。</van-collapse-item>
           </div>
@@ -358,7 +358,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="基金认购或赎回后可以撤销吗？"
+              title="节假日基金有收益吗？"
               name="69"
             >根据数字货币的特殊性，不区分节假日，每日更新基金产品净值，即节假日基金仍有收益。</van-collapse-item>
           </div>
@@ -366,7 +366,7 @@
             <span class="icon"></span>
             <van-collapse-item
               size="large"
-              title="基金认购或赎回什么时候确认？"
+              title="如何计算基金收益？"
               name="610"
             >平台根据基金产品每日净值变化率计算每日盈亏。 昨日收益=（T-1日产品净值 – T-2日产品净值）* T-1日持有份额</van-collapse-item>
           </div>
