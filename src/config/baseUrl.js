@@ -11,7 +11,6 @@ const prod = 'http://dev.xjetry.top:8081';
 // const dev = 'http://uat.xjetry.top:8091';
 // const prod = 'http://uat.xjetry.top:8091';
 
-
 const env = process.env.NODE_ENV || 'development';
 
 const config = {
