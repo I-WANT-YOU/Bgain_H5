@@ -92,13 +92,13 @@ export default {
     try {
       await this.getAddressDetail();
       if (this.address) {
-        this.addressText = `${this.address.province} ${this.address.city} ${this.address.region}`;
+        this.addressText = `${this.address.city}`;
         if (this.address.province === '北京市'
           || this.address.province === '上海市'
           || this.address.province === '天津市'
           || this.address.province === '重庆市'
           || this.address.province === '澳门特别行政区') {
-          this.addressText = `${this.address.province} ${this.address.region}`;
+          this.addressText = `${this.address.city}`;
         }
         this.username = this.address.receiver;
         this.tel = this.address.receiver_phone_num;
@@ -150,8 +150,12 @@ export default {
       const regu = /^[a-zA-Z\u4e00-\u9fa5]+$/;
       if (!regu.test(this.username)) {
         Toast('收货人只能输入中英文');
+      } else if (this.tel === '') {
+        Toast('请输入手机号');
       } else if (!telReg.test(this.tel)) {
         Toast('手机号有误，请重新输入');
+      } else if (this.addressText === '') {
+        Toast('请选择您的所在地');
       } else if (this.textarea.length < 5) {
         Toast('详情地址不少于5个字');
       } else {

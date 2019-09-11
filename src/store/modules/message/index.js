@@ -16,7 +16,7 @@ const getters = {
       return item;
     }),
   announcementList: state => map(state.news, (item) => {
-    item.create_date = formatDate(item.create_date);
+    item.created_at = formatDate(item.created_at);
     return item;
   }, []),
   announcementDetail: state => ({

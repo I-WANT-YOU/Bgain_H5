@@ -76,7 +76,11 @@ export default {
   },
   methods: {
     onSkip(router) {
-      this.$router.push({ name: router, params: { from: 'kyc-result' } });
+      if (router === 'kyc') {
+        this.$router.push({ name: router });
+      } else {
+        this.$router.push({ name: router, params: { from: 'kyc-result' } });
+      }
     },
   },
 };

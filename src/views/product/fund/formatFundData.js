@@ -115,7 +115,7 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
   return {
     grid: {
       left: '11%',
-      right: '0%',
+      right: '2%',
       bottom: '5%',
       top: '5%',
     },
