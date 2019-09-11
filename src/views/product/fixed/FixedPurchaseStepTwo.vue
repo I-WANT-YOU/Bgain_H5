@@ -113,6 +113,7 @@ export default {
       'availabelCoupons', // 获取优惠券
       'userPortfolio', // 获取预期收益
       'fixed',
+      'buyFixedProductResult', // 购买定期产品结果
     ]),
     ...mapGetters('user', [
       'authLevel',
@@ -196,6 +197,8 @@ export default {
         (res) => {
           Toast.clear();
           this.maskShow = false;
+          // console.log(this.buyFixedProductResult);
+          // this.buyFixedProductResult
           this.$router.push(
             {
               name: 'SubscriptionResults',
@@ -212,6 +215,7 @@ export default {
         },
         () => {
           Toast.clear();
+          Toast('网络错误');
           this.maskShow = false;
           this.$router.push(
             {

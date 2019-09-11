@@ -61,7 +61,9 @@ export default {
     try {
       if (this.$route.params.fixedBuyResult) {
         sessionStorage.setItem('fixedBuyResult', JSON.stringify(this.$route.params));
-        this.showGetBGPPop = true;
+        if (this.$route.params.fixedBuyResult.result === 'success') {
+          this.showGetBGPPop = true;
+        }
       }
       this.showData = JSON.parse(sessionStorage.getItem('fixedBuyResult')).fixedBuyResult;
     } catch (e) {
