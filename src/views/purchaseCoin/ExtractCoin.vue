@@ -129,7 +129,6 @@ export default {
     ...mapActions('coin/wallet', ['getWalletInfo', 'getWithdrawal']),
     // 判断是否显示弹窗
     async dialog() {
-      console.log(this.kycStatus);
       if (this.kycStatus === 'CERTIFY_FAILED' || this.kycStatus === 'FAILED') {
         this.showDialog = true;
         this.dialogText = {};

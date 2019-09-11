@@ -43,6 +43,7 @@ import { Field, Toast } from 'vant';
 import { createNamespacedHelpers } from 'vuex';
 import BgainButton from '@/components/BgainButton.vue';
 import BgainNavBar from '@/components/BgainNavBar.vue';
+import responseStatus from '@/constants/responseStatus';
 import PaymentPasswordDialog from '../components/PaymentPasswordDialog.vue';
 
 const { mapActions, mapGetters } = createNamespacedHelpers('product/current');
@@ -136,7 +137,9 @@ export default {
           name: 'current-sell-result',
         });
       } catch (error) {
-        Toast(error.message);
+        if (error.status) {
+          Toast(responseStatus[error.status]);
+        }
       }
     },
     onClose() {
