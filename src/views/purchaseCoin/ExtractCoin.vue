@@ -276,9 +276,12 @@ export default {
         }
       }
       .input {
+        width: 100%;
         height: 20px;
         border: 0;
+        margin: 0;
         margin-bottom: 10px;
+        padding: 0;
         &::placeholder {
           font-size: 14px;
           color: #a8aeb9;

@@ -50,7 +50,7 @@
       <div class="text">{{statu ? '预计' : ''}}收款日</div>
       <div class="num">{{formatDate(option.product_payment_date)}}</div>
     </div>
-    <div class="line roll-in">
+    <div class="line roll-in" v-if="option.payment_currency !== 'BGP'">
       <div class="text">
         自动转入天天赚
         <span class="tip-class-wrap" @click="onTip">
