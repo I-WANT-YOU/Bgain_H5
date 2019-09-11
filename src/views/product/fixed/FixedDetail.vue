@@ -118,34 +118,6 @@ export default {
       buyButtonState: false,
     };
   },
-  mounted() {
-    window.scrollTo(0, 0);
-    this.getFixedProductById(this.$route.params.id).then(
-      () => {
-        // 若商品不可购买 隐藏按钮
-        if (this.fixed.purchase_end_date - this.fixed.server_time >= 0) {
-          this.buyButtonState = true;
-        }
-        // 设置购买流程（包含倒计时）
-        this.setSteps(this.fixed.product_progress_status_type);
-        // 认购开始日期 起息日 到期日 预计收款日
-        this.stepTime(
-          [this.fixed.purchase_start_date, this.fixed.interest_start_date,
-            this.fixed.due_date, this.fixed.expected_payment_date],
-        );
-      },
-      (err) => {
-        if (err.status) {
-          this.$toast(errorMessage[err.status]);
-        } else {
-          this.$toast('网络错误');
-        }
-      },
-    );
-  },
-  beforeDestroy() {
-    clearInterval(this.timer);
-  },
   computed: {
     ...mapState([
       'fixed',
@@ -208,12 +180,16 @@ export default {
     setSteps(status) {
       // 设置申购倒计时
       this.countDownTimeIsShow = true;
-      if (((this.fixed.purchase_start_date - this.fixed.server_time) - Date.now()) < 0) {
+      if ((this.fixed.purchase_end_date - this.fixed.server_time) < 0) {
+        console.log(this.fixed.purchase_end_date - this.fixed.server_time);
         this.countDownTimeIsShow = false;
+      } else {
+        let countDownTime = this.fixed.purchase_end_date - this.fixed.server_time;
+        this.timer = setInterval(() => {
+          this.countDown(countDownTime);
+          countDownTime -= 1000;
+        }, 1000);
       }
-      this.timer = setInterval(() => {
-        this.countDown(this.fixed.purchase_start_date - this.fixed.server_time);
-      }, 1000);
       switch (status) {
         case '"PURCHASE_START':
           // 设置申购倒计时
@@ -242,12 +218,9 @@ export default {
       }
     },
     //  设置倒计时
-    countDown(time) {
-      if (time - Date.now() < 0) {
-        this.countDownTimeIsShow = false;
-        return false;
-      }
-      const date = time - Date.now();
+    countDown(date) {
+      this.countDownTimeIsShow = true;
+      // const date = new datetime;
       let seconds = Math.floor((date / 1000) % 60); // 所余秒数
       let minutes = Math.floor(((date / 1000) / 60) % 60); // 所余分钟数
       let hour = Math.floor((((date / 1000) / 60) / 60) % 24); // 所余时钟数
@@ -316,6 +289,37 @@ export default {
       }
       this.$router.push(path);
     },
+  },
+  updated() {
+    window.scroll(0, 0);
+  },
+  mounted() {
+    window.scrollTo(0, 0);
+    this.getFixedProductById(this.$route.params.id).then(
+      () => {
+        // 若商品不可购买 隐藏按钮
+        if (this.fixed.purchase_end_date - this.fixed.server_time >= 0) {
+          this.buyButtonState = true;
+        }
+        // 设置购买流程（包含倒计时）
+        this.setSteps(this.fixed.product_progress_status_type);
+        // 认购开始日期 起息日 到期日 预计收款日
+        this.stepTime(
+          [this.fixed.purchase_start_date, this.fixed.interest_start_date,
+            this.fixed.due_date, this.fixed.expected_payment_date],
+        );
+      },
+      (err) => {
+        if (err.status) {
+          this.$toast(errorMessage[err.status]);
+        } else {
+          this.$toast('网络错误');
+        }
+      },
+    );
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
 };
 </script>
@@ -462,15 +466,14 @@ export default {
       .message-tips{
         display: flex;
         justify-content: space-between;
-        margin: 21px 49px 0 60px ;
+        margin: 21px 50px 0;
         font-size: 12px;
         color: #C9D5FF;
         >div{
-          width: 80px ;
-          padding: 0 3px;
+          padding: 0 5px;
           height: 20px;
-          border: 0.51px solid #99AEF6;
-          border-radius: 2px;
+          border: 0.81px solid #99AEF6;
+          border-radius: 6px;
           text-align: center;
           line-height: 20px;
         }

@@ -1,14 +1,18 @@
 <template>
   <Popup round v-on="$listeners" v-bind="$attrs" :close-on-click-overlay="false">
     <div class="bgain-dialog__container" :style="{height:wrapHeight}">
-      <svg-icon v-if="showClose" icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
+      <svg-icon v-if="showClose"
+                icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
       <div class="dialog__title">{{title}}</div>
       <div class="dialog__content">
         <span v-if="content !== ''">{{content}}</span>
         <slot name="content"></slot>
       </div>
       <div class="dialog__buttons">
-        <Button class="dialog__buttons--cancel" v-if="showCancel" @click="onCancel">{{cancelText}}</Button>
+        <Button
+          class="dialog__buttons--cancel"
+          v-if="showCancel"
+          @click="onCancel">{{cancelText}}</Button>
         <Button
           type="info"
           class="dialog__buttons--submit"

@@ -1,7 +1,7 @@
 <template>
   <div class="balance__container">
     <bgain-nav-bar title="总资产" :on-arrow-click="onArrowClick" />
-    <div class="info">总资产 = 可用余额 + 在投资产（包括活期、定期产品） + 待收收益</div>
+    <div class="info">总资产 = 可用余额 + 在投资产（包括活期、定期、基金产品） + 待收收益</div>
     <div class="balance__content">
       <cell-group>
         <cell
@@ -11,7 +11,8 @@
           :key="balance.currency"
         >
           <template v-slot:title>
-            <svg-icon :icon-class="`icon-${balance.currency.toLowerCase()}`" class="currency-icon" />
+            <svg-icon :icon-class="`icon-${balance.currency.toLowerCase()}`"
+                      class="currency-icon" />
             <span class="currency-label">{{balance.currency}}</span>
           </template>
           <template v-slot:value>

@@ -20,6 +20,21 @@
     <button @click="onSkip('/mine/fixed')">查看详情</button>
     <button class="sure" @click="onSkip('/product/fixed')">继续认购</button>
   </div>
+  <!--获取BGP奖励的弹窗-->
+  <BgainBaseDialog
+    v-model="showGetBGPPop"
+    submitText="我知道了"
+    :showCancel="false"
+    :showClose="false"
+    @submit="showGetBGPPop = false"
+    title="提示"
+    content=""
+  >
+    <div slot="content" class="popSlot">
+      <span>恭喜获得</span>
+      <span>{{showData.getBGPAmount}}BGP</span>
+    </div>
+  </BgainBaseDialog>
 </div>
 </template>
 
@@ -27,10 +42,11 @@
 /* eslint-disable no-underscore-dangle */
 
 import BgainNavBar from '../../../components/BgainNavBar.vue';
+import BgainBaseDialog from '../../../components/BgainBaseDialog.vue';
 
 export default {
   name: 'SubscriptionResults',
-  components: { BgainNavBar },
+  components: { BgainNavBar, BgainBaseDialog },
   data() {
     return {
       showData: {},
@@ -38,12 +54,14 @@ export default {
         'fixed_result_success',
         'fixed_result_failed',
       ],
+      showGetBGPPop: false,
     };
   },
   mounted() {
     try {
       if (this.$route.params.fixedBuyResult) {
         sessionStorage.setItem('fixedBuyResult', JSON.stringify(this.$route.params));
+        this.showGetBGPPop = true;
       }
       this.showData = JSON.parse(sessionStorage.getItem('fixedBuyResult')).fixedBuyResult;
     } catch (e) {
@@ -120,6 +138,13 @@ export default {
         color: #FBFCFB;
         border: none;
       }
+    }
+    .popSlot{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      line-height: 1.3;
     }
   }
 

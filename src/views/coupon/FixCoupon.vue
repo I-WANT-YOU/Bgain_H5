@@ -2,6 +2,7 @@
   <div class="couponList">
    <header class="couponLIst-header">
      <div @click="backToStepTwoWithoutParams"><svg-icon icon-class="back" class="back-icon"/> </div>
+     <span>优惠券</span>
      <span  @click="backToStepTwoWithParams">确定</span>
    </header>
     <div class="coupons">
@@ -11,7 +12,7 @@
           <div class="coupon-back">
             <div class="coupon-num">
               <span>{{item.coupon_value}}%</span>
-              <span>收益加息</span>
+              <span>{{item.coupon_type.toUpperCase() === 'RATIO'?'收息加益':'本金加息'}}</span>
             </div>
             <div class="couponInfo">
               <span>{{item.min_usage_limit}}&nbsp;{{item.currency_type}}&nbsp;起投</span>
