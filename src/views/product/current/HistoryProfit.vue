@@ -1,6 +1,6 @@
 <template>
   <div class="history-profit__container">
-    <bgain-nav-bar :title="`历史收益(${currency})`"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="onArrowClick" :title="`历史收益(${currency})`"></bgain-nav-bar>
     <div class="history-profit__wrapper">
       <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)">
         <div class="history-rate__content" v-if="historyProfits.length !== 0">
@@ -9,8 +9,8 @@
             :key="history.date"
             :percentage="Number(history.amount) / historyProfitMax * 100"
             :left-text="index === 0 ? '昨日收益' : history.date"
-            :right-text="`${history.amount}`">
-          </progress-card>
+            :right-text="`${history.amount}`"
+          ></progress-card>
         </div>
         <bgain-empty v-else title="暂无历史收益记录"></bgain-empty>
       </pull-refresh>
@@ -58,32 +58,40 @@ export default {
         this.isLoading = false;
       }
     },
+    onArrowClick() {
+      this.$router.push({
+        name: 'current',
+        query: {
+          currency: this.currency,
+        },
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss">
-  .history-profit__container {
-    min-height: 100%;
+.history-profit__container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .history-profit__wrapper {
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    flex: 1 1 auto;
 
-    .history-profit__wrapper {
-      height: 100%;
-      display: flex;
-      flex: 1 1 auto;
+    .history-rate__content {
+      padding: 10px 20px 0;
+    }
 
-      .history-rate__content {
-        padding: 10px 20px 0;
-      }
+    .van-pull-refresh {
+      flex: 1;
 
-      .van-pull-refresh {
-        flex: 1;
-
-        .van-pull-refresh__track {
-          height: 100%;
-        }
+      .van-pull-refresh__track {
+        height: 100%;
       }
     }
   }
+}
 </style>

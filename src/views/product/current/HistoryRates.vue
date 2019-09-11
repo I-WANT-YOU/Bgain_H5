@@ -1,6 +1,6 @@
 <template>
   <div class="history-rates__container">
-    <bgain-nav-bar title="历史年化利率"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="onArrowClick" title="历史年化利率"></bgain-nav-bar>
     <div class="history-rates__wrapper">
       <pull-refresh v-model="isLoading" @refresh="onRefresh(currency)">
         <div class="history-rate__content">
@@ -55,6 +55,14 @@ export default {
         Toast(error.message);
         this.isLoading = false;
       }
+    },
+    onArrowClick() {
+      this.$router.push({
+        name: 'current',
+        query: {
+          currency: this.currency,
+        },
+      });
     },
   },
 };

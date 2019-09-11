@@ -4,7 +4,7 @@
       今日年化利率
       <svg-icon icon-class="current-arrow" class="icon-arrow" />
     </div>
-    <div class="card__trade-records" @click="onRecordsClick">
+    <div class="card__trade-records" @click="onRecordsClick(dataSource.currency_type)">
       <svg-icon icon-class="current-records" class="icon-records"></svg-icon>交易记录
     </div>
     <div class="card-annual__rate">{{dataSource.interest_rate}}</div>
@@ -116,10 +116,13 @@ export default {
     ...mapAuthActions({ isloginSt: 'isLogin' }),
     ...mapActions(['getUserSummary']),
     ...mapCurrentActions(['getHoliday']),
-    onRecordsClick() {
+    onRecordsClick(currency) {
       window._czc.push(['_trackEvent', 'click', '天天赚-活期-交易记录']);
       this.$router.push({
         name: 'trade-records',
+        params: {
+          currency,
+        },
       });
     },
     onHistoryRatesClick(currency) {
