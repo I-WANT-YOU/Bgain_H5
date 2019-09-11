@@ -1,7 +1,7 @@
 <template>
   <div class="kyc-result__container">
     <bgain-nav-bar :onArrowClick="goSafety" title="身份认证"></bgain-nav-bar>
-    <kyc-result-card :status="status" :subtitle="subtitle"/>
+    <kyc-result-card :status="status" :subtitle="subtitle" />
   </div>
 </template>
 
@@ -32,7 +32,8 @@ export default {
       return STATUS[this.submitKycStatus.toLocaleLowerCase()];
     },
     subtitle() {
-      if (this.submitKycStatus !== 'failed' || this.submitKycStatus !== 'rejected') return '';
+      if (this.submitKycStatus.toLocaleLowerCase() !== 'failed'
+        && this.submitKycStatus.toLocaleLowerCase() !== 'rejected') return '';
       return this.submitKycMsg;
     },
   },
@@ -75,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .kyc-result__container {
-    height: 100%;
-  }
+.kyc-result__container {
+  height: 100%;
+}
 </style>

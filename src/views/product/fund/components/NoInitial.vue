@@ -27,7 +27,7 @@
       </div>
       <div class="time">
         <svg-icon
-          :icon-class="options.status.toLocaleUpperCase() === 'OPEN' ? 'start' : 'end'"
+          :icon-class="options.status.toLocaleUpperCase() === 'OPEN' ? 'end' : 'start'"
           class="icon"
         />
         <span>{{options.status.toLocaleUpperCase() === 'OPEN' ? options.closing_date : options.next_open_date}}</span>

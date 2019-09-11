@@ -134,7 +134,7 @@ export default {
         this.showDialog = true;
         this.dialogText = {};
         this.dialogText = {
-          content: '您的身份消息认证失败请重新认证',
+          content: '您的身份信息认证失败，请重新认证',
           button: '重新认证',
           path: '/mine/safety/kyc',
         };
