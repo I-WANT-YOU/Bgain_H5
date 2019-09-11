@@ -197,6 +197,7 @@ export default {
         (res) => {
           Toast.clear();
           this.maskShow = false;
+          // console.log(this.buyFixedProductResult);
           // this.buyFixedProductResult
           this.$router.push(
             {

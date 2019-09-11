@@ -102,8 +102,9 @@ const actions = {
   async buyFixedProduct({ commit }, params) {
     try {
       const response = await FixedService.buyFixedProduct(params);
-      const data = await handlerSuccessResponseV3(response);
-      commit(types.BUY_FIXED_PRODUCT_RESULT, data);
+      return handlerSuccessResponse(response);
+      // const data = await handlerSuccessResponseV3(response);
+      // commit(types.BUY_FIXED_PRODUCT_RESULT, data);
     } catch (error) {
       throw error;
     }
