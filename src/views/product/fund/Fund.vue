@@ -31,18 +31,22 @@
         </div>
       </pull-refresh>
     </div>
+    <!--一级页面强制弹窗-->
+    <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
   </div>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
 import { Sticky, PullRefresh, Toast } from 'vant';
+import LevelOnePop from '@component/LevelOnePop.vue';
 import formatFundData, { fundProductTypeList, riskLevelTypeList } from './formatFundData';
 import Screen from './components/Screen.vue';
 import Initial from './components/Initial.vue';
 import NoInitial from './components/NoInitial.vue';
 
 const { mapGetters, mapActions, mapState } = createNamespacedHelpers('product/fund');
+const { mapActions: mapHomeActive, mapState: mapHomeState } = createNamespacedHelpers('home');
 
 const options = [
   {
@@ -76,9 +80,11 @@ export default {
     PullRefresh,
     Initial,
     NoInitial,
+    LevelOnePop,
   },
   data() {
     return {
+      isPopShow: 'none', // 一级弹窗
       isLoading: false,
       options,
       params: {},
@@ -87,6 +93,7 @@ export default {
   },
   methods: {
     ...mapActions(['getFundProducts']),
+    ...mapHomeActive(['getPopInfo']),
     onReset() {
       this.options = this.options.map((item) => {
         item.active = 'all';
@@ -138,6 +145,7 @@ export default {
   computed: {
     ...mapGetters(['otherFunds', 'initialFunds']),
     ...mapState(['currencies', 'risk', 'productType']),
+    ...mapHomeState(['popInfo']),
     showInitialFunds() {
       return this.initialFunds.map(
         item => formatFundData(item),
@@ -184,7 +192,12 @@ export default {
       return item;
     }));
     try {
-      this.getFundProducts(this.params).then(() => {
+      Promise.all([this.getFundProducts(this.params), this.getPopInfo()]).then(() => {
+        if (this.popInfo.is_popup_window === 1) {
+          this.isPopShow = 'block';
+        } else {
+          this.isPopShow = 'none';
+        }
         Toast.clear();
         this.options[0].children = this.currencies;
       });
