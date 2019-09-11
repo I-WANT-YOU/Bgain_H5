@@ -323,6 +323,9 @@ export default {
       }
     },
   },
+  updated() {
+    window.scroll(0, 0);
+  },
 };
 </script>
 

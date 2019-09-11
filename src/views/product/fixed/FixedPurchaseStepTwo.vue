@@ -56,7 +56,7 @@
       :showClose="false"
       @submit="showTip = false"
       @cancel="showTip = false"
-      title
+      title="提示"
     />
     <PaymentPasswordDialog
       @close="maskShow=false"
@@ -193,7 +193,7 @@ export default {
       };
       // 请求购买接口
       this.buyFixedProduct(params).then(
-        () => {
+        (res) => {
           Toast.clear();
           this.maskShow = false;
           this.$router.push(
@@ -204,6 +204,7 @@ export default {
                   result: 'success',
                   amount: params.amount,
                   currencyType: params.amount_currency,
+                  getBGPAmount: res.fbpPoints,
                 },
               },
             },
@@ -385,6 +386,9 @@ export default {
     cancelPayment() {
       this.payment = false;
     },
+  },
+  updated() {
+    window.scroll(0, 0);
   },
   mounted() {
     if (this.$route.params.stepTwoData) {
