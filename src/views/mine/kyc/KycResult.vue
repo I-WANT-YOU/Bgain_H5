@@ -38,16 +38,16 @@ export default {
     },
   },
   async mounted() {
+    try {
+      await this.getKycInfo();
+    } catch (error) {
+      throw error;
+    }
     /* 监听浏览器回退操作 */
     if (window.history && window.history.pushState) {
       // 向历史记录中插入了当前页
       window.history.pushState(null, null, document.URL);
       window.addEventListener('popstate', this.watchBack);
-    }
-    try {
-      await this.getKycInfo();
-    } catch (error) {
-      throw error;
     }
   },
   methods: {

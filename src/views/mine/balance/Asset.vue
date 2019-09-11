@@ -73,9 +73,9 @@ export default {
 
   .info {
     width: 100%;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    line-height: 16px;
     background: #faf4dc;
     font-size: 12px;
     color: #6a707d;
