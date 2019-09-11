@@ -3,13 +3,13 @@
     <BgainNavBar :title="option.product_name" />
     <div class="line income">
       <div class="text">
-        <div class="come">{{statu ? '待收' : '已得'}}收益</div>
-        <div class="prev">产品原始收益</div>
+        <div class="come">{{statu !== 'false' ? '待收' : '已得'}}收益</div>
+        <div v-if="option.coupon_profit * 1" class="prev">产品原始收益</div>
         <div v-if="option.coupon_profit * 1" class="prev">使用加息券获得</div>
       </div>
       <div class="num">
         <div class="come">{{option.profit}} {{option.payment_currency}}</div>
-        <div class="prev">{{option.product_profit}} {{option.payment_currency}}</div>
+        <div v-if="option.coupon_profit * 1" class="prev">{{option.product_profit}} {{option.payment_currency}}</div>
         <div
           v-if="option.coupon_profit * 1"
           class="prev coupon"
@@ -50,7 +50,7 @@
       <div class="text">{{statu ? '预计' : ''}}收款日</div>
       <div class="num">{{formatDate(option.product_payment_date)}}</div>
     </div>
-    <div class="line roll-in" v-if="option.payment_currency !== 'BGP'">
+    <div class="line roll-in" v-if="!(option.payment_currency === 'BGP' || statu === 'false')">
       <div class="text">
         自动转入天天赚
         <span class="tip-class-wrap" @click="onTip">
