@@ -54,7 +54,7 @@
       <div class="text">
         自动转入天天赚
         <span class="tip-class-wrap" @click="onTip">
-          <svg-icon icon-class="tips-mine-fixed" class="tip-class" />
+          <svg-icon icon-class="fixed_tips" class="tip-class" />
         </span>
       </div>
       <on-off :disabled="statu === 'false' ? true : false" v-model="checked" @change="onAuto" />
@@ -71,8 +71,9 @@
     <BgainBaseDialog
       v-model="showTip"
       content="即指产品到期回款后，授权平台将本息总额转入天天赚；开通后亦可随时关闭该项功能。"
-      submitText="确定"
+      submitText="我知道了"
       :showCancel="false"
+      :showClose="false"
       @submit="showTip = false"
       @cancel="showTip = false"
       title

@@ -51,8 +51,9 @@
     <BgainBaseDialog
       v-model="showTip"
       content="即指产品到期回款后，授权平台将本息总额转入天天赚；开通后亦可随时关闭该项功能。"
-      submitText="确定"
+      submitText="我知道了"
       :showCancel="false"
+      :showClose="false"
       @submit="showTip = false"
       @cancel="showTip = false"
       title

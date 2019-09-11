@@ -1,6 +1,6 @@
 <template>
   <div class="trade-records__container">
-    <bgain-nav-bar title="活期交易记录"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="onArrowClick" title="活期交易记录"></bgain-nav-bar>
     <div class="trade-records__content">
       <pull-refresh v-model="isLoading" @refresh="onRefresh">
         <div class="trade__records" v-if="tradeRecords.length !== 0">
@@ -42,6 +42,7 @@ export default {
     ...mapState(['tradeRecords']),
   },
   mounted() {
+    this.currency = this.$route.params.currency;
     this.onRefresh();
   },
   methods: {
@@ -53,6 +54,14 @@ export default {
       } catch (error) {
         this.isLoading = false;
       }
+    },
+    onArrowClick() {
+      this.$router.push({
+        name: 'current',
+        query: {
+          currency: this.currency,
+        },
+      });
     },
   },
 };
