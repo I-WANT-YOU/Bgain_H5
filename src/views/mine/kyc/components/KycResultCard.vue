@@ -59,12 +59,12 @@ export default {
         FAIL: {
           icon: 'kyc-fail',
           title: '认证失败',
-          subtitle: '',
+          subtitle: this.subtitle ? `失败原因: ${this.subtitle}` : '',
         },
         REJECTED: {
           icon: 'kyc-fail',
           title: '认证失败',
-          subtitle: '',
+          subtitle: this.subtitle ? `失败原因: ${this.subtitle}` : '',
         },
         PENDING: {
           icon: 'kyc-pending',
