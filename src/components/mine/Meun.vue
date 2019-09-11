@@ -71,7 +71,7 @@ export default {
       justify-content: center;
       .menu-icon {
         width: 16px;
-        height: 14px;
+        height: 16px;
       }
     }
   }
