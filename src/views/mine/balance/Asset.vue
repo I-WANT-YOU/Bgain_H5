@@ -5,7 +5,7 @@
     <div class="balance__content">
       <cell-group>
         <cell
-          v-for="balance in singleCurrency"
+          v-for="balance in singleCurrencys"
           :title="balance.currency"
           :center="true"
           :key="balance.currency"
@@ -40,7 +40,7 @@ export default {
     Cell,
   },
   computed: {
-    ...mapGetters(['singleCurrency']),
+    ...mapGetters(['singleCurrencys']),
   },
   async mounted() {
     try {

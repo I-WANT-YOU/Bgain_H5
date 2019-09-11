@@ -43,6 +43,7 @@ const getters = {
     ? [{ currency: 'BTC', ...state.userBalance.btc },
       { currency: 'CNY', ...state.userBalance.cny },
       { currency: 'USDT', ...state.userBalance.usdt }] : []),
+  singleCurrencys: state => get(state.userBalance, 'single_currency', []),
   currencyss: state => Object.entries(state.userBalance).filter(item => item[0] !== 'single_currency' && item[0] !== 'activity'),
   balances: state => get(state.userBalance, 'single_currency', []).map(({ currency, balance }) => ({
     currency,
