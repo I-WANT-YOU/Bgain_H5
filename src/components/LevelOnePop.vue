@@ -72,7 +72,6 @@
 
 <script>
 import { Image } from 'vant';
-import { mapState } from 'vuex';
 import boxImage from '../assets/images/levelOnePop/box.png';
 import checkImage from '../assets/images/levelOnePop/check.png';
 import coinDark from '../assets/images/levelOnePop/coin_dark.png';
@@ -98,7 +97,6 @@ export default {
     'van-image': Image,
   },
   computed: {
-    ...mapState('auth', ['authenticated']),
     submit() {
       if (this.showData.is_kyc && !this.showData.is_recharge) {
         return {
@@ -135,11 +133,7 @@ export default {
       this.$emit('close');
     },
     onSkip(router) {
-      if (this.authenticated) {
-        this.$router.push(router);
-      } else {
-        this.$router.push('/login');
-      }
+      this.$router.push(router);
     },
   },
 };
