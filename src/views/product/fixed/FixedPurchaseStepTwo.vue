@@ -213,22 +213,26 @@ export default {
             },
           );
         },
-        () => {
+        (err) => {
           Toast.clear();
-          Toast('网络错误');
-          this.maskShow = false;
-          this.$router.push(
-            {
-              name: 'SubscriptionResults',
-              params: {
-                fixedBuyResult: {
-                  result: 'fail',
-                  amount: params.amount,
-                  currencyType: params.amount_currency,
+          if (err.status) {
+            this.$toast(errorMessage[err.status]);
+          } else {
+            // Toast('网络错误');
+            this.maskShow = false;
+            this.$router.push(
+              {
+                name: 'SubscriptionResults',
+                params: {
+                  fixedBuyResult: {
+                    result: 'fail',
+                    amount: params.amount,
+                    currencyType: params.amount_currency,
+                  },
                 },
               },
-            },
-          );
+            );
+          }
         },
       );
     },
