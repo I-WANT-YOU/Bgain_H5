@@ -9,15 +9,24 @@
       <div class="amount-text">当前市值({{fundOwnerDetail.currency_type}})</div>
       <div class="income">
         <div>
-          <div :class="['num', yesterday > 0 ? 'profit' : 'loss', yesterday ? '' : 'computed']">{{yesterday && yesterday > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
+          <div
+            :class="['num', yesterday > 0 ? 'profit' :
+            'loss', yesterday === '--' ? 'computed' : '']"
+          >{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
           <div class="text">昨日盈亏({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div :class="['num', fundOwnerDetail.pnl > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl ? '' : 'computed']">{{fundOwnerDetail.pnl && fundOwnerDetail.pnl > 0 ? '+' :'-'}}{{changeAm(fundOwnerDetail.currency_type, fundOwnerDetail.pnl)}}</div>
+          <div
+            :class="['num', pnl > 0 ? 'profit' :
+            'loss', pnl === '--' ? 'computed' : '']"
+          >{{changeAm(fundOwnerDetail.currency_type, pnl)}}</div>
           <div class="text">持仓收益({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
-          <div :class="['num', fundOwnerDetail.pnl_ratio > 0 ? 'profit' : 'loss', fundOwnerDetail.pnl_ratio ? '' : 'computed']">{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio > 0 ? '+' :'-'}}{{fundOwnerDetail.pnl_ratio && fundOwnerDetail.pnl_ratio.toFixed(2)}}%</div>
+          <div
+            :class="['num', pnlRatio > 0 ? 'profit' :
+            'loss', pnlRatio ? 'computed' : '']"
+          >{{pnlRatio && pnlRatio}}</div>
           <div class="text">持仓收益率</div>
         </div>
       </div>
@@ -312,14 +321,35 @@ export default {
         },
       });
     },
+    add(num) {
+      if (num * 1 > 0) {
+        return `+${num}`;
+      }
+      if (num * 1 < 0) {
+        return `-${num}`;
+      }
+      return num;
+    },
   },
   computed: {
     ...mapState(['fundOwnerDetail']),
     yesterday() {
       if (this.fundOwnerDetail.yesterday_change) {
-        return this.fundOwnerDetail.yesterday_change;
+        return this.add(this.fundOwnerDetail.yesterday_change);
       }
-      return !this.fundOwnerDetail.yesterday_change && this.fundOwnerDetail.yesterday_change !== '0' ? '--' : '0';
+      return !this.fundOwnerDetail.yesterday_change && this.fundOwnerDetail.yesterday_change * 1 !== 0 ? '--' : '0';
+    },
+    pnl() {
+      if (this.fundOwnerDetail.pnl) {
+        return this.add(this.fundOwnerDetail.pnl);
+      }
+      return !this.fundOwnerDetail.pnl && this.fundOwnerDetail.pnl * 1 !== 0 ? '--' : '0';
+    },
+    pnlRatio() {
+      if (this.fundOwnerDetail.pnl_ratio) {
+        return `${this.add(this.fundOwnerDetail.pnl_ratio.toFixed(2))}%`;
+      }
+      return !this.fundOwnerDetail.pnl_ratio && this.fundOwnerDetail.pnl_ratio * 1 !== 0 ? '--' : '0';
     },
     status() {
       return this.fundOwnerDetail.fund_product_status_type === 'OPEN'
