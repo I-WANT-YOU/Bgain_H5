@@ -295,8 +295,13 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
+    Toast.loading({
+      mask: true,
+      message: '加载中',
+    });
     this.getFixedProductById(this.$route.params.id).then(
       () => {
+        Toast.clear();
         // 若商品不可购买 隐藏按钮
         if (this.fixed.purchase_end_date - this.fixed.server_time >= 0) {
           this.buyButtonState = true;
@@ -310,6 +315,7 @@ export default {
         );
       },
       (err) => {
+        Toast.clear();
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
@@ -320,6 +326,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.timer);
+    Toast.clear();
   },
 };
 </script>

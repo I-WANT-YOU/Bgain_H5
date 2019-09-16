@@ -399,6 +399,10 @@ export default {
     window.scroll(0, 0);
   },
   mounted() {
+    Toast.loading({
+      mask: true,
+      message: '加载中',
+    });
     if (this.$route.params.stepTwoData) {
       sessionStorage.setItem('showData', this.$route.params.stepTwoData); // 保存上一页的数据
     }
@@ -406,11 +410,14 @@ export default {
     // 判断是否设置交易密码
     this.isSetPassword();
     if (this.showData.currencyType === 'BGP') {
+      Toast.clear();
       this.createShowDataWithoutCoupon();
     } else if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') { // 刷新本页面
+      Toast.clear();
       // 获取可用优惠券
       this.getCoupon(true, sessionStorage.getItem('couponData'));
     } else {
+      Toast.clear();
       // 获取可用优惠券
       this.getCoupon(false);
     }
@@ -427,10 +434,10 @@ export default {
   },
 
   beforeDestroy() {
+    Toast.clear();
     if (sessionStorage.getItem('couponData') || sessionStorage.getItem('couponData') === '0') {
       sessionStorage.removeItem('couponData');
     }
-    Toast.clear();
   },
 };
 </script>

@@ -29,7 +29,6 @@ export default {
     // 取消
     cancel() {
       window._czc.push(['_trackEvent', 'click', '定期盈-余额不足-取消']);
-      console.log(this.type);
       if (isFunction(this.type)) {
         this.type();
       } else {

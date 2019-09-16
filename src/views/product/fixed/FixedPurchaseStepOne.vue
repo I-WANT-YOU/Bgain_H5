@@ -94,6 +94,10 @@ export default {
   },
 
   mounted() {
+    Toast({
+      mask: true,
+      message: '加载中',
+    });
     if (this.$route.params.info) {
       sessionStorage.setItem('info', this.$route.params.info);
     }
@@ -101,6 +105,7 @@ export default {
     this.productId = info.productId;
     this.getFixedBuyInfo(info.productId).then(
       () => {
+        Toast.clear();
         // 设置title
         this.title = info.title;
         const localFixedBuyInfo = this.fixedBuyInfo;
@@ -108,6 +113,7 @@ export default {
         this.purchaseProcess(info, localFixedBuyInfo);
       },
       (err) => {
+        Toast.clear();
         if (err.status) {
           this.$toast(errorMessage[err.status]);
         } else {
@@ -327,6 +333,9 @@ export default {
   },
   updated() {
     window.scroll(0, 0);
+  },
+  beforeDestroy() {
+    Toast.clear();
   },
 };
 </script>
