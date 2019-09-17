@@ -148,7 +148,6 @@ export default {
         );
       }
     },
-    /* 弹窗方法 !! */
 
     // 查询订单信息（调用接口） // 用来二次调用
     queryOrderDetailById() {
@@ -159,10 +158,15 @@ export default {
           // 设置倒计时 传递给header和footer(在待放行和请付款页面需要)
           if (this.orderInfoById.otc_order_status === 'pending') { // 请付款
             this.tips = `请使用本人银行卡（${this.orderInfoById.username}）向以上账户自行转账`;
-            this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
+            // this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
+            this.timer = setInterval(() => {
+              this.setTime(this.orderInfoById.otc_order_status);
+            }, 1000);
           } else if (this.orderInfoById.otc_order_status === 'payed') { // 待放行
             this.tips = '99%的用户会在15分钟内收到资产';
-            this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
+            this.timer = setInterval(() => {
+              this.setTime(this.orderInfoById.otc_order_status);
+            }, 1000);
           }
 
           // 设置订单不同状态

@@ -67,7 +67,8 @@
       </div>
     </div>
     <div class="kyc__button-wrap">
-      <bgain-button type="info" :fluid="true" @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
+      <bgain-button type="info" :fluid="true"
+                    @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
       <bgain-button
         type="info"
         :fluid="true"
@@ -125,6 +126,9 @@ export default {
     files: {
       type: Array,
       required: true,
+    },
+    authenticationType: {
+      type: String,
     },
   },
   data() {
@@ -205,8 +209,13 @@ export default {
         this.$emit('change-step', 3);
       }
     },
+    // 用户选择证件类型
     onShowPicker() {
-      this.showPicker = true;
+      if (this.authenticationType === 'OTC') { // OTC验证 禁止用户进行证件类型选择
+        this.showPicker = false;
+      } else {
+        this.showPicker = true;
+      }
     },
     onCancelPicker() {
       this.showPicker = false;

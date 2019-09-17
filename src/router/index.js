@@ -49,6 +49,9 @@ const router = new Router({
       path: '/purchaseCoinHome',
       name: 'PurchaseCoinHome',
       component: () => import(/* webpackChunkName: "PurchaseCoinHome" */ '../views/purchaseCoin/purchaseCoinHome.vue'),
+      meta: {
+        keepAlive: true, // 需要被缓存
+      },
     },
     {
       path: '/homeToLogin/',

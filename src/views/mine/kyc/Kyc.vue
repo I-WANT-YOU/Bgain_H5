@@ -19,6 +19,7 @@
       :document-type="documentType"
       :document-number="documentNumber"
       @change-step="onChangeStep"
+      :authenticationType="this.authenticationType"
     ></kyc-step-two>
     <kyc-step-three
       v-if="step === 3"
@@ -66,6 +67,7 @@ export default {
       documentNumber: '',
       files: ['', '', ''],
       remainingTimeText: '',
+      authenticationType: '', // 判断是kyc还是otc的标识
     };
   },
   computed: {
@@ -75,6 +77,12 @@ export default {
     const { params } = this.$route;
     if (!isEmpty(params)) {
       this.country = params;
+    }
+    /* 判断是KYC认证还是OTC认证 */
+    if (this.$route.query.type) {
+      if (this.$route.query.type === 'OTC') {
+        this.authenticationType = 'OTC';
+      }
     }
   },
   methods: {
