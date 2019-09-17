@@ -27,6 +27,13 @@ export default {
       ],
     };
   },
+  beforeRouteLeave(to, from, next) {
+    // 设置下一个路由的 meta
+    if (to.path === '/purchaseCoinHome') {
+      to.meta.keepAlive = true;
+    }
+    next();
+  },
 };
 </script>
 

@@ -18,7 +18,9 @@
           @input="onFirstNameInput"
           label="姓名"
           placeholder="请输入真实姓名"
-          v-if="country.key === 'China' || this.country.key === 'Hongkong' || this.country.key === 'Taiwan'"
+          v-if="country.key === 'China'
+          || this.country.key === 'Hongkong'
+          || this.country.key === 'Taiwan'"
         ></kyc-field>
         <template v-else>
           <kyc-field

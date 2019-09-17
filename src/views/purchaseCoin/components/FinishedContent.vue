@@ -31,7 +31,7 @@
           <span>卖家实名</span>
           <div>
             <span ref="sellerName">{{orderInfoById.pay_name}}</span>
-            <div  @click="copyText('sellerName')">
+            <div  @click="copyText('sellerName')" class="copy-icon-container">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <span>订单号</span>
           <div>
             <span ref="orderNum" >{{orderInfoById.otc_order_id}}</span>
-            <div  @click="copyText('orderNum')">
+            <div class="copy-icon-container"  @click="copyText('orderNum')">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default {
   .copy-style{
     width: 15px;
     height: 15px;
-    margin:10px 0 13px 5px;
+    /*margin:10px 0 13px 5px;*/
   }
   .payContent{
     font-family: PingFangSC-Regular sans-serif;
@@ -128,6 +128,11 @@ export default {
     .userInfo{
       margin:10px 21px 0 21px;
       padding-bottom: 29px;
+      .copy-icon-container{
+        display: flex;
+        align-items: start;
+        padding-left: 10px;
+      }
       >div{
         display: flex;
         flex-direction: row;
