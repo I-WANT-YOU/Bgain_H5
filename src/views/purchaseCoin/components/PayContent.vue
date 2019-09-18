@@ -76,7 +76,7 @@ export default {
   name: 'PayContent',
   data() {
     return {
-      showCodePop: true, // 是都显示弹窗
+      showCodePop: false, // 是都显示弹窗
       qRCode: {}, // 二维码
       qRCodeTitle: '',
     };
@@ -101,14 +101,14 @@ export default {
               '收款二维码', '微信账号', '',
             ];
             this.qRCodeTitle = '微信';
-            this.showCodePop = true;
+            this.showCodePop = false;
             break;
           case 'alipay':
             currentTitle = [
               '收款二维码', '支付宝账号', '',
             ];
             this.qRCodeTitle = '支付宝';
-            this.showCodePop = true;
+            this.showCodePop = false;
             break;
           default:
             break;
