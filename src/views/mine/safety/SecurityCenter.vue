@@ -24,14 +24,14 @@
             ></svg-icon>
           </div>
         </cell>
-        <!-- <cell title="OTC认证">
+         <cell title="OTC认证">
           <span class="field--kyc" @click="onOtc">{{otcText}}</span>
           <svg-icon
             icon-class="next"
             :class="['icon-next', otcStatu === 'CERTIFY_FAILED' ? '' : 'none']"
             @click="onOtc"
           ></svg-icon>
-        </cell>-->
+        </cell>
       </cell-group>
       <div class="logout-button" @click="onLogoutClick">
         <span>安全退出</span>
@@ -171,7 +171,7 @@ export default {
       }
     },
     onOtcSubmit() {
-      console.log('跳转otc认证页');
+      this.$router.push({ name: 'kyc', query: { type: 'OTC' } });
     },
   },
   destroyed() {

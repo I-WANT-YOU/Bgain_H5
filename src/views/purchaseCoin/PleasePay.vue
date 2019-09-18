@@ -157,8 +157,13 @@ export default {
           this.$toast.clear();
           // 设置倒计时 传递给header和footer(在待放行和请付款页面需要)
           if (this.orderInfoById.otc_order_status === 'pending') { // 请付款
-            this.tips = `请使用本人银行卡（${this.orderInfoById.username}）向以上账户自行转账`;
-            // this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
+            if (this.orderInfoById.pay_type === 'alipay') {
+              this.tips = `请使用本人支付宝（${this.orderInfoById.username}）向以上账户自行转账`;
+            } else if (this.orderInfoById.pay_type === 'weixin') {
+              this.tips = `请使用本人微信（${this.orderInfoById.username}）向以上账户自行转账`;
+            } else if (this.orderInfoById.pay_type === 'ebank') {
+              this.tips = `请使用本人银行卡（${this.orderInfoById.username}）向以上账户自行转账`;
+            }
             this.timer = setInterval(() => {
               this.setTime(this.orderInfoById.otc_order_status);
             }, 1000);
@@ -202,7 +207,7 @@ export default {
             break;
           case 'finished':
             this.formatedOrderStatus = '已完成';
-            this.subTitle = '卖家在15分总内已放行资产';
+            this.subTitle = '卖家在15分钟总内已放行资产';
             break;
           case 'canceled':
             this.formatedOrderStatus = '已关闭';

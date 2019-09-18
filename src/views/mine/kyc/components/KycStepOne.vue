@@ -52,10 +52,13 @@
 </template>
 
 <script>
-import { CellGroup } from 'vant';
+import { CellGroup, Toast } from 'vant';
 import { isEmpty } from 'lodash';
+import { createNamespacedHelpers } from 'vuex';
 import BgainButton from '@/components/BgainButton.vue';
 import KycField from './KycField.vue';
+
+const { mapActions } = createNamespacedHelpers('user');
 
 export default {
   name: 'KycStepOne',
@@ -63,6 +66,11 @@ export default {
     BgainButton,
     KycField,
     CellGroup,
+  },
+  data() {
+    return {
+      type: '',
+    };
   },
   props: {
     firstName: {
@@ -87,7 +95,11 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['checkUserName']),
     onCountryClick() {
+      if (this.type === 'OTC') {
+        return false;
+      }
       this.$router.push({
         name: 'country',
         params: {
@@ -101,9 +113,29 @@ export default {
     onLastNameInput(lastName) {
       this.$emit('last-name', lastName);
     },
-    onNextClick() {
-      this.$emit('change-step', 2);
+    /* 下一步 */
+    async onNextClick() {
+      // 进行OTC填写验证 判断名字事是否一致
+      if (this.type === 'OTC') {
+        try {
+          const data = await this.checkUserName(this.firstName);
+          if (data.code === 0) {
+            this.$emit('change-step', 2);
+          } else {
+            Toast(data.msg);
+          }
+        } catch (e) {
+          Toast('网络错误');
+        }
+      } else {
+        this.$emit('change-step', 2);
+      }
     },
+  },
+  mounted() {
+    if (this.$route.query.type === 'OTC') {
+      this.type = this.$route.query.type;
+    }
   },
 };
 </script>

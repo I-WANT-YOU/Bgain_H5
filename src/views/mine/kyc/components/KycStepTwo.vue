@@ -102,6 +102,7 @@ import { DOCUMENT_TYPE } from '@/constants/options';
 import BgainButton from '@/components/BgainButton.vue';
 import KycField from './KycField.vue';
 
+
 export default {
   name: 'KycStepTwo',
   components: {
@@ -177,6 +178,7 @@ export default {
             label: '',
           },
         ],
+        type: '', // 类型 OTC KYC
       },
     };
   },
@@ -198,15 +200,30 @@ export default {
     },
   },
   methods: {
+    ...mapActions('/user', ['checkUserId']),
     ...mapActions('app', ['getUploadPolicy']),
     onPrevClick() {
       this.$emit('change-step', 1);
     },
-    onNextClick() {
+    async onNextClick() {
       if (!checkDocumentNumber(this.documentType, this.documentNumber)) {
         Toast('请输入正确的证件号码');
       } else {
-        this.$emit('change-step', 3);
+        // 进行OTC填写验证 判断证件号码是否一致
+        if (this.type === 'OTC') {
+          try {
+            const data = await this.checkUserId(this.documentNumber);
+            if (data.code === 0) {
+              this.$emit('change-step', 3);
+            } else {
+              Toast(data.msg);
+            }
+          } catch (e) {
+            Toast('网络错误');
+          }
+        } else {
+          this.$emit('change-step', 3);
+        }
       }
     },
     // 用户选择证件类型
@@ -298,6 +315,11 @@ export default {
         Toast(error);
       }
     },
+  },
+  mounted() {
+    if (this.$route.query.type === 'OTC') {
+      this.type = this.$route.query.type;
+    }
   },
 };
 </script>

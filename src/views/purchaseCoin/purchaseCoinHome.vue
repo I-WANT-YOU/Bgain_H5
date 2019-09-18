@@ -361,6 +361,9 @@ export default {
       );
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
 
   beforeRouteLeave(to, from, next) {
     // 设置下一个路由的 meta
