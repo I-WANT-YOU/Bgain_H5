@@ -1,6 +1,6 @@
 <template>
 <div class="buyingRecord">
-  <BgainNavBar title = "买币记录"/>
+  <BgainNavBar title = "买币记录" :onArrowClick="goBack"/>
   <div class="record-history">
     <div class="history-item"
          v-for="(item,index) in standerOrderList"
@@ -52,6 +52,10 @@ export default {
     ...mapActions('coin/orderInfo', [
       'getOrderList',
     ]),
+    // 跳回买币页面
+    goBack() {
+      this.$router.go(-1);
+    },
     // 跳转到详情页面
     toOrderDetail(orderId) {
       this.$router.push({
@@ -111,14 +115,13 @@ export default {
         afterStatus = '申诉中';
       } else if (orderStatus === 'finished') {
         afterStatus = '已完成';
-      }else if(orderStatus ==='canceled'){
+      } else if (orderStatus === 'canceled') {
         afterStatus = '已取消';
       }
       return afterStatus;
     },
     // 格式化列表
     formateOrderList() {
-      console.log(this.orderList);
       const currentData = this.orderList.map((item) => {
         item.dest_currency_type = item.dest_currency_type.toUpperCase(); // 类型大写
         item.create_date = this.formatedDate(item.create_date); // 时间格式化
@@ -141,6 +144,13 @@ export default {
     });
     // 获取用户列表
     this.getUserOrderList();
+  },
+  beforeRouteLeave(to, from, next) {
+    // 设置下一个路由的 meta
+    if (to.path === '/purchaseCoinHome') {
+      to.meta.keepAlive = true;
+    }
+    next();
   },
   beforeDestroy() {
     this.$toast.clear();

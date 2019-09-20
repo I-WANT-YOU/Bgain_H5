@@ -28,7 +28,9 @@
       <div>
         <span>{{formateTitle[0]}}</span>
         <span v-show="orderInfoById.pay_type==='ebank'">{{orderInfoById.pay_data}}</span>
-        <div class="qrcode_click"  v-show="orderInfoById.pay_type!=='ebank'" @click="()=>{this.showCodePop = true}">
+        <div class="qrcode_click"
+             v-show="orderInfoById.pay_type!=='ebank'"
+             @click="()=>{this.showCodePop = true}">
           <svg-icon icon-class="qr_click" class="qrcode-copy"></svg-icon>
         </div>
       </div>
@@ -66,18 +68,18 @@
 <script>
 import { mapState } from 'vuex';
 import QRCode from 'qrcodejs2';
-import {Toast} from 'vant';
+import { Toast } from 'vant';
 import Vue from 'vue';
 
 Vue.use(Toast);
 export default {
   name: 'PayContent',
-  data(){
-    return{
-      showCodePop: true, // 是都显示弹窗
+  data() {
+    return {
+      showCodePop: false, // 是都显示弹窗
       qRCode: {}, // 二维码
-      qRCodeTitle:'',
-    }
+      qRCodeTitle: '',
+    };
   },
   computed: {
     ...mapState('coin/orderInfo', [
@@ -99,14 +101,14 @@ export default {
               '收款二维码', '微信账号', '',
             ];
             this.qRCodeTitle = '微信';
-            this.showCodePop = true;
+            this.showCodePop = false;
             break;
           case 'alipay':
             currentTitle = [
               '收款二维码', '支付宝账号', '',
             ];
             this.qRCodeTitle = '支付宝';
-            this.showCodePop = true;
+            this.showCodePop = false;
             break;
           default:
             break;
@@ -115,31 +117,31 @@ export default {
       return currentTitle;
     },
   },
-  mounted(){
+  mounted() {
     // 判断支付宝和微信 显示二维码
     this.qRCode = new QRCode(this.$refs.qrcode, {
-      id:'qRImage',
+      id: 'qRImage',
       text: this.orderInfoById.pay_data, // 二维码code
       width: 111,
       height: 111,
       colorDark: '#000000',
       colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H,
-    })
+    });
   },
 
   methods: {
-    /*关闭弹窗*/
+    /* 关闭弹窗 */
     closeCodePop() {
       this.showCodePop = false;
     },
 
-    //点击保存图片//imgurl 图片地址
+    // 点击保存图片//imgurl 图片地址
     downloadImage(imgUrl, name) {
-      console.log(document.getElementsByTagName('img'))
-      let a = document.createElement('a');
+      console.log(document.getElementsByTagName('img'));
+      const a = document.createElement('a');
       // 将a的download属性设置为我们想要下载的图片名称
-      a.download = name || 'pic'
+      a.download = name || 'pic';
       // 将生成的URL设置为a.href属性
       a.href = document.getElementsByTagName('img')[1].src;
       // 触发a的单击事件
@@ -168,6 +170,7 @@ export default {
     .qrcode-copy{
       width:15px;
       height: 15px;
+      vertical-align:0;
     }
   }
   .payContent{

@@ -90,6 +90,9 @@ export default {
     },
     // 提交申诉
     submitAppeal() {
+      if (this.radio === -1) {
+        return false;
+      }
       let params = {};
       if (this.otherReason === true) { // 其他理由
         params = {
@@ -106,11 +109,16 @@ export default {
       this.postAppealingInfo(params).then(
         () => {
           this.$toast('提交成功');
+          this.$router.push({
+            name: 'PleasePay',
+            params: { orderId: sessionStorage.getItem('appealPageOrderId') },
+          });
         },
         () => {
           this.$toast('提交失败');
         },
       );
+      return true;
     },
   },
   watch: {

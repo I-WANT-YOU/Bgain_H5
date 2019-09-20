@@ -1,5 +1,5 @@
 import request from '@utils/request';
-import { handlerResponse } from '@utils/auth';
+import { handlerResponse, handlerSuccessResponseV3 } from '@utils/auth';
 
 class UserService {
   static async getUserSummary() {
@@ -30,10 +30,38 @@ class UserService {
     }
   }
 
+  static async submitOTC(options) {
+    try {
+      const requestOptions = {
+        url: '/otc-kyc/do-kyc',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        data: options,
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   static async getKycInfo() {
     try {
       const requestOptions = {
         url: '/user/get-kyc-info',
+        method: 'get',
+      };
+      const response = await request(requestOptions);
+      return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getOTCInfo() {
+    try {
+      const requestOptions = {
+        url: '/otc-kyc/get-otc-kyc-info',
         method: 'get',
       };
       const response = await request(requestOptions);
@@ -78,6 +106,7 @@ class UserService {
         method: 'post',
       };
       const response = await request(requestOptions);
+      console.log(response);
       return handlerResponse(response);
     } catch (error) {
       throw new Error(error);
@@ -187,6 +216,37 @@ class UserService {
       };
       const response = await request(requestOptions);
       return handlerResponse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /*
+  * KYC OTC 身份认证相关接口
+  * */
+  static async checkUserName(params) {
+    try {
+      const requestOptions = {
+        url: '/otc-kyc/check-username',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerSuccessResponseV3(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async checkUserId(params) {
+    try {
+      const requestOptions = {
+        url: '/otc-kyc/check-id-number',
+        method: 'post',
+        data: params,
+      };
+      const response = await request(requestOptions);
+      return handlerSuccessResponseV3(response);
     } catch (error) {
       throw new Error(error);
     }

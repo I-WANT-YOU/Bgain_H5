@@ -1,6 +1,6 @@
 <template>
   <div class="kyc__container">
-    <bgain-nav-bar :onArrowClick="goBack" title="身份认证"></bgain-nav-bar>
+    <bgain-nav-bar :onArrowClick="goBack" :title="title"></bgain-nav-bar>
     <kyc-notice-bar />
     <kyc-step-one
       v-if="step === 1"
@@ -19,6 +19,7 @@
       :document-type="documentType"
       :document-number="documentNumber"
       @change-step="onChangeStep"
+      :authenticationType="this.authenticationType"
     ></kyc-step-two>
     <kyc-step-three
       v-if="step === 3"
@@ -66,6 +67,8 @@ export default {
       documentNumber: '',
       files: ['', '', ''],
       remainingTimeText: '',
+      authenticationType: '', // 判断是kyc还是otc的标识
+      title: '身份认证',
     };
   },
   computed: {
@@ -76,9 +79,16 @@ export default {
     if (!isEmpty(params)) {
       this.country = params;
     }
+    /* 判断是KYC认证还是OTC认证 */
+    if (this.$route.query.type) {
+      if (this.$route.query.type === 'OTC') {
+        this.authenticationType = 'OTC';
+        this.title = 'OTC认证';
+      }
+    }
   },
   methods: {
-    ...mapActions(['submitKyc', 'getUserSummary']),
+    ...mapActions(['submitKyc', 'getUserSummary', 'checkUserName', 'submitOTC']),
     onCountryClick() {
       this.$router.push({
         name: 'country',
@@ -137,11 +147,20 @@ export default {
           forbidClick: true,
           message: '提交审核中...',
         });
-        await this.submitKyc(options);
-        Toast.clear();
-        this.$router.push({
-          name: 'kyc-result',
-        });
+        if (this.authenticationType === 'OTC') {
+          await this.submitOTC(options);
+          Toast.clear();
+          this.$router.push({
+            name: 'kyc-result',
+            query: { type: 'OTC' },
+          });
+        } else {
+          await this.submitKyc(options);
+          Toast.clear();
+          this.$router.push({
+            name: 'kyc-result',
+          });
+        }
       } catch (error) {
         Toast.clear();
         Toast(error);

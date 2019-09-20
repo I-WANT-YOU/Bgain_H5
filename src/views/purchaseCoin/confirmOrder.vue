@@ -4,19 +4,19 @@
   <div class="paymentMethods">
     <div class="paymentMethods-title"><span>支付方式</span></div>
     <div class="paymentMethods-content">
-      <div v-for="(item,key,index) in paymentType"
+      <div v-for="(item,index) in paymentType"
            :class="{activeSelected:selectedIndex === index}"
            :key="index"
-           @click="toggleSelect(index)">
+           @click="toggleSelect(index,item)">
         <div>
-          <svg-icon icon-class="selected_order" style = "width: 26px;height: 26px"
+          <svg-icon icon-class="selected_order" class="check-icon"
                     v-show="selectedIndex === index"/>
         </div>
         <div>
-          <svg-icon :icon-class=key style = "width: 60px;height: 44px"/>
+          <svg-icon :icon-class=item class="paymentType-icon" />
         </div>
         <div>
-          <span>{{toCN(key)}}</span>
+          <span>{{toCN(item)}}</span>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
 <script>
 import { Toast } from 'vant';
 import Vue from 'vue';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import BgainNavBar from '../../components/BgainNavBar.vue';
 import errorMessage from '../../constants/responseStatus';
 
@@ -49,6 +49,8 @@ export default {
       selectedIndex: -1,
       paymentMethods: ['支付宝', '微信', '银行开支付'],
       orderInfo: [],
+      paymentType: [],
+      selectedPayType: '',
       initExchangeInfo: [
         {
           title: '单约价',
@@ -71,24 +73,23 @@ export default {
       'orderInformation', // 生成订单接口 返回信息
       'allPayInfo', // 选择支付方式后接口 返回的信息
     ]),
-    ...mapGetters('coin/orderInfo', [
-      'paymentType',
-    ]),
   },
   methods: {
-    toggleSelect(index) {
-      this.selectedIndex = index;
-    },
     ...mapActions('coin/orderInfo', [
       'getOrderInfoById',
       'submitOrder',
     ]),
-    // 格式化银行微信支付宝为中文
-    toCN(type){
+    /* 选择支付类型 */
+    toggleSelect(index, type) {
+      this.selectedPayType = type;
+      this.selectedIndex = index;
+    },
+    /* 格式化银行微信支付宝为中文 */
+    toCN(type) {
       let payType = '';
       switch (type) {
         case 'ebank':
-          payType ='银行卡';
+          payType = '银行卡';
           break;
         case 'weixin':
           payType = '微信';
@@ -96,27 +97,29 @@ export default {
         case 'alipay':
           payType = '支付宝';
           break;
+        default:
+          break;
       }
       return payType;
     },
-    // 提交订单
+    /* 提交订单 */
     orderSubmit() {
       Toast.loading({
         mask: false,
-        message: '加载中...'
-      })
+        message: '加载中...',
+      });
       const currentParams = {
-        pay_type: 'EBANK',
-        id: this.orderInformation.id,
+        pay_type: this.selectedPayType.toUpperCase(),
+        id: this.orderId,
       };
       this.submitOrder(currentParams).then(
         () => {
           Toast.clear();
           // 跳转到请付款页面
           this.$router.push({
-            name:'PleasePay',
-            params:{orderId:this.orderInformation.id}
-          })
+            name: 'PleasePay',
+            params: { orderId: this.orderId },
+          });
         },
         (err) => {
           this.$toast.clear();
@@ -127,7 +130,6 @@ export default {
       );
     },
   },
-
   mounted() {
     // 从路由中获取订单id
     const orderInfo = this.$route.params;
@@ -136,13 +138,21 @@ export default {
       if (orderInfo.data) {
         sessionStorage.setItem('orderInfo', orderInfo.data);
         sessionStorage.setItem('orderId', orderInfo.orderId);
+        sessionStorage.setItem('paymentType', orderInfo.paymentType);
       }
     } catch (e) {
       console.log(e);
     }
     this.orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
     this.orderId = sessionStorage.getItem('orderId');
-    console.log(this.orderId);
+    this.paymentType = JSON.parse(sessionStorage.getItem('paymentType'));
+  },
+  beforeRouteLeave(to, from, next) {
+    // 设置下一个路由的 meta
+    if (to.path === '/purchaseCoinHome') {
+      to.meta.keepAlive = true; // B 跳转到 A 时，让 A 缓存，即不刷新
+    }
+    next();
   },
 };
 </script>
@@ -180,6 +190,14 @@ export default {
          font-size: 12px;
          color: #0F3256;
          text-align: center;
+         .check-icon{
+           width: 26px;
+           height: 26px
+         }
+         .paymentType-icon{
+           width: 60px;
+           height: 44px;
+         }
          >div:nth-child(1){
            position: absolute;
            top:0;

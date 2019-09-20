@@ -67,7 +67,8 @@
       </div>
     </div>
     <div class="kyc__button-wrap">
-      <bgain-button type="info" :fluid="true" @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
+      <bgain-button type="info" :fluid="true"
+                    @click="onNextClick" :disabled="disabledNext">下一步</bgain-button>
       <bgain-button
         type="info"
         :fluid="true"
@@ -101,6 +102,7 @@ import { DOCUMENT_TYPE } from '@/constants/options';
 import BgainButton from '@/components/BgainButton.vue';
 import KycField from './KycField.vue';
 
+
 export default {
   name: 'KycStepTwo',
   components: {
@@ -125,6 +127,9 @@ export default {
     files: {
       type: Array,
       required: true,
+    },
+    authenticationType: {
+      type: String,
     },
   },
   data() {
@@ -173,6 +178,7 @@ export default {
             label: '',
           },
         ],
+        type: '', // 类型 OTC KYC
       },
     };
   },
@@ -194,19 +200,39 @@ export default {
     },
   },
   methods: {
+    ...mapActions('/user', ['checkUserId']),
     ...mapActions('app', ['getUploadPolicy']),
     onPrevClick() {
       this.$emit('change-step', 1);
     },
-    onNextClick() {
+    async onNextClick() {
       if (!checkDocumentNumber(this.documentType, this.documentNumber)) {
         Toast('请输入正确的证件号码');
       } else {
-        this.$emit('change-step', 3);
+        // 进行OTC填写验证 判断证件号码是否一致
+        if (this.type === 'OTC') {
+          try {
+            const data = await this.checkUserId(this.documentNumber);
+            if (data.code === 0) {
+              this.$emit('change-step', 3);
+            } else {
+              Toast(data.msg);
+            }
+          } catch (e) {
+            Toast('网络错误');
+          }
+        } else {
+          this.$emit('change-step', 3);
+        }
       }
     },
+    // 用户选择证件类型
     onShowPicker() {
-      this.showPicker = true;
+      if (this.authenticationType === 'OTC') { // OTC验证 禁止用户进行证件类型选择
+        this.showPicker = false;
+      } else {
+        this.showPicker = true;
+      }
     },
     onCancelPicker() {
       this.showPicker = false;
@@ -289,6 +315,11 @@ export default {
         Toast(error);
       }
     },
+  },
+  mounted() {
+    if (this.$route.query.type === 'OTC') {
+      this.type = this.$route.query.type;
+    }
   },
 };
 </script>

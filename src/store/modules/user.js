@@ -151,10 +151,28 @@ const actions = {
       throw error;
     }
   },
+  async submitOTC({ commit }, params) {
+    try {
+      const response = await UserService.submitOTC(params);
+      const data = Auth.handlerSuccessResponseV2(response);
+      commit(types.GET_SUBMIT_KYC_RESULT, data);
+    } catch (error) {
+      throw error;
+    }
+  },
   // 获取用户 KYC 信息
   async getKycInfo({ commit }) {
     try {
       const response = await UserService.getKycInfo();
+      const data = await Auth.handlerSuccessResponseV3(response);
+      commit(types.GET_KYC_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getOTCInfo({ commit }) {
+    try {
+      const response = await UserService.getOTCInfo();
       const data = await Auth.handlerSuccessResponseV3(response);
       commit(types.GET_KYC_INFO, data);
     } catch (error) {
@@ -174,8 +192,9 @@ const actions = {
   // 用户一键授权OTC验证
   async toGrantAuthorization() {
     try {
-      await UserService.toGrantAuthorization();
-      // const data = await Auth.handlerSuccessResponseV2(response);
+      const response = await UserService.toGrantAuthorization();
+      const data = await Auth.handlerSuccessResponseV2(response);
+      return data;
       // commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
@@ -261,6 +280,34 @@ const actions = {
       const response = await UserService.getUserNameInfo(params);
       const data = await Auth.handlerSuccessResponse(response);
       commit(types.GET_USERNAME_INFO, data);
+    } catch (error) {
+      throw error;
+    }
+  },
+  /*
+  OTC KYC 身份认证相关接口
+  */
+
+  /* 进行二级OTC验证时 判断输入姓名和一级kyc验证是否一致 */
+  /*
+  * return 0 success
+  * return others toast
+  * */
+  async checkUserName(params) {
+    try {
+      const response = await UserService.checkUserName(params);
+      const data = await Auth.handlerSuccessResponse(response);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  /* check身份证输入是否一致 */
+  async checkUserId(params) {
+    try {
+      const response = await UserService.checkUserId(params);
+      const data = await Auth.handlerSuccessResponse(response);
+      return data;
     } catch (error) {
       throw error;
     }
