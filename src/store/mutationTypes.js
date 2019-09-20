@@ -124,3 +124,12 @@ export const GET_V_CODE = 'GET_V_CODE';
 export const REDEEM_CODE_INFO = 'REDEEM_CODE_INFO';
 export const CODE_EXCHANGE = 'CODE_EXCHANGE';
 export const GET_USERNAME_INFO = 'GET_USERNAME_INFO';
+
+
+// 交易大赛
+export const GET_TEAM_DETAIL = 'GET_TEAM_DETAIL';
+export const GET_HOME_DATA = 'GET_HOME_DATA';
+export const GET_HOME_COMMENTS = 'GET_HOME_COMMENTS';
+export const GET_HOME_REPORTS = 'GET_HOME_REPORTS';
+export const GET_HOME_TOP1 = 'GET_HOME_TOP1';
+export const GET_RANK_LIST = 'GET_RANK_LIST';

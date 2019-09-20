@@ -32,7 +32,7 @@
           <div class="assets-change-con">
             <span
               :class="['num', hold * 1 > 0 ? 'loss' : 'profit',
-               (hold === '---' || hold === 0) ? 'computed' : '']"
+               (hold === '---' || hold * 1 === 0) ? 'computed' : '']"
             >{{numberWithThousands(hold)}}</span>
             <span>持仓收益(BTC)</span>
           </div>
@@ -46,12 +46,16 @@
             <span>持仓收益率</span>
           </div>
         </div>
-        <div v-if="peddingsLength" class="tradeing">
+        <div
+          @click="$router.push('/mine/fund/trade-pending-record')"
+          v-if="peddingsLength"
+          class="tradeing"
+        >
           <div>
             <span class="num">{{peddingsLength}}</span>
             笔交易待确定中，在途资金 {{pending}}{{currency}}
           </div>
-          <div @click="$router.push('/mine/fund/trade-pending-record')" class="icon-wrap">
+          <div class="icon-wrap">
             <svg-icon icon-class="mine-fund-next" class="icon" />
           </div>
         </div>
@@ -109,10 +113,10 @@ export default {
     });
     try {
       await this.getHoldingFunds();
-      await this.getFundOrderHistory('pending');
       this.currencyList = Object.keys(this.holdCurencies).map(item => ({
         name: item.toLocaleUpperCase(),
       }));
+      this.currencyList = ['BTC', 'CNY', 'USDT'].map(name => this.currencyList.find(item => item.name === name));
       this.onChangeCurrency('BTC');
       Toast.clear();
     } catch (error) {
@@ -125,7 +129,7 @@ export default {
     ...mapState(['holdingFunds']),
   },
   methods: {
-    ...mapActions(['getHoldingFunds', 'getFundOrderHistory']),
+    ...mapActions(['getHoldingFunds']),
     onRecord() {
       // 历史交易记录
       this.$router.push('/mine/fund/trade-record-history');
@@ -297,7 +301,7 @@ export default {
             }
             &.computed {
               font-size: 12px;
-              color: #dee0e4;
+              color: #000000;
             }
           }
         }

@@ -11,22 +11,22 @@
         <div>
           <div
             :class="['num', yesterday > 0 ? 'profit' :
-            'loss', yesterday === '--' ? 'computed' : '']"
+            'loss', (yesterday === '--' || yesterday * 1 === 0) ? 'computed' : '']"
           >{{changeAm(fundOwnerDetail.currency_type, yesterday)}}</div>
           <div class="text">昨日盈亏({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
           <div
             :class="['num', pnl > 0 ? 'profit' :
-            'loss', pnl === '--' ? 'computed' : '']"
+            'loss',(pnl === '--' || pnl * 1 === 0 ) ? 'computed' : '']"
           >{{changeAm(fundOwnerDetail.currency_type, pnl)}}</div>
           <div class="text">持仓收益({{fundOwnerDetail.currency_type}})</div>
         </div>
         <div>
           <div
             :class="['num', pnlRatio > 0 ? 'profit' :
-            'loss', pnlRatio ? 'computed' : '']"
-          >{{pnlRatio && pnlRatio}}</div>
+            'loss', (pnlRatio === '--' || pnlRatio * 1 === 0 ) ? 'computed' : '']"
+          >{{pnlRatio && this.add(pnlRatio)}}%</div>
           <div class="text">持仓收益率</div>
         </div>
       </div>
@@ -71,7 +71,7 @@
               </div>
               <div class="line">
                 <div class="text">最新净值</div>
-                <div class="num">{{fundOwnerDetail.nav}}({{navTime}})</div>
+                <div class="num">{{fundOwnerDetail.nav.toFixed(4)}}({{navTime}})</div>
               </div>
             </div>
           </div>
@@ -304,7 +304,7 @@ export default {
       });
     },
     onBuy() {
-      this.$router.push('/product/fund');
+      this.$router.push(`/product/fund/subscribe/${this.fundOwnerDetail.fund_product_id}`);
     },
     onTradeRules() {
       this.$router.push({
@@ -347,9 +347,9 @@ export default {
     },
     pnlRatio() {
       if (this.fundOwnerDetail.pnl_ratio) {
-        return `${this.add(this.fundOwnerDetail.pnl_ratio.toFixed(2))}%`;
+        return (this.fundOwnerDetail.pnl_ratio * 100).toFixed(2);
       }
-      return !this.fundOwnerDetail.pnl_ratio && this.fundOwnerDetail.pnl_ratio * 1 !== 0 ? '--' : '0';
+      return !this.fundOwnerDetail.pnl_ratio && this.fundOwnerDetail.pnl_ratio * 100 !== 0 ? '--' : '0';
     },
     status() {
       return this.fundOwnerDetail.fund_product_status_type === 'OPEN'
@@ -407,7 +407,7 @@ export default {
         }
         &.computed {
           font-size: 12px;
-          color: #dee0e4;
+          color: #000000;
         }
       }
       .text {

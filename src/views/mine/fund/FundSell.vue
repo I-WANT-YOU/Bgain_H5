@@ -21,7 +21,7 @@
             <span>预估手续费</span>
             <span class="num">{{num*redemmptFeeRate}} {{currency}}</span>
           </div>
-          <div class="icon">
+          <div class="icon" @click="goSellRules">
             <span class="text">赎回规则</span>
             <svg-icon icon-class="next" class="next" />
           </div>
@@ -95,6 +95,12 @@ export default {
         payment_password: password,
       };
       await this.sellFund(params);
+    },
+    goSellRules() {
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.query.fund_id },
+      });
     },
   },
   components: {
