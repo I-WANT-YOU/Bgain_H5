@@ -44,7 +44,7 @@
       />
       <bgain-base-dialog
         v-model="otc"
-        content="您的身份消息认证失败请重新认证"
+        content="您的身份信息认证失败，重新验证进行买币"
         submitText="重新认证"
         @submit="onOtcSubmit"
         :showCancel="false"

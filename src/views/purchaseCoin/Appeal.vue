@@ -1,6 +1,6 @@
 <template>
 <div class="appeal">
-  <BgainNavBar title = '申诉'/>
+  <BgainNavBar title = '申诉' :onArrowClick = "goBack"/>
   <div class="appealReason">
      <!--title-->
     <div class="reason-title">
@@ -56,6 +56,7 @@ export default {
         '1. 提起申诉后资产将会冻结，申诉专员将介入本次交易，直至申诉结束；',
         '2. 恶意申诉属于扰乱平台正常运营秩序行为，情节严重将冻结账户。',
       ],
+      nextRoute: '', // 判断上一页还是上两页
     };
   },
   components: {
@@ -109,16 +110,25 @@ export default {
       this.postAppealingInfo(params).then(
         () => {
           this.$toast('提交成功');
-          this.$router.push({
-            name: 'PleasePay',
-            params: { orderId: sessionStorage.getItem('appealPageOrderId') },
-          });
+          this.nextRoute = 'stepsTwo';
+          // this.$router.push({
+          //   name: 'PleasePay',
+          //   params: { orderId: sessionStorage.getItem('appealPageOrderId') },
+          // });
         },
         () => {
           this.$toast('提交失败');
         },
       );
       return true;
+    },
+    // 返回上一页 或者上两页
+    goBack() {
+      if (this.nextRoute === 'stepsTwo') {
+        this.$router.go(-2);
+      } else {
+        this.$router.go(-1);
+      }
     },
   },
   watch: {

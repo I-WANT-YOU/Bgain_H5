@@ -130,11 +130,7 @@ export default {
     ...mapActions('coin/wallet', ['getWalletInfo', 'getWithdrawal']),
     // 判断是否显示弹窗
     async dialog() {
-<<<<<<< Updated upstream
       if (this.kycStatus === 'CERTIFY_FAILED' || this.kycStatus === 'FAILED') {
-=======
-      if (this.kycStatus === 'CERTIFY_FAILED') {
->>>>>>> Stashed changes
         this.showDialog = true;
         this.dialogText = {};
         this.dialogText = {
