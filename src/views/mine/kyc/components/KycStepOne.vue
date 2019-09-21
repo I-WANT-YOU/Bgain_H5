@@ -9,7 +9,9 @@
           <template v-slot:input>
             <div class="kyc__country" @click="onCountryClick">
               <span>{{country.text}}</span>
-              <svg-icon icon-class="next" class="icon-next"></svg-icon>
+              <svg-icon icon-class="next"
+                        class="icon-next"
+                        :class="{'icon-hidden':type === 'OTC'?true:false}"></svg-icon>
             </div>
           </template>
         </kyc-field>
@@ -95,7 +97,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['checkUserName']),
+    ...mapActions(['checkOtcUserName']),
+
     onCountryClick() {
       if (this.type === 'OTC') {
         return false;
@@ -106,6 +109,7 @@ export default {
           fromPath: 'kyc',
         },
       });
+      return true;
     },
     onFirstNameInput(firstName) {
       this.$emit('first-name', firstName);
@@ -117,15 +121,18 @@ export default {
     async onNextClick() {
       // 进行OTC填写验证 判断名字事是否一致
       if (this.type === 'OTC') {
+        const checkOtcUserNameParams = {
+          user_name: this.firstName,
+        };
         try {
-          const data = await this.checkUserName(this.firstName);
+          const data = await this.checkOtcUserName(checkOtcUserNameParams);
           if (data.code === 0) {
             this.$emit('change-step', 2);
           } else {
             Toast(data.msg);
           }
         } catch (e) {
-          Toast('网络错误');
+          Toast('网络错误1');
         }
       } else {
         this.$emit('change-step', 2);

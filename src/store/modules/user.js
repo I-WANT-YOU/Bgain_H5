@@ -195,7 +195,6 @@ const actions = {
       const response = await UserService.toGrantAuthorization();
       const data = await Auth.handlerSuccessResponseV2(response);
       return data;
-      // commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
     }
@@ -293,20 +292,21 @@ const actions = {
   * return 0 success
   * return others toast
   * */
-  async checkUserName(params) {
+  async checkOtcUserName({ commit }, params) {
+    console.log(params);
     try {
-      const response = await UserService.checkUserName(params);
-      const data = await Auth.handlerSuccessResponse(response);
+      const response = await UserService.checkOtcUserName(params);
+      const data = await Auth.handlerSuccessResponseV3(response.data);
       return data;
     } catch (error) {
       throw error;
     }
   },
   /* check身份证输入是否一致 */
-  async checkUserId(params) {
+  async checkUserOtcId({ commit },params) {
     try {
-      const response = await UserService.checkUserId(params);
-      const data = await Auth.handlerSuccessResponse(response);
+      const response = await UserService.checkUserOtcId(params);
+      const data = await Auth.handlerSuccessResponseV3(response.data);
       return data;
     } catch (error) {
       throw error;

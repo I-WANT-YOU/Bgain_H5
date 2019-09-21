@@ -4,7 +4,9 @@
       <svg-icon :icon-class="options[status].icon" />
     </div>
     <div class="kyc-card__title">{{options[status].title}}</div>
-    <div class="kyc-card__title--sub">{{options[status].subtitle}}</div>
+    <div class="kyc-card__title--sub">
+      {{this.authenticationType === 'OTC'?options[status].subtitleOtc:options[status].subtitle}}
+    </div>
     <div class="kyc-card__buttons" v-if="(status === 'FAIL' || status === 'REJECTED')">
       <bgain-button type="info" :fluid="true" @click="onSkip('kyc')">重新认证</bgain-button>
     </div>
@@ -50,6 +52,7 @@ export default {
   },
   data() {
     return {
+      authenticationType: '', // 判断是otc还是kyc
       options: {
         SUCCESS: {
           icon: 'kyc-success',
@@ -70,6 +73,7 @@ export default {
           icon: 'kyc-pending',
           title: '审核中',
           subtitle: '审核结果将在3个工作日内给出',
+          subtitleOtc: '审核结果将在1个工作日内给出',
         },
       },
     };
@@ -82,6 +86,11 @@ export default {
         this.$router.push({ name: router, params: { from: 'kyc-result' } });
       }
     },
+  },
+  mounted() {
+    if (this.$route.query.authenticationType === 'OTC') {
+      this.authenticationType = 'OTC';
+    }
   },
 };
 </script>

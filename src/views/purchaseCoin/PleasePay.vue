@@ -5,7 +5,8 @@
       :title = 'formatedOrderStatus'
       :subTitle = "subTitle"
       :countTime="countTime"
-      :buttonTime="buttonTime"/>
+      :buttonTime="buttonTime"
+      :onArrowClick="backFunc"/>
     <div class="content-container">
       <!--请付款-->
       <PayContent v-if = "orderStatus === 'pending'"/>
@@ -20,8 +21,9 @@
     </div>
     <!--提示信息和按钮-->
     <div class="footer" v-show="!!tips">
-      <span>{{tips}}</span>
-      <div><button @click="goToNext(orderStatus)">{{buttonTime}}</button></div>
+      <p>{{tips}}</p>
+      <div><button @click="goToNext(orderStatus)"
+                   :class="{disabledButton:buttonState}">{{buttonTime}}</button></div>
     </div>
     <BgainBaseDialog
       v-model="isShowConfirm"
@@ -91,6 +93,7 @@ export default {
       countTime: '',
       buttonTime: '',
       tips: '',
+      buttonState: false, // 贷放款页面button 样式
     };
   },
   computed: {
@@ -160,7 +163,7 @@ export default {
             if (this.orderInfoById.pay_type === 'alipay') {
               this.tips = `请使用本人支付宝（${this.orderInfoById.username}）向以上账户自行转账`;
             } else if (this.orderInfoById.pay_type === 'weixin') {
-              this.tips = `请使用本人微信（${this.orderInfoById.username}）向以上账户自行转账`;
+              this.tips = '在转账过程中请勿备注BTC、USDT、Bgain等信息，防止回款被拦截、银行卡被冻结等问题';
             } else if (this.orderInfoById.pay_type === 'ebank') {
               this.tips = `请使用本人银行卡（${this.orderInfoById.username}）向以上账户自行转账`;
             }
@@ -168,6 +171,7 @@ export default {
               this.setTime(this.orderInfoById.otc_order_status);
             }, 1000);
           } else if (this.orderInfoById.otc_order_status === 'payed') { // 待放行
+            this.buttonState = true;
             this.tips = '99%的用户会在15分钟内收到资产';
             this.timer = setInterval(() => {
               this.setTime(this.orderInfoById.otc_order_status);
@@ -203,7 +207,7 @@ export default {
             break;
           case 'dispute':
             this.formatedOrderStatus = '申诉中';
-            this.subTitle = this.orderInfoById.dispute_reason;
+            this.subTitle = '我已完成付款，买家未及时放行';
             break;
           case 'finished':
             this.formatedOrderStatus = '已完成';
@@ -222,6 +226,7 @@ export default {
     setTime(status) {
       if (this.orderInfoById.minuend_date - this.orderInfoById.system_date <= 0) { // 倒计时结束
         clearInterval(this.timer);
+        this.buttonState = false;
         if (status === 'payed') {
           this.countTime = '没有收到资产，请申诉';
           this.buttonTime = '申诉';
@@ -256,6 +261,14 @@ export default {
         );
       }
     },
+    /* 返回上一页 （直接返回买币页面） */
+    backFunc() {
+      if (this.fromRoute === 'ConfirmOrder') {
+        this.$router.go(-2);
+      } else {
+        this.$router.go(-1);
+      }
+    },
   },
   mounted() {
     this.$toast.loading({
@@ -268,35 +281,16 @@ export default {
       const { orderId } = this.$route.params;
       sessionStorage.setItem('orderId', orderId); // 存入本地
     }
-    // const orderId = sessionStorage.getItem('orderId');
+    // 判断进入页面的路由名称
+    if (this.$route.query.fromRoute) {
+    //  存入session中
+      sessionStorage.setItem('fromRoute', this.$route.query.fromRoute);
+    } else {
+      sessionStorage.setItem('fromRoute', '');
+    }
+    this.fromRoute = sessionStorage.getItem('fromRoute');
+    // 根据id查询信息
     this.queryOrderDetailById();
-    // 请求订单信息
-    // this.getOrderInfoById(orderId).then( // 获取币种列表
-    //   () => {
-    //     this.$toast.clear();
-    //     // 设置倒计时 传递给header和footer(在待放行和请付款页面需要)
-    //     if (this.orderInfoById.otc_order_status === 'pending') { // 请付款
-    //       this.tips = `请使用本人银行卡（${this.orderInfoById.username}）向以上账户自行转账`;
-    //       this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
-    //     } else if (this.orderInfoById.otc_order_status === 'payed') { // 待放行
-    //       this.tips = '99%的用户会在15分钟内收到资产';
-    //       this.timer = setInterval(this.setTime(this.orderInfoById.otc_order_status), 1000);
-    //     }
-    //
-    //     // 设置订单不同状态
-    //     // 根据不同支付类型和订单不同的状态 渲染不同的组件
-    //     this.payType = '';
-    //     this.orderStatus = this.orderInfoById.otc_order_status;
-    //     // 设置header的title和subtitle
-    //     this.setOrderStatus();
-    //   },
-    //   (err) => {
-    //     this.$toast.clear();
-    //     if (err.status) { this.$toast(errorMessage[err.status]); } else {
-    //       this.$toast('网络故障');
-    //     }
-    //   },
-    // );
   },
   beforeDestroy() {
     this.$toast.clear();
@@ -319,11 +313,9 @@ export default {
       border-radius: 0 0 4px 4px;
     }
     .footer{
-      >span{
-        display: block;
-        height: 30px;
-        padding-left: 22px;
-        line-height: 30px;
+      >p{
+        padding:5px 22px;
+        line-height:1.5;
         font-size: 12px;
         color: #6A707D;
         background: #FAF4DC;
@@ -341,6 +333,9 @@ export default {
           color: #FFFFFF;
           border: none;
           text-align: center;
+        }
+        .disabledButton{
+          background: #D2D8EB;
         }
       }
     }

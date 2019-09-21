@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['submitKyc', 'getUserSummary', 'checkUserName', 'submitOTC']),
+    ...mapActions(['submitKyc', 'getUserSummary', 'submitOTC']),
     onCountryClick() {
       this.$router.push({
         name: 'country',
@@ -114,6 +114,19 @@ export default {
     },
     getSubmitOptions(token) {
       if (this.documentType === 'ID') {
+        if (this.authenticationType === 'OTC') {
+          return {
+            nationality: this.country.text,
+            first_name: this.firstName,
+            last_name: this.lastName,
+            id_card_number: this.documentNumber,
+            user_name: this.username,
+            token,
+            img_url_1: this.files[0],
+            img_url_2: this.files[1],
+            img_url_3: this.files[2],
+          };
+        }
         return {
           nationality: this.country.text,
           first_name: this.firstName,
@@ -152,7 +165,7 @@ export default {
           Toast.clear();
           this.$router.push({
             name: 'kyc-result',
-            query: { type: 'OTC' },
+            query: { authenticationType: 'OTC' },
           });
         } else {
           await this.submitKyc(options);
@@ -226,11 +239,14 @@ export default {
         width: 7px;
         height: 11px;
       }
+      .icon-hidden{
+        display: none;
+      }
     }
   }
 
   .kyc__button-wrap {
-    margin-top: 60px;
+    margin: 45px 0 30px;
     padding: 0 22px;
   }
 }

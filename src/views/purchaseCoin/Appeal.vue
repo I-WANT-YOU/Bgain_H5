@@ -152,7 +152,7 @@ export default {
       font-size: 13px;
       padding:0 30px;
       .van-radio{
-        margin-top: 20px;
+        margin-top: 18px;
       }
       .van-radio__icon{
         width: 15px;
@@ -166,7 +166,7 @@ export default {
     }
     /*title*/
     .reason-title{
-      margin-top: 18px;
+      margin-top: 15px;
       padding-left: 20px;
       font-size: 15px;
       color: #6A707D;
@@ -179,7 +179,7 @@ export default {
       padding:16px 30px 0 30px;
       >textarea{
         width: 100%;
-        height: 140px;
+        height: 110px;
         padding: 0;
         resize:none;
         border: 1px solid #EEEEEE;
@@ -190,7 +190,7 @@ export default {
   }
   // 交易提示
   .tradeTips{
-    padding: 15px 30px 0 30px;
+    padding: 10px 30px 0 30px;
     >div:nth-child(1){
       >span{
         height: 20px;
@@ -211,7 +211,7 @@ export default {
   }
   // 提交
   .commit{
-    margin-top: 33px;
+    margin: 25px 0;
     display: flex;
     justify-content: center;
     >button{
