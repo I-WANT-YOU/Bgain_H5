@@ -23,12 +23,12 @@
           </div>
         <div class="info-item">
           <div>
-            <p class="placeHolder" v-show="!showData.is_kyc"></p>
-            <van-image :src="checkImage" class="check-icon" v-show="showData.is_kyc" />
+            <p class="placeHolder" v-show="showData.is_kyc !== 1"></p>
+            <van-image :src="checkImage" class="check-icon" v-show="showData.is_kyc === 1" />
             <span>KYC身份认证</span>
           </div>
           <div>
-            <van-image :src="showData.is_kyc?coinLight:coinDark" class="coin-icon"/>
+            <van-image :src="showData.is_kyc === 1?coinLight:coinDark" class="coin-icon"/>
             <span>+{{showData.kyc_reward}}</span>
           </div>
         </div>
@@ -98,25 +98,25 @@ export default {
   },
   computed: {
     submit() {
-      if (this.showData.is_kyc && !this.showData.is_recharge) {
+      if (this.showData.is_kyc === 1 && !this.showData.is_recharge) {
         return {
           text: '去买币/充币',
           path: '/purchaseCoinHome',
         };
       }
-      if (this.showData.is_kyc && this.showData.is_recharge) {
+      if (this.showData.is_kyc === 1 && this.showData.is_recharge) {
         return {
           text: '去赚钱',
           path: '/',
         };
       }
-      if (!this.showData.is_kyc && this.showData.is_recharge && !this.showData.is_buy) {
+      if (!this.showData.is_kyc === 1 && this.showData.is_recharge && !this.showData.is_buy) {
         return {
           text: '去赚钱',
           path: '/product/fund',
         };
       }
-      if (!this.showData.is_kyc && this.showData.is_recharge && this.showData.is_buy) {
+      if (!this.showData.is_kyc === 1 && this.showData.is_recharge && this.showData.is_buy) {
         return {
           text: '去认证',
           path: '/mine/safety/kyc',

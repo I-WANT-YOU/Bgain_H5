@@ -33,7 +33,8 @@
         </Tab>
         <Tab class="tab" title="实盘业绩">
           <div class="con">{{option.firm_performance}}</div>
-          <div class="echarts">
+
+          <div v-if="showEcharts" class="echarts">
             <div class="echarts-title">
               <div>日期{{formatDate(chart_x)}}</div>
               <div>
@@ -85,6 +86,12 @@ export default {
   computed: {
     ...mapState('product/fund', ['fundInformation']),
     ...mapGetters('product/fund', ['fundNav']),
+    showEcharts() {
+      if (this.fundNav[0] && this.fundNav[0].nav_time !== 0) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     ...mapActions('product/fund', ['getFundInformation']),
@@ -114,7 +121,7 @@ export default {
       }
     },
     switchTab(name, title) {
-      if (title === '实盘业绩') {
+      if (title === '实盘业绩' && this.showEcharts) {
         this.$nextTick(() => {
           this.setEcharts(this.fundNav);
         });

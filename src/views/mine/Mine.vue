@@ -270,7 +270,8 @@ export default {
       }
 
       if (this.login) {
-        // 关闭我的基金
+        // 基金开放
+        this.$router.push(router);
         // if (router === '/mine/fund') {
         //   this.dialogApp = true;
         // } else {
