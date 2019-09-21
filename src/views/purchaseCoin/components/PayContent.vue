@@ -74,7 +74,7 @@
         <div class="back-img">
           <span>{{qRCodeTitle}}收款二维码</span>
           <div ref="qrcode" class="qrcode-img"></div>
-          <button @click="downloadImage">保存图片</button>
+          <button @click="downloadImage">{{iosButton?'长按图片保存':'保存图片'}}</button>
         </div>
         <div class="y-line"></div>
         <div @click="closeCodePop" class="close-img">
@@ -90,7 +90,7 @@ import { mapState } from 'vuex';
 import QRCode from 'qrcodejs2';
 import { Toast } from 'vant';
 import Vue from 'vue';
-import { copyText } from '../../../utils/tools';
+import { copyText, checkPhoneType } from '../../../utils/tools';
 
 Vue.use(Toast);
 export default {
@@ -100,6 +100,7 @@ export default {
       showCodePop: false, // 是都显示弹窗
       qRCode: {}, // 二维码
       qRCodeTitle: '',
+      iosButton: false, // ios时候显示 长按保存按钮
     };
   },
   computed: {
@@ -149,6 +150,11 @@ export default {
       colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H,
     });
+    // 判断机型
+    const phoneType = checkPhoneType();
+    if (phoneType === 'IOS') {
+      this.iosButton = true;
+    }
   },
 
   methods: {
@@ -158,33 +164,21 @@ export default {
     },
 
     /* 点击保存图片//imgurl 图片地址 */
-    // downloadImage(imgUrl, name) {
-    //   console.log(document.getElementsByTagName('img'));
-    //   const a = document.createElement('a');
-    //   // 将a的download属性设置为我们想要下载的图片名称
-    //   a.download = name || 'pic';
-    //   // 将生成的URL设置为a.href属性
-    //   a.href = document.getElementsByTagName('img')[1].src;
-    //   // 触发a的单击事件
-    //   a.click();
-    //   Toast('保存成功');
-    //   a.remove();
-    // },
-    downloadImage() {
-      const Url = document.getElementsByTagName('img')[1].src;
-      console.log(Url);
-      window.location = Url;
-      // const blob = new Blob([''], { type: 'application/octet-stream' });
-      // const url = URL.createObjectURL(blob);
-      // const a = document.createElement('a');
-      // a.href = Url;
-      // a.download = Url.replace(/(.*\/)*([^.]+.*)/ig, '$2').split('?')[0];
-      // const e = document.createEvent('MouseEvents');
-      // e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      // a.dispatchEvent(e);
-      // URL.revokeObjectURL(url);
+    downloadImage(imgUrl, name) {
+      if (checkPhoneType() === 'IOS') {
+        return false;
+      }
+      const a = document.createElement('a');
+      // 将a的download属性设置为我们想要下载的图片名称
+      a.download = name || 'pic';
+      // 将生成的URL设置为a.href属性
+      a.href = document.getElementsByTagName('img')[1].src;
+      // 触发a的单击事件
+      a.click();
+      Toast('保存成功');
+      a.remove();
+      return true;
     },
-
     /* 点击保存 */
     copyTextFunc(text) {
       copyText(text);

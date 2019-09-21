@@ -31,7 +31,7 @@
           <span>卖家实名</span>
           <div>
             <span ref="sellerName">{{orderInfoById.pay_name}}</span>
-            <div  @click="copyText('sellerName')" class="copy-icon-container">
+            <div  @click="copyTextFunc(orderInfoById.pay_name)" class="copy-icon-container">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <span>订单号</span>
           <div>
             <span ref="orderNum" >{{orderInfoById.otc_order_id}}</span>
-            <div class="copy-icon-container"  @click="copyText('orderNum')">
+            <div class="copy-icon-container"  @click="copyTextFunc(orderInfoById.otc_order_id)">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -59,6 +59,7 @@
 <script>
 import { mapState } from 'vuex';
 import publicMethods from '@utils/publicMethods';
+import { copyText } from '../../../utils/tools';
 
 export default {
   name: 'FinishedContent',
@@ -73,24 +74,9 @@ export default {
     },
   },
   methods: {
-    // 复制功能
-    copyText(name) {
-      const input = document.createElement('input');
-      input.setAttribute('id', 'copyInput');
-      if (name === 'sellerName') {
-        input.setAttribute('value', this.orderInfoById.pay_name);
-        document.getElementsByTagName('body')[0].appendChild(input);
-        document.getElementById('copyInput').select();
-        document.execCommand('copy');
-        this.$toast('复制成功');
-      } else if (name === 'orderNum') {
-        input.setAttribute('value', this.orderInfoById.otc_order_id);
-        document.getElementsByTagName('body')[0].appendChild(input);
-        document.getElementById('copyInput').select();
-        document.execCommand('copy');
-        this.$toast('复制成功');
-      }
-      document.getElementById('copyInput').remove();
+    /* 点击保存 */
+    copyTextFunc(text) {
+      copyText(text);
     },
   },
 };

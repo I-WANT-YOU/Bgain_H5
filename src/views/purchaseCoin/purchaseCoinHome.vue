@@ -50,6 +50,7 @@
     <BgainBaseDialog
       v-model="isShowAuthorize"
       :showCancel="false"
+      title="确认授权"
       submitText="一键授权"
       content="确认授权Bgain开通OTC服务"
       @submit="goToAuthorize"
