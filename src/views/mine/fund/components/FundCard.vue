@@ -119,7 +119,7 @@ export default {
           color: #ff5c5c;
         }
         &.computed {
-          color: #dee0e4;
+          color: #000000;
         }
       }
     }

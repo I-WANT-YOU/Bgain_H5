@@ -152,7 +152,11 @@ export default {
       this.visible = false;
     },
     goBack() {
+      const downApp = sessionStorage.getItem('downApp');
       sessionStorage.clear();
+      if (downApp) {
+        sessionStorage.setItem('downApp', true);
+      }
       window.history.go(-1);
     },
     onKyc() {
@@ -179,7 +183,11 @@ export default {
     window.removeEventListener('popstate', this.goBack, false);
   },
   beforeRouteLeave(to, from, next) {
+    const downApp = sessionStorage.getItem('downApp');
     sessionStorage.clear();
+    if (downApp) {
+      sessionStorage.setItem('downApp', true);
+    }
     next();
   },
 };
