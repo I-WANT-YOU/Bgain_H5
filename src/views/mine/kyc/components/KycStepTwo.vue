@@ -6,7 +6,10 @@
           <template v-slot:input>
             <div class="kyc__country" @click="onShowPicker">
               <div class="kyc__document--type">{{type}}</div>
-              <svg-icon icon-class="next" class="icon-next"></svg-icon>
+              <svg-icon icon-class="next"
+                        class="icon-next"
+                        :class="{'icon-hidden':authenticationType === 'OTC'?true:false}"
+              />
             </div>
           </template>
         </kyc-field>
@@ -82,6 +85,7 @@
       <Picker
         show-toolbar
         value-key="label"
+        visible-item-count=3
         :columns="columns"
         @cancel="onCancelPicker"
         @confirm="onConfirmPicker"
@@ -178,7 +182,7 @@ export default {
             label: '',
           },
         ],
-        type: '', // 类型 OTC KYC
+        levelType: '', // 类型 OTC KYC
       },
     };
   },
@@ -200,7 +204,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('/user', ['checkUserId']),
+    ...mapActions('user', ['checkUserOtcId']),
     ...mapActions('app', ['getUploadPolicy']),
     onPrevClick() {
       this.$emit('change-step', 1);
@@ -208,22 +212,22 @@ export default {
     async onNextClick() {
       if (!checkDocumentNumber(this.documentType, this.documentNumber)) {
         Toast('请输入正确的证件号码');
-      } else {
-        // 进行OTC填写验证 判断证件号码是否一致
-        if (this.type === 'OTC') {
-          try {
-            const data = await this.checkUserId(this.documentNumber);
-            if (data.code === 0) {
-              this.$emit('change-step', 3);
-            } else {
-              Toast(data.msg);
-            }
-          } catch (e) {
-            Toast('网络错误');
+      } else if (this.authenticationType === 'OTC') {
+        const checkUserOtcIdParams = {
+          id_card_number: this.documentNumber,
+        };
+        try {
+          const data = await this.checkUserOtcId(checkUserOtcIdParams);
+          if (data.code === 0) {
+            this.$emit('change-step', 3);
+          } else {
+            Toast(data.msg);
           }
-        } else {
-          this.$emit('change-step', 3);
+        } catch (e) {
+          Toast('网络错误');
         }
+      } else {
+        this.$emit('change-step', 3);
       }
     },
     // 用户选择证件类型
@@ -315,11 +319,6 @@ export default {
         Toast(error);
       }
     },
-  },
-  mounted() {
-    if (this.$route.query.type === 'OTC') {
-      this.type = this.$route.query.type;
-    }
   },
 };
 </script>

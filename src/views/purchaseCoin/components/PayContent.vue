@@ -6,7 +6,7 @@
           <span>{{'¥'+orderInfoById.amount}}</span>
         </div>
         <div>
-          <span>单约价</span>
+          <span>单价约</span>
           <span>
             {{this.orderInfoById.price}}
             {{this.orderInfoById.src_currency_type?
@@ -17,14 +17,21 @@
         </div>
         <div>
           <span>数量</span>
-          <span>{{orderInfoById.quantity}}</span>
+          <span>{{orderInfoById.quantity+' '+orderInfoById.dest_currency_type}}</span>
         </div>
       </div>
-    <div class="paymentInfo userInfo">
-      <div>
+    <div class="paymentInfo">
+      <!--收款人-->
+      <div class="hasCopy">
         <span>收款人</span>
-        <span>{{orderInfoById.pay_name}}</span>
+        <div>
+          <span ref="sellerName">{{orderInfoById.pay_name}}</span>
+          <div  @click="copyTextFunc(orderInfoById.pay_name)" class="copy-icon-container">
+            <svg-icon icon-class="copy_light" class="copy-style"/>
+          </div>
+        </div>
       </div>
+      <!--收款二维码或者其他-->
       <div>
         <span>{{formateTitle[0]}}</span>
         <span v-show="orderInfoById.pay_type==='ebank'">{{orderInfoById.pay_data}}</span>
@@ -34,17 +41,30 @@
           <svg-icon icon-class="qr_click" class="qrcode-copy"></svg-icon>
         </div>
       </div>
-      <div>
+      <!--支付账号-->
+      <div class="hasCopy">
         <span>{{formateTitle[1]}}</span>
-        <span>{{orderInfoById.pay_id}}</span>
+        <div>
+          <span ref="sellerName">{{orderInfoById.pay_id}}</span>
+          <div  @click="copyTextFunc(orderInfoById.pay_id)" class="copy-icon-container">
+            <svg-icon icon-class="copy_light" class="copy-style"/>
+          </div>
+        </div>
       </div>
+      <!--当支付方式为银行卡时候的提示-->
       <div v-show="orderInfoById.pay_type==='ebank'">
         <span>{{formateTitle[2]}}</span>
         <span style = "font-size: 12px;color: #A8AEB9;">切勿备注BTC、Bgain等敏感字样，防冻结</span>
       </div>
-      <div>
+      <!--订单号-->
+      <div class="hasCopy">
         <span>订单号</span>
-        <span>{{orderInfoById.otc_order_id}}</span>
+        <div>
+          <span ref="sellerName">{{orderInfoById.otc_order_id}}</span>
+          <div  @click="copyTextFunc(orderInfoById.otc_order_id)" class="copy-icon-container">
+            <svg-icon icon-class="copy_light" class="copy-style"/>
+          </div>
+        </div>
       </div>
     </div>
     <!--支付宝微信二维码弹窗-->
@@ -70,6 +90,7 @@ import { mapState } from 'vuex';
 import QRCode from 'qrcodejs2';
 import { Toast } from 'vant';
 import Vue from 'vue';
+import { copyText } from '../../../utils/tools';
 
 Vue.use(Toast);
 export default {
@@ -136,18 +157,37 @@ export default {
       this.showCodePop = false;
     },
 
-    // 点击保存图片//imgurl 图片地址
-    downloadImage(imgUrl, name) {
-      console.log(document.getElementsByTagName('img'));
-      const a = document.createElement('a');
-      // 将a的download属性设置为我们想要下载的图片名称
-      a.download = name || 'pic';
-      // 将生成的URL设置为a.href属性
-      a.href = document.getElementsByTagName('img')[1].src;
-      // 触发a的单击事件
-      a.click();
-      Toast('保存成功');
-      a.remove();
+    /* 点击保存图片//imgurl 图片地址 */
+    // downloadImage(imgUrl, name) {
+    //   console.log(document.getElementsByTagName('img'));
+    //   const a = document.createElement('a');
+    //   // 将a的download属性设置为我们想要下载的图片名称
+    //   a.download = name || 'pic';
+    //   // 将生成的URL设置为a.href属性
+    //   a.href = document.getElementsByTagName('img')[1].src;
+    //   // 触发a的单击事件
+    //   a.click();
+    //   Toast('保存成功');
+    //   a.remove();
+    // },
+    downloadImage() {
+      const Url = document.getElementsByTagName('img')[1].src;
+      console.log(Url);
+      window.location = Url;
+      // const blob = new Blob([''], { type: 'application/octet-stream' });
+      // const url = URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = Url;
+      // a.download = Url.replace(/(.*\/)*([^.]+.*)/ig, '$2').split('?')[0];
+      // const e = document.createEvent('MouseEvents');
+      // e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      // a.dispatchEvent(e);
+      // URL.revokeObjectURL(url);
+    },
+
+    /* 点击保存 */
+    copyTextFunc(text) {
+      copyText(text);
     },
   },
 };
@@ -165,12 +205,11 @@ export default {
   }
   // 可点击二维码
   .qrcode_click{
-    width:15px;
-    height: 15px;
+    width:18px;
+    height: 18px;
     .qrcode-copy{
-      width:15px;
-      height: 15px;
-      vertical-align:0;
+      width:17px;
+      height: 17px;
     }
   }
   .payContent{
@@ -180,21 +219,37 @@ export default {
       border-bottom: 0.51px solid #EEEEEE;
       >div{
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
+        align-items: center;
         >span{
           height: 38px;
           line-height: 38px;
           font-size: 13px;
-        }
-        >span:nth-child(1){
           color: #6A707D;
         }
-        >span:nth-child(2){
-          color: #0F3256;
+        >div{
+          display: flex;
+          align-items: center;
+          .copy-icon-container{
+            height: 16px;
+            width:16px;
+            padding:0 0 3px 7px;
+            display: flex;
+            .copy-style{
+              width: 15px;
+              height: 15px;
+            }
+          }
+          >span{
+            height: 38px;
+            line-height: 38px;
+            font-size: 13px;
+            color: #0F3256;
+          }
         }
       }
     }
-    .userInfo{}
     // 弹窗
     .hadCodePop{
       position: fixed;

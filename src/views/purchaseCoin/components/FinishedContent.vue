@@ -8,7 +8,7 @@
           <span>{{'¥'+orderInfoById.amount}}</span>
         </div>
         <div>
-          <span>单约价</span>
+          <span>单价约</span>
           <span>
             {{this.orderInfoById.price}}
             {{this.orderInfoById.src_currency_type?

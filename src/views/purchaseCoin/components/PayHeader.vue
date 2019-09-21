@@ -24,6 +24,7 @@
 
 import { mapState } from 'vuex';
 import publicMethods from '@utils/publicMethods';
+import { isFunction } from 'lodash';
 
 export default {
   name: 'PayHeader',
@@ -38,6 +39,7 @@ export default {
     'subTitle',
     'countTime',
     'buttonTime',
+    'onArrowClick',
   ],
   methods: {
     // 设置倒计时
@@ -54,12 +56,16 @@ export default {
     },
     // 回退到上一页
     back() {
+      if (isFunction(this.onArrowClick)) {
+        this.onArrowClick();
+        return true;
+      }
       if (window.history.length <= 1) {
         this.$router.push({ path: '/' });
         return false;
       }
       this.$router.go(-1);
-      return false;
+      return true;
     },
   },
   mounted() {

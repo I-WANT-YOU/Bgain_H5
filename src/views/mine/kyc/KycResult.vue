@@ -1,7 +1,7 @@
 <template>
   <div class="kyc-result__container">
     <bgain-nav-bar :onArrowClick="goSafety" title="身份认证"></bgain-nav-bar>
-    <kyc-result-card :status="status" :subtitle="subtitle" />
+    <kyc-result-card :status="status" :subtitle="subtitle" v-if="isShowResultCard"/>
     <!--已认证去授权-->
     <BgainBaseDialog
       v-model="isShowAuthorize"
@@ -38,6 +38,7 @@ const STATUS = {
   rejected: 'REJECTED',
   certified: 'SUCCESS',
   unaudited: 'PENDING',
+  passed: 'SUCCESS',
 };
 
 export default {
@@ -47,6 +48,7 @@ export default {
       countDownTime: 5,
       isShowAuthorize: false,
       showSuccessTip: false,
+      isShowResultCard: false,
     };
   },
   components: {
@@ -67,7 +69,7 @@ export default {
   },
   async mounted() {
     /* 获取身份验证类型 OTC KYC */
-    if (this.$route.query.type === 'OTC') {
+    if (this.$route.query.authenticationType === 'OTC') {
       this.getOTCResult();
     } else {
       this.timer = setInterval(() => {
@@ -98,26 +100,40 @@ export default {
     },
     // 调用接口查询验证状态 kyc
     async getKycResult() {
+      Toast.loading({
+        message: '加载中...',
+      });
       if (this.countDownTime > 0) {
         this.countDownTime -= 1;
         try {
           await this.getKycInfo();
-          if (this.submitKycStatus === 'certified') { // 审核通过 显示 一件授权弹窗
+          if (this.submitKycStatus === 'CERTIFIED' || this.submitKycStatus === 'PASSED') { // 审核通过 显示 一件授权弹窗
+            Toast.clear();
+            this.isShowResultCard = true;
             clearInterval(this.timer); // 清除轮询
             this.isShowAuthorize = true;
           }
         } catch (error) {
+          Toast.clear();
           throw error;
         }
       } else {
         clearInterval(this.timer);
+        Toast.clear();
+        this.isShowResultCard = true;
       }
     },
     // 调用接口查询验证状态otc
     async getOTCResult() {
+      Toast.loading({
+        message: '加载中...',
+      });
       try {
         await this.getOTCInfo();
+        Toast.clear();
+        this.isShowResultCard = true;
       } catch (error) {
+        Toast.clear();
         throw error;
       }
     },

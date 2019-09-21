@@ -28,7 +28,7 @@
           <span class="field--kyc" @click="onOtc">{{otcText}}</span>
           <svg-icon
             icon-class="next"
-            :class="['icon-next', otcStatu === 'CERTIFY_FAILED' ? '' : 'none']"
+            :class="['icon-next', otcStatus === 'FAILED' ? '' : 'none']"
             @click="onOtc"
           ></svg-icon>
         </cell>
@@ -121,6 +121,7 @@ export default {
         forbidClick: true,
       });
       await this.getUserSummary();
+      this.otcStatu = this.otcStatus;
       Toast.clear();
     } catch (error) {
       Toast(error.message);
@@ -170,7 +171,7 @@ export default {
       }
     },
     onOtc() {
-      if (this.basicInfo.kyc_stauts.toLocaleUpperCase() === 'CERTIFY_FAILED') {
+      if (this.basicInfo.otc_kyc_status.toLocaleUpperCase() === 'FAILED') {
         this.otc = true;
       }
     },
