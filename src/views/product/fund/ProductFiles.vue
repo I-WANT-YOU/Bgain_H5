@@ -33,6 +33,7 @@
         </Tab>
         <Tab class="tab" title="实盘业绩">
           <div class="con">{{option.firm_performance}}</div>
+
           <div v-if="showEcharts" class="echarts">
             <div class="echarts-title">
               <div>日期{{formatDate(chart_x)}}</div>
