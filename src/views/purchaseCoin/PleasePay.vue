@@ -161,7 +161,7 @@ export default {
           // 设置倒计时 传递给header和footer(在待放行和请付款页面需要)
           if (this.orderInfoById.otc_order_status === 'pending') { // 请付款
             if (this.orderInfoById.pay_type === 'alipay') {
-              this.tips = `请使用本人支付宝（${this.orderInfoById.username}）向以上账户自行转账`;
+              this.tips = `请使用本人（${this.orderInfoById.username}）支付宝向以上账户自行转账`;
             } else if (this.orderInfoById.pay_type === 'weixin') {
               this.tips = '在转账过程中请勿备注BTC、USDT、Bgain等信息，防止回款被拦截、银行卡被冻结等问题';
             } else if (this.orderInfoById.pay_type === 'ebank') {

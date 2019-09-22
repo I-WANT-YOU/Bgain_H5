@@ -319,7 +319,7 @@ export default {
         data = [
           {
             title: `单价约  (${this.activeContentTab})`,
-            content: '--',
+            content: `${this.currencyPrice.price}CNY/${this.activeContentTab}`,
           },
           {
             title: `成交数量  (${this.activeContentTab})`,
