@@ -18,7 +18,7 @@
       <div class="history-content">
         <div>
           <span>{{item.quantity}}</span>
-          <span>数量&nbsp;{{'('+item.dest_currency_type.toLowerCase()+')'}}</span>
+          <span>数量&nbsp;{{'('+item.dest_currency_type.toUpperCase()+')'}}</span>
         </div>
         <div>
           <span>{{item.amount}}</span>

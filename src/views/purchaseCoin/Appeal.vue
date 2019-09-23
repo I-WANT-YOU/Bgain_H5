@@ -186,13 +186,15 @@ export default {
       }
     }
     .reason-text{
-      padding:16px 30px 0 30px;
+      margin:16px 30px 0 30px;
+      border: 1px solid #EEEEEE;
       >textarea{
         width: 100%;
         height: 110px;
         padding: 0;
         resize:none;
-        border: 1px solid #EEEEEE;
+        /*border: 1px solid #EEEEEE;*/
+        border: none;
         border-radius: 4px;
        font-size: 15px;
       }
