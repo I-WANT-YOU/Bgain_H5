@@ -253,12 +253,14 @@ export default {
         // 重新查询订单状态
         this.isShowConfirm = true;
       } else if (orderStatus === 'payed') { // 待放行-->申诉
-        this.$router.push(
-          {
-            name: 'Appeal',
-            params: { orderId: this.orderInfoById.id },
-          },
-        );
+        if (this.orderInfoById.minuend_date - this.orderInfoById.system_date <= 0) {
+          this.$router.push(
+            {
+              name: 'Appeal',
+              params: { orderId: this.orderInfoById.id },
+            },
+          );
+        }
       }
     },
     /* 返回上一页 （直接返回买币页面） */
