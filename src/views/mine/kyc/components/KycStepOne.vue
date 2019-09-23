@@ -11,7 +11,7 @@
               <span>{{country.text}}</span>
               <svg-icon icon-class="next"
                         class="icon-next"
-                        :class="{'icon-hidden':type === 'OTC'?true:false}"></svg-icon>
+                        :class="{'icon-hidden':isCountryClick}"></svg-icon>
             </div>
           </template>
         </kyc-field>
@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      type: '',
+      isCountryClick: false,
     };
   },
   props: {
@@ -100,7 +100,7 @@ export default {
     ...mapActions(['checkOtcUserName']),
 
     onCountryClick() {
-      if (this.type === 'OTC') {
+      if (this.isCountryClick === true) {
         return false;
       }
       this.$router.push({
@@ -140,8 +140,8 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.type === 'OTC') {
-      this.type = this.$route.query.type;
+    if (this.$route.query.type === 'OTC' || this.$route.query.type === 'KYC') {
+      this.isCountryClick = true;
     }
   },
 };
