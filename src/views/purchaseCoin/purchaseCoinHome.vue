@@ -189,7 +189,7 @@ export default {
       if (this.dialogText.path === '') {
         this.showAuthenticationDialog = false;
       } else if (this.dialogText.path === 'kyc') {
-        this.$router.push({ name: this.dialogText.path });
+        this.$router.push({ name: 'kyc', query: { type: 'KYC' } });
       } else if (this.dialogText.path === 'otc') {
         this.$router.push({ name: 'kyc', query: { type: 'OTC' } });
       }
@@ -273,7 +273,7 @@ export default {
               case 2: // OTC审核中
                 this.dialogText = {
                   title: '审核中',
-                  content: '您的身份认证申请已提交，审核结果将在1个工作日内公布',
+                  content: '您的OTC身份认证申请已提交，审核结果将在1个工作日内公布',
                   button: '知道了',
                   path: '',
                 };
