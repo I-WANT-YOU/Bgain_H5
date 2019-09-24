@@ -1,6 +1,6 @@
 <template>
 <div class="appeal">
-  <BgainNavBar title = '申诉'/>
+  <BgainNavBar title = '申诉' :onArrowClick = "goBack"/>
   <div class="appealReason">
      <!--title-->
     <div class="reason-title">
@@ -56,6 +56,7 @@ export default {
         '1. 提起申诉后资产将会冻结，申诉专员将介入本次交易，直至申诉结束；',
         '2. 恶意申诉属于扰乱平台正常运营秩序行为，情节严重将冻结账户。',
       ],
+      nextRoute: '', // 判断上一页还是上两页
     };
   },
   components: {
@@ -109,16 +110,25 @@ export default {
       this.postAppealingInfo(params).then(
         () => {
           this.$toast('提交成功');
-          this.$router.push({
-            name: 'PleasePay',
-            params: { orderId: sessionStorage.getItem('appealPageOrderId') },
-          });
+          this.nextRoute = 'stepsTwo';
+          // this.$router.push({
+          //   name: 'PleasePay',
+          //   params: { orderId: sessionStorage.getItem('appealPageOrderId') },
+          // });
         },
         () => {
           this.$toast('提交失败');
         },
       );
       return true;
+    },
+    // 返回上一页 或者上两页
+    goBack() {
+      if (this.nextRoute === 'stepsTwo') {
+        this.$router.go(-2);
+      } else {
+        this.$router.go(-1);
+      }
     },
   },
   watch: {
@@ -152,7 +162,7 @@ export default {
       font-size: 13px;
       padding:0 30px;
       .van-radio{
-        margin-top: 20px;
+        margin-top: 18px;
       }
       .van-radio__icon{
         width: 15px;
@@ -166,7 +176,7 @@ export default {
     }
     /*title*/
     .reason-title{
-      margin-top: 18px;
+      margin-top: 15px;
       padding-left: 20px;
       font-size: 15px;
       color: #6A707D;
@@ -176,13 +186,15 @@ export default {
       }
     }
     .reason-text{
-      padding:16px 30px 0 30px;
+      margin:16px 30px 0 30px;
+      border: 1px solid #EEEEEE;
       >textarea{
         width: 100%;
-        height: 140px;
+        height: 110px;
         padding: 0;
         resize:none;
-        border: 1px solid #EEEEEE;
+        /*border: 1px solid #EEEEEE;*/
+        border: none;
         border-radius: 4px;
        font-size: 15px;
       }
@@ -190,7 +202,7 @@ export default {
   }
   // 交易提示
   .tradeTips{
-    padding: 15px 30px 0 30px;
+    padding: 10px 30px 0 30px;
     >div:nth-child(1){
       >span{
         height: 20px;
@@ -211,7 +223,7 @@ export default {
   }
   // 提交
   .commit{
-    margin-top: 33px;
+    margin: 25px 0;
     display: flex;
     justify-content: center;
     >button{

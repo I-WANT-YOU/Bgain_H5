@@ -18,7 +18,7 @@
       <div class="history-content">
         <div>
           <span>{{item.quantity}}</span>
-          <span>数量</span>
+          <span>数量&nbsp;{{'('+item.dest_currency_type.toUpperCase()+')'}}</span>
         </div>
         <div>
           <span>{{item.amount}}</span>
@@ -101,7 +101,7 @@ export default {
       if (minute < 10) {
         minute = `0${minute}`;
       }
-      const afterDate = `${year}-${month}-${day}-${hours}:${minute}`;
+      const afterDate = `${year}-${month}-${day} ${hours}:${minute}`;
       return afterDate;
     },
     // 格式化订单状态
@@ -116,7 +116,7 @@ export default {
       } else if (orderStatus === 'finished') {
         afterStatus = '已完成';
       } else if (orderStatus === 'canceled') {
-        afterStatus = '已取消';
+        afterStatus = '已关闭';
       }
       return afterStatus;
     },

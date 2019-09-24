@@ -27,7 +27,9 @@
         <span>{{item.content}}</span>
       </div>
   </div>
-  <div class="pushOrder"><button @click="orderSubmit">提交订单</button></div>
+  <div class="pushOrder">
+    <button :class="{activeButton:activatedButton}" @click="orderSubmit">提交订单</button>
+  </div>
 </div>
 </template>
 
@@ -51,6 +53,7 @@ export default {
       orderInfo: [],
       paymentType: [],
       selectedPayType: '',
+      activatedButton: false, // 按钮是否激活
       initExchangeInfo: [
         {
           title: '单约价',
@@ -83,6 +86,7 @@ export default {
     toggleSelect(index, type) {
       this.selectedPayType = type;
       this.selectedIndex = index;
+      this.activatedButton = true;
     },
     /* 格式化银行微信支付宝为中文 */
     toCN(type) {
@@ -119,6 +123,7 @@ export default {
           this.$router.push({
             name: 'PleasePay',
             params: { orderId: this.orderId },
+            query: { orderId: this.orderId, fromRoute: 'ConfirmOrder' },
           });
         },
         (err) => {
@@ -245,9 +250,12 @@ export default {
        height: 46px;
        font-size: 16px;
        color: #FFFFFF;
-       background: #3C64EE;
+       background: #D2D8EB;
        border-radius: 4px;
        border: none;
+     }
+     .activeButton{
+       background: #3C64EE;
      }
    }
 }

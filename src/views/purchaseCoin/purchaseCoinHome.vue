@@ -39,6 +39,7 @@
     <!--身份验证-->
     <BgainBaseDialog
       :showCancel="false"
+      :title="dialogText.title"
       :submitText="dialogText.button"
       :content="dialogText.content"
       v-model="showAuthenticationDialog"
@@ -49,6 +50,7 @@
     <BgainBaseDialog
       v-model="isShowAuthorize"
       :showCancel="false"
+      title="确认授权"
       submitText="一键授权"
       content="确认授权Bgain开通OTC服务"
       @submit="goToAuthorize"
@@ -62,14 +64,7 @@
       content="为保证您在平台交易的资金安全请先完成身份认证"
       @submit="goToSecondAuthentication"
       @cancel="()=>{this.showSecondAuthenticationDialog = false}"
-      :submitColor="popColor"
     >
-      <!--suppress XmlUnboundNsPrefix -->
-      <template v-slot:content>
-        <van-checkbox icon-size="15px" v-model="OTCChecked" @click="changeCheckStatus">
-          <span style="font-size: 12px;line-height: 28px;color: #2A64F7; ">我同意授权Bgain开通OTC服务</span>
-        </van-checkbox>
-      </template>
     </BgainBaseDialog>
   </div>
 </template>
@@ -78,7 +73,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import { mapActions, mapState, createNamespacedHelpers } from 'vuex';
-import { Toast, Checkbox } from 'vant';
+import { Toast } from 'vant';
 import Vue from 'vue';
 import BgainBaseDialog from '@component/BgainBaseDialog.vue';
 import CoinPurchase from './components/CoinPurchase.vue';
@@ -95,7 +90,6 @@ export default {
     CoinPurchase,
     CoinRecharge,
     BgainBaseDialog,
-    'van-checkbox': Checkbox,
   },
 
   data() {
@@ -107,8 +101,6 @@ export default {
       showAuthenticationDialog: false, // 身份认证
       showSecondAuthenticationDialog: false, // 一级非身份证验证通过
       isShowAuthorize: false, // 一键授权
-      OTCChecked: false, // 一级非身份证验证通过 （用户是否勾选协议）
-      popColor: '#3C64EE', // 协议按钮颜色
       dialogText: {
         content: '为保证您在平台交易的资金安全请先完成身份认证',
         button: '身份认证',
@@ -197,29 +189,16 @@ export default {
       if (this.dialogText.path === '') {
         this.showAuthenticationDialog = false;
       } else if (this.dialogText.path === 'kyc') {
-        this.$router.push({ name: this.dialogText.path });
+        this.$router.push({ name: 'kyc', query: { type: 'KYC' } });
       } else if (this.dialogText.path === 'otc') {
-        this.$router.push({ name: this.dialogText.path, query: { type: 'OTC' } });
+        this.$router.push({ name: 'kyc', query: { type: 'OTC' } });
       }
     },
     /* 跳转到身份认证(一级非身份证验证已过) */
     goToSecondAuthentication() {
-      if (this.OTCChecked) {
-        this.$router.push({ name: 'kyc', query: { type: 'OTC' } });
-      } else {
-        Toast('请勾选同意协议');
-      }
+      this.$router.push({ name: 'kyc', query: { type: 'OTC' } });
     },
-    // 跳转到身份认证 用户是否勾选协议
-    changeCheckStatus() {
-      if (this.popColor === '#3C64EE') {
-        this.popColor = '#D2D8EB';
-        this.OTCChecked = false;
-      } else {
-        this.popColor = '#3C64EE';
-        this.OTCChecked = true;
-      }
-    },
+
     /* 一键授权 */
     goToAuthorize() {
       this.toGrantAuthorization().then(
@@ -275,6 +254,7 @@ export default {
                 break;
               case 0: // KYC未验证
                 this.dialogText = {
+                  title: '未认证',
                   content: '为保证您在平台交易的资金安全请先完成身份认证',
                   button: '身份认证',
                   path: 'kyc',
@@ -283,6 +263,7 @@ export default {
                 break;
               case 1: // KYC审核中
                 this.dialogText = {
+                  title: '审核中',
                   content: '您的身份认证申请已提交，审核结果将在3个工作日内公布',
                   button: '知道了',
                   path: '',
@@ -291,7 +272,8 @@ export default {
                 break;
               case 2: // OTC审核中
                 this.dialogText = {
-                  content: '您的身份认证申请已提交，审核结果将在1个工作日内公布',
+                  title: '审核中',
+                  content: '您的OTC身份认证申请已提交，审核结果将在1个工作日内公布',
                   button: '知道了',
                   path: '',
                 };

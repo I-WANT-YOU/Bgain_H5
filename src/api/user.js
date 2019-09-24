@@ -224,12 +224,12 @@ class UserService {
   /*
   * KYC OTC 身份认证相关接口
   * */
-  static async checkUserName(params) {
+  static async checkOtcUserName(userName) {
     try {
       const requestOptions = {
         url: '/otc-kyc/check-username',
         method: 'post',
-        data: params,
+        data: userName,
       };
       const response = await request(requestOptions);
       return handlerSuccessResponseV3(response);
@@ -238,7 +238,7 @@ class UserService {
     }
   }
 
-  static async checkUserId(params) {
+  static async checkUserOtcId(params) {
     try {
       const requestOptions = {
         url: '/otc-kyc/check-id-number',

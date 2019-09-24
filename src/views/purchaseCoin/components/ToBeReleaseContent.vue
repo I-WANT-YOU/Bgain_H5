@@ -8,7 +8,7 @@
           <span>{{'¥'+orderInfoById.amount}}</span>
         </div>
         <div>
-          <span>单约价</span>
+          <span>单价约</span>
           <span>
             {{this.orderInfoById.price}}
             {{this.orderInfoById.src_currency_type?
@@ -31,7 +31,7 @@
           <span>卖家实名</span>
           <div>
             <span ref="sellerName">{{orderInfoById.pay_name}}</span>
-            <div  @click="copyText('sellerName')">
+            <div  @click="copyTextFunc(orderInfoById.pay_name)" class="copy-icon-container">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <span>订单号</span>
           <div>
             <span ref="orderNum" >{{orderInfoById.otc_order_id}}</span>
-            <div  @click="copyText('orderNum')">
+            <div @click="copyTextFunc(orderInfoById.otc_order_id)" class="copy-icon-container">
               <svg-icon icon-class="copy_light" class="copy-style"/>
             </div>
           </div>
@@ -52,6 +52,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { copyText } from '../../../utils/tools';
 
 export default {
   name: 'ToBeReleaseContent',
@@ -60,35 +61,16 @@ export default {
       'orderInfoById',
     ]),
   },
-  methods:{
-    copyText(name){
-      let input = document.createElement('input');
-      input.setAttribute('id', 'copyInput');
-      if(name === 'sellerName'){
-        input.setAttribute('value', this.orderInfoById.pay_name);
-        document.getElementsByTagName('body')[0].appendChild(input);
-        document.getElementById('copyInput').select();
-        document.execCommand('copy')
-        this.$toast('复制成功');
-      } else if ( name === 'orderNum'){
-        input.setAttribute('value', this.orderInfoById.otc_order_id);
-        document.getElementsByTagName('body')[0].appendChild(input);
-        document.getElementById('copyInput').select();
-        document.execCommand('copy')
-        this.$toast('复制成功');
-      }
-      document.getElementById('copyInput').remove();
-    }
+  methods: {
+    /* 点击保存 */
+    copyTextFunc(text) {
+      copyText(text);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .copy-style{
-    width: 15px;
-    height: 15px;
-    margin:10px 0 13px 5px;
-  }
   .payContent{
     font-family: PingFangSC-Regular sans-serif;
     letter-spacing: 0;
@@ -113,12 +95,14 @@ export default {
       }
     }
     .userInfo{
-      margin:10px 21px 0 21px;
+      margin:11px 21px 0px 21px;
       padding-bottom: 29px;
+      border-bottom: 0.51px solid #EEEEEE;
       >div{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
         >span{
           height: 38px;
           line-height: 38px;
@@ -128,6 +112,17 @@ export default {
         >div{
           display: flex;
           align-items: center;
+          .copy-icon-container{
+            height: 16px;
+            width:16px;
+            padding:0 0 3px 7px;
+            display: flex;
+            align-items: start;
+            .copy-style{
+              width: 15px;
+              height: 15px;
+            }
+          }
           >span{
             height: 38px;
             line-height: 38px;
@@ -136,7 +131,6 @@ export default {
           }
         }
       }
-
     }
   }
 </style>

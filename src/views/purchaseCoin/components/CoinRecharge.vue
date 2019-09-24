@@ -24,7 +24,7 @@
         <div class="exchange-count">
           <div>
             <label>
-              <input :placeholder="placeHolder" v-model="inputValue"/>
+              <input :placeholder="placeHolder" v-model="inputValue" type="number"/>
             </label>
           </div>
           <div><span>{{exchangeType}}</span></div>
@@ -48,6 +48,11 @@
         :class="{activeButtonStyle:activeButton}"
         :disabled = !activeButton
       >下一步</button>
+    </div>
+    <div class="toUserTips">
+      <p>
+        注：OTC功能由LinkCoin提供服务，平台仅做展示，不提供担保。请在注册地法律允许的范围内，自担风险进行兑换
+      </p>
     </div>
 
     <!--两笔订单进行中-->
@@ -102,7 +107,7 @@ export default {
       activeExchangeTab: 0,
       exchangeType: '', // 兑换类型
       exchangeInfo: [],
-      singleOfferPrice: '', // 单约价
+      singleOfferPrice: '', // 单价约
       transactionsNumber: '', // 成交数量
       paymentAmount: '', // 实付金额
       activeButton: false,
@@ -257,8 +262,10 @@ export default {
           this.$toast.clear();
           this.activeExchangeTab = 0;
           this.exchangeType = 'CNY';
-          this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
-          this.singleOfferPrice = `${this.currencyPrice.price}CNY/${this.activeContentTab}`; // 单约价
+          if (this.currencyPrice.min_quota !== undefined) {
+            this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
+          }
+          this.singleOfferPrice = `${this.currencyPrice.price}CNY/${this.activeContentTab}`; // 单价约
         },
         (err) => {
           this.$toast.clear();
@@ -301,9 +308,6 @@ export default {
       get() {
         const currencyList = this.currencyData.data.link_coin_currency_types
           .map(item => item.toUpperCase()); // 币种列表
-        // this.activeContentTab = this.currencyList[0].toString(); // 激活币种显示样式
-        // this.exchangeType = 'CNY'; // 兑换方式选择
-        // this.getNewCurrencyPrice(this.activeContentTab);//  获取币种价格
         return currencyList;
       },
     },
@@ -314,15 +318,15 @@ export default {
       if (this.inputValue === '') {
         data = [
           {
-            title: `单约价  (${this.activeContentTab})`,
-            content: '--',
+            title: `单价约  (${this.activeContentTab})`,
+            content: `${this.currencyPrice.price}CNY/${this.activeContentTab}`,
           },
           {
             title: `成交数量  (${this.activeContentTab})`,
             content: '--',
           },
           {
-            title: `实付金额  (${this.activeContentTab})`,
+            title: '实付金额  (CNY)',
             content: '--',
           },
         ];
@@ -330,31 +334,31 @@ export default {
         if (this.exchangeType !== 'CNY') {
           data = [
             {
-              title: `单约价  (${this.activeContentTab})`,
+              title: `单价约  (${this.activeContentTab})`,
               content: `${this.currencyPrice.price}CNY/${this.activeContentTab}`,
             },
             {
-              title: '成交数量',
+              title: `成交数量  (${this.activeContentTab})`,
               content: this.inputValue,
             },
             {
-              title: '实付金额',
-              content: `¥${Math.floor(this.inputValue * this.currencyPrice.price * 100000000) / 100000000}`,
+              title: '实付金额  (CNY)',
+              content: `¥${Math.floor(this.inputValue * this.currencyPrice.price * 100) / 100}`,
             },
           ];
         } else {
           data = [
             {
-              title: `单约价  (${this.activeContentTab})`,
+              title: `单价约  (${this.activeContentTab})`,
               content: `${this.currencyPrice.price}CNY/${this.activeContentTab}`,
             },
             {
-              title: '成交数量',
+              title: `成交数量  (${this.activeContentTab})`,
               // eslint-disable-next-line max-len
               content: Math.floor((this.inputValue / this.currencyPrice.price) * 100000000) / 100000000,
             },
             {
-              title: '实付金额',
+              title: '实付金额  (CNY)',
               content: `¥${this.inputValue}`,
             },
           ];
@@ -586,6 +590,18 @@ export default {
       border-radius: 4px;
       font-size: 16px;
       color: #FFFFFF;
+    }
+  }
+  .toUserTips{
+    margin-top: 35px;
+    line-height: 1.5;
+    padding:8px 21px;
+    font-size: 12px;
+    color: #6A707D;
+    letter-spacing: 0;
+    background: #FAF4DC;
+    >p{
+      margin: 0;
     }
   }
 </style>
