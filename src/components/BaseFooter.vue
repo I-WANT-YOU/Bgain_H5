@@ -5,10 +5,6 @@
         <svg-icon icon-class="contact" />
         <span class="footer__content-text">联系我们</span>
       </div>
-      <div class="footer__content--download">
-        <svg-icon icon-class="mobile" />
-        <span class="footer__content-text" @click="onApp">下载APP</span>
-      </div>
       <div class="footer__content--language" @click="onLanguageClick">
         <span class="footer__content-text">简体中文</span>
         <div class="footer__content--language-arrow"></div>
@@ -76,7 +72,7 @@ export default {
 
     .footer__content {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       padding: 1.5px 0;
       margin-bottom: 12px;
@@ -90,14 +86,6 @@ export default {
           width: 12.9px;
           height: 10.3px;
           margin-right: 3.1px;
-        }
-      }
-
-      .footer__content--download {
-        svg {
-          width: 8px;
-          height: 12px;
-          margin-right: 2px;
         }
       }
 

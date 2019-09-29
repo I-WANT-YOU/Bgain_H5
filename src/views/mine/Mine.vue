@@ -111,17 +111,6 @@
       </div>
     </div>
     <ActionSheet v-model="showCurrency" :actions="options" @select="onSelectCurrency" />
-    <BgainBaseDialog
-      v-model="dialogApp"
-      :showCancel="false"
-      submitText="下载App"
-      content="下载App，了解和查看更多产品详情"
-      @cancel="onCancel"
-      @submit="onSubmit"
-    />
-    <div class="footer-fixed">
-      <DownApp @func="getMsgFormSon" />
-    </div>
     <BaseFooter />
     <!--一级页面强制弹窗-->
     <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
@@ -130,13 +119,10 @@
 
 <script>
 /* eslint-disable no-underscore-dangle */
-
 import { ActionSheet, Toast } from 'vant';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import Header from '@component/mine/Header.vue';
 import BaseFooter from '@component/BaseFooter.vue';
-import BgainBaseDialog from '@component/BgainBaseDialog.vue';
-import DownApp from '@component/DownApp.vue';
 import LevelOnePop from '@component/LevelOnePop.vue';
 
 export default {
@@ -145,8 +131,6 @@ export default {
     Header,
     ActionSheet,
     BaseFooter,
-    BgainBaseDialog,
-    DownApp,
     LevelOnePop,
   },
   data() {
@@ -162,7 +146,6 @@ export default {
       showCurrency: false,
       options: ['BTC', 'USDT', 'ETH', 'EOS'],
       msgFormSon: false,
-      dialogApp: false,
     };
   },
   mounted() {
@@ -272,24 +255,12 @@ export default {
       if (this.login) {
         // 基金开放
         this.$router.push(router);
-        // if (router === '/mine/fund') {
-        //   this.dialogApp = true;
-        // } else {
-        //   this.$router.push(router);
-        // }
-        this.$router.push(router);
       } else {
         this.$router.push('/login');
       }
     },
     onAsset() {
       this.$router.push('/asset');
-    },
-    onCancel() {
-      this.dialogApp = false;
-    },
-    onSubmit() {
-      window.location.href = 'https://fir.im/ngaw';
     },
   },
 };
@@ -531,13 +502,6 @@ export default {
       border-bottom: 1px solid #eeeeee;
       transform: scaleY(0.5);
     }
-  }
-  .footer-fixed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
   }
 }
 </style>

@@ -5,14 +5,10 @@
       <router-view />
     </div>
     <base-footer />
-    <div class="footer-fixed">
-      <DownApp @func="getMsgFormSon" />
-    </div>
   </div>
 </template>
 
 <script>
-import DownApp from '@component/DownApp.vue';
 import BaseHeader from '@/components/BaseHeader.vue';
 import BaseFooter from '@/components/BaseFooter.vue';
 
@@ -21,7 +17,6 @@ export default {
   components: {
     BaseHeader,
     BaseFooter,
-    DownApp,
   },
   data() {
     return {
@@ -45,13 +40,6 @@ export default {
   .product-content {
     display: flex;
     flex: 1 1 auto;
-  }
-  .footer-fixed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
   }
 }
 </style>
