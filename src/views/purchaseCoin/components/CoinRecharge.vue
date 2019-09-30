@@ -59,16 +59,16 @@
     <BgainBaseDialog
       v-model="hasTwoOrders"
       submitText="查看订单"
-      content="当前有2笔订单进行中无法继续买币"
+      content="当前有1笔订单进行中无法继续买币"
       @submit="checkExistingOrders"
       @cancel="()=>{this.hasTwoOrders = false}"
     />
     <!--一笔订单进行中-->
     <BgainBaseDialog
       v-model="hasOneOrder"
-      submitText="继续完成"
-      content="当前有1笔订单进行中"
-      @submit="goOnComplete"
+      submitText="查看订单"
+      content="当前有1笔未完成订单"
+      @submit="checkExistingOrders"
       @cancel="()=>{this.hasOneOrder = false}"
     />
     <!--用户余额不足-->
@@ -132,26 +132,6 @@ export default {
     ...mapActions('coin/orderInfo', [
       'generateOrderInfo',
     ]),
-    // 有一笔未完成订单时 用户继续支付
-    goOnComplete() {
-      // 跳转到支付方式选择页面 传递参数id
-      this.routerData = this.initExchangeInfo;
-      const data = JSON.stringify(this.routerData);
-      const paymentType = [];
-      if (this.orderInformation.data.payment_type) {
-        for (const key in this.orderInformation.data.payment_type) {
-          paymentType.push(key);
-        }
-      }
-      this.$router.push({
-        name: 'ConfirmOrder',
-        params: {
-          data,
-          orderId: this.orderInformation.data.id,
-          paymentType: JSON.stringify(paymentType),
-        },
-      });
-    },
     // 当用户有两笔订单时候 产看用户订单列表
     checkExistingOrders() {
       this.$router.push({
@@ -183,7 +163,7 @@ export default {
           if (this.orderInformation.code === 167) { // otc不支持该币种购买
             Toast('不支持该币种购买');
             return false;
-          } if (this.orderInformation.code === 168) { // otc待处理订单超过两条
+          } if (this.orderInformation.code === 168) { // otc待处理订单超过两条（）
             this.hasTwoOrders = true;
             return false;
           } if (this.orderInformation.code === 169) { // otc购买数量为零
@@ -213,27 +193,14 @@ export default {
           } if (this.orderInformation.code === 177) {
             Toast('服务器异常');
             return true;
-          } if (this.orderInformation.code === 178) { // otc 用户存在一笔未支付订单
-            if (this.orderInformation.is_warn === true) {
-              this.hasOneOrder = true;
-            }
-            return false;
-          }
-          // 跳转到支付方式选择页面 传递参数id
-          this.routerData = this.initExchangeInfo;
-          const data = JSON.stringify(this.routerData);
-          const paymentType = [];
-          if (this.orderInformation.data.payment_type) {
-            for (const key in this.orderInformation.data.payment_type) {
-              paymentType.push(key);
-            }
+          } if (this.orderInformation.code === 178) { // otc 用户存在一笔未支付订单(未选支付方式)
+            this.hasOneOrder = true;
+            return true;
           }
           this.$router.push({
             name: 'ConfirmOrder',
-            params: {
-              data,
+            query: {
               orderId: this.orderInformation.data.id,
-              paymentType: JSON.stringify(paymentType),
             },
           });
           return true;
@@ -283,7 +250,7 @@ export default {
         this.placeHolder = `请输入${this.currencyPrice.min_quota}～${this.currencyPrice.max_quota}`;
         this.exchangeType = 'CNY';
       } else {
-        this.placeHolder = '请输入法币数量';
+        this.placeHolder = '请输入兑换数量';
         this.exchangeType = this.activeContentTab;
       }
     },
@@ -528,7 +495,7 @@ export default {
             margin:0;
             line-height: 25px;
             border: none;
-            color: #3C64EE;
+            color: #000;
           }
         }
         >div:nth-child(2){

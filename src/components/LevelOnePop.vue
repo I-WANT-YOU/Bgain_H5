@@ -100,7 +100,7 @@ export default {
     submit() {
       if (this.showData.is_kyc === 1 && !this.showData.is_recharge) {
         return {
-          text: '去买币/充币',
+          text: '去充币/买币',
           path: '/purchaseCoinHome',
         };
       }
@@ -110,20 +110,32 @@ export default {
           path: '/',
         };
       }
-      if (!this.showData.is_kyc === 1 && this.showData.is_recharge && !this.showData.is_buy) {
+      if (!(this.showData.is_kyc === 1) && this.showData.is_recharge && !this.showData.is_buy) {
         return {
           text: '去赚钱',
           path: '/product/fund',
         };
       }
-      if (!this.showData.is_kyc === 1 && this.showData.is_recharge && this.showData.is_buy) {
+      if (this.showData.is_kyc === 2) {
+        return {
+          text: '去充币/买币',
+          path: '/purchaseCoinHome',
+        };
+      }
+      if (!(this.showData.is_kyc === 1) && this.showData.is_recharge && this.showData.is_buy) {
+        return {
+          text: '去认证',
+          path: '/mine/safety/kyc',
+        };
+      }
+      if (!(this.showData.is_kyc === 1) && !this.showData.is_recharge && !this.showData.is_buy) {
         return {
           text: '去认证',
           path: '/mine/safety/kyc',
         };
       }
       return {
-        text: '去认证',
+        text: '',
         path: '/mine/safety/kyc',
       };
     },

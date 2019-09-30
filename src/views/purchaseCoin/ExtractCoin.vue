@@ -55,7 +55,7 @@
     </div>
     <BgainBaseDialog
       :showCancel="false"
-      :showClose="false"
+      :showClose="true"
       :submitText="dialogText.button"
       :content="dialogText.content"
       v-model="showDialog"

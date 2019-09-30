@@ -77,8 +77,12 @@ export default {
     ...mapAuthActions(['getToken']),
     ...mapUserActions(['getUserSummary']),
     onInput(value) {
-      const re = /^\d+$/;
+      /* const re = /^\d+$/;
       if (!re.test(value)) {
+        this.token = value.slice(0, value.length - 1);
+      } */
+      const Regx = /^[A-Za-z0-9]*$/;
+      if (!Regx.test(value)) {
         this.token = value.slice(0, value.length - 1);
       }
       if (value.length > 6) {

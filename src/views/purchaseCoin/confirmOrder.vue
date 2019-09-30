@@ -2,30 +2,39 @@
 <div class="confirmOrder">
   <BgainNavBar title = "确认订单"/>
   <div class="paymentMethods">
-    <div class="paymentMethods-title"><span>支付方式</span></div>
+    <div class="paymentMethods-title"><span>请选择支付方式</span></div>
     <div class="paymentMethods-content">
-      <div v-for="(item,index) in paymentType"
+      <div v-for="(item,key,index) in paymentType"
            :class="{activeSelected:selectedIndex === index}"
            :key="index"
-           @click="toggleSelect(index,item)">
+           @click="toggleSelect(index,key)">
         <div>
           <svg-icon icon-class="selected_order" class="check-icon"
                     v-show="selectedIndex === index"/>
         </div>
         <div>
-          <svg-icon :icon-class=item class="paymentType-icon" />
+          <svg-icon :icon-class=key class="paymentType-icon" />
         </div>
         <div>
-          <span>{{toCN(item)}}</span>
+          <span>{{toCN(key)}}</span>
         </div>
       </div>
     </div>
   </div>
   <div class="paymentInfo">
-      <div v-for="(item,index) in orderInfo" :key="index">
-        <span>{{item.title}}</span>
-        <span>{{item.content}}</span>
+      <div>
+        <span>单价约：</span>
+        <span>{{orderInfoById.price+' '
+          +orderInfoById.src_currency_type+'/'+orderInfoById.dest_currency_type}}</span>
       </div>
+    <div>
+      <span>数量：</span>
+      <span>{{orderInfoById.quantity+ ' '+ orderInfoById.dest_currency_type}}</span>
+    </div>
+    <div>
+      <span>实付金额：</span>
+      <span>{{orderInfoById.amount+' '+orderInfoById.src_currency_type}}</span>
+    </div>
   </div>
   <div class="pushOrder">
     <button :class="{activeButton:activatedButton}" @click="orderSubmit">提交订单</button>
@@ -108,6 +117,9 @@ export default {
     },
     /* 提交订单 */
     orderSubmit() {
+      if (this.activatedButton === false) {
+        return false;
+      }
       Toast.loading({
         mask: false,
         message: '加载中...',
@@ -122,8 +134,7 @@ export default {
           // 跳转到请付款页面
           this.$router.push({
             name: 'PleasePay',
-            params: { orderId: this.orderId },
-            query: { orderId: this.orderId, fromRoute: 'ConfirmOrder' },
+            params: { orderId: this.orderId, fromRoute: 'ConfirmOrder' },
           });
         },
         (err) => {
@@ -133,25 +144,23 @@ export default {
           }
         },
       );
+      return true;
     },
   },
   mounted() {
-    // 从路由中获取订单id
-    const orderInfo = this.$route.params;
-    // 根据订单id查询订单
-    try {
-      if (orderInfo.data) {
-        sessionStorage.setItem('orderInfo', orderInfo.data);
-        sessionStorage.setItem('orderId', orderInfo.orderId);
-        sessionStorage.setItem('paymentType', orderInfo.paymentType);
-      }
-    } catch (e) {
-      console.log(e);
+    if (this.$route.query.orderId) {
+      this.orderId = this.$route.query.orderId;
+      this.getOrderInfoById(this.$route.query.orderId).then(
+        () => {
+          this.paymentType = this.orderInfoById.payment_type;
+        },
+        () => {
+          Toast('网络错误');
+        },
+      );
     }
-    this.orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
-    this.orderId = sessionStorage.getItem('orderId');
-    this.paymentType = JSON.parse(sessionStorage.getItem('paymentType'));
   },
+
   beforeRouteLeave(to, from, next) {
     // 设置下一个路由的 meta
     if (to.path === '/purchaseCoinHome') {

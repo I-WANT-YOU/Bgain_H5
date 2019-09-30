@@ -44,17 +44,24 @@
           <span style="font-size: 16px;color: #0F3256;letter-spacing: 0.15px;line-height: 24px;">
             （恶意点击将直接冻结账户）
           </span>
-          <van-checkbox
-            icon-size="15px"
-            v-model="confirmChecked"
-            @click="changeCheckStatus">
-            <span style="font-size: 12px;line-height: 28px;color: #2A64F7; ">
-              我同意授权Bgain开通OTC服务
+          <div style="display: flex">
+            <van-checkbox
+              icon-size="15px"
+              v-model="confirmChecked"
+              @click="changeCheckStatus" />
+            <span style="font-size: 12px;line-height: 28px;color: #2A64F7;margin-left: 5px ">
+              我以遵守
             </span>
-          </van-checkbox>
+            <span style="font-size: 12px;line-height: 28px;color: #2A64F7;"
+                  @click="()=>{legalDeclarationPopShow = true}">
+              《资金来源合法声明》
+            </span>
+          </div>
         </div>
       </template>
     </BgainBaseDialog>
+    <LegalDeclarationPop v-show="legalDeclarationPopShow"
+                         @popShow = "()=>{this.legalDeclarationPopShow = false}"/>
   </div>
 </template>
 
@@ -66,6 +73,7 @@ import publicMethods from '@utils/publicMethods';
 import PayContent from './components/PayContent.vue';
 import ToBeReleaseContent from './components/ToBeReleaseContent.vue';
 import PayHeader from './components/PayHeader.vue';
+import LegalDeclarationPop from './components/LegalDeclarationPop.vue';
 import errorMessage from '../../constants/responseStatus';
 import FinishedContent from '@/views/purchaseCoin/components/FinishedContent.vue';
 import BgainBaseDialog from '../../components/BgainBaseDialog.vue';
@@ -80,6 +88,7 @@ export default {
     ToBeReleaseContent,
     BgainBaseDialog,
     'van-checkbox': Checkbox,
+    LegalDeclarationPop,
   },
   data() {
     return {
@@ -94,6 +103,7 @@ export default {
       buttonTime: '',
       tips: '',
       buttonState: false, // 贷放款页面button 样式
+      legalDeclarationPopShow: false, // 声明弹窗
     };
   },
   computed: {
@@ -134,6 +144,9 @@ export default {
                 Toast('操作失败');
                 break;
               case 0:
+                if (this.timer) {
+                  clearInterval(this.timer);
+                }
                 this.queryOrderDetailById();
                 break;
               default:
@@ -154,10 +167,16 @@ export default {
 
     // 查询订单信息（调用接口） // 用来二次调用
     queryOrderDetailById() {
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
       const orderId = sessionStorage.getItem('orderId');
       this.getOrderInfoById(orderId).then( // 获取币种列表
         () => {
           this.$toast.clear();
+          if (this.orderInfoById.minuend_date) {
+            this.deadLineDate = this.orderInfoById.minuend_date;
+          }
           // 设置倒计时 传递给header和footer(在待放行和请付款页面需要)
           if (this.orderInfoById.otc_order_status === 'pending') { // 请付款
             if (this.orderInfoById.pay_type === 'alipay') {
@@ -211,7 +230,7 @@ export default {
             break;
           case 'finished':
             this.formatedOrderStatus = '已完成';
-            this.subTitle = '卖家在15分钟总内已放行资产';
+            this.subTitle = '卖家在15分钟内已放行资产';
             break;
           case 'canceled':
             this.formatedOrderStatus = '已关闭';
@@ -236,7 +255,7 @@ export default {
         }
       } else {
         // eslint-disable-next-line max-len
-        const test = publicMethods.countDownMinute(this.orderInfoById.minuend_date, this.orderInfoById.system_date);
+        const test = publicMethods.countDownMinute(this.deadLineDate, this.orderInfoById.system_date);
         if (status === 'payed') {
           this.countTime = `预计在${test}内收到资产`;
           this.buttonTime = `申诉（${test}）`;
@@ -244,11 +263,14 @@ export default {
           this.countTime = `请在${test}内付款给卖家`;
           this.buttonTime = '我已付款成功';
         }
-        this.orderInfoById.minuend_date = this.orderInfoById.minuend_date - 1000;
+        this.deadLineDate = this.deadLineDate - 1000;
       }
     },
     // button点击事件（请付款-->待放行  待放行-->申诉）
     goToNext(orderStatus) {
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
       if (orderStatus === 'pending') { // 请付款-->待放行
         // 重新查询订单状态
         this.isShowConfirm = true;
@@ -267,6 +289,8 @@ export default {
     backFunc() {
       if (this.fromRoute === 'ConfirmOrder') {
         this.$router.go(-2);
+      } else if (this.fromRoute === 'appeal') {
+        this.$router.go(-3);
       } else {
         this.$router.go(-1);
       }
@@ -282,20 +306,24 @@ export default {
     if (this.$route.params.orderId) {
       const { orderId } = this.$route.params;
       sessionStorage.setItem('orderId', orderId); // 存入本地
+      // 判断进入页面的路由名称
+      if (this.$route.params.fromRoute) {
+        //  存入session中
+        sessionStorage.setItem('fromRoute', this.$route.params.fromRoute);
+      } else {
+        sessionStorage.setItem('fromRoute', '');
+      }
     }
-    // 判断进入页面的路由名称
-    if (this.$route.query.fromRoute) {
-    //  存入session中
-      sessionStorage.setItem('fromRoute', this.$route.query.fromRoute);
-    } else {
-      sessionStorage.setItem('fromRoute', '');
-    }
+    Toast.loading({
+      mask: true,
+      message: '加载中...',
+    });
     this.fromRoute = sessionStorage.getItem('fromRoute');
     // 根据id查询信息
     this.queryOrderDetailById();
   },
   beforeDestroy() {
-    this.$toast.clear();
+    Toast.clear();
     clearInterval(this.timer);
   },
 };

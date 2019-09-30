@@ -52,10 +52,14 @@
       :showCancel="false"
       title="确认授权"
       submitText="一键授权"
-      content="确认授权Bgain开通OTC服务"
+      content=""
       @submit="goToAuthorize"
       @cancel="()=>{this.isShowAuthorize = false}"
-    />
+    >
+      <template v-slot:content>
+       <span class="specialSpan">确认授权Bgain开通OTC服务</span>
+      </template>
+    </BgainBaseDialog>
     <!--一级非身份证验证通过-->
     <BgainBaseDialog
       v-model="showSecondAuthenticationDialog"
@@ -360,6 +364,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .specialSpan{
+    display: block;
+    margin-top: 15px;
+    font-family: PingFang SC sans-serif;
+    font-size: 0.42667rem;
+    line-height: 0.53333rem;
+    color: #666666;
+  }
 .purchaseCoinHome{
   .activeHeaderTab{
     color: #FFFFFF;

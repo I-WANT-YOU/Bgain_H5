@@ -151,9 +151,9 @@ export function echartsOption(X, series, min, max, num, tooltip = true) {
     yAxis: {
       show: true,
       type: 'value',
-      min: strip(min - num, 3),
-      max: strip(max * 1 + num, 3),
-      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 4, 3),
+      min: strip(min - max, 3) === 0 ? 0 : strip(min - num, 3),
+      max: strip(max - min, 3) === 0 ? 2 : strip(max * 1 + num, 3),
+      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 4, 3) === 0 ? 0.5 : strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 4, 3),
       axisLabel: {
         show: true,
         textStyle: {

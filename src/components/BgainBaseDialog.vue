@@ -1,6 +1,7 @@
 <template>
   <Popup round v-on="$listeners" v-bind="$attrs" :close-on-click-overlay="false">
-    <div class="bgain-dialog__container" :style="{height:wrapHeight}">
+    <!--<div class="bgain-dialog__container" :style="{height:wrapHeight}">-->
+    <div class="bgain-dialog__container">
       <svg-icon v-if="showClose"
                 icon-class="close" class="icon-close" @click.native="onCancel"></svg-icon>
       <div class="dialog__title">{{title}}</div>
@@ -98,7 +99,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 305px;
-  height: 200px;
+  min-height: 200px;
   padding: 24px 0 20px;
   box-sizing: border-box;
   background: #ffffff;

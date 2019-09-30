@@ -24,14 +24,14 @@
         <div class="assets-change">
           <div class="assets-change-con">
             <span
-              :class="['num', yesterday * 1 > 0 ? 'loss' : 'profit',
+              :class="['num', yesterday * 1 < 0 ? 'loss' : 'profit',
                (yesterday === '---' || yesterday === 0) ? 'computed' : '']"
             >{{numberWithThousands(yesterday)}}</span>
             <span>昨日盈亏(BTC)</span>
           </div>
           <div class="assets-change-con">
             <span
-              :class="['num', hold * 1 > 0 ? 'loss' : 'profit',
+              :class="['num', hold * 1 < 0 ? 'loss' : 'profit',
                (hold === '---' || hold * 1 === 0) ? 'computed' : '']"
             >{{numberWithThousands(hold)}}</span>
             <span>持仓收益(BTC)</span>
@@ -39,7 +39,7 @@
           <div class="assets-change-con">
             <span
               :class="['num',
-              holdTotalPnlRatio ? 'loss' : 'profit',
+              holdTotalPnlRatio ? 'profit' : 'loss',
               (holdRate === '---' || holdTotalPnlRatio === 0) ? 'computed' : ''
               ]"
             >{{holdRate}}</span>

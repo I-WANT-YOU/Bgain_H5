@@ -143,7 +143,11 @@ export const copyText = (text) => {
   selectText(input, 0, textString.length);
   if (document.execCommand('copy')) {
     document.execCommand('copy');
-    Toast('复制成功');
+    Toast.clear();
+    Toast({
+      message: '复制成功',
+      duration: 500,
+    });
   }
   input.blur();
   document.body.removeChild(input);

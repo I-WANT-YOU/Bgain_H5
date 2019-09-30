@@ -192,11 +192,6 @@ export default {
   .showPop{
     display: block!important;
   }
-  /*二维码图片*/
-  .qrcode-img{
-    width: 111px;
-    height: 111px;
-  }
   // 可点击二维码
   .qrcode_click{
     width:18px;
@@ -208,7 +203,7 @@ export default {
   }
   .payContent{
     .paymentInfo{
-      margin:11px 21px 0px 21px;
+      margin:11px 21px 0 21px;
       padding-bottom: 10px;
       border-bottom: 0.51px solid #EEEEEE;
       >div{
@@ -228,8 +223,9 @@ export default {
           .copy-icon-container{
             height: 16px;
             width:16px;
-            padding:0 0 3px 7px;
+            margin:0 0 3px 7px;
             display: flex;
+            align-items: center;
             .copy-style{
               width: 15px;
               height: 15px;

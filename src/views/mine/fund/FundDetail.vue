@@ -240,7 +240,7 @@ export default {
       if (text === 'CNY') {
         return num.toFixed(2);
       }
-      return this.slice(num, 5);
+      return parseFloat(this.slice(num, 5));
     },
     // 累计盈亏
     pnlRatioEcharts() {
@@ -373,7 +373,7 @@ export default {
 
 <style lang='scss'>
 .fund-detail {
-  background: #f8f8f8;
+  background:#f4f4f4;
   .amount-info {
     margin-bottom: 10px;
     background: #ffffff;
@@ -456,10 +456,11 @@ export default {
     background: #ffffff;
     padding-bottom: 21px;
     .tabs {
-      height: 50px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: space-around;
+      border-bottom: 1px solid #f4f4f4;
       .tab {
         width: 130px;
         height: 50px;
@@ -485,7 +486,7 @@ export default {
         justify-content: space-between;
         font-size: 12px;
         color: #6a707d;
-        margin-top: 14px;
+        margin: 14px 0 20px;
         .right {
           display: flex;
           align-items: center;
