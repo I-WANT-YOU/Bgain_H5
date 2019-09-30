@@ -15,18 +15,18 @@
       </div>
       <div class="item">
         <span class="icon"></span>
-        <CollapseItem title="中途能否提前退出？" name="3">天天赚为固定收益类产品，封闭期内中途不支持提前退出。</CollapseItem>
+        <CollapseItem title="中途能否提前退出？" name="3">定期盈为固定收益类产品，封闭期内中途不支持提前退出。</CollapseItem>
       </div>
       <div class="item">
         <span class="icon"></span>
-        <CollapseItem title="中途能否转让？" name="4">天天赚为固定收益类产品，封闭期内中途不支持转让。</CollapseItem>
+        <CollapseItem title="中途能否转让？" name="4">定期盈为固定收益类产品，封闭期内中途不支持转让。</CollapseItem>
       </div>
       <div class="item">
         <span class="icon"></span>
         <CollapseItem
           title="购买后至起息日之间所投资的数字货币去哪了？"
           name="5"
-        >购买后用户投资金额对应的数字货币将实时从用户可用余额中转入至产品募集账户，待产品募集结束后转移至分币交易所账户由精选的量化投资团队进行委托管理。</CollapseItem>
+        >购买后用户投资金额对应的数字货币将实时从用户可用余额中转入至产品募集账户，待产品募集结束后转移至Bgain交易所账户由精选的量化投资团队进行委托管理。</CollapseItem>
       </div>
     </Collapse>
   </div>

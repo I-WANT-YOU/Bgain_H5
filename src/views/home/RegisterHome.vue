@@ -42,9 +42,6 @@
     <!--一级页面强制弹窗-->
     <LevelOnePop :showData="popInfo" :show="isPopShow" @close="isPopShow='none'" />
     <Menu v-model="showMenu" @close="showMenu=false"/>
-    <div class="footer-fixed">
-      <DownApp @func="getMsgFormSon" />
-    </div>
   </div>
 </template>
 
@@ -52,13 +49,11 @@
 import { mapActions, mapState } from 'vuex';
 import { Toast } from 'vant';
 import Menu from '@component/mine/Meun.vue';
-import DownApp from '@component/DownApp.vue';
 import errorMessage from '../../constants/responseStatus';
 import HomeSwipe from './components/HomeSwipe.vue';
 import HomeTip from './components/HomeTip.vue';
 import HomeGuide from './components/HomeGuide.vue';
 import HomeProductList from './components/HomeProductList.vue';
-
 import HomeNotice from './components/HomeNotice.vue';
 import BaseFooter from '../../components/BaseFooter.vue';
 import HomeToLogin from './components/HomeToLogin.vue';
@@ -76,7 +71,6 @@ export default {
     BaseFooter,
     LevelOnePop,
     Menu,
-    DownApp,
   },
   data() {
     return {
@@ -249,13 +243,6 @@ export default {
   }
   .footer {
     margin-top: 24px;
-  }
-  .footer-fixed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
   }
 }
 </style>
