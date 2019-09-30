@@ -335,15 +335,15 @@ export default {
     }
   }
   .holiday {
-    padding: 0 15px;
+    padding: 0 10px;
     font-size: 16px;
     color: #0f3256;
     letter-spacing: 0.15px;
     text-align: center;
-    line-height: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   .holiday-rules{
+    margin-bottom: 10px;
     text-align: left;
     font-size: 12px;
     color: #6A707D;

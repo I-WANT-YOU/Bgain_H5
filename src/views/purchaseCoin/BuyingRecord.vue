@@ -1,10 +1,10 @@
 <template>
 <div class="buyingRecord">
   <BgainNavBar title = "买币记录" :onArrowClick="goBack"/>
-  <div class="record-history">
+  <div class="record-history" v-if="standerOrderList.length">
     <div class="history-item"
          v-for="(item,index) in standerOrderList"
-         @click="toOrderDetail(item.id)"
+         @click="toOrderDetail(item.id,item.otc_order_status,item.pay_type)"
          :key="index">
       <div class="history-header">
         <div>
@@ -22,10 +22,14 @@
         </div>
         <div>
           <span>{{item.amount}}</span>
-          <span>交易总额（cny）</span>
+          <span>交易总额（CNY）</span>
         </div>
       </div>
     </div>
+  </div>
+  <div v-else class="no-record">
+    <svg-icon icon-class="mine-fund-no-record" class="no-record-icon" />
+    <div>暂无买币记录</div>
   </div>
 </div>
 </template>
@@ -57,11 +61,20 @@ export default {
       this.$router.go(-1);
     },
     // 跳转到详情页面
-    toOrderDetail(orderId) {
-      this.$router.push({
-        name: 'PleasePay',
-        params: { orderId },
-      });
+    toOrderDetail(orderId, type, payType) {
+      if (type === '请付款' && payType !== 'ebank' && payType !== 'alipay' && payType !== 'weixin') {
+        this.$router.push({
+          name: 'ConfirmOrder',
+          query: {
+            orderId,
+          },
+        });
+      } else {
+        this.$router.push({
+          name: 'PleasePay',
+          params: { orderId },
+        });
+      }
     },
     // 获取用户订单列表
     getUserOrderList() {
@@ -237,6 +250,16 @@ export default {
           }
         }
       }
+    }
+  }
+  .no-record {
+    text-align: center;
+    font-size: 14px;
+    color: #999999;
+    .no-record-icon {
+      width: 102px;
+      height: 78px;
+      margin: 104px 0 10px;
     }
   }
 }

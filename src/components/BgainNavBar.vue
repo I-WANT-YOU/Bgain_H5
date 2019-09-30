@@ -68,6 +68,11 @@ export default {
   height: 44px;
   line-height: 44px;
 }
+.van-nav-bar__left{
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
 
 .van-nav-bar__title {
   font-size: 17px;

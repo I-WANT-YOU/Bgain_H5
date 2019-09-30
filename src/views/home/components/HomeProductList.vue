@@ -50,13 +50,12 @@
                 <div class="item-three">
                   <div>
                     <span :class="[item.total_ups_and_downs * 1 > 0 ? 'up'
-                    : item.total_ups_and_downs * 1 === 0 ? 'none' : '' ]">
+                    : item.total_ups_and_downs * 1 === 0 ? 'none' : 'down' ]">
                   {{/* eslint-disable max-len */
                    item.total_ups_and_downs.substring(0,1)==='-' ?
                   `${item.total_ups_and_downs}%`: item.total_ups_and_downs * 1 === 0 ? '0.00%' : `+${item.total_ups_and_downs}%` }}
-                </span>
+                    </span>
                   </div>
-
                 </div>
               </td>
             </tr>
@@ -354,6 +353,9 @@ export default {
 </script>
 
 <style lang="scss" >
+  .down{
+    color: red;
+  }
 .product-list {
   font-family: PingFangSC-Regular sans-serif;
   letter-spacing: 0;
@@ -576,6 +578,9 @@ export default {
         }
         .up{
           color:#00b870;
+        }
+        .down{
+          color: #ff5656!important;
         }
       }
       > div:nth-child(3) {

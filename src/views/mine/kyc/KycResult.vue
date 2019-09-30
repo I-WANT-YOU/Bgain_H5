@@ -73,9 +73,7 @@ export default {
     if (this.$route.query.authenticationType === 'OTC') {
       this.getOTCResult();
     } else {
-      this.timer = setInterval(() => {
-        this.getKycResult();
-      }, 1000);
+      this.getKycResult();
     }
 
     /* 监听浏览器回退操作 */
@@ -104,24 +102,19 @@ export default {
       Toast.loading({
         message: '加载中...',
       });
-      if (this.countDownTime > 0) {
-        this.countDownTime -= 1;
-        try {
-          await this.getKycInfo();
-          if (this.submitKycStatus === 'CERTIFIED' || this.submitKycStatus === 'PASSED') { // 审核通过 显示 一件授权弹窗
-            Toast.clear();
-            this.isShowResultCard = true;
-            clearInterval(this.timer); // 清除轮询
-            this.isShowAuthorize = true;
-          }
-        } catch (error) {
+      try {
+        await this.getKycInfo();
+        if (this.submitKycStatus === 'CERTIFIED' || this.submitKycStatus === 'PASSED') { // 审核通过 显示 一件授权弹窗
           Toast.clear();
-          throw error;
+          this.isShowResultCard = true;
+          this.isShowAuthorize = true;
+        } else {
+          Toast.clear();
+          this.isShowResultCard = true;
         }
-      } else {
-        clearInterval(this.timer);
+      } catch (error) {
         Toast.clear();
-        this.isShowResultCard = true;
+        throw error;
       }
     },
     // 调用接口查询验证状态otc

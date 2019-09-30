@@ -142,6 +142,7 @@ export default {
   mounted() {
     if (this.$route.query.type === 'OTC' || this.$route.query.type === 'KYC') {
       this.isCountryClick = true;
+      this.type = this.$route.query.type;
     }
   },
 };

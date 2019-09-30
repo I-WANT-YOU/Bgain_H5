@@ -41,7 +41,7 @@ import KycStepOne from './components/KycStepOne.vue';
 import KycStepTwo from './components/KycStepTwo.vue';
 import KycStepThree from './components/KycStepThree.vue';
 
-const { mapActions, mapGetters } = createNamespacedHelpers('user');
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('user');
 
 export default {
   name: 'Kyc',
@@ -55,6 +55,7 @@ export default {
   data() {
     return {
       step: 1,
+      countDownTime: 5,
       country: {
         key: 'China',
         label: '+86',
@@ -72,7 +73,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['username']),
+    ...mapGetters(['username', 'submitKycStatus', 'submitKycMsg']),
+    ...mapState(['submitKycResult']),
   },
   mounted() {
     const { params } = this.$route;
@@ -88,7 +90,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['submitKyc', 'getUserSummary', 'submitOTC']),
+    ...mapActions(['submitKyc', 'getUserSummary', 'submitOTC', 'getKycInfo']),
     onCountryClick() {
       this.$router.push({
         name: 'country',
@@ -154,41 +156,105 @@ export default {
     },
     async onSubmit(token) {
       const options = this.getSubmitOptions(token);
-      try {
-        Toast.loading({
-          duration: 0,
-          forbidClick: true,
-          message: '提交审核中...',
-        });
-        if (this.authenticationType === 'OTC') {
-          await this.submitOTC(options);
-          Toast.clear();
-          this.$router.push({
-            name: 'kyc-result',
-            query: { authenticationType: 'OTC' },
-          });
-        } else {
-          await this.submitKyc(options);
-          Toast.clear();
-          this.$router.push({
-            name: 'kyc-result',
-          });
-        }
-      } catch (error) {
-        Toast.clear();
-        Toast(error);
+      Toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '提交审核中...',
+      });
+      if (this.authenticationType === 'OTC') {
+        this.submitOTC(options).then(
+          (res) => {
+            Toast.clear();
+            if (res.code === 0) {
+              this.$router.push({
+                name: 'kyc-result',
+                query: { authenticationType: 'OTC' },
+              });
+            } else { // 身份证被占用
+              Toast.clear();
+              Toast(res.msg);
+            }
+          },
+          () => {
+            Toast.clear();
+            Toast('网络错误');
+          },
+        );
+      } else {
+        this.submitKyc(options).then(
+          (res) => {
+            if (res.code === 0) {
+              Toast.clear();
+              if (this.documentType === 'ID') {
+                this.timer = setInterval(() => {
+                  this.getKycResult();
+                }, 1000);
+              } else {
+                this.$router.push({
+                  name: 'kyc-result',
+                });
+              }
+            } else { // 身份证被占用
+              Toast.clear();
+              Toast(res.msg);
+            }
+          },
+          () => {
+            Toast.clear();
+            Toast('网络错误');
+          },
+        );
       }
     },
     goBack() {
       if (this.$route.query.fromPath && this.$route.query.fromPath === 'register') {
         this.$router.push('/');
-      } else {
+      } else if (this.$route.query.fromPath === 'kyc') {
         this.$router.push('/mine/safety');
+      } else {
+        this.$router.go(-1);
+      }
+    },
+    // 调用接口查询验证状态 kyc
+    async getKycResult() {
+      Toast.loading({
+        message: '加载中...',
+      });
+      if (this.countDownTime > 0) {
+        this.countDownTime -= 1;
+        try {
+          await this.getKycInfo();
+          if (this.submitKycStatus === 'CERTIFIED' || this.submitKycStatus === 'PASSED') { // 审核通过 显示 一件授权弹窗
+            Toast.clear();
+            clearInterval(this.timer); // 清除轮询
+            this.$router.push({
+              name: 'kyc-result',
+            });
+          } else if (this.submitKycStatus === 'REJECTED') {
+            clearInterval(this.timer); // 清除轮询
+            Toast.clear();
+            this.$router.push({
+              name: 'kyc-result',
+            });
+          }
+        } catch (error) {
+          Toast.clear();
+          throw error;
+        }
+      } else {
+        clearInterval(this.timer);
+        Toast.clear();
+        this.$router.push({
+          name: 'kyc-result',
+        });
       }
     },
     remainingTime(time) {
       this.remainingTimeText = time;
     },
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
 };
 </script>

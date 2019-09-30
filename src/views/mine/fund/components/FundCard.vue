@@ -15,7 +15,7 @@
       <div class="con">
         <div
           :class="['num', option.yesterday_change
-        && (option.yesterday_change * 1) > 0 ? 'loss' : 'profit',
+        && (option.yesterday_change * 1) > 0 ? 'profit' : 'loss',
         option.yesterday_change && option.yesterday_change === 0 ? 'computed' : '',
         option.yesterday_change ? '' : 'computed']"
         >
@@ -29,7 +29,7 @@
       <div class="con">
         <div
           :class="['num', option.holding_profit
-        && (option.holding_profit * 1) > 0 ? 'loss' : 'profit',
+        && (option.holding_profit * 1) > 0 ? 'profit' : 'loss',
         option.holding_profit === 0 ? 'computed' : '']"
         >
           {{option.holding_profit > 0

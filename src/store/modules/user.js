@@ -1,6 +1,6 @@
 import { get, isNil } from 'lodash';
-import * as Auth from '@utils/auth';
 import UserService from '@api/user';
+import { handlerSuccessResponse, handlerSuccessResponseV2, handlerSuccessResponseV3 } from '@/utils/auth';
 import * as types from '../mutationTypes';
 
 const state = {
@@ -108,7 +108,7 @@ const actions = {
   async getUserSummary({ commit }) {
     try {
       const response = await UserService.getUserSummary();
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_SUMMARY, data);
     } catch (error) {
       throw error;
@@ -118,7 +118,7 @@ const actions = {
   async getTransferDetails({ commit }, currency) {
     try {
       const response = await UserService.getTransferDetails(currency);
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_TRANSFER_DETAILS, data);
     } catch (error) {
       throw error;
@@ -145,8 +145,8 @@ const actions = {
   async submitKyc({ commit }, params) {
     try {
       const response = await UserService.submitKyc(params);
-      const data = Auth.handlerSuccessResponseV2(response);
-      commit(types.GET_SUBMIT_KYC_RESULT, data);
+      const data = handlerSuccessResponseV3(response);
+      return data;
     } catch (error) {
       throw error;
     }
@@ -154,8 +154,8 @@ const actions = {
   async submitOTC({ commit }, params) {
     try {
       const response = await UserService.submitOTC(params);
-      const data = Auth.handlerSuccessResponseV2(response);
-      commit(types.GET_SUBMIT_KYC_RESULT, data);
+      const data = handlerSuccessResponseV3(response);
+      return data;
     } catch (error) {
       throw error;
     }
@@ -164,7 +164,7 @@ const actions = {
   async getKycInfo({ commit }) {
     try {
       const response = await UserService.getKycInfo();
-      const data = await Auth.handlerSuccessResponseV3(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
@@ -173,7 +173,7 @@ const actions = {
   async getOTCInfo({ commit }) {
     try {
       const response = await UserService.getOTCInfo();
-      const data = await Auth.handlerSuccessResponseV3(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.GET_KYC_INFO, data);
     } catch (error) {
       throw error;
@@ -182,7 +182,7 @@ const actions = {
   async getUserBalanceSummary({ commit }) {
     try {
       const response = await UserService.getUserBalanceSummary();
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_BALANCE_SUMMARY, data);
     } catch (error) {
       throw error;
@@ -193,7 +193,7 @@ const actions = {
   async toGrantAuthorization() {
     try {
       const response = await UserService.toGrantAuthorization();
-      const data = await Auth.handlerSuccessResponseV2(response);
+      const data = await handlerSuccessResponseV2(response);
       return data;
     } catch (error) {
       throw error;
@@ -204,7 +204,7 @@ const actions = {
   async getUserIsSignIn({ commit }) {
     try {
       const response = await UserService.getUserIsSignIn();
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_IS_SIGN_IN, data);
     } catch (error) {
       throw error;
@@ -215,7 +215,7 @@ const actions = {
   async getReferInfo({ commit }) {
     try {
       const response = await UserService.getReferInfo();
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_REFER, data);
     } catch (error) {
       throw error;
@@ -226,7 +226,7 @@ const actions = {
   async getAssetRecord({ commit }) {
     try {
       const response = await UserService.getTransferDetails('');
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_ASSET_RECORD, data);
     } catch (error) {
       throw error;
@@ -237,7 +237,7 @@ const actions = {
   async getUserCouponList({ commit }) {
     try {
       const response = await UserService.getUserCouponList();
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USER_COUPON_LIST, data);
     } catch (error) {
       throw error;
@@ -247,7 +247,7 @@ const actions = {
   async getActiveVerificationCode({ commit }, params) {
     try {
       const response = await UserService.getActiveVerificationCode(params);
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_V_CODE, data);
     } catch (error) {
       throw error;
@@ -257,7 +257,7 @@ const actions = {
   async postRedeemCode({ commit }, params) {
     try {
       const response = await UserService.postRedeemCode(params);
-      const data = await Auth.handlerSuccessResponseV2(response);
+      const data = await handlerSuccessResponseV2(response);
       commit(types.REDEEM_CODE_INFO, data);
     } catch (error) {
       throw error;
@@ -267,7 +267,7 @@ const actions = {
   async codeExchange({ commit }, params) {
     try {
       const response = await UserService.codeExchange(params);
-      const data = await Auth.handlerSuccessResponseV3(response);
+      const data = await handlerSuccessResponseV3(response);
       commit(types.CODE_EXCHANGE, data);
     } catch (error) {
       throw error;
@@ -277,7 +277,7 @@ const actions = {
   async getUserNameInfo({ commit }, params) {
     try {
       const response = await UserService.getUserNameInfo(params);
-      const data = await Auth.handlerSuccessResponse(response);
+      const data = await handlerSuccessResponse(response);
       commit(types.GET_USERNAME_INFO, data);
     } catch (error) {
       throw error;
@@ -296,17 +296,17 @@ const actions = {
     console.log(params);
     try {
       const response = await UserService.checkOtcUserName(params);
-      const data = await Auth.handlerSuccessResponseV3(response.data);
+      const data = await handlerSuccessResponseV3(response.data);
       return data;
     } catch (error) {
       throw error;
     }
   },
   /* check身份证输入是否一致 */
-  async checkUserOtcId({ commit },params) {
+  async checkUserOtcId({ commit }, params) {
     try {
       const response = await UserService.checkUserOtcId(params);
-      const data = await Auth.handlerSuccessResponseV3(response.data);
+      const data = await handlerSuccessResponseV3(response.data);
       return data;
     } catch (error) {
       throw error;

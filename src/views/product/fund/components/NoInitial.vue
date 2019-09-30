@@ -8,7 +8,8 @@
       <div class="top">
         <div :class="['setup', options.ups_and_downs_week > 0 ? '' : 'active']">
           <span>
-            {{options.nav > 0 ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}
+            {{options.ups_and_downs_week > 0
+            ? `+${options.ups_and_downs_week}` : options.ups_and_downs_week}}
           </span>
           <span class="unit">%</span>
         </div>

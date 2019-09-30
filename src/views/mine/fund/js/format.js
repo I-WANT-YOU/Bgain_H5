@@ -76,7 +76,7 @@ export function echartsOption(X, series, series2, min, max, num, tooltip = true)
 
   return {
     grid: {
-      left: '10%',
+      left: '12%',
       right: '0%',
       bottom: '4%',
       top: '3%',
@@ -97,9 +97,10 @@ export function echartsOption(X, series, series2, min, max, num, tooltip = true)
         },
       },
       axisLabel: {
-        show: true,
+        show: false,
+        color: '#f4f4f4',
         textStyle: {
-          color: '#ffffff',
+          color: '#f4f4f4',
           fontSize: 8,
         },
       },
@@ -113,24 +114,28 @@ export function echartsOption(X, series, series2, min, max, num, tooltip = true)
     yAxis: {
       show: true,
       type: 'value',
-      min: strip(min - num, 1),
-      max: strip(max + num, 1),
-      interval: strip((strip(max * 1 + num, 3) - strip(min - num, 3)) / 9, 2),
+      min: strip(min - num, 2),
+      max: strip(max + num, 2),
+      interval: strip((strip(max * 1 + num, 2) - strip(min - num, 2)) / 5, 2),
       axisLabel: {
         show: true,
         textStyle: {
-          color: '#a8aeb9',
+          color: '#999999',
           fontSize: 8,
         },
       },
       axisLine: {
         show: false,
         lineStyle: {
-          color: '#ffffff',
+          color: '#999999',
         },
       },
       splitLine: {
-        show: false,
+        show: true,
+        lineStyle: {
+          color: '#a8aeb9',
+          width: 0.3,
+        },
       },
       axisTick: {
         show: false,
