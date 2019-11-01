@@ -61,6 +61,18 @@
         </div>
       </template>
     </BgainBaseDialog>
+    <!--临时弹窗-->
+    <BgainBaseDialog
+      v-model="temporaryDialog"
+      :showCancel="false"
+      :showClose="false"
+      title="温馨提示"
+      content="由于功能升级，天天赚暂不可转入，您可选购其他产品"
+      submitText="知道了"
+      @submit="()=>{this.temporaryDialog = false}"
+      @cancel="()=>{this.temporaryDialog = false}"
+      wrapHeight="260px"
+    />
   </div>
 </template>
 
@@ -96,6 +108,7 @@ export default {
       al: 1,
       showDialog: false,
       Dialog: false,
+      temporaryDialog: false,
     };
   },
   mounted() {
@@ -175,12 +188,13 @@ export default {
         if (this.al === 2) {
           await this.getHoliday();
           if (this.holidayStatus) {
-            this.$router.push({
-              name: 'current-buy',
-              params: {
-                currency,
-              },
-            });
+            this.temporaryDialog = true;
+            // this.$router.push({
+            //   name: 'current-buy',
+            //   params: {
+            //     currency,
+            //   },
+            // });
           } else {
             this.Dialog = true;
           }
