@@ -147,10 +147,12 @@ export default {
       } else if (!num.test(value * 1)) {
         this.num = value.slice(0, value.length - 1);
       }
-      if (floatNum && floatNum.length > 2) {
-        this.num = this.num.substring(0, this.num.indexOf('.') + 3);
-        Toast('小数点最多可输入2位');
+
+      if (floatNum && floatNum.length > 8) {
+        this.num = this.num.substring(0, this.num.indexOf('.') + 9);
+        Toast('小数点最多可输入8位');
       }
+
       if (value * 1 > this.holdingShares) {
         Toast(`最多可赎回${this.holdingShares}份, 请重新输入`);
         this.num = this.holdingShares;
