@@ -132,7 +132,7 @@ export default {
             Toast(data.msg);
           }
         } catch (e) {
-          Toast('网络错误1');
+          Toast('网络错误');
         }
       } else {
         this.$emit('change-step', 2);

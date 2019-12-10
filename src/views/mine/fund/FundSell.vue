@@ -63,46 +63,6 @@ const { mapActions, mapState } = createNamespacedHelpers('product/fund');
 
 export default {
   name: 'FundSell',
-  methods: {
-    ...mapActions(['sellFundDetail', 'sellFund']),
-    onAll() {
-      this.num = this.holdingShares;
-    },
-    onSell() {
-      // 最小份额
-      if (this.holdingShares !== this.num
-        && this.minHoldShares > this.holdingShares * 1 - strip(this.num * 1)) {
-        this.sellDialog = true;
-      } else {
-        this.passwordDialog = true;
-      }
-    },
-    onClose() {
-      this.passwordDialog = false;
-    },
-    onReset() {
-      this.num = '';
-      this.sellDialog = false;
-    },
-    allSell() {
-      this.num = this.holdingShares;
-      this.sellDialog = false;
-    },
-    async onSubmit(password) {
-      const params = {
-        fund_id: this.$route.query.fund_id,
-        sell_shares: this.num,
-        payment_password: password,
-      };
-      await this.sellFund(params);
-    },
-    goSellRules() {
-      this.$router.push({
-        path: '/product/fund/trade-rules',
-        query: { productId: this.$route.query.fund_id },
-      });
-    },
-  },
   components: {
     BgainNavBar,
     Field,
@@ -187,6 +147,58 @@ export default {
       Toast.clear();
       Toast(error);
     }
+  },
+  methods: {
+    ...mapActions(['sellFundDetail', 'sellFund']),
+    onAll() {
+      this.num = this.holdingShares;
+    },
+    onSell() {
+      // 最小份额
+      if (this.holdingShares !== this.num
+        && this.minHoldShares > this.holdingShares * 1 - strip(this.num * 1)) {
+        this.sellDialog = true;
+      } else {
+        this.passwordDialog = true;
+      }
+    },
+    onClose() {
+      this.passwordDialog = false;
+    },
+    onReset() {
+      this.num = '';
+      this.sellDialog = false;
+    },
+    allSell() {
+      this.num = this.holdingShares;
+      this.sellDialog = false;
+    },
+    async onSubmit(password) {
+      try {
+        const params = {
+          fund_id: this.$route.query.fund_id,
+          sell_shares: this.num,
+          payment_password: password,
+        };
+        const response = await this.sellFund(params);
+        this.passwordDialog = false;
+        this.$router.push({
+          name: 'FundSellResult',
+          query: {
+            data: JSON.stringify(response),
+            success: true,
+          },
+        });
+      } catch (errorMessage) {
+        console.log(errorMessage);
+      }
+    },
+    goSellRules() {
+      this.$router.push({
+        path: '/product/fund/trade-rules',
+        query: { productId: this.$route.query.fund_id },
+      });
+    },
   },
 };
 </script>

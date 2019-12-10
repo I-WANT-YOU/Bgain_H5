@@ -30,7 +30,9 @@ request.interceptors.request.use(
 );
 
 request.interceptors.response.use(
-  response => response,
+  (response) => {
+    return response;
+  },
   (error) => {
     if (error.response.status === 401) {
       Auth.removeToken();
