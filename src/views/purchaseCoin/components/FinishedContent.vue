@@ -21,7 +21,8 @@
           <span>数量</span>
           <span>
             {{orderInfoById.quantity}}
-            {{this.orderInfoById.dest_currency_type?this.orderInfoById.dest_currency_type.toUpperCase():''}}
+            {{this.orderInfoById.dest_currency_type ?
+            this.orderInfoById.dest_currency_type.toUpperCase():''}}
           </span>
         </div>
       </div>
@@ -116,7 +117,7 @@ export default {
       padding-bottom: 29px;
       .copy-icon-container{
         display: flex;
-        align-items: start;
+        align-items: flex-start;
         padding-left: 10px;
       }
       >div{

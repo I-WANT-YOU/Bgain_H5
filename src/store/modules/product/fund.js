@@ -223,11 +223,9 @@ const actions = {
 
   // 赎回基金
   async sellFund(context, options) {
-    console.log(options);
     try {
       const response = await FundService.sellFund(options);
-      console.log(response);
-      // return Auth.handlerSuccessResponse(response);
+      return Auth.handlerSuccessResponse(response);
     } catch (error) {
       throw error;
     }

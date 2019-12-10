@@ -6,7 +6,7 @@
         <svg-icon icon-class="sell-success" class="icon" />
         <div class="info">
           <div>您的赎回申请已提交</div>
-          <div class="num">赎回份额 23.12份</div>
+          <div class="num">赎回份额 {{currentData.share}}份</div>
           <div class="reminder">该交易成功与否以平台确认结果为准，请及时关注消息通知</div>
         </div>
         <div class="steps">
@@ -16,15 +16,15 @@
           <div class="step-text">
             <div class="step-x active">
               <div>冻结基金份额，提交赎回申请</div>
-              <div>2019-05-01 12:23:04</div>
+              <div>{{currentData.createDate}}</div>
             </div>
             <div class="step-x">
               <div>确定赎回，扣减基金份额</div>
-              <div>2019-05-08 18:00</div>
+              <div>{{currentData.endDate}}</div>
             </div>
             <div class="step-x">
               <div>赎回资金到账</div>
-              <div>预计2019-05-09 24：00前</div>
+              <div>预计{{currentData.lastDate}}前</div>
             </div>
           </div>
         </div>
@@ -44,6 +44,7 @@
 <script>
 import BgainNavBar from '@component/BgainNavBar.vue';
 import BgainButton from '@component/BgainButton.vue';
+import dayjs from 'dayjs';
 // import { formatDate } from '@utils/tools';
 
 export default {
@@ -54,8 +55,21 @@ export default {
   },
   data() {
     return {
+      currentData: {}, // 结果页面数据
       success: false,
     };
+  },
+  mounted() {
+    if (this.$route.query.data) {
+      const currentData = JSON.parse(this.$route.query.data);
+      this.currentData = {
+        share: currentData.shares, // 赎回份额
+        createDate: dayjs(currentData.submit_date).format('YYYY-MM-DD HH:mm:ss'), // 订单创建时间
+        endDate: dayjs(currentData.confirm_date).format('YYYY-MM-DD HH:mm:ss'),
+        lastDate: dayjs(currentData.fund_back_date).format('YYYY-MM-DD HH:mm:ss'),
+      };
+      this.success = this.$route.query.success;
+    }
   },
   methods: {
     onSubmit() {

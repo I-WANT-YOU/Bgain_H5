@@ -238,7 +238,7 @@ export default {
         return this.slice(num, 3);
       }
       if (text === 'CNY') {
-        return num.toFixed(2);
+        return (num * 1).toFixed(2);
       }
       return parseFloat(this.slice(num, 5));
     },

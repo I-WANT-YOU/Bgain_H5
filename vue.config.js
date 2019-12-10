@@ -70,8 +70,32 @@ module.exports = {
     },
   },
   devServer: {
-    host: '0.0.0.0',
-    port: 8080,
-    disableHostCheck: true,
+    // 设置主机地址
+    // host: 'localhost',
+    // // 设置默认端口
+    // port: 8080,
+    // 设置代理
+    proxy: {
+      '/api': {
+        // 目标 API 地址
+        target: 'https://api.fin-bee.com/',
+        // 如果要代理 websockets
+        ws: true,
+        // 将主机标头的原点更改为目标URL
+        changeOrigin: false,
+        pathRewrite: { // 路径重写，
+          '^/api': 'https://api.fin-bee.com/', // 替换target中的请求地址
+        },
+      },
+    },
   },
+  // devServer: {
+  //   // host: '0.0.0.0',
+  //   // port: 80,
+  //   // disableHostCheck: true,
+  //   proxy: {
+  //     target: 'http://www.example.org',
+  //     changeOrigin: true
+  //   },
+  // },
 };

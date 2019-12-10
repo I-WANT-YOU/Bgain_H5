@@ -42,6 +42,7 @@ const actions = {
     try {
       const response = await HomeService.getAllHomeInfo();
       const data = await handlerSuccessResponseV2(response);
+      console.log(data);
       commit(types.GET_ALL_HOME_INFO, data);
     } catch (error) {
       throw error;

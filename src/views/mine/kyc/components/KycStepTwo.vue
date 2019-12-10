@@ -286,7 +286,6 @@ export default {
       const photo = file.file;
       const name = `${this.getRandomFileName()}${this.getSuffix(photo.name)}`;
       const key = `${dir}${name}`;
-
       const param = new FormData();
       param.append('name', `${name}`);
       param.append('key', `${key}`);
@@ -316,7 +315,7 @@ export default {
         this.upload(file, index);
       } catch (error) {
         this.files.splice(index, 1, 'error');
-        Toast(error);
+        Toast('error');
       }
     },
   },
