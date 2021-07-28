@@ -89,13 +89,4 @@ module.exports = {
       },
     },
   },
-  // devServer: {
-  //   // host: '0.0.0.0',
-  //   // port: 80,
-  //   // disableHostCheck: true,
-  //   proxy: {
-  //     target: 'http://www.example.org',
-  //     changeOrigin: true
-  //   },
-  // },
 };

@@ -3,7 +3,7 @@
     <img src="../../../assets/images/home_tip.svg" alt="." />
     <span
       @click="goToNotice"
-    >{{announcement.title}}</span>
+    >{{announcement.title}}{{text}}</span>
     <img
       @click="$router.push('/message/announcement')"
       src="../../../assets/images/home_next.svg"
@@ -24,10 +24,16 @@ export default {
       'announcement',
     ]),
   },
+  props: {
+    text: {
+      type: String,
+    },
+  },
   methods: {
     goToNotice() {
-      window._czc.push(['_trackEvent', 'click', '首页-公告列表']);
-      this.$router.push(`/message-detail/announcement?id=${this.announcement.id}`);
+      this.$emit('update:text', '2222222');
+      // window._czc.push(['_trackEvent', 'click', '首页-公告列表']);
+      // this.$router.push(`/message-detail/announcement?id=${this.announcement.id}`);
     },
   },
 };

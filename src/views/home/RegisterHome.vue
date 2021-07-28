@@ -17,7 +17,7 @@
     <HomeSwipe ref="my-swiper" />
     <!--all-->
     <div class="home-tip-container">
-      <HomeTip />
+      <HomeTip   :text.sync="testData"/>
     </div>
     <!--登陆注册后有-->
     <div class="notice-container" v-show="userStatus === 'login'">
@@ -74,6 +74,7 @@ export default {
   },
   data() {
     return {
+      testData: '11',
       isPopShow: 'none', // 一级弹窗
       userStatus: 'unLogin',
       kyc_status: 0, // 是否身份认证
@@ -152,6 +153,10 @@ export default {
     });
   },
   methods: {
+    test(value) {
+      console.log(value);
+      this.testData = 'new';
+    },
     // 触发action的方法 getRecord
     ...mapActions('user', [
       'getUserSummary',
